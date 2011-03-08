@@ -17,7 +17,7 @@ ActiveRecord::Schema.define(:version => 20110307204633) do
     t.boolean  "is_current",                     :default => false
     t.string   "submitter",                      :default => "anonymous", :null => false
     t.datetime "date_approved"
-    t.integer  "image_id",                                                :null => false
+    t.integer  "image_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

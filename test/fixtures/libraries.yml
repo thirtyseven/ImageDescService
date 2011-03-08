@@ -2,8 +2,8 @@
 
 one:
   id:  1
-  name: MyString
+  name: bookshare
 
 two:
   id:  2
-  name: MyString
+  name: other library

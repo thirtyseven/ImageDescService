@@ -2,7 +2,7 @@
 
 one:
   book_id: 1
-  image_id: MyString
+  image_id: img001.jpg
   isbn: MyString
   page_number: 1
   sequence_number: 1
@@ -12,7 +12,7 @@ one:
 
 two:
   book_id: 1
-  image_id: MyString
+  image_id: img002.jpg
   isbn: MyString
   page_number: 1
   sequence_number: 1
