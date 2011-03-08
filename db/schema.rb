@@ -37,7 +37,7 @@ ActiveRecord::Schema.define(:version => 20110307204633) do
     t.datetime "updated_at"
   end
 
-  add_index "images", ["book_id", "image_id"], :name => "images_book_image_unq", :unique => true
+  add_index "images", ["library_id", "book_id", "image_id"], :name => "images_book_image_unq", :unique => true
   add_index "images", ["library_id"], :name => "fk_images_library"
 
   create_table "libraries", :force => true do |t|
