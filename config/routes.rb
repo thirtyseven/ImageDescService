@@ -1,4 +1,12 @@
 DiagramRailsApp::Application.routes.draw do
+  resources :descriptions
+
+  resources :images do
+    resources :descriptions
+  end
+
+  resources :libraries
+
   get "home/index"
 
   # The priority is based upon order of creation:

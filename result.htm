@@ -1,0 +1,304 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Action Controller: Exception caught</title>
+  <style>
+    body { background-color: #fff; color: #333; }
+
+    body, p, ol, ul, td {
+      font-family: verdana, arial, helvetica, sans-serif;
+      font-size:   13px;
+      line-height: 18px;
+    }
+
+    pre {
+      background-color: #eee;
+      padding: 10px;
+      font-size: 11px;
+    }
+
+    a { color: #000; }
+    a:visited { color: #666; }
+    a:hover { color: #fff; background-color:#000; }
+  </style>
+</head>
+<body>
+
+<h1>
+  ActiveRecord::RecordNotUnique
+    in ImagesController#create
+</h1>
+<pre>Mysql2::Error: Duplicate entry '12345-img001' for key 'images_book_image_unq': INSERT INTO `images` (`book_id`, `image_id`, `isbn`, `page_number`, `sequence_number`, `caption`, `url`, `library_id`, `created_at`, `updated_at`, `id`) VALUES (12345, 'img001', NULL, NULL, NULL, NULL, NULL, 29274, '2011-03-08 00:45:27', '2011-03-08 00:45:27', 433808784)</pre>
+
+
+<p><code>Rails.root: /Users/roms/DiagramRailsApp</code></p>
+
+<div id="traces">
+    <a href="#" onclick="document.getElementById('Framework-Trace').style.display='none';document.getElementById('Full-Trace').style.display='none';document.getElementById('Application-Trace').style.display='block';; return false;">Application Trace</a> |
+    <a href="#" onclick="document.getElementById('Application-Trace').style.display='none';document.getElementById('Full-Trace').style.display='none';document.getElementById('Framework-Trace').style.display='block';; return false;">Framework Trace</a> |
+    <a href="#" onclick="document.getElementById('Application-Trace').style.display='none';document.getElementById('Framework-Trace').style.display='none';document.getElementById('Full-Trace').style.display='block';; return false;">Full Trace</a> 
+
+    <div id="Application-Trace" style="display: block;">
+      <pre><code>app/controllers/images_controller.rb:14:in `block in create'
+app/controllers/images_controller.rb:13:in `create'</code></pre>
+    </div>
+    <div id="Framework-Trace" style="display: none;">
+      <pre><code>activerecord (3.0.4) lib/active_record/connection_adapters/abstract_adapter.rb:207:in `rescue in log'
+activerecord (3.0.4) lib/active_record/connection_adapters/abstract_adapter.rb:199:in `log'
+mysql2 (0.2.6) lib/active_record/connection_adapters/mysql2_adapter.rb:314:in `execute'
+activerecord (3.0.4) lib/active_record/connection_adapters/abstract/database_statements.rb:278:in `insert_sql'
+mysql2 (0.2.6) lib/active_record/connection_adapters/mysql2_adapter.rb:325:in `insert_sql'
+activerecord (3.0.4) lib/active_record/connection_adapters/abstract/database_statements.rb:44:in `insert'
+activerecord (3.0.4) lib/active_record/connection_adapters/abstract/query_cache.rb:16:in `insert'
+arel (2.0.9) lib/arel/select_manager.rb:217:in `insert'
+activerecord (3.0.4) lib/active_record/relation.rb:14:in `insert'
+activerecord (3.0.4) lib/active_record/persistence.rb:270:in `create'
+activerecord (3.0.4) lib/active_record/timestamp.rb:47:in `create'
+activerecord (3.0.4) lib/active_record/callbacks.rb:281:in `block in create'
+activesupport (3.0.4) lib/active_support/callbacks.rb:413:in `_run_create_callbacks'
+activerecord (3.0.4) lib/active_record/callbacks.rb:281:in `create'
+activerecord (3.0.4) lib/active_record/persistence.rb:246:in `create_or_update'
+activerecord (3.0.4) lib/active_record/callbacks.rb:277:in `block in create_or_update'
+activesupport (3.0.4) lib/active_support/callbacks.rb:423:in `_run_save_callbacks'
+activerecord (3.0.4) lib/active_record/callbacks.rb:277:in `create_or_update'
+activerecord (3.0.4) lib/active_record/persistence.rb:39:in `save'
+activerecord (3.0.4) lib/active_record/validations.rb:43:in `save'
+activerecord (3.0.4) lib/active_record/attribute_methods/dirty.rb:21:in `save'
+activerecord (3.0.4) lib/active_record/transactions.rb:240:in `block (2 levels) in save'
+activerecord (3.0.4) lib/active_record/transactions.rb:292:in `block in with_transaction_returning_status'
+activerecord (3.0.4) lib/active_record/connection_adapters/abstract/database_statements.rb:139:in `transaction'
+activerecord (3.0.4) lib/active_record/transactions.rb:207:in `transaction'
+activerecord (3.0.4) lib/active_record/transactions.rb:290:in `with_transaction_returning_status'
+activerecord (3.0.4) lib/active_record/transactions.rb:240:in `block in save'
+activerecord (3.0.4) lib/active_record/transactions.rb:251:in `rollback_active_record_state!'
+activerecord (3.0.4) lib/active_record/transactions.rb:239:in `save'
+actionpack (3.0.4) lib/action_controller/metal/mime_responds.rb:264:in `call'
+actionpack (3.0.4) lib/action_controller/metal/mime_responds.rb:264:in `retrieve_response_from_mimes'
+actionpack (3.0.4) lib/action_controller/metal/mime_responds.rb:191:in `respond_to'
+actionpack (3.0.4) lib/action_controller/metal/implicit_render.rb:4:in `send_action'
+actionpack (3.0.4) lib/abstract_controller/base.rb:150:in `process_action'
+actionpack (3.0.4) lib/action_controller/metal/rendering.rb:11:in `process_action'
+actionpack (3.0.4) lib/abstract_controller/callbacks.rb:18:in `block in process_action'
+activesupport (3.0.4) lib/active_support/callbacks.rb:435:in `_run__3541552298119609480__process_action__3359736835116358094__callbacks'
+activesupport (3.0.4) lib/active_support/callbacks.rb:409:in `_run_process_action_callbacks'
+activesupport (3.0.4) lib/active_support/callbacks.rb:93:in `run_callbacks'
+actionpack (3.0.4) lib/abstract_controller/callbacks.rb:17:in `process_action'
+actionpack (3.0.4) lib/action_controller/metal/instrumentation.rb:30:in `block in process_action'
+activesupport (3.0.4) lib/active_support/notifications.rb:52:in `block in instrument'
+activesupport (3.0.4) lib/active_support/notifications/instrumenter.rb:21:in `instrument'
+activesupport (3.0.4) lib/active_support/notifications.rb:52:in `instrument'
+actionpack (3.0.4) lib/action_controller/metal/instrumentation.rb:29:in `process_action'
+actionpack (3.0.4) lib/action_controller/metal/rescue.rb:17:in `process_action'
+actionpack (3.0.4) lib/abstract_controller/base.rb:119:in `process'
+actionpack (3.0.4) lib/abstract_controller/rendering.rb:41:in `process'
+actionpack (3.0.4) lib/action_controller/metal.rb:138:in `dispatch'
+actionpack (3.0.4) lib/action_controller/metal/rack_delegation.rb:14:in `dispatch'
+actionpack (3.0.4) lib/action_controller/metal.rb:178:in `block in action'
+actionpack (3.0.4) lib/action_dispatch/routing/route_set.rb:62:in `call'
+actionpack (3.0.4) lib/action_dispatch/routing/route_set.rb:62:in `dispatch'
+actionpack (3.0.4) lib/action_dispatch/routing/route_set.rb:27:in `call'
+rack-mount (0.6.13) lib/rack/mount/route_set.rb:148:in `block in call'
+rack-mount (0.6.13) lib/rack/mount/code_generation.rb:93:in `block in recognize'
+rack-mount (0.6.13) lib/rack/mount/code_generation.rb:75:in `optimized_each'
+rack-mount (0.6.13) lib/rack/mount/code_generation.rb:92:in `recognize'
+rack-mount (0.6.13) lib/rack/mount/route_set.rb:139:in `call'
+actionpack (3.0.4) lib/action_dispatch/routing/route_set.rb:492:in `call'
+actionpack (3.0.4) lib/action_dispatch/middleware/best_standards_support.rb:17:in `call'
+actionpack (3.0.4) lib/action_dispatch/middleware/head.rb:14:in `call'
+rack (1.2.1) lib/rack/methodoverride.rb:24:in `call'
+actionpack (3.0.4) lib/action_dispatch/middleware/params_parser.rb:21:in `call'
+actionpack (3.0.4) lib/action_dispatch/middleware/flash.rb:182:in `call'
+actionpack (3.0.4) lib/action_dispatch/middleware/session/abstract_store.rb:149:in `call'
+actionpack (3.0.4) lib/action_dispatch/middleware/cookies.rb:302:in `call'
+activerecord (3.0.4) lib/active_record/query_cache.rb:32:in `block in call'
+activerecord (3.0.4) lib/active_record/connection_adapters/abstract/query_cache.rb:28:in `cache'
+activerecord (3.0.4) lib/active_record/query_cache.rb:12:in `cache'
+activerecord (3.0.4) lib/active_record/query_cache.rb:31:in `call'
+activerecord (3.0.4) lib/active_record/connection_adapters/abstract/connection_pool.rb:354:in `call'
+actionpack (3.0.4) lib/action_dispatch/middleware/callbacks.rb:46:in `block in call'
+activesupport (3.0.4) lib/active_support/callbacks.rb:415:in `_run_call_callbacks'
+actionpack (3.0.4) lib/action_dispatch/middleware/callbacks.rb:44:in `call'
+rack (1.2.1) lib/rack/sendfile.rb:107:in `call'
+actionpack (3.0.4) lib/action_dispatch/middleware/remote_ip.rb:48:in `call'
+actionpack (3.0.4) lib/action_dispatch/middleware/show_exceptions.rb:47:in `call'
+railties (3.0.4) lib/rails/rack/logger.rb:13:in `call'
+rack (1.2.1) lib/rack/runtime.rb:17:in `call'
+activesupport (3.0.4) lib/active_support/cache/strategy/local_cache.rb:72:in `call'
+rack (1.2.1) lib/rack/lock.rb:11:in `block in call'
+&lt;internal:prelude&gt;:10:in `synchronize'
+rack (1.2.1) lib/rack/lock.rb:11:in `call'
+actionpack (3.0.4) lib/action_dispatch/middleware/static.rb:30:in `call'
+railties (3.0.4) lib/rails/application.rb:168:in `call'
+railties (3.0.4) lib/rails/application.rb:77:in `method_missing'
+railties (3.0.4) lib/rails/rack/log_tailer.rb:14:in `call'
+rack (1.2.1) lib/rack/content_length.rb:13:in `call'
+rack (1.2.1) lib/rack/handler/webrick.rb:52:in `service'
+/Users/roms/.rvm/rubies/ruby-1.9.2-p180/lib/ruby/1.9.1/webrick/httpserver.rb:111:in `service'
+/Users/roms/.rvm/rubies/ruby-1.9.2-p180/lib/ruby/1.9.1/webrick/httpserver.rb:70:in `run'
+/Users/roms/.rvm/rubies/ruby-1.9.2-p180/lib/ruby/1.9.1/webrick/server.rb:183:in `block in start_thread'</code></pre>
+    </div>
+    <div id="Full-Trace" style="display: none;">
+      <pre><code>activerecord (3.0.4) lib/active_record/connection_adapters/abstract_adapter.rb:207:in `rescue in log'
+activerecord (3.0.4) lib/active_record/connection_adapters/abstract_adapter.rb:199:in `log'
+mysql2 (0.2.6) lib/active_record/connection_adapters/mysql2_adapter.rb:314:in `execute'
+activerecord (3.0.4) lib/active_record/connection_adapters/abstract/database_statements.rb:278:in `insert_sql'
+mysql2 (0.2.6) lib/active_record/connection_adapters/mysql2_adapter.rb:325:in `insert_sql'
+activerecord (3.0.4) lib/active_record/connection_adapters/abstract/database_statements.rb:44:in `insert'
+activerecord (3.0.4) lib/active_record/connection_adapters/abstract/query_cache.rb:16:in `insert'
+arel (2.0.9) lib/arel/select_manager.rb:217:in `insert'
+activerecord (3.0.4) lib/active_record/relation.rb:14:in `insert'
+activerecord (3.0.4) lib/active_record/persistence.rb:270:in `create'
+activerecord (3.0.4) lib/active_record/timestamp.rb:47:in `create'
+activerecord (3.0.4) lib/active_record/callbacks.rb:281:in `block in create'
+activesupport (3.0.4) lib/active_support/callbacks.rb:413:in `_run_create_callbacks'
+activerecord (3.0.4) lib/active_record/callbacks.rb:281:in `create'
+activerecord (3.0.4) lib/active_record/persistence.rb:246:in `create_or_update'
+activerecord (3.0.4) lib/active_record/callbacks.rb:277:in `block in create_or_update'
+activesupport (3.0.4) lib/active_support/callbacks.rb:423:in `_run_save_callbacks'
+activerecord (3.0.4) lib/active_record/callbacks.rb:277:in `create_or_update'
+activerecord (3.0.4) lib/active_record/persistence.rb:39:in `save'
+activerecord (3.0.4) lib/active_record/validations.rb:43:in `save'
+activerecord (3.0.4) lib/active_record/attribute_methods/dirty.rb:21:in `save'
+activerecord (3.0.4) lib/active_record/transactions.rb:240:in `block (2 levels) in save'
+activerecord (3.0.4) lib/active_record/transactions.rb:292:in `block in with_transaction_returning_status'
+activerecord (3.0.4) lib/active_record/connection_adapters/abstract/database_statements.rb:139:in `transaction'
+activerecord (3.0.4) lib/active_record/transactions.rb:207:in `transaction'
+activerecord (3.0.4) lib/active_record/transactions.rb:290:in `with_transaction_returning_status'
+activerecord (3.0.4) lib/active_record/transactions.rb:240:in `block in save'
+activerecord (3.0.4) lib/active_record/transactions.rb:251:in `rollback_active_record_state!'
+activerecord (3.0.4) lib/active_record/transactions.rb:239:in `save'
+app/controllers/images_controller.rb:14:in `block in create'
+actionpack (3.0.4) lib/action_controller/metal/mime_responds.rb:264:in `call'
+actionpack (3.0.4) lib/action_controller/metal/mime_responds.rb:264:in `retrieve_response_from_mimes'
+actionpack (3.0.4) lib/action_controller/metal/mime_responds.rb:191:in `respond_to'
+app/controllers/images_controller.rb:13:in `create'
+actionpack (3.0.4) lib/action_controller/metal/implicit_render.rb:4:in `send_action'
+actionpack (3.0.4) lib/abstract_controller/base.rb:150:in `process_action'
+actionpack (3.0.4) lib/action_controller/metal/rendering.rb:11:in `process_action'
+actionpack (3.0.4) lib/abstract_controller/callbacks.rb:18:in `block in process_action'
+activesupport (3.0.4) lib/active_support/callbacks.rb:435:in `_run__3541552298119609480__process_action__3359736835116358094__callbacks'
+activesupport (3.0.4) lib/active_support/callbacks.rb:409:in `_run_process_action_callbacks'
+activesupport (3.0.4) lib/active_support/callbacks.rb:93:in `run_callbacks'
+actionpack (3.0.4) lib/abstract_controller/callbacks.rb:17:in `process_action'
+actionpack (3.0.4) lib/action_controller/metal/instrumentation.rb:30:in `block in process_action'
+activesupport (3.0.4) lib/active_support/notifications.rb:52:in `block in instrument'
+activesupport (3.0.4) lib/active_support/notifications/instrumenter.rb:21:in `instrument'
+activesupport (3.0.4) lib/active_support/notifications.rb:52:in `instrument'
+actionpack (3.0.4) lib/action_controller/metal/instrumentation.rb:29:in `process_action'
+actionpack (3.0.4) lib/action_controller/metal/rescue.rb:17:in `process_action'
+actionpack (3.0.4) lib/abstract_controller/base.rb:119:in `process'
+actionpack (3.0.4) lib/abstract_controller/rendering.rb:41:in `process'
+actionpack (3.0.4) lib/action_controller/metal.rb:138:in `dispatch'
+actionpack (3.0.4) lib/action_controller/metal/rack_delegation.rb:14:in `dispatch'
+actionpack (3.0.4) lib/action_controller/metal.rb:178:in `block in action'
+actionpack (3.0.4) lib/action_dispatch/routing/route_set.rb:62:in `call'
+actionpack (3.0.4) lib/action_dispatch/routing/route_set.rb:62:in `dispatch'
+actionpack (3.0.4) lib/action_dispatch/routing/route_set.rb:27:in `call'
+rack-mount (0.6.13) lib/rack/mount/route_set.rb:148:in `block in call'
+rack-mount (0.6.13) lib/rack/mount/code_generation.rb:93:in `block in recognize'
+rack-mount (0.6.13) lib/rack/mount/code_generation.rb:75:in `optimized_each'
+rack-mount (0.6.13) lib/rack/mount/code_generation.rb:92:in `recognize'
+rack-mount (0.6.13) lib/rack/mount/route_set.rb:139:in `call'
+actionpack (3.0.4) lib/action_dispatch/routing/route_set.rb:492:in `call'
+actionpack (3.0.4) lib/action_dispatch/middleware/best_standards_support.rb:17:in `call'
+actionpack (3.0.4) lib/action_dispatch/middleware/head.rb:14:in `call'
+rack (1.2.1) lib/rack/methodoverride.rb:24:in `call'
+actionpack (3.0.4) lib/action_dispatch/middleware/params_parser.rb:21:in `call'
+actionpack (3.0.4) lib/action_dispatch/middleware/flash.rb:182:in `call'
+actionpack (3.0.4) lib/action_dispatch/middleware/session/abstract_store.rb:149:in `call'
+actionpack (3.0.4) lib/action_dispatch/middleware/cookies.rb:302:in `call'
+activerecord (3.0.4) lib/active_record/query_cache.rb:32:in `block in call'
+activerecord (3.0.4) lib/active_record/connection_adapters/abstract/query_cache.rb:28:in `cache'
+activerecord (3.0.4) lib/active_record/query_cache.rb:12:in `cache'
+activerecord (3.0.4) lib/active_record/query_cache.rb:31:in `call'
+activerecord (3.0.4) lib/active_record/connection_adapters/abstract/connection_pool.rb:354:in `call'
+actionpack (3.0.4) lib/action_dispatch/middleware/callbacks.rb:46:in `block in call'
+activesupport (3.0.4) lib/active_support/callbacks.rb:415:in `_run_call_callbacks'
+actionpack (3.0.4) lib/action_dispatch/middleware/callbacks.rb:44:in `call'
+rack (1.2.1) lib/rack/sendfile.rb:107:in `call'
+actionpack (3.0.4) lib/action_dispatch/middleware/remote_ip.rb:48:in `call'
+actionpack (3.0.4) lib/action_dispatch/middleware/show_exceptions.rb:47:in `call'
+railties (3.0.4) lib/rails/rack/logger.rb:13:in `call'
+rack (1.2.1) lib/rack/runtime.rb:17:in `call'
+activesupport (3.0.4) lib/active_support/cache/strategy/local_cache.rb:72:in `call'
+rack (1.2.1) lib/rack/lock.rb:11:in `block in call'
+&lt;internal:prelude&gt;:10:in `synchronize'
+rack (1.2.1) lib/rack/lock.rb:11:in `call'
+actionpack (3.0.4) lib/action_dispatch/middleware/static.rb:30:in `call'
+railties (3.0.4) lib/rails/application.rb:168:in `call'
+railties (3.0.4) lib/rails/application.rb:77:in `method_missing'
+railties (3.0.4) lib/rails/rack/log_tailer.rb:14:in `call'
+rack (1.2.1) lib/rack/content_length.rb:13:in `call'
+rack (1.2.1) lib/rack/handler/webrick.rb:52:in `service'
+/Users/roms/.rvm/rubies/ruby-1.9.2-p180/lib/ruby/1.9.1/webrick/httpserver.rb:111:in `service'
+/Users/roms/.rvm/rubies/ruby-1.9.2-p180/lib/ruby/1.9.1/webrick/httpserver.rb:70:in `run'
+/Users/roms/.rvm/rubies/ruby-1.9.2-p180/lib/ruby/1.9.1/webrick/server.rb:183:in `block in start_thread'</code></pre>
+    </div>
+</div>
+
+
+
+<h2 style="margin-top: 30px">Request</h2>
+<p><b>Parameters</b>: <pre>{&quot;image&quot;=&gt;{&quot;library_id&quot;=&gt;&quot;29274&quot;,
+ &quot;book_id&quot;=&gt;&quot;12345&quot;,
+ &quot;image_id&quot;=&gt;&quot;img001&quot;},
+ &quot;format&quot;=&gt;&quot;xml&quot;}</pre></p>
+
+<p><a href="#" onclick="document.getElementById('session_dump').style.display='block'; return false;">Show session dump</a></p>
+<div id="session_dump" style="display:none"><pre></pre></div>
+
+<p><a href="#" onclick="document.getElementById('env_dump').style.display='block'; return false;">Show env dump</a></p>
+<div id="env_dump" style="display:none"><pre>CONTENT_LENGTH: &quot;67&quot;
+CONTENT_TYPE: &quot;application/x-www-form-urlencoded&quot;
+GATEWAY_INTERFACE: &quot;CGI/1.1&quot;
+HTTP_ACCEPT: &quot;*/*&quot;
+HTTP_HOST: &quot;localhost:3000&quot;
+HTTP_USER_AGENT: &quot;curl/7.21.1 (x86_64-apple-darwin10.4.0) libcurl/7.21.1 OpenSSL/1.0.0a zlib/1.2.5 libidn/1.19&quot;
+HTTP_VERSION: &quot;HTTP/1.1&quot;
+PATH_INFO: &quot;/images.xml&quot;
+QUERY_STRING: &quot;&quot;
+REMOTE_ADDR: &quot;127.0.0.1&quot;
+REMOTE_HOST: &quot;qa.db&quot;
+REQUEST_METHOD: &quot;POST&quot;
+REQUEST_PATH: &quot;/&quot;
+REQUEST_URI: &quot;http://localhost:3000/images.xml&quot;
+SCRIPT_NAME: &quot;&quot;
+SERVER_NAME: &quot;localhost&quot;
+SERVER_PORT: &quot;3000&quot;
+SERVER_PROTOCOL: &quot;HTTP/1.1&quot;
+SERVER_SOFTWARE: &quot;WEBrick/1.3.1 (Ruby/1.9.2/2011-02-18)&quot;
+action_controller.instance: #&lt;ImagesController:0x000001008f0c40 @action_has_layout=true, @view_context_class=nil, @_headers={&quot;Content-Type&quot;=&gt;&quot;text/html&quot;}, @_status=200, @_response=#&lt;ActionDispatch::Response:0x000001008f03d0 @writer=#&lt;Proc:0x000001008f0178@/Users/roms/.rvm/gems/ruby-1.9.2-p180@rails3/gems/actionpack-3.0.4/lib/action_dispatch/http/response.rb:43 (lambda)&gt;, @block=nil, @length=0, @header={}, @status=200, @body=[], @cookie=[], @sending_file=false, @blank=false, @cache_control={}, @etag=nil, @request=#&lt;ActionDispatch::Request:0x000001008f03f8 @env={&quot;CONTENT_LENGTH&quot;=&gt;&quot;67&quot;, &quot;CONTENT_TYPE&quot;=&gt;&quot;application/x-www-form-urlencoded&quot;, &quot;GATEWAY_INTERFACE&quot;=&gt;&quot;CGI/1.1&quot;, &quot;PATH_INFO&quot;=&gt;&quot;/images.xml&quot;, &quot;QUERY_STRING&quot;=&gt;&quot;&quot;, &quot;REMOTE_ADDR&quot;=&gt;&quot;127.0.0.1&quot;, &quot;REMOTE_HOST&quot;=&gt;&quot;qa.db&quot;, &quot;REQUEST_METHOD&quot;=&gt;&quot;POST&quot;, &quot;REQUEST_URI&quot;=&gt;&quot;http://localhost:3000/images.xml&quot;, &quot;SCRIPT_NAME&quot;=&gt;&quot;&quot;, &quot;SERVER_NAME&quot;=&gt;&quot;localhost&quot;, &quot;SERVER_PORT&quot;=&gt;&quot;3000&quot;, &quot;SERVER_PROTOCOL&quot;=&gt;&quot;HTTP/1.1&quot;, &quot;SERVER_SOFTWARE&quot;=&gt;&quot;WEBrick/1.3.1 (Ruby/1.9.2/2011-02-18)&quot;, &quot;HTTP_USER_AGENT&quot;=&gt;&quot;curl/7.21.1 (x86_64-apple-darwin10.4.0) libcurl/7.21.1 OpenSSL/1.0.0a zlib/1.2.5 libidn/1.19&quot;, &quot;HTTP_HOST&quot;=&gt;&quot;localhost:3000&quot;, &quot;HTTP_ACCEPT&quot;=&gt;&quot;*/*&quot;, &quot;rack.version&quot;=&gt;[1, 1], &quot;rack.input&quot;=&gt;#&lt;StringIO:0x00000100b4dbc8&gt;, &quot;rack.errors&quot;=&gt;#&lt;IO:&lt;STDERR&gt;&gt;, &quot;rack.multithread&quot;=&gt;false, &quot;rack.multiprocess&quot;=&gt;false, &quot;rack.run_once&quot;=&gt;false, &quot;rack.url_scheme&quot;=&gt;&quot;http&quot;, &quot;HTTP_VERSION&quot;=&gt;&quot;HTTP/1.1&quot;, &quot;REQUEST_PATH&quot;=&gt;&quot;/&quot;, &quot;action_dispatch.parameter_filter&quot;=&gt;[:password], &quot;action_dispatch.secret_token&quot;=&gt;&quot;cd486b2b1f5f278334a0cc13eee3d81f09ffd8935eb339e9b8a3ef75cd68706c2aa2994d923632ee5295e11847ed8a20b1aea1c1a390296aa1e9b03176ee503e&quot;, &quot;action_dispatch.remote_ip&quot;=&gt;127.0.0.1, &quot;rack.session&quot;=&gt;{}, &quot;rack.session.options&quot;=&gt;{:path=&gt;&quot;/&quot;, :domain=&gt;nil, :expire_after=&gt;nil, :secure=&gt;false, :httponly=&gt;true, :id=&gt;nil}, &quot;action_dispatch.cookies&quot;=&gt;{}, &quot;action_dispatch.request.unsigned_session_cookie&quot;=&gt;{&quot;session_id&quot;=&gt;&quot;69f199798c1e446094710792cab76ac0&quot;}, &quot;action_dispatch.request.content_type&quot;=&gt;application/x-www-form-urlencoded, &quot;rack.request.form_input&quot;=&gt;#&lt;StringIO:0x00000100b4dbc8&gt;, &quot;rack.request.form_hash&quot;=&gt;{&quot;image&quot;=&gt;{&quot;library_id&quot;=&gt;&quot;29274&quot;, &quot;book_id&quot;=&gt;&quot;12345&quot;, &quot;image_id&quot;=&gt;&quot;img001&quot;}}, &quot;rack.request.form_vars&quot;=&gt;&quot;image[library_id]=29274&amp;image[book_id]=12345&amp;image[image_id]=img001&quot;, &quot;action_dispatch.request.path_parameters&quot;=&gt;{:action=&gt;&quot;create&quot;, :controller=&gt;&quot;images&quot;, :format=&gt;&quot;xml&quot;}, &quot;action_controller.instance&quot;=&gt;#&lt;ImagesController:0x000001008f0c40 ...&gt;, &quot;action_dispatch.request.request_parameters&quot;=&gt;{&quot;image&quot;=&gt;{&quot;library_id&quot;=&gt;&quot;29274&quot;, &quot;book_id&quot;=&gt;&quot;12345&quot;, &quot;image_id&quot;=&gt;&quot;img001&quot;}}, &quot;rack.request.query_string&quot;=&gt;&quot;&quot;, &quot;rack.request.query_hash&quot;=&gt;{}, &quot;action_dispatch.request.query_parameters&quot;=&gt;{}, &quot;action_dispatch.request.parameters&quot;=&gt;{&quot;image&quot;=&gt;{&quot;library_id&quot;=&gt;&quot;29274&quot;, &quot;book_id&quot;=&gt;&quot;12345&quot;, &quot;image_id&quot;=&gt;&quot;img001&quot;}, &quot;action&quot;=&gt;&quot;create&quot;, &quot;controller&quot;=&gt;&quot;images&quot;, &quot;format&quot;=&gt;&quot;xml&quot;}, &quot;action_dispatch.request.formats&quot;=&gt;[application/xml], &quot;action_dispatch.request.flash_hash&quot;=&gt;nil}, @fullpath=&quot;/images.xml&quot;, @request_method=&quot;POST&quot;, @filtered_parameters={&quot;image&quot;=&gt;{&quot;library_id&quot;=&gt;&quot;29274&quot;, &quot;book_id&quot;=&gt;&quot;12345&quot;, &quot;image_id&quot;=&gt;&quot;img001&quot;}, &quot;action&quot;=&gt;&quot;create&quot;, &quot;controller&quot;=&gt;&quot;images&quot;, &quot;format&quot;=&gt;&quot;xml&quot;}, @method=&quot;POST&quot;&gt;&gt;, @_request=#&lt;ActionDispatch::Request:0x000001008f03f8 @env={&quot;CONTENT_LENGTH&quot;=&gt;&quot;67&quot;, &quot;CONTENT_TYPE&quot;=&gt;&quot;application/x-www-form-urlencoded&quot;, &quot;GATEWAY_INTERFACE&quot;=&gt;&quot;CGI/1.1&quot;, &quot;PATH_INFO&quot;=&gt;&quot;/images.xml&quot;, &quot;QUERY_STRING&quot;=&gt;&quot;&quot;, &quot;REMOTE_ADDR&quot;=&gt;&quot;127.0.0.1&quot;, &quot;REMOTE_HOST&quot;=&gt;&quot;qa.db&quot;, &quot;REQUEST_METHOD&quot;=&gt;&quot;POST&quot;, &quot;REQUEST_URI&quot;=&gt;&quot;http://localhost:3000/images.xml&quot;, &quot;SCRIPT_NAME&quot;=&gt;&quot;&quot;, &quot;SERVER_NAME&quot;=&gt;&quot;localhost&quot;, &quot;SERVER_PORT&quot;=&gt;&quot;3000&quot;, &quot;SERVER_PROTOCOL&quot;=&gt;&quot;HTTP/1.1&quot;, &quot;SERVER_SOFTWARE&quot;=&gt;&quot;WEBrick/1.3.1 (Ruby/1.9.2/2011-02-18)&quot;, &quot;HTTP_USER_AGENT&quot;=&gt;&quot;curl/7.21.1 (x86_64-apple-darwin10.4.0) libcurl/7.21.1 OpenSSL/1.0.0a zlib/1.2.5 libidn/1.19&quot;, &quot;HTTP_HOST&quot;=&gt;&quot;localhost:3000&quot;, &quot;HTTP_ACCEPT&quot;=&gt;&quot;*/*&quot;, &quot;rack.version&quot;=&gt;[1, 1], &quot;rack.input&quot;=&gt;#&lt;StringIO:0x00000100b4dbc8&gt;, &quot;rack.errors&quot;=&gt;#&lt;IO:&lt;STDERR&gt;&gt;, &quot;rack.multithread&quot;=&gt;false, &quot;rack.multiprocess&quot;=&gt;false, &quot;rack.run_once&quot;=&gt;false, &quot;rack.url_scheme&quot;=&gt;&quot;http&quot;, &quot;HTTP_VERSION&quot;=&gt;&quot;HTTP/1.1&quot;, &quot;REQUEST_PATH&quot;=&gt;&quot;/&quot;, &quot;action_dispatch.parameter_filter&quot;=&gt;[:password], &quot;action_dispatch.secret_token&quot;=&gt;&quot;cd486b2b1f5f278334a0cc13eee3d81f09ffd8935eb339e9b8a3ef75cd68706c2aa2994d923632ee5295e11847ed8a20b1aea1c1a390296aa1e9b03176ee503e&quot;, &quot;action_dispatch.remote_ip&quot;=&gt;127.0.0.1, &quot;rack.session&quot;=&gt;{}, &quot;rack.session.options&quot;=&gt;{:path=&gt;&quot;/&quot;, :domain=&gt;nil, :expire_after=&gt;nil, :secure=&gt;false, :httponly=&gt;true, :id=&gt;nil}, &quot;action_dispatch.cookies&quot;=&gt;{}, &quot;action_dispatch.request.unsigned_session_cookie&quot;=&gt;{&quot;session_id&quot;=&gt;&quot;69f199798c1e446094710792cab76ac0&quot;}, &quot;action_dispatch.request.content_type&quot;=&gt;application/x-www-form-urlencoded, &quot;rack.request.form_input&quot;=&gt;#&lt;StringIO:0x00000100b4dbc8&gt;, &quot;rack.request.form_hash&quot;=&gt;{&quot;image&quot;=&gt;{&quot;library_id&quot;=&gt;&quot;29274&quot;, &quot;book_id&quot;=&gt;&quot;12345&quot;, &quot;image_id&quot;=&gt;&quot;img001&quot;}}, &quot;rack.request.form_vars&quot;=&gt;&quot;image[library_id]=29274&amp;image[book_id]=12345&amp;image[image_id]=img001&quot;, &quot;action_dispatch.request.path_parameters&quot;=&gt;{:action=&gt;&quot;create&quot;, :controller=&gt;&quot;images&quot;, :format=&gt;&quot;xml&quot;}, &quot;action_controller.instance&quot;=&gt;#&lt;ImagesController:0x000001008f0c40 ...&gt;, &quot;action_dispatch.request.request_parameters&quot;=&gt;{&quot;image&quot;=&gt;{&quot;library_id&quot;=&gt;&quot;29274&quot;, &quot;book_id&quot;=&gt;&quot;12345&quot;, &quot;image_id&quot;=&gt;&quot;img001&quot;}}, &quot;rack.request.query_string&quot;=&gt;&quot;&quot;, &quot;rack.request.query_hash&quot;=&gt;{}, &quot;action_dispatch.request.query_parameters&quot;=&gt;{}, &quot;action_dispatch.request.parameters&quot;=&gt;{&quot;image&quot;=&gt;{&quot;library_id&quot;=&gt;&quot;29274&quot;, &quot;book_id&quot;=&gt;&quot;12345&quot;, &quot;image_id&quot;=&gt;&quot;img001&quot;}, &quot;action&quot;=&gt;&quot;create&quot;, &quot;controller&quot;=&gt;&quot;images&quot;, &quot;format&quot;=&gt;&quot;xml&quot;}, &quot;action_dispatch.request.formats&quot;=&gt;[application/xml], &quot;action_dispatch.request.flash_hash&quot;=&gt;nil}, @fullpath=&quot;/images.xml&quot;, @request_method=&quot;POST&quot;, @filtered_parameters={&quot;image&quot;=&gt;{&quot;library_id&quot;=&gt;&quot;29274&quot;, &quot;book_id&quot;=&gt;&quot;12345&quot;, &quot;image_id&quot;=&gt;&quot;img001&quot;}, &quot;action&quot;=&gt;&quot;create&quot;, &quot;controller&quot;=&gt;&quot;images&quot;, &quot;format&quot;=&gt;&quot;xml&quot;}, @method=&quot;POST&quot;&gt;, @_env={&quot;CONTENT_LENGTH&quot;=&gt;&quot;67&quot;, &quot;CONTENT_TYPE&quot;=&gt;&quot;application/x-www-form-urlencoded&quot;, &quot;GATEWAY_INTERFACE&quot;=&gt;&quot;CGI/1.1&quot;, &quot;PATH_INFO&quot;=&gt;&quot;/images.xml&quot;, &quot;QUERY_STRING&quot;=&gt;&quot;&quot;, &quot;REMOTE_ADDR&quot;=&gt;&quot;127.0.0.1&quot;, &quot;REMOTE_HOST&quot;=&gt;&quot;qa.db&quot;, &quot;REQUEST_METHOD&quot;=&gt;&quot;POST&quot;, &quot;REQUEST_URI&quot;=&gt;&quot;http://localhost:3000/images.xml&quot;, &quot;SCRIPT_NAME&quot;=&gt;&quot;&quot;, &quot;SERVER_NAME&quot;=&gt;&quot;localhost&quot;, &quot;SERVER_PORT&quot;=&gt;&quot;3000&quot;, &quot;SERVER_PROTOCOL&quot;=&gt;&quot;HTTP/1.1&quot;, &quot;SERVER_SOFTWARE&quot;=&gt;&quot;WEBrick/1.3.1 (Ruby/1.9.2/2011-02-18)&quot;, &quot;HTTP_USER_AGENT&quot;=&gt;&quot;curl/7.21.1 (x86_64-apple-darwin10.4.0) libcurl/7.21.1 OpenSSL/1.0.0a zlib/1.2.5 libidn/1.19&quot;, &quot;HTTP_HOST&quot;=&gt;&quot;localhost:3000&quot;, &quot;HTTP_ACCEPT&quot;=&gt;&quot;*/*&quot;, &quot;rack.version&quot;=&gt;[1, 1], &quot;rack.input&quot;=&gt;#&lt;StringIO:0x00000100b4dbc8&gt;, &quot;rack.errors&quot;=&gt;#&lt;IO:&lt;STDERR&gt;&gt;, &quot;rack.multithread&quot;=&gt;false, &quot;rack.multiprocess&quot;=&gt;false, &quot;rack.run_once&quot;=&gt;false, &quot;rack.url_scheme&quot;=&gt;&quot;http&quot;, &quot;HTTP_VERSION&quot;=&gt;&quot;HTTP/1.1&quot;, &quot;REQUEST_PATH&quot;=&gt;&quot;/&quot;, &quot;action_dispatch.parameter_filter&quot;=&gt;[:password], &quot;action_dispatch.secret_token&quot;=&gt;&quot;cd486b2b1f5f278334a0cc13eee3d81f09ffd8935eb339e9b8a3ef75cd68706c2aa2994d923632ee5295e11847ed8a20b1aea1c1a390296aa1e9b03176ee503e&quot;, &quot;action_dispatch.remote_ip&quot;=&gt;127.0.0.1, &quot;rack.session&quot;=&gt;{}, &quot;rack.session.options&quot;=&gt;{:path=&gt;&quot;/&quot;, :domain=&gt;nil, :expire_after=&gt;nil, :secure=&gt;false, :httponly=&gt;true, :id=&gt;nil}, &quot;action_dispatch.cookies&quot;=&gt;{}, &quot;action_dispatch.request.unsigned_session_cookie&quot;=&gt;{&quot;session_id&quot;=&gt;&quot;69f199798c1e446094710792cab76ac0&quot;}, &quot;action_dispatch.request.content_type&quot;=&gt;application/x-www-form-urlencoded, &quot;rack.request.form_input&quot;=&gt;#&lt;StringIO:0x00000100b4dbc8&gt;, &quot;rack.request.form_hash&quot;=&gt;{&quot;image&quot;=&gt;{&quot;library_id&quot;=&gt;&quot;29274&quot;, &quot;book_id&quot;=&gt;&quot;12345&quot;, &quot;image_id&quot;=&gt;&quot;img001&quot;}}, &quot;rack.request.form_vars&quot;=&gt;&quot;image[library_id]=29274&amp;image[book_id]=12345&amp;image[image_id]=img001&quot;, &quot;action_dispatch.request.path_parameters&quot;=&gt;{:action=&gt;&quot;create&quot;, :controller=&gt;&quot;images&quot;, :format=&gt;&quot;xml&quot;}, &quot;action_controller.instance&quot;=&gt;#&lt;ImagesController:0x000001008f0c40 ...&gt;, &quot;action_dispatch.request.request_parameters&quot;=&gt;{&quot;image&quot;=&gt;{&quot;library_id&quot;=&gt;&quot;29274&quot;, &quot;book_id&quot;=&gt;&quot;12345&quot;, &quot;image_id&quot;=&gt;&quot;img001&quot;}}, &quot;rack.request.query_string&quot;=&gt;&quot;&quot;, &quot;rack.request.query_hash&quot;=&gt;{}, &quot;action_dispatch.request.query_parameters&quot;=&gt;{}, &quot;action_dispatch.request.parameters&quot;=&gt;{&quot;image&quot;=&gt;{&quot;library_id&quot;=&gt;&quot;29274&quot;, &quot;book_id&quot;=&gt;&quot;12345&quot;, &quot;image_id&quot;=&gt;&quot;img001&quot;}, &quot;action&quot;=&gt;&quot;create&quot;, &quot;controller&quot;=&gt;&quot;images&quot;, &quot;format&quot;=&gt;&quot;xml&quot;}, &quot;action_dispatch.request.formats&quot;=&gt;[application/xml], &quot;action_dispatch.request.flash_hash&quot;=&gt;nil}, @lookup_context=#&lt;ActionView::LookupContext:0x000001008ed720 @details_key=nil, @details={:handlers=&gt;[:erb, :rjs, :builder, :rhtml, :rxml], :formats=&gt;[:xml], :locale=&gt;[:en, :en]}, @skip_default_locale=false, @frozen_formats=false, @view_paths=[/Users/roms/DiagramRailsApp/app/views]&gt;, @_action_name=&quot;create&quot;, @_response_body=nil, @_config={}, @_params={&quot;image&quot;=&gt;{&quot;library_id&quot;=&gt;&quot;29274&quot;, &quot;book_id&quot;=&gt;&quot;12345&quot;, &quot;image_id&quot;=&gt;&quot;img001&quot;}, &quot;action&quot;=&gt;&quot;create&quot;, &quot;controller&quot;=&gt;&quot;images&quot;, &quot;format&quot;=&gt;&quot;xml&quot;}, @library=#&lt;Library id: 29274, name: &quot;wahoo&quot;, created_at: &quot;2011-03-07 17:11:31&quot;, updated_at: &quot;2011-03-07 17:11:31&quot;&gt;, @image=#&lt;Image id: 433808784, book_id: 12345, image_id: &quot;img001&quot;, isbn: nil, page_number: nil, sequence_number: nil, caption: nil, url: nil, library_id: 29274, created_at: &quot;2011-03-08 00:45:27&quot;, updated_at: &quot;2011-03-08 00:45:27&quot;&gt;&gt;
+action_dispatch.cookies: {}
+action_dispatch.parameter_filter: [:password]
+action_dispatch.remote_ip: 127.0.0.1
+action_dispatch.request.content_type: application/x-www-form-urlencoded
+action_dispatch.request.flash_hash: nil
+action_dispatch.request.formats: [application/xml]
+action_dispatch.request.parameters: {&quot;image&quot;=&gt;{&quot;library_id&quot;=&gt;&quot;29274&quot;, &quot;book_id&quot;=&gt;&quot;12345&quot;, &quot;image_id&quot;=&gt;&quot;img001&quot;}, &quot;action&quot;=&gt;&quot;create&quot;, &quot;controller&quot;=&gt;&quot;images&quot;, &quot;format&quot;=&gt;&quot;xml&quot;}
+action_dispatch.request.path_parameters: {:action=&gt;&quot;create&quot;, :controller=&gt;&quot;images&quot;, :format=&gt;&quot;xml&quot;}
+action_dispatch.request.query_parameters: {}
+action_dispatch.request.request_parameters: {&quot;image&quot;=&gt;{&quot;library_id&quot;=&gt;&quot;29274&quot;, &quot;book_id&quot;=&gt;&quot;12345&quot;, &quot;image_id&quot;=&gt;&quot;img001&quot;}}
+action_dispatch.request.unsigned_session_cookie: {&quot;session_id&quot;=&gt;&quot;69f199798c1e446094710792cab76ac0&quot;}
+action_dispatch.secret_token: &quot;cd486b2b1f5f278334a0cc13eee3d81f09ffd8935eb339e9b8a3ef75cd68706c2aa2994d923632ee5295e11847ed8a20b1aea1c1a390296aa1e9b03176ee503e&quot;
+rack.errors: #&lt;IO:&lt;STDERR&gt;&gt;
+rack.input: #&lt;StringIO:0x00000100b4dbc8&gt;
+rack.multiprocess: false
+rack.multithread: false
+rack.request.form_hash: {&quot;image&quot;=&gt;{&quot;library_id&quot;=&gt;&quot;29274&quot;, &quot;book_id&quot;=&gt;&quot;12345&quot;, &quot;image_id&quot;=&gt;&quot;img001&quot;}}
+rack.request.form_input: #&lt;StringIO:0x00000100b4dbc8&gt;
+rack.request.form_vars: &quot;image[library_id]=29274&amp;image[book_id]=12345&amp;image[image_id]=img001&quot;
+rack.request.query_hash: {}
+rack.request.query_string: &quot;&quot;
+rack.run_once: false
+rack.session: {}
+rack.session.options: {:path=&gt;&quot;/&quot;, :domain=&gt;nil, :expire_after=&gt;nil, :secure=&gt;false, :httponly=&gt;true, :id=&gt;nil}
+rack.url_scheme: &quot;http&quot;
+rack.version: [1, 1]</pre></div>
+
+
+<h2 style="margin-top: 30px">Response</h2>
+<p><b>Headers</b>: <pre>None</pre></p>
+
+
+
+</body>
+</html>
