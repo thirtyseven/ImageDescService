@@ -29,30 +29,16 @@
 </p>
 
 
-<h2>Descriptions</h2>
-<% @image.descriptions.each do |description| %>
-  <p>
-    <b>Submitter:</b>
-    <%= description.submitter %> </br>
-    <b>Description:</b>
-    <%= description.description %>
-  </p>
-<% end %>
-
-<h2>Add a description:</h2>
 <%= form_for([@image, @image.descriptions.build]) do |f| %>
-  <div class="field">
-    <%= f.label :submitter %><br />
-    <%= f.text_field :submitter %>
-  </div>
+
 
   <div class="field">
-    <%= f.label :description %><br />
-    <%= f.text_field :description %>
+    <%= f.text_area :description, :rows=>10, :value=>@last_desc.description %>
+
   </div>
 
   <div class="actions">
-    <%= f.submit %>
+    <%= f.submit :value=>"update description" %>
   </div>
 <% end %>
 

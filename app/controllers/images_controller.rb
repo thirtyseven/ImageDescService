@@ -15,6 +15,7 @@ class ImagesController < ApplicationController
   # GET /images/1.xml
   def show
     @image = Image.find(params[:id])
+    @last_desc = @image.descriptions.last
 
     respond_to do |format|
       format.html # show.html.erb
