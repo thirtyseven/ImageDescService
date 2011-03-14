@@ -1,0 +1,27 @@
+<h1>Listing dynamic_images</h1>
+
+<table>
+  <tr>
+    <th>Uid</th>
+    <th>Title</th>
+    <th>Image location</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @dynamic_images.each do |dynamic_image| %>
+  <tr>
+    <td><%= dynamic_image.uid %></td>
+    <td><%= dynamic_image.title %></td>
+    <td><%= dynamic_image.image_location %></td>
+    <td><%= link_to 'Show', dynamic_image %></td>
+    <td><%= link_to 'Edit', edit_dynamic_image_path(dynamic_image) %></td>
+    <td><%= link_to 'Destroy', dynamic_image, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Dynamic image', new_dynamic_image_path %>

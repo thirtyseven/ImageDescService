@@ -1,0 +1,29 @@
+<%= form_for(@dynamic_image) do |f| %>
+  <% if @dynamic_image.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@dynamic_image.errors.count, "error") %> prohibited this dynamic_image from being saved:</h2>
+
+      <ul>
+      <% @dynamic_image.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :uid %><br />
+    <%= f.text_field :uid %>
+  </div>
+  <div class="field">
+    <%= f.label :title %><br />
+    <%= f.text_field :title %>
+  </div>
+  <div class="field">
+    <%= f.label :image_location %><br />
+    <%= f.text_field :image_location %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

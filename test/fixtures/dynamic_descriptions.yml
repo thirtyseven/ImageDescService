@@ -1,0 +1,15 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  body: MyString
+  is_current: false
+  submitter: MyString
+  date_approved: 2011-03-14 10:32:10
+  dynamic_image: 
+
+two:
+  body: MyString
+  is_current: false
+  submitter: MyString
+  date_approved: 2011-03-14 10:32:10
+  dynamic_image: 

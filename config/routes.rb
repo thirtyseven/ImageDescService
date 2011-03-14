@@ -1,4 +1,10 @@
 DiagramRailsApp::Application.routes.draw do
+  resources :dynamic_descriptions
+
+  resources :dymanic_descriptions
+
+  resources :dynamic_images
+
   resources :descriptions
 
   resources :images do
@@ -8,6 +14,9 @@ DiagramRailsApp::Application.routes.draw do
   resources :libraries
 
   get "home/index"
+
+  match 'imageDesc' => "dynamic_images#show"
+  # match 'imageDesc/uid/:uid => 'dynamic_image#show'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

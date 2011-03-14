@@ -1,0 +1,31 @@
+<h1>Listing dynamic_descriptions</h1>
+
+<table>
+  <tr>
+    <th>Body</th>
+    <th>Is current</th>
+    <th>Submitter</th>
+    <th>Date approved</th>
+    <th>Dynamic image</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @dynamic_descriptions.each do |dynamic_description| %>
+  <tr>
+    <td><%= dynamic_description.body %></td>
+    <td><%= dynamic_description.is_current %></td>
+    <td><%= dynamic_description.submitter %></td>
+    <td><%= dynamic_description.date_approved %></td>
+    <td><%= dynamic_description.dynamic_image %></td>
+    <td><%= link_to 'Show', dynamic_description %></td>
+    <td><%= link_to 'Edit', edit_dynamic_description_path(dynamic_description) %></td>
+    <td><%= link_to 'Destroy', dynamic_description, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Dynamic description', new_dynamic_description_path %>
