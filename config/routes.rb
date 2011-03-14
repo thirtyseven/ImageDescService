@@ -16,6 +16,7 @@ DiagramRailsApp::Application.routes.draw do
   get "home/index"
 
   match 'imageDesc' => "dynamic_images#show"
+  match 'createDesc' => "dynamic_descriptions#create"
   # match 'imageDesc/uid/:uid => 'dynamic_image#show'
 
   # The priority is based upon order of creation:

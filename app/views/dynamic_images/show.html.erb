@@ -1,20 +1,6 @@
 <p id="notice"><%= notice %></p>
 
 <p>
-  <b>Uid:</b>
-  <%= @dynamic_image.uid %>
+  <b>Description:</b>
+  <%= @last_desc.body %>
 </p>
-
-<p>
-  <b>Title:</b>
-  <%= @dynamic_image.title %>
-</p>
-
-<p>
-  <b>Image location:</b>
-  <%= @dynamic_image.image_location %>
-</p>
-
-
-<%= link_to 'Edit', edit_dynamic_image_path(@dynamic_image) %> |
-<%= link_to 'Back', dynamic_images_path %>

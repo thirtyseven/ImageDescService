@@ -13,10 +13,9 @@ class DynamicImagesController < ApplicationController
   # GET /dynamic_images/1
   # GET /dynamic_images/1.xml
   def show
-#    @dynamic_image = DynamicImage.find(params[:id])
-    logger.warn "hello"
-    logger.warn :uid
+
     @dynamic_image = DynamicImage.where("uid = ? AND image_location = ?", params[:uid], params[:image_location]).first
+    @last_desc = @dynamic_image.dynamic_descriptions.last
 
     respond_to do |format|
       format.html # show.html.erb

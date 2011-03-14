@@ -42,7 +42,7 @@ class DynamicDescriptionsController < ApplicationController
   def create
     @dynamic_image = DynamicImage.where("uid = ? AND image_location = ?", params[:uid], params[:image_location]).first
     if(@dynamic_image.nil?)
-      @dynamic_image = DynamicImage.new(:uid => params[:uid], :image_location => params[:image_location])
+      @dynamic_image = DynamicImage.new(:uid => params[:uid], :image_location => params[:image_location], :title => params[:title])
       @dynamic_image.save
     end
     @dynamic_description = @dynamic_image.dynamic_descriptions.create(params[:dynamic_description])
