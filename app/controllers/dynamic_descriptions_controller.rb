@@ -63,6 +63,8 @@ class DynamicDescriptionsController < ApplicationController
         format.xml  { render :xml => @dynamic_description, :status => :created, :location => @dynamic_description }
         format.json  { render :json => @dynamic_description, :callback => params[:callback], :status => :created, :location => @dynamic_description }
       else
+        @uid = params[:uid]
+        @image_location = params[:image_location]
         format.html { render :action => "new" }
         format.xml  { render :xml => @dynamic_description.errors, :status => :non_authoritative_information }
         format.json  { render :json => @dynamic_description.errors, :callback => params[:callback], :status => :non_authoritative_information }

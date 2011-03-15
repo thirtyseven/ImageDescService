@@ -17,12 +17,10 @@
   </div>
 
   <div class="field">
-    <label for="dynamic_description_uid">Dynamic image uid</label><br />
-    <input id="dynamic_description_uid" name="uid" size="30" type="text" />
+    <input id="dynamic_description_uid" name="uid" type="hidden" value= "<%= @uid%>"/>
   </div>
     <div class="field">
-    <label for="dynamic_description_image_location">Dynamic image location</label><br />
-    <input id="dynamic_description_image_location" name="image_location" size="30" type="text" />
+    <input id="dynamic_description_image_location" name="image_location" type="hidden" value="<%= @image_location%>"/>
   </div>
   <div class="actions">
     <%= f.submit %>
