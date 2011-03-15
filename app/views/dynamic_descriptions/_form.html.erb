@@ -1,7 +1,7 @@
 <%= form_for(@dynamic_description) do |f| %>
   <% if @dynamic_description.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(@dynamic_description.errors.count, "error") %> prohibited this dynamic_description from being saved:</h2>
+      <h2><%= pluralize(@dynamic_description.errors.count, "error") %> prohibited this description from being saved:</h2>
 
       <ul>
       <% @dynamic_description.errors.full_messages.each do |msg| %>
