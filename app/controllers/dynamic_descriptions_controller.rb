@@ -40,39 +40,36 @@ class DynamicDescriptionsController < ApplicationController
   # POST /dynamic_descriptions
   # POST /dynamic_descriptions.xml
   def create
-    @dynamic_image = DynamicImage.where("uid = ? AND image_location = ?", params[:uid], params[:image_location]).first
-    if(@dynamic_image.nil?)
-      @dynamic_image = DynamicImage.new(:uid => params[:uid], :image_location => params[:image_location], :title => params[:title])
-      @dynamic_image.save
+    if params[:uid] && params[:image_location]
+      @dynamic_image = DynamicImage.where("uid = ? AND image_location = ?", params[:uid], params[:image_location]).first
+      if(@dynamic_image.nil?)
+        @dynamic_image = DynamicImage.new(:uid => params[:uid], :image_location => params[:image_location], :title => params[:title])
+        @dynamic_image.save
+      end
+      @dynamic_description = @dynamic_image.dynamic_descriptions.create(params[:dynamic_description])
+    else
+      @dynamic_description = DynamicDescription.new
+      @dynamic_description.body = "missing parameters"
+      @missing_parameters = true
     end
-    @dynamic_description = @dynamic_image.dynamic_descriptions.create(params[:dynamic_description])
 
     respond_to do |format|
-      if @dynamic_description.save
+      if @missing_parameters
+        format.html { render :action => "new" }
+        format.xml  { render :xml => @dynamic_description.body, :status => :non_authoritative_information }
+        format.json  { render :json => @dynamic_description.body, :callback => params[:callback], :status => :non_authoritative_information }
+      elsif @dynamic_description.save
         format.html { redirect_to(@dynamic_description, :notice => 'Dynamic description was successfully created.') }
         format.xml  { render :xml => @dynamic_description, :status => :created, :location => @dynamic_description }
+        format.json  { render :json => @dynamic_description, :callback => params[:callback], :status => :created, :location => @dynamic_description }
       else
         format.html { render :action => "new" }
-        format.xml  { render :xml => @dynamic_description.errors, :status => :unprocessable_entity }
+        format.xml  { render :xml => @dynamic_description.errors, :status => :non_authoritative_information }
+        format.json  { render :json => @dynamic_description.errors, :callback => params[:callback], :status => :non_authoritative_information }
       end
     end
   end
 
-  # PUT /dynamic_descriptions/1
-  # PUT /dynamic_descriptions/1.xml
-  def update
-    @dynamic_description = DynamicDescription.find(params[:id])
-
-    respond_to do |format|
-      if @dynamic_description.update_attributes(params[:dynamic_description])
-        format.html { redirect_to(@dynamic_description, :notice => 'Dynamic description was successfully updated.') }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @dynamic_description.errors, :status => :unprocessable_entity }
-      end
-    end
-  end
 
   # DELETE /dynamic_descriptions/1
   # DELETE /dynamic_descriptions/1.xml

@@ -12,36 +12,32 @@ class DynamicImagesController < ApplicationController
 
   # GET /dynamic_images/1
   # GET /dynamic_images/1.xml
+  # GET /dynamic_images/1.json
   def show
     if params[:uid] && params[:image_location] && !params[:uid].empty?
       @dynamic_image = DynamicImage.where("uid = ? AND image_location = ?", params[:uid], params[:image_location]).first
+      if @dynamic_image
+        @last_desc = @dynamic_image.dynamic_descriptions.last
+      else
+        @last_desc = DynamicDescription.new
+        @last_desc.body = "no description found"
+        @status = :no_content
+      end
     else
       @last_desc = DynamicDescription.new
       @last_desc.body = "missing parameter"
-      @missing_parameter = true
+      @status = :non_authoritative_information
     end
-
-    if @dynamic_image
-      @last_desc = @dynamic_image.dynamic_descriptions.last
-    elsif !@missing_parameter
-      @last_desc = DynamicDescription.new
-      @last_desc.body = "no description found"
-    end
-
 
     respond_to do |format|
       if @dynamic_image
         format.html # show.html.erb
         format.xml  { render :xml => @last_desc }
         format.json { render :json => @last_desc.body, :callback => params[:callback]}
-      elsif @missing_parameter
-        format.html
-        format.xml { render :xml => @last_desc, :status => :non_authoritative_information}
-        format.json { render :json => @last_desc.body, :status => :non_authoritative_information}
       else
         format.html
-        format.xml { render :xml => @last_desc, :status => :no_content}
-        format.json { render :json => @last_desc.body, :status => :no_content}
+        format.xml { render :xml => @last_desc, :status => @status}
+        format.json { render :json => @last_desc.body, :callback => params[:callback], :status => @status}
       end
     end
   end
