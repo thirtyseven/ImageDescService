@@ -1,15 +1,15 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
 one:
-  body: MyString
+  body: a dragon
   is_current: false
   submitter: MyString
   date_approved: 2011-03-14 10:32:10
-  dynamic_image: 
+  dynamic_image_id: 1
 
 two:
-  body: MyString
+  body: tenemant building
   is_current: false
   submitter: MyString
   date_approved: 2011-03-14 10:32:10
-  dynamic_image: 
+  dynamic_image_id: 2

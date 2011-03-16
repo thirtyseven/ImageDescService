@@ -18,25 +18,20 @@ class DynamicDescriptionsControllerTest < ActionController::TestCase
 
   test "should create dynamic_description" do
     assert_difference('DynamicDescription.count') do
-      post :create, :dynamic_description => @dynamic_description.attributes
+      post :create, :dynamic_description => @dynamic_description.attributes, :uid => 'book01', :image_location => 'img03.jpg'
     end
 
     assert_redirected_to dynamic_description_path(assigns(:dynamic_description))
   end
 
-  test "should show dynamic_description" do
-    get :show, :id => @dynamic_description.to_param
-    assert_response :success
+  test "missing parameters on json create" do
+    post :create, :dynamic_description => @dynamic_description.attributes, :format => 'json'
+    assert_response :non_authoritative_information
   end
 
   test "should get edit" do
     get :edit, :id => @dynamic_description.to_param
     assert_response :success
-  end
-
-  test "should update dynamic_description" do
-    put :update, :id => @dynamic_description.to_param, :dynamic_description => @dynamic_description.attributes
-    assert_redirected_to dynamic_description_path(assigns(:dynamic_description))
   end
 
   test "should destroy dynamic_description" do

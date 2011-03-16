@@ -1,11 +1,13 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
 one:
-  uid: MyString
-  title: MyString
-  image_location: MyString
+  id: 1
+  uid: book01
+  title: The Hobbit
+  image_location: img03.jpg
 
 two:
-  uid: MyString
-  title: MyString
-  image_location: MyString
+  id: 2
+  uid: book02
+  title: Crime and Punishment
+  image_location: img001.jpg

@@ -33,11 +33,11 @@ class DynamicImagesController < ApplicationController
       if @dynamic_image
         format.html # show.html.erb
         format.xml  { render :xml => @last_desc }
-        format.json { render :json => @last_desc.body, :callback => params[:callback]}
+        format.json { render :json => @last_desc, :callback => params[:callback]}
       else
         format.html
         format.xml { render :xml => @last_desc, :status => @status}
-        format.json { render :json => @last_desc.body, :callback => params[:callback], :status => @status}
+        format.json { render :json => @last_desc, :callback => params[:callback], :status => @status}
       end
     end
   end
@@ -74,31 +74,4 @@ class DynamicImagesController < ApplicationController
     end
   end
 
-  # PUT /dynamic_images/1
-  # PUT /dynamic_images/1.xml
-  def update
-    @dynamic_image = DynamicImage.find(params[:id])
-
-    respond_to do |format|
-      if @dynamic_image.update_attributes(params[:dynamic_image])
-        format.html { redirect_to(@dynamic_image, :notice => 'Dynamic image was successfully updated.') }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @dynamic_image.errors, :status => :unprocessable_entity }
-      end
-    end
-  end
-
-  # DELETE /dynamic_images/1
-  # DELETE /dynamic_images/1.xml
-  def destroy
-    @dynamic_image = DynamicImage.find(params[:id])
-    @dynamic_image.destroy
-
-    respond_to do |format|
-      format.html { redirect_to(dynamic_images_url) }
-      format.xml  { head :ok }
-    end
-  end
 end

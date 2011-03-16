@@ -4,4 +4,9 @@ class DynamicDescription < ActiveRecord::Base
   validates :dynamic_image_id, :presence => true
 
   belongs_to :dynamic_image
+
+  def as_json(options={})
+    { :body => body # just use the attribute when no helper is needed
+    }
+  end
 end
