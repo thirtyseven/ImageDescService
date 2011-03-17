@@ -15,7 +15,7 @@ DiagramRailsApp::Application.routes.draw do
 
   # match 'imageDesc' => "dynamic_images#show"
   match "imageDesc", :to => "dynamic_images#show", :via => "get"
-  match "imageDesc/uid/:uid/image_location/:image_location", :to => "dynamic_images#show", :via => "get"
+  # match "imageDesc/uid/:uid/image_location/:image_location", :to => "dynamic_images#show", :via => "get"
   match "imageDesc", :to => "dynamic_descriptions#create", :via => "post"
 
   # match 'imageDesc/uid/:uid => 'dynamic_image#show'
