@@ -56,8 +56,8 @@ class DynamicDescriptionsController < ApplicationController
     respond_to do |format|
       if @missing_parameters
         format.html { render :action => "new" }
-        format.xml  { render :xml => @dynamic_description.body, :status => :non_authoritative_information }
-        format.json  { render :json => @dynamic_description.body, :callback => params[:callback], :status => :non_authoritative_information }
+        format.xml  { render :xml => @dynamic_description, :status => :non_authoritative_information }
+        format.json  { render :json => @dynamic_description, :callback => params[:callback], :status => :non_authoritative_information }
       elsif @dynamic_description.save
         format.html { redirect_to(@dynamic_description, :notice => 'Dynamic description was successfully created.') }
         format.xml  { render :xml => @dynamic_description, :status => :created, :location => @dynamic_description }
