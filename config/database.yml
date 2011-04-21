@@ -1,3 +1,13 @@
+# NOTE: This trick allows developers to use a different 
+# mysql socket without altering the default configuration
+# To override, create dbsocket.yml containing one line, 
+# which is just the socket filename
+# http://blog.lathi.net/articles/2006/03/02/config-database-yml-goodness-for-teams
+# http://yanpritzker.com/2006/08/29/encrypted-db-passwords-for-rails-with-databaseyml-and-erb/
+<% socket = "/tmp/mysql.sock" %>
+<% file = File.join(RAILS_ROOT, "config", "dbsocket.txt")
+    socket = IO.read(file).strip if File.exist?(file) %>
+    
 # SQLite version 3.x
 #   gem install sqlite3
 development:
@@ -11,7 +21,7 @@ development:
   pool: 5
   username: diagram
   password:
-  socket: /tmp/mysql.sock
+  socket: <%= socket %>
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
