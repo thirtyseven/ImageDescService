@@ -4,3 +4,4 @@ log/*.log
 .idea/*
 DiagramRailsApp.iml
 tmp/
+.project
