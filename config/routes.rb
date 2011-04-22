@@ -10,6 +10,9 @@ DiagramRailsApp::Application.routes.draw do
   end
 
   resources :libraries
+  
+  match "update_descriptions_in_book/upload" => "update_descriptions_in_book#upload", :via => "post"
+  match "update_descriptions_in_book" => "update_descriptions_in_book#index", :via => "get"
 
   get "home/index"
 

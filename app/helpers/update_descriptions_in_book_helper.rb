@@ -1,0 +1,2 @@
+module UpdateDescriptionsInBookHelper
+end
