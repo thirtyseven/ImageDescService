@@ -11,7 +11,12 @@ class UpdateDescriptionsInBookController < ApplicationController
     end
     
     file = File.new( book.path )
-    doc = REXML::Document.new file
+    begin
+      doc = REXML::Document.new file
+    rescue REXML::ParseException => e
+      redirect_to :back, :alert => "Uploaded file must be a Daisy book XML content file"
+      return
+    end
     
     xpath_uid = "//meta[@name='dtb:uid']/@content"
     book_uid = REXML::XPath.first(doc, xpath_uid).to_s
