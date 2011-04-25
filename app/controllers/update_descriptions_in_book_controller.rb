@@ -5,6 +5,11 @@ class UpdateDescriptionsInBookController < ApplicationController
     result = []
     
     book = params[:book]
+    if !book
+      redirect_to :back, :alert => "Must specify a book file to process"
+      return
+    end
+    
     file = File.new( book.path )
     doc = REXML::Document.new file
     
