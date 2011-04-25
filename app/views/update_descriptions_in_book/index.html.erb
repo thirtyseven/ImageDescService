@@ -5,7 +5,7 @@ If the book has already had image descriptions added,
 this will update them to the latest available versions of the descriptions.
 </p>
 
-<%= form_tag("update_descriptions_in_book/upload", {:multipart => true}) do %>
+<%= form_tag("/update_descriptions_in_book/upload", {:multipart => true}) do %>
 <p><label for="upload_file">Select Book File</label> : 
 <%= file_field_tag 'book' %></p>
 <%= submit_tag "Upload" %>
