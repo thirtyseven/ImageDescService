@@ -33,4 +33,6 @@ group :development, :test do
 #   gem 'webrat'
 	gem 'rspec-rails'
 	gem 'cucumber-rails'
+	gem 'capybara' # seems to be required by cucumber-rails
+	gem 'database_cleaner' # seems to be required by cucumber-rails
 end
