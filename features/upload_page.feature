@@ -8,4 +8,8 @@ Feature: Upload Page
 		When I go to the upload page
 		Then I should see "The file will be returned with all available image descriptions added."
 		
-		
+	Scenario: Hitting upload with no book selected
+		When I go to the upload page
+		And I press "Upload"
+		Then I should be on the upload page
+		And I should see "Must specify a book file to process"
