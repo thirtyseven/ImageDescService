@@ -13,3 +13,10 @@ Feature: Upload Page
 		And I press "Upload"
 		Then I should be on the upload page
 		And I should see "Must specify a book file to process"
+		
+	Scenario: Uploading a non-XML book
+		When I go to the upload page
+		And I attach the file "spec/fixtures/NonXMLFile" to "book"
+		And I press "Upload"
+		Then I should be on the upload page
+		And I should see "Uploaded file must be a valid Daisy book XML content file"
