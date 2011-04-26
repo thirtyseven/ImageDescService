@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?xml-stylesheet type="text/css" href="daisy.css" media="screen"?>
+<?xml-stylesheet type="text/xsl" href="daisyTransform.xsl" media="screen"?>
+<!DOCTYPE dtbook SYSTEM "dtbook-2005-3.dtd">
+<dtbook version='2005-2' xmlns='http://www.daisy.org/z3986/2005/dtbook/'>
+  <head>
+    <meta content='en-us-20100517111839' name='dtb:uid'/>
+    <meta content='Outline of U.S. History' name='dc:Title'/>
+    <meta content='Unknown' name='dc:Creator'/>
+    <meta content='' name='dc:Publisher'/>
+    <meta content='2010-05-17' name='dc:Date' scheme='yyyy-mm-dd'/>
+    <meta content='' name='dc:Format'/>
+    <meta content='' name='dc:Identifier'/>
+
+    <meta content='en' name='dc:Language' scheme='ISO 639'/>
+    <meta content='A US history textbook.' name='dc:Description'/>
+    <meta content='Bookshare' name='dc:Publisher'/>
+  </head>
+  <book id='book_15239038561' xml:space='preserve'>
+    <frontmatter id='frontmatter_000001'>
+      <doctitle id='doctitle_000001'>Outline of U.S. History</doctitle>
+      <docauthor id='docauthor_000001'>Alzono Hamby</docauthor><docauthor id='docauthor_000002'>Mildred Sola Neely</docauthor><docauthor id='docauthor_000003'>George Clack</docauthor>
+    </frontmatter>
+
+    <bodymatter id='bodymatter_000001'>
+      <level1 id='level1_000001'>
+        <p class='MsoNormal' id='p_000001' smilref='Outline_of_U_S__History00001.smil#p_000001'>
+          
+        <img alt='described in caption' id='mkme_0001' src='images/image001.jpg'/></p>
+        <level2 id='level2_000001'>
+          <p id='p_000002' smilref='Outline_of_U_S__History00001.smil#p_000002'>
+            <strong id='strong_000001'>Contents</strong>
+          </p>
+    </bodymatter>
+  </book>
+</dtbook>
+

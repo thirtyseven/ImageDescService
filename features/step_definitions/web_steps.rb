@@ -209,3 +209,15 @@ end
 Then /^show me the page$/ do
   save_and_open_page
 end
+
+Then /^the response should be plain text$/ do
+  page.response_headers['Content-Type'].should == 'text/plain; charset=utf-8'
+end
+
+Then /^the xpath "([^"]*)" should exist$/ do |arg1|
+  page.should have_xpath(arg1)
+end
+
+Then /^the xpath "([^"]*)" should not exist$/ do |arg1|
+  page.should_not have_xpath(arg1)
+end

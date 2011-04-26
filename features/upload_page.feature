@@ -20,3 +20,13 @@ Feature: Upload Page
 		And I press "Upload"
 		Then I should be on the upload page
 		And I should see "Uploaded file must be a valid Daisy book XML content file"
+		
+	Scenario: Uploading a book with no known images
+		When I go to the upload page
+		And I attach the file "spec/fixtures/BookXMLWithImagesWithoutGroups.xml" to "book"
+		And I press "Upload"
+		Then the response should be plain text
+		And the xpath "//dtbook" should exist
+		And the xpath "//img" should exist
+		And the xpath "//prodnote" should not exist
+		

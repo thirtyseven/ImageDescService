@@ -17,7 +17,7 @@ class UpdateDescriptionsInBookController < ApplicationController
       return
     end
     
-    render :text => xml
+    render :text => xml, :content_type => 'text/plain'
   end
   
 private
