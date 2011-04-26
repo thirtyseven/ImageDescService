@@ -32,4 +32,5 @@ gem 'nokogiri'
 group :development, :test do
 #   gem 'webrat'
 	gem 'rspec'
+	gem 'cucumber'
 end
