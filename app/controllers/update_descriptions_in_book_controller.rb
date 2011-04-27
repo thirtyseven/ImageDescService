@@ -12,13 +12,12 @@ class UpdateDescriptionsInBookController < ApplicationController
     begin
       xml = get_contents_with_updated_descriptions(file)
     rescue Exception => e
-      $stderr.puts(e.message)
-      $stderr.puts(e.backtrace)
+      # TODO: Need to log the exception here
       redirect_to :back, :alert => "Uploaded file must be a valid Daisy book XML content file"
       return
     end
     
-    render :text => xml
+    render :text => xml, :content_type => 'text/plain'
   end
   
 private
