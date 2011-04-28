@@ -25,7 +25,8 @@ Feature: Upload Page
 		When I go to the upload page
 		And I attach the file "spec/fixtures/BookXMLWithImagesWithoutGroups.xml" to "book"
 		And I press "Upload"
-		Then the response should be plain text
+		Then the response should be xml
+		# TODO: Should verify disposition (attachment) and filename
 		And the xpath "//dtbook" should exist
 		And the xpath "//img" should exist
 		And the xpath "//prodnote" should not exist
@@ -40,7 +41,8 @@ Feature: Upload Page
 		And I go to the upload page
 		And I attach the file "spec/fixtures/BookXMLWithImagesWithoutGroups.xml" to "book"
 		And I press "Upload"
-		Then the response should be plain text
+		Then the response should be xml
+		# TODO: Should verify disposition (attachment) and filename
 		And the xpath "//dtbook" should exist
 		And the xpath "//img" should exist
 		And the xpath "//imggroup" should exist
@@ -53,7 +55,8 @@ Feature: Upload Page
 		And I go to the upload page
 		And I attach the file "spec/fixtures/BookXMLWithImagesWithOurProdnotes.xml" to "book"
 		And I press "Upload"
-		Then the response should be plain text
+		Then the response should be xml
+		# TODO: Should verify disposition (attachment) and filename
 		And the xpath "//imggroup/prodnote[@id='pnid_mkme_0001']" should exist
 		And the xpath "//imggroup/prodnote[@id='pnid_mkme_0001']" should be "Prodnote from database"
 

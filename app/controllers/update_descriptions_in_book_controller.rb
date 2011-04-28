@@ -11,7 +11,6 @@ class UpdateDescriptionsInBookController < ApplicationController
       redirect_to :back, :alert => "Must specify a book file to process"
       return
     end
-    
     file = File.new( book.path )
     begin
       xml = get_contents_with_updated_descriptions(file)
@@ -26,7 +25,7 @@ class UpdateDescriptionsInBookController < ApplicationController
       return
     end
     
-    render :text => xml, :content_type => 'text/plain'
+    send_data xml, :type => 'application/xml; charset=utf-8', :filename => book.original_filename, :disposition => 'attachment' 
   end
   
 private
