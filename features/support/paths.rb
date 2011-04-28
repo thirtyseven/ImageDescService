@@ -19,6 +19,8 @@ module NavigationHelpers
 
     when /the upload page/
       '/update_descriptions_in_book'
+    when /the images list page/
+      '/dynamic_images'
       
     else
       begin

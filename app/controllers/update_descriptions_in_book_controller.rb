@@ -54,10 +54,10 @@ private
       
       image_id = image.attributes['id']
       prodnote.content = dynamic_image.dynamic_descriptions.first.body
-      prodnote.attributes['render'] = 'optional'
-      prodnote.attributes['imgref'] = image_id
-      prodnote.attributes['id'] = "pnid_#{image_id}"
-      prodnote.attributes['showin'] = 'blp'
+      prodnote['render'] = 'optional'
+      prodnote['imgref'] = image_id
+      prodnote['id'] = "pnid_#{image_id}"
+      prodnote['showin'] = 'blp'
     end
     
     return doc.to_xml
