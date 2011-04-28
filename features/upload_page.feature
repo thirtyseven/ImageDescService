@@ -48,6 +48,15 @@ Feature: Upload Page
 		And the attribute "id" of "//prodnote" should be "pnid_mkme_0001" 
 		And the xpath "//prodnote" should be "Prodnote from database"
 
+	Scenario: Uploading a book with prodnotes added by our site earlier
+		When a description for the image "images/image001.jpg" in book "en-us-20100517111839" with title "Outline of U.S. History" is "Prodnote from database"
+		And I go to the upload page
+		And I attach the file "spec/fixtures/BookXMLWithImagesWithOurProdnotes.xml" to "book"
+		And I press "Upload"
+		Then the response should be plain text
+		And the xpath "//imggroup/prodnote[@id='pnid_mkme_0001']" should exist
+		And the xpath "//imggroup/prodnote[@id='pnid_mkme_0001']" should be "Prodnote from database"
+
 	Scenario: Uploading a book with unrecognized prodnotes
 		When a description for the image "images/image001.jpg" in book "en-us-20100517111839" with title "Outline of U.S. History" is "Prodnote from database"
 		And I go to the upload page
@@ -55,3 +64,5 @@ Feature: Upload Page
 		And I press "Upload"
 		Then I should see "Unable to update descriptions"
 		And I should see "contained descriptions from other sources"
+
+		
