@@ -239,6 +239,16 @@ Then /^the xpath "([^"]*)" should not exist$/ do |arg1|
   page.should_not have_xpath(arg1)
 end
 
+Then /^the xpath "([^"]*)" should be "([^"]*)"$/ do |xpath, expected|
+  node = page.find(:xpath, xpath)
+  node.text.should == expected
+end
+
+Then /^the attribute "([^"]*)" of "([^"]*)" should be "([^"]*)"$/ do |attribute, xpath, expected|
+  node = page.find(:xpath, xpath)
+  node[attribute].should == expected
+end
+
 Then /^dump the page to stderr$/ do
   $stderr.puts page.body
 end

@@ -45,4 +45,5 @@ Feature: Upload Page
 		And the xpath "//img" should exist
 		And the xpath "//imggroup" should exist
 		And the xpath "//prodnote" should exist
-		And I should see "Prodnote from database"
+		And the attribute "id" of "//prodnote" should be "pnid_mkme_0001" 
+		And the xpath "//prodnote" should be "Prodnote from database"
