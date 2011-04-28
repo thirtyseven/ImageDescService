@@ -35,7 +35,7 @@ Feature: Upload Page
 		And I go to the images list page
 		Then I should see "images/image001.jpg"
 		
-	Scenario: Uploading a book with known images but no existing prodnotes 2
+	Scenario: Uploading a book with known images but no existing prodnotes
 		When a description for the image "images/image001.jpg" in book "en-us-20100517111839" with title "Outline of U.S. History" is "Prodnote from database"
 		And I go to the upload page
 		And I attach the file "spec/fixtures/BookXMLWithImagesWithoutGroups.xml" to "book"
@@ -47,3 +47,11 @@ Feature: Upload Page
 		And the xpath "//prodnote" should exist
 		And the attribute "id" of "//prodnote" should be "pnid_mkme_0001" 
 		And the xpath "//prodnote" should be "Prodnote from database"
+
+	Scenario: Uploading a book with unrecognized prodnotes
+		When a description for the image "images/image001.jpg" in book "en-us-20100517111839" with title "Outline of U.S. History" is "Prodnote from database"
+		And I go to the upload page
+		And I attach the file "spec/fixtures/BookXMLWithImagesWithUnrecognizedProdnotes.xml" to "book"
+		And I press "Upload"
+		Then I should see "Unable to update descriptions"
+		And I should see "contained descriptions from other sources"
