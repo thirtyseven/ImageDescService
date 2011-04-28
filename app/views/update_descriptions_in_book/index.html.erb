@@ -4,6 +4,11 @@ The file will be returned with all available image descriptions added.
 If the book has already had image descriptions added, 
 this will update them to the latest available versions of the descriptions.
 </p>
+<p>
+After uploading the book file, the modified version will be returned, 
+and you should save it to disk. This modified version will contain the 
+latest available image descriptions.
+</p>
 
 <%= form_tag("/update_descriptions_in_book/upload", {:multipart => true}) do %>
 <p><label for="upload_file">Select Book File</label> : 
