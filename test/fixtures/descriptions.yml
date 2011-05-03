@@ -5,11 +5,13 @@ one:
   is_current: false
   submitter: MyString
   date_approved: 2011-03-07 12:46:33
-  image: 
+  image_id: 1
+  image:
 
 two:
   description: MyString
   is_current: false
   submitter: MyString
-  date_approved: 2011-03-07 12:46:33
-  image: 
+  date_approved: 2011-04-07 12:46:33
+  image_id: 1
+  image:
