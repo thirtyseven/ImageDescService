@@ -4,4 +4,11 @@ class DynamicImage < ActiveRecord::Base
   validates :title, :length => { :maximum => 255 }
 
   has_many :dynamic_descriptions
+  
+  def best_description
+    dynamic_descriptions.each do | desc |
+      puts desc.body
+    end
+    return dynamic_descriptions.last
+  end
 end
