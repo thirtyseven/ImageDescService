@@ -102,22 +102,18 @@ When /^(?:|I )attach the file "([^"]*)" to "([^"]*)"$/ do |path, field|
   attach_file(field, File.expand_path(path))
 end
 
-When /^a description for the image "([^"]*)" in book "([^"]*)" with title "([^"]*)" is "([^"]*)"$/ do |image_location, book_id, book_title, text|
-  image = DynamicImage.where("uid = ? AND image_location = ?", book_id, image_location).first
-  if !image
-    image = DynamicImage.create(:uid => book_id, :title => book_title, :image_location => image_location)
-    image.save
-  end
-  if(image.dynamic_descriptions.empty?)
-    description = DynamicDescription.create(:dynamic_image_id => image['uid'], :submitter => 'Cucumber', :body => text)
-    image.dynamic_descriptions << description
-  else
-    description = image.dynamic_descriptions.first
-    description.body = text
-    description.save
-  end
+When /^the first description for the image "([^"]*)" in book "([^"]*)" with title "([^"]*)" is "([^"]*)"$/ do |image_location, book_id, book_title, text|
+  image = DynamicImage.create(:uid => book_id, :title => book_title, :image_location => image_location)
+  image.save
+  description = DynamicDescription.create(:dynamic_image_id => image['uid'], :submitter => 'Cucumber', :body => text)
+  image.dynamic_descriptions << description
 end
 
+When /^another description for the image "([^"]*)" in book "([^"]*)" is "([^"]*)"$/ do |image_location, book_id, text|
+  image = DynamicImage.where("uid = ? AND image_location = ?", book_id, image_location).first
+  description = DynamicDescription.create(:dynamic_image_id => image['uid'], :submitter => 'Cucumber', :body => text)
+  image.dynamic_descriptions << description
+end
 
 Then /^(?:|I )should see "([^"]*)"$/ do |text|
   if page.respond_to? :should

@@ -32,12 +32,12 @@ Feature: Upload Page
 		And the xpath "//prodnote" should not exist
 		
 	Scenario: Make sure an image description can be added to the database (directly)
-		When a description for the image "images/image001.jpg" in book "en-us-20100517111839" with title "Outline of U.S. History" is "Prodnote from database"
+		When the first description for the image "images/image001.jpg" in book "en-us-20100517111839" with title "Outline of U.S. History" is "Prodnote from database"
 		And I go to the images list page
 		Then I should see "images/image001.jpg"
 		
 	Scenario: Uploading a book with known images but no existing prodnotes
-		When a description for the image "images/image001.jpg" in book "en-us-20100517111839" with title "Outline of U.S. History" is "Prodnote from database"
+		When the first description for the image "images/image001.jpg" in book "en-us-20100517111839" with title "Outline of U.S. History" is "Prodnote from database"
 		And I go to the upload page
 		And I attach the file "spec/fixtures/BookXMLWithImagesWithoutGroups.xml" to "book"
 		And I press "Upload"
@@ -51,7 +51,7 @@ Feature: Upload Page
 		And the xpath "//prodnote" should be "Prodnote from database"
 
 	Scenario: Uploading a book with prodnotes added by our site earlier
-		When a description for the image "images/image001.jpg" in book "en-us-20100517111839" with title "Outline of U.S. History" is "Prodnote from database"
+		When the first description for the image "images/image001.jpg" in book "en-us-20100517111839" with title "Outline of U.S. History" is "Prodnote from database"
 		And I go to the upload page
 		And I attach the file "spec/fixtures/BookXMLWithImagesWithOurProdnotes.xml" to "book"
 		And I press "Upload"
@@ -61,11 +61,21 @@ Feature: Upload Page
 		And the xpath "//imggroup/prodnote[@id='pnid_mkme_0001']" should be "Prodnote from database"
 
 	Scenario: Uploading a book with unrecognized prodnotes
-		When a description for the image "images/image001.jpg" in book "en-us-20100517111839" with title "Outline of U.S. History" is "Prodnote from database"
+		When the first description for the image "images/image001.jpg" in book "en-us-20100517111839" with title "Outline of U.S. History" is "Prodnote from database"
 		And I go to the upload page
 		And I attach the file "spec/fixtures/BookXMLWithImagesWithUnrecognizedProdnotes.xml" to "book"
 		And I press "Upload"
 		Then I should see "Unable to update descriptions"
 		And I should see "contained descriptions from other sources"
 
-		
+	Scenario: Uploading a book with out-of-date prodnotes added by our site earlier
+		When the first description for the image "images/image001.jpg" in book "en-us-20100517111839" with title "Outline of U.S. History" is "Prodnote from database"
+		And another description for the image "images/image001.jpg" in book "en-us-20100517111839" is "Revised description from database"
+		And I go to the upload page
+		And I attach the file "spec/fixtures/BookXMLWithImagesWithOurProdnotes.xml" to "book"
+		And I press "Upload"
+		Then the response should be xml
+		# TODO: Should verify disposition (attachment) and filename
+		And the xpath "//imggroup/prodnote[@id='pnid_mkme_0001']" should exist
+		And the xpath "//imggroup/prodnote[@id='pnid_mkme_0001']" should be "Revised description from database"
+
