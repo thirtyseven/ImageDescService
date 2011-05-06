@@ -6,9 +6,6 @@ class DynamicImage < ActiveRecord::Base
   has_many :dynamic_descriptions
   
   def best_description
-    dynamic_descriptions.each do | desc |
-      puts desc.body
-    end
     return dynamic_descriptions.last
   end
 end
