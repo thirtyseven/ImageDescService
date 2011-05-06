@@ -1,7 +1,9 @@
 require "nokogiri"
 
 class UnrecognizedProdnoteException < Exception
-  
+end
+
+class NonDaisyXMLException < Exception
 end
 
 class UpdateDescriptionsInBookController < ApplicationController
@@ -18,6 +20,10 @@ class UpdateDescriptionsInBookController < ApplicationController
       # TODO: Should log a note here
       redirect_to :back, :alert => "Unable to update descriptions because the uploaded book contained descriptions from other sources"
       return
+    rescue NonDaisyXMLException => e
+      # TODO: Should log a note here
+      redirect_to :back, :alert => "Uploaded file must be a valid Daisy book XML content file"
+      return
     rescue Exception => e
       # TODO: Need to log the exception here
       #$stderr.puts e
@@ -31,6 +37,11 @@ class UpdateDescriptionsInBookController < ApplicationController
 private
   def get_contents_with_updated_descriptions(file)
     doc = Nokogiri::XML file
+    
+    root = doc.xpath(doc, "/xmlns:dtbook")
+    if root.size != 1
+      raise NonDaisyXMLException.new
+    end
 
     xpath_uid = "//xmlns:meta[@name='dtb:uid']"
     matches = doc.xpath(doc, xpath_uid)

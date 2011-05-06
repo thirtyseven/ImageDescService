@@ -21,6 +21,13 @@ Feature: Upload Page
 		Then I should be on the upload page
 		And I should see "Uploaded file must be a valid Daisy book XML content file"
 		
+	Scenario: Uploading an XML file that is not a valid book contents file
+		When I go to the upload page
+		And I attach the file "features/fixtures/NotValidBook.xml" to "book"
+		And I press "Upload"
+		Then I should be on the upload page
+		And I should see "Uploaded file must be a valid Daisy book XML content file"
+		
 	Scenario: Uploading a book with no known images
 		When I go to the upload page
 		And I attach the file "features/fixtures/BookXMLWithImagesWithoutGroups.xml" to "book"
