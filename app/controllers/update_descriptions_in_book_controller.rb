@@ -31,9 +31,15 @@ class UpdateDescriptionsInBookController < ApplicationController
       logger.info "#{caller_info} Uploaded dtbook without UID #{book.original_filename}"
       redirect_to :back, :alert => "Uploaded Daisy book XML content file must have a UID element"
       return
+    rescue Nokogiri::XML::XPath::SyntaxError => e
+      logger.info "#{caller_info} Uploaded invalid XML file #{book.original_filename}"
+      logger.info "#{e.class}: #{e.message}"
+      logger.info "Line #{e.line}, Column #{e.column}, Code #{e.code}"
+      redirect_to :back, :alert => "Uploaded file must be a valid Daisy book XML content file"
+      return
     rescue Exception => e
       logger.info "#{caller_info} Unexpected exception processing #{book.original_filename}:"
-      logger.info e
+      logger.info "#{e.class}: #{e.message}"
       logger.info e.backtrace.join("\n")
       redirect_to :back, :alert => "Uploaded file must be a valid Daisy book XML content file"
       return
