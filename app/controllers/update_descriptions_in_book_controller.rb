@@ -6,6 +6,9 @@ end
 class NonDaisyXMLException < Exception
 end
 
+class MissingBookUIDException < Exception
+end
+
 class UpdateDescriptionsInBookController < ApplicationController
   def upload
     book = params[:book]
@@ -23,6 +26,10 @@ class UpdateDescriptionsInBookController < ApplicationController
     rescue NonDaisyXMLException => e
       # TODO: Should log a note here
       redirect_to :back, :alert => "Uploaded file must be a valid Daisy book XML content file"
+      return
+    rescue MissingBookUIDException => e
+      # TODO: Should log a note here
+      redirect_to :back, :alert => "Uploaded Daisy book XML content file must have a UID element"
       return
     rescue Exception => e
       # TODO: Need to log the exception here
@@ -45,7 +52,9 @@ private
 
     xpath_uid = "//xmlns:meta[@name='dtb:uid']"
     matches = doc.xpath(doc, xpath_uid)
-
+    if matches.size != 1
+      raise MissingBookUIDException.new
+    end
     node = matches.first
     book_uid = node.attributes['content'].content
 
