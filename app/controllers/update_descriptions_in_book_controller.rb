@@ -20,20 +20,21 @@ class UpdateDescriptionsInBookController < ApplicationController
     begin
       xml = get_contents_with_updated_descriptions(file)
     rescue UnrecognizedProdnoteException
-      # TODO: Should log a note here
+      logger.info "#{caller_info} Unrecognized prodnote elements in #{book.original_filename}"
       redirect_to :back, :alert => "Unable to update descriptions because the uploaded book contained descriptions from other sources"
       return
     rescue NonDaisyXMLException => e
-      # TODO: Should log a note here
+      logger.info "#{caller_info} Uploaded non-dtbook #{book.original_filename}"
       redirect_to :back, :alert => "Uploaded file must be a valid Daisy book XML content file"
       return
     rescue MissingBookUIDException => e
-      # TODO: Should log a note here
+      logger.info "#{caller_info} Uploaded dtbook without UID #{book.original_filename}"
       redirect_to :back, :alert => "Uploaded Daisy book XML content file must have a UID element"
       return
     rescue Exception => e
-      # TODO: Need to log the exception here
-      #$stderr.puts e
+      logger.info "#{caller_info} Unexpected exception processing #{book.original_filename}:"
+      logger.info e
+      logger.info e.backtrace.join("\n")
       redirect_to :back, :alert => "Uploaded file must be a valid Daisy book XML content file"
       return
     end
@@ -97,6 +98,10 @@ private
   
   def create_prodnote_id(image_id)
     "pnid_#{image_id}"
+  end
+  
+  def caller_info
+    return "#{request.remote_addr}"
   end
 end
 
