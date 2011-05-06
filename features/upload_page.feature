@@ -16,14 +16,14 @@ Feature: Upload Page
 		
 	Scenario: Uploading a non-XML book
 		When I go to the upload page
-		And I attach the file "spec/fixtures/NonXMLFile" to "book"
+		And I attach the file "features/fixtures/NonXMLFile" to "book"
 		And I press "Upload"
 		Then I should be on the upload page
 		And I should see "Uploaded file must be a valid Daisy book XML content file"
 		
 	Scenario: Uploading a book with no known images
 		When I go to the upload page
-		And I attach the file "spec/fixtures/BookXMLWithImagesWithoutGroups.xml" to "book"
+		And I attach the file "features/fixtures/BookXMLWithImagesWithoutGroups.xml" to "book"
 		And I press "Upload"
 		Then the response should be xml
 		# TODO: Should verify disposition (attachment) and filename
@@ -39,7 +39,7 @@ Feature: Upload Page
 	Scenario: Uploading a book with known images but no existing prodnotes
 		When the first description for the image "images/image001.jpg" in book "en-us-20100517111839" with title "Outline of U.S. History" is "Prodnote from database"
 		And I go to the upload page
-		And I attach the file "spec/fixtures/BookXMLWithImagesWithoutGroups.xml" to "book"
+		And I attach the file "features/fixtures/BookXMLWithImagesWithoutGroups.xml" to "book"
 		And I press "Upload"
 		Then the response should be xml
 		# TODO: Should verify disposition (attachment) and filename
@@ -53,7 +53,7 @@ Feature: Upload Page
 	Scenario: Uploading a book with prodnotes added by our site earlier
 		When the first description for the image "images/image001.jpg" in book "en-us-20100517111839" with title "Outline of U.S. History" is "Prodnote from database"
 		And I go to the upload page
-		And I attach the file "spec/fixtures/BookXMLWithImagesWithOurProdnotes.xml" to "book"
+		And I attach the file "features/fixtures/BookXMLWithImagesWithOurProdnotes.xml" to "book"
 		And I press "Upload"
 		Then the response should be xml
 		# TODO: Should verify disposition (attachment) and filename
@@ -63,7 +63,7 @@ Feature: Upload Page
 	Scenario: Uploading a book with unrecognized prodnotes
 		When the first description for the image "images/image001.jpg" in book "en-us-20100517111839" with title "Outline of U.S. History" is "Prodnote from database"
 		And I go to the upload page
-		And I attach the file "spec/fixtures/BookXMLWithImagesWithUnrecognizedProdnotes.xml" to "book"
+		And I attach the file "features/fixtures/BookXMLWithImagesWithUnrecognizedProdnotes.xml" to "book"
 		And I press "Upload"
 		Then I should see "Unable to update descriptions"
 		And I should see "contained descriptions from other sources"
@@ -72,7 +72,7 @@ Feature: Upload Page
 		When the first description for the image "images/image001.jpg" in book "en-us-20100517111839" with title "Outline of U.S. History" is "Prodnote from database"
 		And another description for the image "images/image001.jpg" in book "en-us-20100517111839" is "Revised description from database"
 		And I go to the upload page
-		And I attach the file "spec/fixtures/BookXMLWithImagesWithOurProdnotes.xml" to "book"
+		And I attach the file "features/fixtures/BookXMLWithImagesWithOurProdnotes.xml" to "book"
 		And I press "Upload"
 		Then the response should be xml
 		# TODO: Should verify disposition (attachment) and filename
