@@ -41,7 +41,7 @@ class UpdateDescriptionsInBookController < ApplicationController
       logger.info "#{caller_info} Unexpected exception processing #{book.original_filename}:"
       logger.info "#{e.class}: #{e.message}"
       logger.info e.backtrace.join("\n")
-      redirect_to :back, :alert => "Uploaded file must be a valid Daisy book XML content file"
+      redirect_to :back, :alert => "An unexpected error has prevented processing that file"
       return
     end
     
@@ -71,6 +71,11 @@ private
       image = doc.at_xpath( doc, "//xmlns:img[@src='#{image_location}']")
       parent = doc.at_xpath( doc, "//xmlns:img[@src='#{image_location}']/..")
 
+      if !parent
+        logger.info "Missing img element for database description #{book_uid} #{image_location}"
+        next
+      end
+      
       is_parent_image_group = parent.matches?('//xmlns:imggroup')
       if(!is_parent_image_group)
         image_group = Nokogiri::XML::Node.new "imggroup", doc

@@ -93,3 +93,13 @@ Feature: Upload Page
 		And the xpath "//imggroup/prodnote[@id='pnid_mkme_0001']" should exist
 		And the xpath "//imggroup/prodnote[@id='pnid_mkme_0001']" should be "Revised description from database"
 
+	Scenario: Uploading a book with missing img tags for descriptions in the database
+		When the first description for the image "images/image001.jpg" in book "en-us-20100517111839" with title "Outline of U.S. History" is "Prodnote from database"
+		And the first description for the image "nosuchimgelement" in book "en-us-20100517111839" with title "Outline of U.S. History" is "Prodnote from database"
+		And I go to the upload page
+		And I attach the file "features/fixtures/BookXMLWithImagesWithoutGroups.xml" to "book"
+		And I press "Upload"
+		Then the response should be xml
+		# TODO: Should verify disposition (attachment) and filename
+		And the xpath "//imggroup/prodnote[@id='pnid_mkme_0001']" should exist
+		And the xpath "//imggroup/prodnote[@id='pnid_mkme_0001']" should be "Prodnote from database"
