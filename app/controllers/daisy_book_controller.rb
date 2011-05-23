@@ -1,4 +1,6 @@
-require "nokogiri"
+require 'fileutils'
+require 'nokogiri'
+require 'tempfile'
 require 'xml/xslt'
 require 'zip/zipfilesystem'
 
@@ -12,6 +14,42 @@ class UnrecognizedProdnoteException < Exception
 end
 
 class DaisyBookController < ApplicationController
+  def get_daisy_with_descriptions
+    book_directory = session[:daisy_directory]
+    contents_filename = get_daisy_contents_xml_name(book_directory)
+    xml_file = File.read(contents_filename)
+    begin
+      xml = get_contents_with_updated_descriptions(xml_file)
+    rescue UnrecognizedProdnoteException
+      logger.info "#{caller_info} Unrecognized prodnote elements in #{contents_filename}"
+      redirect_to :back, :alert => "Unable to update descriptions because the uploaded book contained descriptions from other sources"
+      return
+    rescue NonDaisyXMLException => e
+      logger.info "#{caller_info} Uploaded non-dtbook #{contents_filename}"
+      redirect_to :back, :alert => "Uploaded file must be a valid Daisy book XML content file"
+      return
+    rescue MissingBookUIDException => e
+      logger.info "#{caller_info} Uploaded dtbook without UID #{contents_filename}"
+      redirect_to :back, :alert => "Uploaded Daisy book XML content file must have a UID element"
+      return
+    rescue Nokogiri::XML::XPath::SyntaxError => e
+      logger.info "#{caller_info} Uploaded invalid XML file #{contents_filename}"
+      logger.info "#{e.class}: #{e.message}"
+      logger.info "Line #{e.line}, Column #{e.column}, Code #{e.code}"
+      redirect_to :back, :alert => "Uploaded file must be a valid Daisy book XML content file"
+      return
+    rescue Exception => e
+      logger.info "#{caller_info} Unexpected exception processing #{contents_filename}:"
+      logger.info "#{e.class}: #{e.message}"
+      logger.info e.backtrace.join("\n")
+      redirect_to :back, :alert => "An unexpected error has prevented processing that file"
+      return
+    end
+
+    basename = File.basename(contents_filename)
+    zip_filename = create_zip(session[:daisy_file], basename, xml)    
+    send_file zip_filename, :type => 'application/zip; charset=utf-8', :filename => basename + '.zip', :disposition => 'attachment' 
+  end
 
   def get_xml_with_descriptions
     book_directory = session[:daisy_directory]
@@ -65,6 +103,11 @@ class DaisyBookController < ApplicationController
     
     book_directory = unzip_to_temp(file)
     session[:daisy_directory] = book_directory
+
+    copy_of_daisy_file = File.join(book_directory, "Daisy.zip")
+    FileUtils.cp(book.path, copy_of_daisy_file)
+    session[:daisy_file] = copy_of_daisy_file
+
     redirect_to :action => 'edit'
   end
 
@@ -187,5 +230,21 @@ private
   
   def caller_info
     return "#{request.remote_addr}"
+  end
+  
+  def create_zip(old_daisy_zip, contents_filename, new_xml_contents)
+    puts "create_zip #{old_daisy_zip}, #{contents_filename}, size=#{new_xml_contents.size}"
+    new_contents_file = Tempfile.new('baked-xml')
+    new_contents_file.write(new_xml_contents)
+    new_contents_file.close
+    puts "baked xml: #{new_contents_file.path} size=#{File.size(new_contents_file.path)}"
+    new_daisy_zip = Tempfile.new('baked-daisy')
+    new_daisy_zip.close
+    FileUtils.cp(old_daisy_zip, new_daisy_zip.path)
+    puts "copied daisy zip to #{new_daisy_zip.path}"
+    Zip::ZipFile.open(new_daisy_zip.path) do |zipfile|
+        zipfile.replace(contents_filename, new_contents_file.path)
+    end
+    return new_daisy_zip.path
   end
 end
