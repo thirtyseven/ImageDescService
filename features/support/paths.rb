@@ -21,6 +21,8 @@ module NavigationHelpers
       '/update_descriptions_in_book'
     when /the daisy upload page/
       '/daisy_book/upload'
+    when /the description editing page/
+      '/daisy_book/edit'
     when /the images list page/
       '/dynamic_images'
       

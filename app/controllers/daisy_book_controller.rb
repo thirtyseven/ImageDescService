@@ -1,3 +1,5 @@
+require 'zip/zipfilesystem'
+
 class DaisyBookController < ApplicationController
   def upload
   end
@@ -9,6 +11,25 @@ class DaisyBookController < ApplicationController
       redirect_to :action => 'upload'
       return
     end
+    
+    file = File.new( book.path )
+    if !valid_daisy_zip?(file)
+      flash[:alert] = "Uploaded file must be a valid Daisy (zip) file"
+      redirect_to :action => 'upload'
+      return
+    end
   end
 
+private
+  def valid_daisy_zip?(file)
+    begin
+      Zip::ZipFile.open(file) do |zipfile|
+        dir = zipfile.dir
+      end
+    rescue
+      return false
+    end
+    
+    return true
+  end
 end
