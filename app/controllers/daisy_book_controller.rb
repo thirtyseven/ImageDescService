@@ -31,10 +31,19 @@ class DaisyBookController < ApplicationController
     session[:daisy_directory] = book_directory
     
     contents_filename = get_daisy_contents_xml_name(book_directory)
-    puts "Rendering #{contents_filename}"
-    render :text => get_text_to_display(contents_filename)
+    contents = File.read(contents_filename)
+    render :text => contents, :content_type => 'text/html'
   end
-
+  
+  def image
+    image_name = params[:image]
+    book_directory = session[:daisy_directory]
+    images_directory = File.join(book_directory, 'images')
+    image_file = File.join(images_directory, image_name)
+    contents = File.read(image_file)
+    render :text => contents, :content_type => 'image/jpeg'
+  end
+  
 private
   def valid_daisy_zip?(file)
     begin
@@ -60,24 +69,4 @@ private
     return Dir.glob(File.join(book_directory, '*.xml'))[0]
   end
   
-  def get_text_to_display(book_xml_file)
-    contents = File.read(book_xml_file)
-    doc = Nokogiri::XML contents
-    
-    root = doc.xpath(doc, "/xmlns:dtbook")
-    if root.size != 1
-      raise NonDaisyXMLException.new
-    end
-
-    xpath_uid = "//xmlns:meta[@name='dtb:uid']"
-    matches = doc.xpath(doc, xpath_uid)
-    if matches.size != 1
-      raise MissingBookUIDException.new
-    end
-    node = matches.first
-    book_uid = node.attributes['content'].content
-    
-    images = doc.xpath( doc, "//xmlns:img")
-    return "Successfully uploaded book (uid=#{book_uid}) which has #{images.size} images"
-  end
 end
