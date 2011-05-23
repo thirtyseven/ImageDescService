@@ -5,38 +5,38 @@ Feature: Upload Page
 	So that I can get back a copy with embedded descriptions
 	
 	Scenario: Upload page should have the necessary content
-		When I go to the upload page
+		When I go to the xml upload page
 		Then I should see "The file will be returned with all available image descriptions added."
 		
 	Scenario: Hitting upload with no book selected
-		When I go to the upload page
+		When I go to the xml upload page
 		And I press "Upload"
-		Then I should be on the upload page
+		Then I should be on the xml upload page
 		And I should see "Must specify a book file to process"
 		
 	Scenario: Uploading a non-XML book
-		When I go to the upload page
+		When I go to the xml upload page
 		And I attach the file "features/fixtures/NonXMLFile" to "book"
 		And I press "Upload"
-		Then I should be on the upload page
+		Then I should be on the xml upload page
 		And I should see "Uploaded file must be a valid Daisy book XML content file"
 		
 	Scenario: Uploading an XML file that is not a valid book contents file
-		When I go to the upload page
+		When I go to the xml upload page
 		And I attach the file "features/fixtures/NotValidBook.xml" to "book"
 		And I press "Upload"
-		Then I should be on the upload page
+		Then I should be on the xml upload page
 		And I should see "Uploaded file must be a valid Daisy book XML content file"
 		
 	Scenario: Uploading an XML file that is not dtbook but has no UID
-		When I go to the upload page
+		When I go to the xml upload page
 		And I attach the file "features/fixtures/BookXMLWithNoUID.xml" to "book"
 		And I press "Upload"
-		Then I should be on the upload page
+		Then I should be on the xml upload page
 		And I should see "Uploaded Daisy book XML content file must have a UID element"
 		
 	Scenario: Uploading a book with no known images
-		When I go to the upload page
+		When I go to the xml upload page
 		And I attach the file "features/fixtures/BookXMLWithImagesWithoutGroups.xml" to "book"
 		And I press "Upload"
 		Then the response should be xml
@@ -52,7 +52,7 @@ Feature: Upload Page
 		
 	Scenario: Uploading a book with known images but no existing prodnotes
 		When the first description for the image "images/image001.jpg" in book "en-us-20100517111839" with title "Outline of U.S. History" is "Prodnote from database"
-		And I go to the upload page
+		And I go to the xml upload page
 		And I attach the file "features/fixtures/BookXMLWithImagesWithoutGroups.xml" to "book"
 		And I press "Upload"
 		Then the response should be xml
@@ -66,7 +66,7 @@ Feature: Upload Page
 
 	Scenario: Uploading a book with prodnotes added by our site earlier
 		When the first description for the image "images/image001.jpg" in book "en-us-20100517111839" with title "Outline of U.S. History" is "Prodnote from database"
-		And I go to the upload page
+		And I go to the xml upload page
 		And I attach the file "features/fixtures/BookXMLWithImagesWithOurProdnotes.xml" to "book"
 		And I press "Upload"
 		Then the response should be xml
@@ -76,7 +76,7 @@ Feature: Upload Page
 
 	Scenario: Uploading a book with unrecognized prodnotes
 		When the first description for the image "images/image001.jpg" in book "en-us-20100517111839" with title "Outline of U.S. History" is "Prodnote from database"
-		And I go to the upload page
+		And I go to the xml upload page
 		And I attach the file "features/fixtures/BookXMLWithImagesWithUnrecognizedProdnotes.xml" to "book"
 		And I press "Upload"
 		Then I should see "Unable to update descriptions"
@@ -85,7 +85,7 @@ Feature: Upload Page
 	Scenario: Uploading a book with out-of-date prodnotes added by our site earlier
 		When the first description for the image "images/image001.jpg" in book "en-us-20100517111839" with title "Outline of U.S. History" is "Prodnote from database"
 		And another description for the image "images/image001.jpg" in book "en-us-20100517111839" is "Revised description from database"
-		And I go to the upload page
+		And I go to the xml upload page
 		And I attach the file "features/fixtures/BookXMLWithImagesWithOurProdnotes.xml" to "book"
 		And I press "Upload"
 		Then the response should be xml
@@ -96,7 +96,7 @@ Feature: Upload Page
 	Scenario: Uploading a book with missing img tags for descriptions in the database
 		When the first description for the image "images/image001.jpg" in book "en-us-20100517111839" with title "Outline of U.S. History" is "Prodnote from database"
 		And the first description for the image "nosuchimgelement" in book "en-us-20100517111839" with title "Outline of U.S. History" is "Prodnote from database"
-		And I go to the upload page
+		And I go to the xml upload page
 		And I attach the file "features/fixtures/BookXMLWithImagesWithoutGroups.xml" to "book"
 		And I press "Upload"
 		Then the response should be xml

@@ -17,8 +17,10 @@ module NavigationHelpers
     #   when /^(.*)'s profile page$/i
     #     user_profile_path(User.find_by_login($1))
 
-    when /the upload page/
+    when /the xml upload page/
       '/update_descriptions_in_book'
+    when /the daisy upload page/
+      '/daisy_book/upload'
     when /the images list page/
       '/dynamic_images'
       

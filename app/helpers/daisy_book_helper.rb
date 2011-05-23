@@ -1,0 +1,2 @@
+module DaisyBookHelper
+end

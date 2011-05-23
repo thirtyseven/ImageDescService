@@ -1,0 +1,14 @@
+<h1>Daisy Book Upload</h1>
+<p>Choose an unencrypted Daisy book (zip) file to upload. 
+</p>
+<p>
+After uploading the book file, you will see the contents and will have the ability 
+to add or edit image descriptions.
+</p>
+
+<%= form_tag("/daisy_book/edit", {:multipart => true}) do %>
+<p><label for="upload_file">Select Daisy book file</label> : 
+<%= file_field_tag 'book' %></p>
+<%= submit_tag "Upload" %>
+<% end %>
+
