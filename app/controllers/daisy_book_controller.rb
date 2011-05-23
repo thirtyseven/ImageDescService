@@ -18,6 +18,13 @@ class DaisyBookController < ApplicationController
       redirect_to :action => 'upload'
       return
     end
+    
+    book_directory = unzip_to_temp(file)
+    session[:daisy_directory] = book_directory
+    
+    contents_filename = get_daisy_contents_xml_name(book_directory)
+    puts "Rendering #{contents_filename}"
+    render :text => File.join(book_directory, contents_filename), :content_type => 'text/plain'
   end
 
 private
@@ -31,5 +38,17 @@ private
     end
     
     return true
+  end
+  
+  def unzip_to_temp(zipped_file)
+    dir = Dir.mktmpdir
+    Zip::ZipFile.foreach(zipped_file) do | entry |
+      entry.extract(File.join(dir, entry.name))
+    end
+    return dir
+  end
+  
+  def get_daisy_contents_xml_name(book_directory)
+    return Dir.glob(File.join(book_directory, '*.xml'))[0]
   end
 end

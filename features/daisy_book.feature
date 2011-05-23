@@ -27,7 +27,6 @@ Feature: Daisy Book
 		And I press "Upload"
 		Then I should be on the daisy upload page
 		And I should see "Uploaded file must be a valid Daisy (zip) file"
-
 		
 	Scenario: Uploading a valid Daisy zip file
 		When I go to the daisy upload page
@@ -36,5 +35,8 @@ Feature: Daisy Book
 		Then I should be on the description editing page
 		# TODO: Make sure book content is visible
 		
-			
-	
+	# TODO: Need tests for non-bookshare Daisy books:
+	#    - Multiple XML content files?
+	#    - Different case of XML/xml files
+	#    - XML files not at the top level?
+		
