@@ -43,3 +43,18 @@ Feature: Daisy Book
 	#    - XML files not at the top level?
 	#	 - Non-JPEG images
 	
+	Scenario: Downloading an XML file with descriptions
+		When the first description for the image "images/fwk-gallaugher-fig01_001.jpg" in book "_id2244343" with title "Information Systems: A Manager’s Guide to Harnessing Technology" is "Prodnote from database"
+		And I go to the daisy upload page
+		And I attach the file "features/fixtures/DaisyZipBookUnencrypted.zip" to "book"
+		And I press "Upload"
+		And I go to the header panel
+		And I press "Download XML"
+		Then the response should be xml
+		And the xpath "//dtbook" should exist
+		And the xpath "//img" should exist
+		And the xpath "//imggroup" should exist
+		And the xpath "//prodnote" should exist
+		And the xpath "//imggroup/prodnote[@id='pnid_img_000003']" should exist
+		And the xpath "//imggroup/prodnote[@id='pnid_img_000003']" should be "Prodnote from database"
+		

@@ -25,6 +25,8 @@ module NavigationHelpers
       '/daisy_book/edit'
     when /the content page/
       '/daisy_book/content'
+    when /the header panel/
+      '/daisy_book/top_bar'
     when /the images list page/
       '/dynamic_images'
       
