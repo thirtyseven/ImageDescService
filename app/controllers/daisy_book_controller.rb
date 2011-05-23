@@ -33,7 +33,7 @@ class DaisyBookController < ApplicationController
     
     contents_filename = get_daisy_contents_xml_name(book_directory)
     xml = File.read(contents_filename)
-    xsl_filename = File.join(book_directory, 'daisyTransform.xsl')
+    xsl_filename = 'app/views/xslt/daisyTransform.xsl'
     xsl = File.read(xsl_filename)
     contents = xslt(xml, xsl)
     render :text => contents, :content_type => 'text/html'
