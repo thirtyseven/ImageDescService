@@ -21,7 +21,13 @@ Feature: Daisy Book
 		Then I should be on the daisy upload page
 		And I should see "Uploaded file must be a valid Daisy (zip) file"
 	
-	# TODO: Need a scenario for a valid zip that is not a Daisy book
+	Scenario: Uploading a non-Daisy zip file
+		When I go to the daisy upload page
+		And I attach the file "features/fixtures/NonDaisyZip.zip" to "book"
+		And I press "Upload"
+		Then I should be on the daisy upload page
+		And I should see "Uploaded file must be a valid Daisy (zip) file"
+
 		
 	Scenario: Uploading a valid Daisy zip file
 		When I go to the daisy upload page
