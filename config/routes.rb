@@ -1,7 +1,7 @@
 DiagramRailsApp::Application.routes.draw do
   get "daisy_book/upload"
-
-  post "daisy_book/edit"
+  post "daisy_book/submit"
+  get "daisy_book/edit"
 
   resources :dynamic_descriptions
 

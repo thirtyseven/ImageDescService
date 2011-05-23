@@ -12,8 +12,8 @@ class DaisyBookController < ApplicationController
   
   def upload
   end
-
-  def edit
+  
+  def submit
     book = params[:book]
     if !book
       flash[:alert] = "Must specify a book file to process"
@@ -30,6 +30,10 @@ class DaisyBookController < ApplicationController
     
     book_directory = unzip_to_temp(file)
     session[:daisy_directory] = book_directory
+    redirect_to :action => 'edit'
+  end
+
+  def edit
     render :layout => 'frames'
   end
   
