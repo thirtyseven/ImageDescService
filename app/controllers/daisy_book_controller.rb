@@ -1,4 +1,5 @@
 require "nokogiri"
+require 'xml/xslt'
 require 'zip/zipfilesystem'
 
 class NonDaisyXMLException < Exception
@@ -31,7 +32,10 @@ class DaisyBookController < ApplicationController
     session[:daisy_directory] = book_directory
     
     contents_filename = get_daisy_contents_xml_name(book_directory)
-    contents = File.read(contents_filename)
+    xml = File.read(contents_filename)
+    xsl_filename = File.join(book_directory, 'daisyTransform.xsl')
+    xsl = File.read(xsl_filename)
+    contents = xslt(xml, xsl)
     render :text => contents, :content_type => 'text/html'
   end
   
@@ -69,4 +73,10 @@ private
     return Dir.glob(File.join(book_directory, '*.xml'))[0]
   end
   
+  def xslt(xml, xsl)
+    engine = XML::XSLT.new
+    engine.xml = xml
+    engine.xsl = xsl
+    return engine.serve
+  end
 end
