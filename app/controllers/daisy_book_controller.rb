@@ -30,7 +30,11 @@ class DaisyBookController < ApplicationController
     
     book_directory = unzip_to_temp(file)
     session[:daisy_directory] = book_directory
-    
+    render :layout => 'frames'
+  end
+  
+  def content
+    book_directory = session[:daisy_directory]
     contents_filename = get_daisy_contents_xml_name(book_directory)
     xml = File.read(contents_filename)
     xsl_filename = 'app/views/xslt/daisyTransform.xsl'

@@ -33,10 +33,13 @@ Feature: Daisy Book
 		And I attach the file "features/fixtures/DaisyZipBookUnencrypted.zip" to "book"
 		And I press "Upload"
 		Then I should be on the description editing page
-		# TODO: Make sure book content is visible
+		And there should be frames
+		When I go to the content page
+		Then I should see "John Gallaugher"
 		
 	# TODO: Need tests for non-bookshare Daisy books:
 	#    - Multiple XML content files?
 	#    - Different case of XML/xml files
 	#    - XML files not at the top level?
-		
+	#	 - Non-JPEG images
+	

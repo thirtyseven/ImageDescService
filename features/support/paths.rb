@@ -23,6 +23,8 @@ module NavigationHelpers
       '/daisy_book/upload'
     when /the description editing page/
       '/daisy_book/edit'
+    when /the content page/
+      '/daisy_book/content'
     when /the images list page/
       '/dynamic_images'
       

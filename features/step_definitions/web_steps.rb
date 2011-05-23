@@ -231,6 +231,10 @@ Then /^the response should be xml$/ do
   page.response_headers['Content-Type'].should == 'application/xml; charset=utf-8'
 end
 
+Then /^there should be frames$/ do
+  page.should have_xpath('//frameset')
+end
+
 Then /^the xpath "([^"]*)" should exist$/ do |arg1|
   page.should have_xpath(arg1)
 end
