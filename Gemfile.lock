@@ -135,6 +135,7 @@ DEPENDENCIES
   rails (= 3.0.4)
   rspec-rails
   ruby-xslt
+  rubyzip
   sqlite3
   test-unit
   uuidtools
