@@ -133,7 +133,21 @@ class DaisyBookController < ApplicationController
     contents = File.read(image_file)
     render :text => contents, :content_type => 'image/jpeg'
   end
+
+  def side_bar
+    book_directory = session[:daisy_directory]
+    contents_filename = get_daisy_contents_xml_name(book_directory)
+    xml = File.read(contents_filename)
+    doc = Nokogiri::XML xml
+
+    @images = []
+    images = doc.xpath( doc, "//xmlns:img")
+    images.each do | image_node |
+      @images << image_node['src']
+    end
+  end
   
+    
 private
   def valid_daisy_zip?(file)
     begin

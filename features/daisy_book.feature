@@ -36,12 +36,16 @@ Feature: Daisy Book
 		And there should be frames
 		When I go to the content page
 		Then I should see "John Gallaugher"
+		# TODO: Need tests for:
+		# - Names of frames
+		# - Sidebar containing images
 		
 	# TODO: Need tests for non-bookshare Daisy books:
 	#    - Multiple XML content files?
 	#    - Different case of XML/xml files
 	#    - XML files not at the top level?
 	#	 - Non-JPEG images
+	#    - Multi-part content XML files
 	
 	Scenario: Downloading an XML file with descriptions
 		When the first description for the image "images/fwk-gallaugher-fig01_001.jpg" in book "_id2244343" with title "Information Systems: A Manager’s Guide to Harnessing Technology" is "Prodnote from database"
