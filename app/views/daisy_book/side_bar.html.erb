@@ -1,5 +1,19 @@
-<h3>Vertical list of images</h3>
-<% @images.each do | image | %>
-<img style="border:1px solid black; padding:0.25em; font-size: 80%;" height='180px' width='240px' src='<%= image %>'></img>
+<script type="text/javascript">
+function click(image_id){
+parent.content.location = "/daisy_book/content#" + image_id
+}
+</script>
+
+<h3><%= @images.size %> Images</h3>
+<% @images.each do | image | 
+	id = image['id']
+	src = image['src']
+%>
+<a id="<%= id %>" href="#<%= id %>">
+<img style="border:1px solid black; padding:0.25em; font-size: 80%;" height='180px' width='240px' 
+	onclick="click('<%= id %>')"
+	src='<%= src %>'>
+</img>
+</a>
 <hr/>
-<% end %>
+<% end %>id

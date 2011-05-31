@@ -143,7 +143,7 @@ class DaisyBookController < ApplicationController
     @images = []
     images = doc.xpath( doc, "//xmlns:img")
     images.each do | image_node |
-      @images << image_node['src']
+      @images << image_node
     end
   end
   
