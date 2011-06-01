@@ -24,7 +24,9 @@ end
 class DaisyBookController < ApplicationController
   def get_daisy_with_descriptions
     begin
-      xml = get_xml_contents_with_updated_descriptions
+      book_directory = session[:daisy_directory]
+      contents_filename = get_daisy_contents_xml_name(book_directory)
+      xml = get_xml_contents_with_updated_descriptions(contents_filename)
       basename = File.basename(contents_filename)
       zip_filename = create_zip(session[:daisy_file], basename, xml)    
       send_file zip_filename, :type => 'application/zip; charset=utf-8', :filename => basename + '.zip', :disposition => 'attachment' 
@@ -34,9 +36,19 @@ class DaisyBookController < ApplicationController
     end
   end
   
-  def get_xml_contents_with_updated_descriptions
-    book_directory = session[:daisy_directory]
-    contents_filename = get_daisy_contents_xml_name(book_directory)
+  def get_xml_with_descriptions
+    begin
+      book_directory = session[:daisy_directory]
+      contents_filename = get_daisy_contents_xml_name(book_directory)
+      xml = get_xml_contents_with_updated_descriptions(contents_filename)
+      send_data xml, :type => 'application/xml; charset=utf-8', :filename => contents_filename, :disposition => 'attachment' 
+    rescue ShowAlertAndGoBack => e
+      redirect_to :back, :alert => e.message
+      return
+    end
+  end
+
+  def get_xml_contents_with_updated_descriptions(contents_filename)
     xml_file = File.read(contents_filename)
     begin
       xml = get_contents_with_updated_descriptions(xml_file)
@@ -64,41 +76,6 @@ class DaisyBookController < ApplicationController
     return xml
   end
 
-  def get_xml_with_descriptions
-    book_directory = session[:daisy_directory]
-    contents_filename = get_daisy_contents_xml_name(book_directory)
-    xml_file = File.read(contents_filename)
-    begin
-      xml = get_contents_with_updated_descriptions(xml_file)
-    rescue UnrecognizedProdnoteException
-      logger.info "#{caller_info} Unrecognized prodnote elements in #{contents_filename}"
-      redirect_to :back, :alert => "Unable to update descriptions because the uploaded book contained descriptions from other sources"
-      return
-    rescue NonDaisyXMLException => e
-      logger.info "#{caller_info} Uploaded non-dtbook #{contents_filename}"
-      redirect_to :back, :alert => "Uploaded file must be a valid Daisy book XML content file"
-      return
-    rescue MissingBookUIDException => e
-      logger.info "#{caller_info} Uploaded dtbook without UID #{contents_filename}"
-      redirect_to :back, :alert => "Uploaded Daisy book XML content file must have a UID element"
-      return
-    rescue Nokogiri::XML::XPath::SyntaxError => e
-      logger.info "#{caller_info} Uploaded invalid XML file #{contents_filename}"
-      logger.info "#{e.class}: #{e.message}"
-      logger.info "Line #{e.line}, Column #{e.column}, Code #{e.code}"
-      redirect_to :back, :alert => "Uploaded file must be a valid Daisy book XML content file"
-      return
-    rescue Exception => e
-      logger.info "#{caller_info} Unexpected exception processing #{contents_filename}:"
-      logger.info "#{e.class}: #{e.message}"
-      logger.info e.backtrace.join("\n")
-      redirect_to :back, :alert => "An unexpected error has prevented processing that file"
-      return
-    end
-    
-    send_data xml, :type => 'application/xml; charset=utf-8', :filename => contents_filename, :disposition => 'attachment' 
-  end
-  
   def submit
     book = params[:book]
     if !book
