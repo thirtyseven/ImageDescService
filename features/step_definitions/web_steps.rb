@@ -231,6 +231,10 @@ Then /^the response should be xml$/ do
   page.response_headers['Content-Type'].should == 'application/xml; charset=utf-8'
 end
 
+Then /^the response should be a zip file$/ do
+  page.response_headers['Content-Type'].should == 'application/zip; charset=utf-8'
+end
+
 Then /^there should be frames$/ do
   page.should have_xpath('//frameset')
 end
