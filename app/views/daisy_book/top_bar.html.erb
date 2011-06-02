@@ -2,8 +2,16 @@
 <!--
 function nextButton()
 {
-	delta = 1
-	
+	changeImage(1)
+}
+
+function previousButton()
+{
+	changeImage(-1)
+}
+
+function changeImage(delta)
+{
 	availableImages = document.getElementById("available_images").options
 	currentId = document.getElementById("current_image_index").value
 	if(availableImages.length == 0)
@@ -33,6 +41,7 @@ function nextButton()
 }
 // -->
 </script>
+<input type="Button" id="previous" value="&lt;&lt;Previous" onclick="previousButton()"></input>
 <input type="Button" id="next" value="Next&gt;&gt;" onclick="nextButton()"></input>
 
 <%= button_to "Download XML", :action => "get_xml_with_descriptions" %>
