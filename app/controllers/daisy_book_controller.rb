@@ -125,19 +125,12 @@ class DaisyBookController < ApplicationController
   end
 
   def side_bar
-    book_directory = session[:daisy_directory]
-    contents_filename = get_daisy_contents_xml_name(book_directory)
-    xml = File.read(contents_filename)
-    doc = Nokogiri::XML xml
-
-    @images = []
-    images = doc.xpath( doc, "//xmlns:img")
-    images.each do | image_node |
-      image = {'id' => image_node['id'], 'src' => image_node['src']}
-      @images << image
-    end
+    configure_images
   end
-  
+
+  def top_bar
+    configure_images
+  end  
     
 private
   def valid_daisy_zip?(file)
@@ -252,4 +245,18 @@ private
     end
     return new_daisy_zip.path
   end
+
+  def configure_images
+    book_directory = session[:daisy_directory]
+    contents_filename = get_daisy_contents_xml_name(book_directory)
+    xml = File.read(contents_filename)
+    doc = Nokogiri::XML xml
+    @images = []
+    images = doc.xpath( doc, "//xmlns:img")
+    images.each do | image_node |
+      image = {'id' => image_node['id'], 'src' => image_node['src']}
+      @images << image
+    end
+  end
+
 end

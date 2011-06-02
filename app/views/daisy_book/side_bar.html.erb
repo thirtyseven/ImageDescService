@@ -1,7 +1,10 @@
 <script type="text/javascript">
+<!--
 function click(image_id){
 parent.content.location = "/daisy_book/content#" + image_id
+parent.top_bar.document.getElementById("current_image_index").value = image_id
 }
+//-->
 </script>
 
 <h3><%= @images.size %> Images</h3>

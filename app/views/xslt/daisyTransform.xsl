@@ -50,6 +50,10 @@ xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/">
                 targetDiv.textContent = text;
             }
          }
+		function click(image_id) {
+			parent.side_bar.location = "/daisy_book/side_bar#" + image_id
+			parent.top_bar.document.getElementById("current_image_index").value = image_id
+		}
          <xsl:for-each select="//dtb:img">
             <xsl:variable name="divId">img<xsl:value-of select="generate-id(.)"/></xsl:variable>
             function <xsl:value-of select="$divId"/>Callback(json) {
@@ -590,7 +594,7 @@ xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/">
       <xsl:if test="@width">
         <xsl:attribute name="width"><xsl:value-of select="@width"/></xsl:attribute>
       </xsl:if>
-      <xsl:attribute name="onclick">parent.side_bar.location = "/daisy_book/side_bar#<xsl:value-of select="@id"/>"</xsl:attribute>
+      <xsl:attribute name="onclick">click("<xsl:value-of select="@id"/>")</xsl:attribute>
     </xsl:element>
     <xsl:element name="br"/>
     <xsl:variable name="divId">img<xsl:value-of select="generate-id(.)"/></xsl:variable>
