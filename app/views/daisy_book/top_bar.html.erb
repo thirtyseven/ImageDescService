@@ -2,6 +2,8 @@
 <!--
 function nextButton()
 {
+	delta = 1
+	
 	availableImages = document.getElementById("available_images").options
 	currentId = document.getElementById("current_image_index").value
 	if(availableImages.length == 0)
@@ -18,14 +20,13 @@ function nextButton()
 			break;
 		}
 	}
-	next = currentIndex + 1
+	targetIndex = currentIndex + delta
 	count = availableImages.length
-	if(next > count)
+	if(targetIndex < 0 || targetIndex >= count)
 	{
-		document.getElementById("current_image_index").value = "past end"
 		return;
 	}
-	target = availableImages[next].value
+	target = availableImages[targetIndex].value
 	document.getElementById("current_image_index").value = target
 	parent.side_bar.location = "/daisy_book/side_bar#" + target
 	parent.content.location = "/daisy_book/content#" + target
