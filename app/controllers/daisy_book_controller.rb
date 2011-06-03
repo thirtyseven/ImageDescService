@@ -161,6 +161,7 @@ private
     engine = XML::XSLT.new
     engine.xml = xml
     engine.xsl = xsl
+    engine.parameters = {"form_authenticity_token" => form_authenticity_token}
     return engine.serve
   end
   

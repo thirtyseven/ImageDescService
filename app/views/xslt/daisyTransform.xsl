@@ -605,6 +605,11 @@ xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/">
         <xsl:attribute name="method">POST</xsl:attribute>
         <xsl:attribute name="target">imageDescWindow</xsl:attribute>        
         <xsl:attribute name="action">/imageDesc</xsl:attribute>
+        <xsl:element name="input">
+        	<xsl:attribute name="name">authenticity_token</xsl:attribute>
+        	<xsl:attribute name="type">hidden</xsl:attribute>
+        	<xsl:attribute name="value"><xsl:value-of select="$form_authenticity_token"></xsl:value-of></xsl:attribute>
+        </xsl:element>
         <xsl:element name="textarea">
             <xsl:attribute name="name">dynamic_description[body]</xsl:attribute>
             <xsl:attribute name="rows">2</xsl:attribute>
