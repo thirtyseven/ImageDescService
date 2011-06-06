@@ -31,6 +31,8 @@ module NavigationHelpers
       '/daisy_book/side_bar'
     when /the images list page/
       '/dynamic_images'
+    when /the raw xml download page/
+      '/daisy_book/get_xml_with_descriptions'
       
     else
       begin

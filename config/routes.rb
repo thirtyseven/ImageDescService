@@ -5,8 +5,8 @@ DiagramRailsApp::Application.routes.draw do
   get "daisy_book/side_bar"
   get "daisy_book/top_bar"
   get "daisy_book/content_with_top_bar"
-  post "daisy_book/get_xml_with_descriptions"
-  post "daisy_book/get_daisy_with_descriptions"
+  get "daisy_book/get_xml_with_descriptions"
+  get "daisy_book/get_daisy_with_descriptions"
 
   resources :dynamic_descriptions
 

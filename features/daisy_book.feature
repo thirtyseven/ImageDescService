@@ -53,8 +53,7 @@ Feature: Daisy Book
 		And I go to the daisy upload page
 		And I attach the file "features/fixtures/DaisyZipBookUnencrypted.zip" to "book"
 		And I press "Upload"
-		And I go to the header panel
-		And I press "Download XML"
+		And I go to the raw xml download page
 		Then the response should be xml
 		And the xpath "//dtbook" should exist
 		And the xpath "//img" should exist
@@ -69,6 +68,6 @@ Feature: Daisy Book
 		And I attach the file "features/fixtures/DaisyZipBookUnencrypted.zip" to "book"
 		And I press "Upload"
 		And I go to the header panel
-		And I press "Download Daisy Book"
+		And I press "Save As..."
 		Then the response should be a zip file
 		
