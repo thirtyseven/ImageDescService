@@ -11,12 +11,23 @@ parent.top_bar.document.getElementById("current_image_index").value = image_id
 <% @images.each do | image | 
 	id = image['id']
 	src = image['src']
+	raw_width = image['width']
+	raw_height = image['height']
+	ratio = 1.0 * raw_width / raw_height
+	if(raw_width > raw_height)
+		width = 240
+		height = width / ratio
+	else
+		height = 160
+		width = height * ratio		
+	end
 %>
 <a id="<%= id %>" href="#<%= id %>">
-<img style="border:1px solid black; padding:0.25em; font-size: 80%;" height='180px' width='240px' 
+<img style="border:1px solid black; padding:0.25em; font-size: 80%;" 
+	 width='<%= width %>px' height='<%= height %>px' 
 	onclick="click('<%= id %>')"
 	src='<%= src %>'>
 </img>
 </a>
 <hr/>
-<% end %>id
+<% end %>

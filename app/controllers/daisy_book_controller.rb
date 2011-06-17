@@ -1,4 +1,5 @@
 require 'fileutils'
+require 'RMagick'
 require 'nokogiri'
 require 'tempfile'
 require 'xml/xslt'
@@ -255,8 +256,11 @@ private
     @images = []
     images = doc.xpath( doc, "//xmlns:img")
     images.each do | image_node |
-      image = {'id' => image_node['id'], 'src' => image_node['src']}
-      @images << image
+      image_file = File.join(book_directory, image_node['src'])
+      image = Magick::ImageList.new(image_file)[0]
+      image_data = {'id' => image_node['id'], 'src' => image_node['src'], 
+        'width' => image.base_columns, 'height' => image.base_rows}
+      @images << image_data
     end
   end
 
