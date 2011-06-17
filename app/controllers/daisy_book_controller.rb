@@ -121,8 +121,12 @@ class DaisyBookController < ApplicationController
     book_directory = session[:daisy_directory]
     images_directory = File.join(book_directory, 'images')
     image_file = File.join(images_directory, image_name)
-    contents = File.read(image_file)
-    render :text => contents, :content_type => 'image/jpeg'
+    timestamp = File.stat(image_file).ctime
+    if(stale?(:last_modified => timestamp))
+      contents = File.read(image_file)
+      response.headers['Last-Modified'] = timestamp.httpdate
+      render :text => contents, :content_type => 'image/jpeg'
+    end
   end
 
   def side_bar
