@@ -39,4 +39,5 @@ group :development, :test do
 	gem 'cucumber-rails'
 	gem 'capybara' # seems to be required by cucumber-rails
 	gem 'database_cleaner' # seems to be required by cucumber-rails
+	gem 'thin' # avoids massive memory consumption (as with webrick) on dev machine
 end
