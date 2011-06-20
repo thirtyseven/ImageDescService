@@ -42,7 +42,13 @@ Feature: Daisy Book
 		When I go to the sidebar page
 		Then the xpath "//img" should exist
 		
-	# TODO: Need tests for non-bookshare Daisy books:
+	Scenario: Uploading a valid non-Bookshare Daisy zip file with no DTD file
+		When I go to the daisy upload page
+		And I attach the file "features/fixtures/DaisyZipBookWithoutDTD.zip" to "book"
+		And I press "Upload"
+		Then I should be on the description editing page
+
+	# TODO: Need tests for more non-bookshare Daisy books:
 	#    - Multiple XML content files?
 	#    - Different case of XML/xml files
 	#    - XML files not at the top level?

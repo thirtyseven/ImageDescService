@@ -137,19 +137,22 @@ class DaisyBookController < ApplicationController
     configure_images
   end  
     
-private
   def valid_daisy_zip?(file)
     begin
-      Zip::ZipFile.open(file) do |zipfile|
-        zipfile.get_entry 'dtbook-2005-3.dtd'
+      Zip::ZipFile.foreach(file) do |zipfile|
+        if zipfile.to_s =~ /\.ncx$/
+          return true
+        end
       end
-    rescue
+    rescue Exception => e
+      puts e
       return false
     end
     
-    return true
+    return false
   end
   
+  private
   def unzip_to_temp(zipped_file)
     dir = Dir.mktmpdir
     Zip::ZipFile.foreach(zipped_file) do | entry |
