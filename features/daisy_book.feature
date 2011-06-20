@@ -34,8 +34,8 @@ Feature: Daisy Book
 		And I press "Upload"
 		Then I should be on the description editing page
 		And there should be frames
-		And the xpath "//frameset/frame[@name='side_bar']" should exist
-		And the xpath "//frameset/frameset/frame[@name='top_bar']" should exist
+		And the xpath "//frameset/frame[@name='top_bar']" should exist
+		And the xpath "//frameset/frameset/frame[@name='side_bar']" should exist
 		And the xpath "//frameset/frameset/frame[@name='content']" should exist
 		When I go to the content page
 		Then I should see "John Gallaugher"
