@@ -31,7 +31,7 @@ DiagramRailsApp::Application.routes.draw do
   match "imageDesc", :to => "dynamic_descriptions#create", :via => "post"
 
   get "daisy_book/book/content", :controller => 'daisy_book', :action => 'content'
-  match "daisy_book/images/*image", :controller => 'daisy_book', :action => 'image'
+  match "daisy_book/book/*directory/*file", :controller => 'daisy_book', :action => 'file'
   
   # match 'imageDesc/uid/:uid => 'dynamic_image#show'
 

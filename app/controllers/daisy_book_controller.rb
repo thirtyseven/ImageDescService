@@ -106,6 +106,27 @@ class DaisyBookController < ApplicationController
     render :layout => 'frames'
   end
   
+  def file
+    directory_name = params[:directory]
+    file_name = params[:file]
+    book_directory = session[:daisy_directory]
+    directory = File.join(book_directory, directory_name)
+    file = File.join(directory, file_name)
+    timestamp = File.stat(file).ctime
+    if(stale?(:last_modified => timestamp))
+      content_type = 'text/plain'
+      case File.extname(file).downcase
+      when '.jpg', '.jpeg'
+        content_type = 'image/jpeg'
+      when '.png'
+        content_type = 'image/png'
+      end
+      contents = File.read(file)
+      response.headers['Last-Modified'] = timestamp.httpdate
+      render :text => contents, :content_type => content_type
+    end
+  end
+  
   def content
     book_directory = session[:daisy_directory]
     contents_filename = get_daisy_contents_xml_name(book_directory)
@@ -116,19 +137,6 @@ class DaisyBookController < ApplicationController
     render :text => contents, :content_type => 'text/html'
   end
   
-  def image
-    image_name = params[:image]
-    book_directory = session[:daisy_directory]
-    images_directory = File.join(book_directory, 'images')
-    image_file = File.join(images_directory, image_name)
-    timestamp = File.stat(image_file).ctime
-    if(stale?(:last_modified => timestamp))
-      contents = File.read(image_file)
-      response.headers['Last-Modified'] = timestamp.httpdate
-      render :text => contents, :content_type => 'image/jpeg'
-    end
-  end
-
   def side_bar
     configure_images
   end
@@ -265,7 +273,7 @@ class DaisyBookController < ApplicationController
     images.each do | image_node |
       image_file = File.join(book_directory, image_node['src'])
       image = Magick::ImageList.new(image_file)[0]
-      image_data = {'id' => image_node['id'], 'src' => image_node['src'], 
+      image_data = {'id' => image_node['id'], 'src' => "book/#{image_node['src']}", 
         'width' => image.base_columns, 'height' => image.base_rows}
       @images << image_data
     end
