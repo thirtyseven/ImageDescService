@@ -28,7 +28,7 @@ Feature: Daisy Book
 		Then I should be on the daisy upload page
 		And I should see "Uploaded file must be a valid Daisy (zip) file"
 		
-	Scenario: Uploading a valid Daisy zip file
+	Scenario: Uploading a valid Daisy zip file with images
 		When I go to the daisy upload page
 		And I attach the file "features/fixtures/DaisyZipBookUnencrypted.zip" to "book"
 		And I press "Upload"
@@ -58,10 +58,18 @@ Feature: Daisy Book
 		When I go to the sidebar page
 		Then the xpath "//img" should exist
 
+	Scenario: Uploading a valid non-Bookshare Daisy zip file with all files in a subdirectory
+		When I go to the daisy upload page
+		And I attach the file "features/fixtures/DaisyZipBookWithTopLevelSubdirectory.zip" to "book"
+		And I press "Upload"
+		Then I should be on the description editing page
+		And I go to the header panel
+		And I press "Save As..."
+		Then the response should be a zip file
+
 	# TODO: Need tests for more non-bookshare Daisy books:
 	#    - Multiple XML content files?
 	#    - Different case of XML/xml files
-	#    - XML files not at the top level?
 	#	 - Non-JPEG images
 	
 	Scenario: Downloading an XML file with descriptions

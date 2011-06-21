@@ -26,10 +26,15 @@ class DaisyBookController < ApplicationController
   def get_daisy_with_descriptions
     begin
       book_directory = session[:daisy_directory]
+      zip_directory = session[:zip_directory]
       contents_filename = get_daisy_contents_xml_name(book_directory)
+      relative_contents_path = contents_filename[zip_directory.length..-1]
+      if(relative_contents_path[0,1] == '/')
+        relative_contents_path = relative_contents_path[1..-1]
+    end
       xml = get_xml_contents_with_updated_descriptions(contents_filename)
+      zip_filename = create_zip(session[:daisy_file], relative_contents_path, xml)    
       basename = File.basename(contents_filename)
-      zip_filename = create_zip(session[:daisy_file], basename, xml)    
       send_file zip_filename, :type => 'application/zip; charset=utf-8', :filename => basename + '.zip', :disposition => 'attachment' 
     rescue ShowAlertAndGoBack => e
       redirect_to :back, :alert => e.message
@@ -40,6 +45,7 @@ class DaisyBookController < ApplicationController
   def get_xml_with_descriptions
     begin
       book_directory = session[:daisy_directory]
+      zip_directory = session[:zip_directory]
       contents_filename = get_daisy_contents_xml_name(book_directory)
       xml = get_xml_contents_with_updated_descriptions(contents_filename)
       send_data xml, :type => 'application/xml; charset=utf-8', :filename => contents_filename, :disposition => 'attachment' 
@@ -92,10 +98,19 @@ class DaisyBookController < ApplicationController
       return
     end
     
-    book_directory = unzip_to_temp(file)
+    zip_directory = unzip_to_temp(file)
+    session[:zip_directory] = zip_directory
+    top_level_entries = Dir.entries(zip_directory)
+    top_level_entries.delete('.')
+    top_level_entries.delete('..')
+    if(top_level_entries.size == 1)
+      book_directory = File.join(zip_directory, top_level_entries.first)
+    else
+      book_directory = zip_directory
+    end
     session[:daisy_directory] = book_directory
 
-    copy_of_daisy_file = File.join(book_directory, "Daisy.zip")
+    copy_of_daisy_file = File.join(zip_directory, "Daisy.zip")
     FileUtils.cp(book.path, copy_of_daisy_file)
     session[:daisy_file] = copy_of_daisy_file
 
@@ -108,6 +123,9 @@ class DaisyBookController < ApplicationController
   
   def file
     directory_name = params[:directory]
+    if !directory_name
+      directory_name = ''
+    end
     file_name = params[:file]
     book_directory = session[:daisy_directory]
     directory = File.join(book_directory, directory_name)
@@ -160,13 +178,25 @@ class DaisyBookController < ApplicationController
     return false
   end
   
-  private
+private
   def unzip_to_temp(zipped_file)
     dir = Dir.mktmpdir
     Zip::ZipFile.foreach(zipped_file) do | entry |
-      entry.extract(File.join(dir, entry.name))
+      full_path = File.join(dir, entry.name)
+      mkdirs(File.dirname(full_path))
+      entry.extract(full_path)
     end
     return dir
+  end
+  
+  def mkdirs(full_path)
+    dirname = File.dirname(full_path)
+    if(dirname.length > 0 && dirname != '/')
+      mkdirs(dirname)
+    end
+    if(!File.exists?(full_path)) 
+      Dir.mkdir(full_path)
+    end
   end
   
   def get_daisy_contents_xml_name(book_directory)
@@ -248,17 +278,14 @@ class DaisyBookController < ApplicationController
   end
   
   def create_zip(old_daisy_zip, contents_filename, new_xml_contents)
-    puts "create_zip #{old_daisy_zip}, #{contents_filename}, size=#{new_xml_contents.size}"
     new_contents_file = Tempfile.new('baked-xml')
     new_contents_file.write(new_xml_contents)
     new_contents_file.close
-    puts "baked xml: #{new_contents_file.path} size=#{File.size(new_contents_file.path)}"
     new_daisy_zip = Tempfile.new('baked-daisy')
     new_daisy_zip.close
     FileUtils.cp(old_daisy_zip, new_daisy_zip.path)
-    puts "copied daisy zip to #{new_daisy_zip.path}"
     Zip::ZipFile.open(new_daisy_zip.path) do |zipfile|
-        zipfile.replace(contents_filename, new_contents_file.path)
+      zipfile.replace(contents_filename, new_contents_file.path)
     end
     return new_daisy_zip.path
   end
