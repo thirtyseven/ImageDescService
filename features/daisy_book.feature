@@ -48,6 +48,16 @@ Feature: Daisy Book
 		And I press "Upload"
 		Then I should be on the description editing page
 
+	Scenario: Uploading a Bookshare Daisy zip file with missing images directory
+		When I go to the daisy upload page
+		And I attach the file "features/fixtures/DaisyZipBookWithMissingImages.zip" to "book"
+		And I press "Upload"
+		Then I should be on the description editing page
+		When I go to the header panel
+		Then the xpath "//input" should exist
+		When I go to the sidebar page
+		Then the xpath "//img" should exist
+
 	# TODO: Need tests for more non-bookshare Daisy books:
 	#    - Multiple XML content files?
 	#    - Different case of XML/xml files

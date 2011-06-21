@@ -271,10 +271,16 @@ class DaisyBookController < ApplicationController
     @images = []
     images = doc.xpath( doc, "//xmlns:img")
     images.each do | image_node |
+      image_data = {'id' => image_node['id'], 'src' => "book/#{image_node['src']}"}
       image_file = File.join(book_directory, image_node['src'])
-      image = Magick::ImageList.new(image_file)[0]
-      image_data = {'id' => image_node['id'], 'src' => "book/#{image_node['src']}", 
-        'width' => image.base_columns, 'height' => image.base_rows}
+      if File.exists?(image_file)
+        image = Magick::ImageList.new(image_file)[0]
+        image_data['width'] = image.base_columns
+        image_data['height'] = image.base_rows
+      else
+        image_data['width'] = 20
+        image_data['height'] = 20
+      end
       @images << image_data
     end
   end
