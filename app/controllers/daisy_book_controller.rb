@@ -302,8 +302,18 @@ private
     @images = []
     images = doc.xpath( doc, "//xmlns:img")
     images.each do | image_node |
-      image_data = {'id' => image_node['id'], 'src' => "book/#{image_node['src']}"}
-      image_file = File.join(book_directory, image_node['src'])
+      img_id = image_node['id']
+      if(!img_id)
+        puts "Skipping image with no id: #{image_node.path}"
+        next
+      end
+      img_src = image_node['src']
+      if(!img_src)
+        puts "Skipping image with no src: id=#{img_id}"
+        next
+      end
+      image_data = {'id' => img_id, 'src' => "book/#{img_src}"}
+      image_file = File.join(book_directory, img_src)
       if File.exists?(image_file)
         image = Magick::ImageList.new(image_file)[0]
         image_data['width'] = image.base_columns
