@@ -67,6 +67,15 @@ Feature: Daisy Book
 		And I press "Save As..."
 		Then the response should be a zip file
 
+	Scenario: Uploading an Internet Archive (slightly invalid) Daisy zip file
+		When I go to the daisy upload page
+		And I attach the file "features/fixtures/DaisyZipBookWithSlightlyInvalidEntries.zip" to "book"
+		And I press "Upload"
+		Then I should be on the description editing page
+		And I go to the header panel
+		And I press "Save As..."
+		Then the response should be a zip file
+
 	# TODO: Need tests for more non-bookshare Daisy books:
 	#    - Multiple XML content files?
 	#    - Different case of XML/xml files

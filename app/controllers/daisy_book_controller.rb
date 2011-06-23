@@ -3,7 +3,6 @@ require 'RMagick'
 require 'nokogiri'
 require 'tempfile'
 require 'xml/xslt'
-require 'zip/zipfilesystem'
 
 class NonDaisyXMLException < Exception
 end
@@ -91,14 +90,13 @@ class DaisyBookController < ApplicationController
       return
     end
     
-    file = File.new( book.path )
-    if !valid_daisy_zip?(file)
+    if !valid_daisy_zip?(book.path)
       flash[:alert] = "Uploaded file must be a valid Daisy (zip) file"
       redirect_to :action => 'upload'
       return
     end
     
-    zip_directory = unzip_to_temp(file)
+    zip_directory = unzip_to_temp(book.path)
     session[:zip_directory] = zip_directory
     top_level_entries = Dir.entries(zip_directory)
     top_level_entries.delete('.')
@@ -164,14 +162,18 @@ class DaisyBookController < ApplicationController
   end  
     
   def valid_daisy_zip?(file)
+    puts "valid_daisy_zip?(#{file})"
     begin
-      Zip::ZipFile.foreach(file) do |zipfile|
-        if zipfile.to_s =~ /\.ncx$/
-          return true
+      Zip::Archive.open(file) do |zipfile|
+        zipfile.each do |entry|
+          if entry.name =~ /\.ncx$/
+            return true
+          end
         end
       end
     rescue Exception => e
       puts e
+      puts e.backtrace.join("\n")
       return false
     end
     
@@ -181,22 +183,22 @@ class DaisyBookController < ApplicationController
 private
   def unzip_to_temp(zipped_file)
     dir = Dir.mktmpdir
-    Zip::ZipFile.foreach(zipped_file) do | entry |
-      full_path = File.join(dir, entry.name)
-      mkdirs(File.dirname(full_path))
-      entry.extract(full_path)
-    end
+    Zip::Archive.open(zipped_file) do |zipfile|
+      zipfile.each do |entry|
+        if entry.directory?
+          FileUtils.mkdir_p(entry.name)
+        else
+          dirname = File.join(dir, File.dirname(entry.name))
+          FileUtils.mkdir_p(dirname) unless File.exist?(dirname)
+    
+          destination = File.join(dir, entry.name)
+          open(destination, 'wb') do |f|
+            f << entry.read
+          end
+        end
+      end
+    end    
     return dir
-  end
-  
-  def mkdirs(full_path)
-    dirname = File.dirname(full_path)
-    if(dirname.length > 0 && dirname != '/')
-      mkdirs(dirname)
-    end
-    if(!File.exists?(full_path)) 
-      Dir.mkdir(full_path)
-    end
   end
   
   def get_daisy_contents_xml_name(book_directory)
@@ -278,14 +280,16 @@ private
   end
   
   def create_zip(old_daisy_zip, contents_filename, new_xml_contents)
-    new_contents_file = Tempfile.new('baked-xml')
-    new_contents_file.write(new_xml_contents)
-    new_contents_file.close
     new_daisy_zip = Tempfile.new('baked-daisy')
     new_daisy_zip.close
     FileUtils.cp(old_daisy_zip, new_daisy_zip.path)
-    Zip::ZipFile.open(new_daisy_zip.path) do |zipfile|
-      zipfile.replace(contents_filename, new_contents_file.path)
+    Zip::Archive.open(new_daisy_zip.path) do |zipfile|
+      zipfile.num_files.times do |index|
+        if(zipfile.get_name(index) == contents_filename)
+          zipfile.replace_buffer(index, new_xml_contents)
+          break
+        end
+      end
     end
     return new_daisy_zip.path
   end

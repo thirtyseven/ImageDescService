@@ -9,7 +9,7 @@ gem 'sqlite3'
 gem 'mysql2'
 gem 'uuidtools'
 gem 'test-unit'
-gem 'rubyzip'
+gem 'zipruby'
 
 # Use unicorn as the web server
 # gem 'unicorn'
