@@ -185,13 +185,12 @@ private
     dir = Dir.mktmpdir
     Zip::Archive.open(zipped_file) do |zipfile|
       zipfile.each do |entry|
+        destination = File.join(dir, entry.name)
         if entry.directory?
-          FileUtils.mkdir_p(entry.name)
+          FileUtils.mkdir_p(destination)
         else
           dirname = File.join(dir, File.dirname(entry.name))
           FileUtils.mkdir_p(dirname) unless File.exist?(dirname)
-    
-          destination = File.join(dir, entry.name)
           open(destination, 'wb') do |f|
             f << entry.read
           end
