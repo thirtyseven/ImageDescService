@@ -314,7 +314,6 @@ private
       image_data = {'id' => img_id, 'src' => "book/#{img_src}"}
       image_file = File.join(book_directory, img_src)
       if File.exists?(image_file)
-        puts "Opening Magick on #{image_file}"
         image = Magick::ImageList.new(image_file)[0]
         image_data['width'] = image.base_columns
         image_data['height'] = image.base_rows
