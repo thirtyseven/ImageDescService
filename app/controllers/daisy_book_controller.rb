@@ -318,6 +318,7 @@ private
         image = Magick::ImageList.new(image_file)[0]
         image_data['width'] = image.base_columns
         image_data['height'] = image.base_rows
+        image.destroy!
       else
         image_data['width'] = 20
         image_data['height'] = 20
