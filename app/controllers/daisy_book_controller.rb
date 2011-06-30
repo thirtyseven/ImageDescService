@@ -234,6 +234,12 @@ private
       image = doc.at_xpath( doc, "//xmlns:img[@src='#{image_location}']")
       parent = doc.at_xpath( doc, "//xmlns:img[@src='#{image_location}']/..")
   
+      dynamic_description = dynamic_image.best_description
+      if(!dynamic_description)
+        logger.info "Image #{book_uid} #{image_location} is in database but with no descriptions"
+        next
+      end
+      
       if !parent
         logger.info "Missing img element for database description #{book_uid} #{image_location}"
         next
@@ -259,7 +265,6 @@ private
         raise UnrecognizedProdnoteException.new
       end
       
-      dynamic_description = dynamic_image.best_description
       prodnote.content = dynamic_description.body
       prodnote['render'] = 'optional'
       prodnote['imgref'] = image_id

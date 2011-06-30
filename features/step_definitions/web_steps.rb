@@ -102,6 +102,11 @@ When /^(?:|I )attach the file "([^"]*)" to "([^"]*)"$/ do |path, field|
   attach_file(field, File.expand_path(path))
 end
 
+When /^the image "([^"]*)" in book "([^"]*)" with title "([^"]*)" exists but has no description$/ do |image_location, book_id, book_title|
+  image = DynamicImage.create(:uid => book_id, :title => book_title, :image_location => image_location)
+  image.save
+end
+
 When /^the first description for the image "([^"]*)" in book "([^"]*)" with title "([^"]*)" is "([^"]*)"$/ do |image_location, book_id, book_title, text|
   image = DynamicImage.create(:uid => book_id, :title => book_title, :image_location => image_location)
   image.save

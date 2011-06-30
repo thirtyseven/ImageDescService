@@ -113,3 +113,11 @@ Feature: Daisy Book
 		And I press "Save As..."
 		Then the response should be a zip file
 		
+	Scenario: Downloading an XML file with an image that is in the db but has no descriptions (IMG-100)
+		When the image "images/fwk-gallaugher-fig01_001.jpg" in book "_id2244343" with title "Information Systems: A Manager’s Guide to Harnessing Technology" exists but has no description
+		And I go to the daisy upload page
+		And I attach the file "features/fixtures/DaisyZipBookUnencrypted.zip" to "book"
+		And I press "Upload"
+		And I go to the raw xml download page
+		Then the response should be xml
+				
