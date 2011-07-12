@@ -50,10 +50,15 @@ function changeImage(delta)
 }
 // -->
 </script>
+<form accept-charset="UTF-8" action="/daisy_book/get_daisy_with_descriptions" method="get">
 <input type="Button" id="previous" value="&lt;&lt;Previous" onclick="previousButton()"></input>
 <input type="Button" id="next" value="Next&gt;&gt;" onclick="nextButton()"></input>
 
-<%= button_to "Save As...", {:action => "get_daisy_with_descriptions"}, {:method => :get} %>
+<div class='right'>
+<input type="Submit" value="Save As..."> </input>
+</div>
+<div class='clear'/>
+</form>
 
 <form name="navigation_helpers" id="nav_help">
 <input type="hidden" value="" name="current_image_index" id="current_image_index" size="20"></input>
