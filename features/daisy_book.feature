@@ -64,7 +64,7 @@ Feature: Daisy Book
 		And I press "Upload"
 		Then I should be on the description editing page
 		And I go to the header panel
-		And I press "Save As..."
+		And I press "SaveAs"
 		Then the response should be a zip file
 
 	Scenario: Uploading an Internet Archive (slightly invalid) Daisy zip file
@@ -73,7 +73,7 @@ Feature: Daisy Book
 		And I press "Upload"
 		Then I should be on the description editing page
 		And I go to the header panel
-		And I press "Save As..."
+		And I press "SaveAs"
 		Then the response should be a zip file
 
 	Scenario: Uploading a Daisy zip file with an image that has no src attribute
@@ -82,7 +82,7 @@ Feature: Daisy Book
 		And I press "Upload"
 		Then I should be on the description editing page
 		And I go to the header panel
-		And I press "Save As..."
+		And I press "SaveAs"
 		Then the response should be a zip file
 
 	# TODO: Need tests for more non-bookshare Daisy books:
@@ -110,7 +110,7 @@ Feature: Daisy Book
 		And I attach the file "features/fixtures/DaisyZipBookUnencrypted.zip" to "book"
 		And I press "Upload"
 		And I go to the header panel
-		And I press "Save As..."
+		And I press "SaveAs"
 		Then the response should be a zip file
 		
 	Scenario: Downloading an XML file with an image that is in the db but has no descriptions (IMG-100)
