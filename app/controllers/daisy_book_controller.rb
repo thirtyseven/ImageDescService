@@ -232,14 +232,14 @@ private
     matching_images.each do | dynamic_image |
       image_location = dynamic_image.image_location
       image = doc.at_xpath( doc, "//xmlns:img[@src='#{image_location}']")
-      parent = doc.at_xpath( doc, "//xmlns:img[@src='#{image_location}']/..")
-  
       dynamic_description = dynamic_image.best_description
       if(!dynamic_description)
         logger.info "Image #{book_uid} #{image_location} is in database but with no descriptions"
         next
       end
-      
+
+      parent = doc.at_xpath( doc, "//xmlns:img[@src='#{image_location}']/..")
+  
       if !parent
         logger.info "Missing img element for database description #{book_uid} #{image_location}"
         next
