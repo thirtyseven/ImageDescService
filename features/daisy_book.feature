@@ -28,6 +28,12 @@ Feature: Daisy Book
 		Then I should be on the daisy upload page
 		And I should see "Uploaded file must be a valid Daisy (zip) file"
 		
+	Scenario: Uploading a valid non-Bookshare Daisy zip file with no DTD file
+		When I go to the daisy upload page
+		And I attach the file "features/fixtures/DaisyZipBookWithoutDTD.zip" to "book"
+		And I press "Upload"
+		Then I should be on the description editing page
+
 	Scenario: Uploading a valid Daisy zip file with images
 		When I go to the daisy upload page
 		And I attach the file "features/fixtures/DaisyZipBookUnencrypted.zip" to "book"
@@ -42,12 +48,6 @@ Feature: Daisy Book
 		When I go to the sidebar page
 		Then the xpath "//img" should exist
 		
-	Scenario: Uploading a valid non-Bookshare Daisy zip file with no DTD file
-		When I go to the daisy upload page
-		And I attach the file "features/fixtures/DaisyZipBookWithoutDTD.zip" to "book"
-		And I press "Upload"
-		Then I should be on the description editing page
-
 	Scenario: Uploading a Bookshare Daisy zip file with missing images directory
 		When I go to the daisy upload page
 		And I attach the file "features/fixtures/DaisyZipBookWithMissingImages.zip" to "book"
@@ -58,7 +58,15 @@ Feature: Daisy Book
 		When I go to the sidebar page
 		Then the xpath "//img" should exist
 
-	Scenario: Uploading a valid non-Bookshare Daisy zip file with all files in a subdirectory
+	Scenario: Downloading an XML file with an image that is in the db but has no descriptions (IMG-100)
+		When the image "images/fwk-gallaugher-fig01_001.jpg" in book "_id2244343" with title "Information Systems: A Manager’s Guide to Harnessing Technology" exists but has no description
+		And I go to the daisy upload page
+		And I attach the file "features/fixtures/DaisyZipBookUnencrypted.zip" to "book"
+		And I press "Upload"
+		And I go to the raw xml download page
+		Then the response should be xml
+
+	Scenario: Downloading a valid non-Bookshare Daisy zip file with all files in a subdirectory
 		When the first description for the image "image1.jpg" in book "AUTO-UID-4767990567747899000" with title "ARE YOU READY?" is "Prodnote from database"
 		And I go to the daisy upload page
 		And I attach the file "features/fixtures/DaisyZipBookWithTopLevelSubdirectory.zip" to "book"
@@ -68,7 +76,7 @@ Feature: Daisy Book
 		And I press "SaveAs"
 		Then the response should be a zip file
 
-	Scenario: Uploading an Internet Archive (slightly invalid) Daisy zip file (and no images)
+	Scenario: Downloading an Internet Archive (slightly invalid) Daisy zip file (and no images)
 		When I go to the daisy upload page
 		And I attach the file "features/fixtures/DaisyZipBookWithSlightlyInvalidEntries.zip" to "book"
 		And I press "Upload"
@@ -78,7 +86,7 @@ Feature: Daisy Book
 		Then the response should be html
 		And I should see "no image descriptions available for this book"
 
-	Scenario: Uploading a Daisy zip file with an image that has no src attribute
+	Scenario: Downloading a Daisy zip file with an image that has no src attribute
 		When the first description for the image "images/image001.jpg" in book "en-us-20100226091725" with title "CK-12 Biology I" is "Prodnote from database"
 		And I go to the daisy upload page
 		And I attach the file "features/fixtures/DaisyZipBookWithMissingSrcAttribute.zip" to "book"
@@ -88,22 +96,6 @@ Feature: Daisy Book
 		And I press "SaveAs"
 		Then the response should be a zip file
 
-	Scenario: Uploading a Daisy zip file with unrecognized prodnotes and image not directly inside group
-		When the first description for the image "images/cover.jpg" in book "_id2244343" with title "Information Systems: A Manager’s Guide to Harnessing Technology" is "Prodnote from database"
-		And I go to the daisy upload page
-		And I attach the file "features/fixtures/DaisyZipBookImageNotDirectChildOfGroup.zip" to "book"
-		And I press "Upload"
-		Then I should be on the description editing page
-		And I go to the header panel
-		And I press "SaveAs"
-		Then I should see "Unable to update descriptions"
-		And I should see "contained descriptions from other sources"
-	
-	# TODO: Need tests for more non-bookshare Daisy books:
-	#    - Multiple XML content files?
-	#    - Different case of XML/xml files
-	#	 - Non-JPEG images
-	
 	Scenario: Downloading an XML file with descriptions
 		When the first description for the image "images/fwk-gallaugher-fig01_001.jpg" in book "_id2244343" with title "Information Systems: A Manager’s Guide to Harnessing Technology" is "Prodnote from database"
 		And I go to the daisy upload page
@@ -136,10 +128,20 @@ Feature: Daisy Book
 		And I press "SaveAs"
 		Then the response should be a zip file
 		
-	Scenario: Downloading an XML file with an image that is in the db but has no descriptions (IMG-100)
-		When the image "images/fwk-gallaugher-fig01_001.jpg" in book "_id2244343" with title "Information Systems: A Manager’s Guide to Harnessing Technology" exists but has no description
+	Scenario: Uploading a Daisy zip file with unrecognized prodnotes and image not directly inside group
+		When the first description for the image "images/cover.jpg" in book "_id2244343" with title "Information Systems: A Manager’s Guide to Harnessing Technology" is "Prodnote from database"
 		And I go to the daisy upload page
-		And I attach the file "features/fixtures/DaisyZipBookUnencrypted.zip" to "book"
+		And I attach the file "features/fixtures/DaisyZipBookImageNotDirectChildOfGroup.zip" to "book"
 		And I press "Upload"
-		And I go to the raw xml download page
-		Then the response should be xml
+		Then I should be on the description editing page
+		And I go to the header panel
+		And I press "SaveAs"
+		Then I should see "Unable to update descriptions"
+		And I should see "contained descriptions from other sources"
+	
+	# TODO: Need tests for more non-bookshare Daisy books:
+	#    - Multiple XML content files?
+	#    - Different case of XML/xml files
+	#	 - Non-JPEG images
+	
+		
