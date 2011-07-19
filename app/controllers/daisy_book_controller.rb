@@ -13,9 +13,6 @@ end
 class MissingBookUIDException < Exception
 end
 
-class UnrecognizedProdnoteException < Exception
-end
-
 class ShowAlertAndGoBack < Exception
   def initialize(message)
     @message = message
@@ -66,9 +63,6 @@ class DaisyBookController < ApplicationController
     rescue NoImageDescriptions
       logger.info "#{caller_info} No descriptions available #{contents_filename}"
       raise ShowAlertAndGoBack.new("There are no image descriptions available for this book")
-    rescue UnrecognizedProdnoteException
-      logger.info "#{caller_info} Unrecognized prodnote elements in #{contents_filename}"
-      raise ShowAlertAndGoBack.new("Unable to update descriptions because the uploaded book contained descriptions from other sources")
     rescue NonDaisyXMLException => e
       logger.info "#{caller_info} Uploaded non-dtbook #{contents_filename}"
       raise ShowAlertAndGoBack.new("Uploaded file must be a valid Daisy book XML content file")
@@ -268,19 +262,23 @@ private
   
       image_id = image['id']
   
-      prodnote = imggroup.at_xpath(".//xmlns:prodnote")
-      if(!prodnote)
-        prodnote = Nokogiri::XML::Node.new "prodnote", doc 
-        image.add_next_sibling prodnote
-      elsif(prodnote['id'] != create_prodnote_id(image_id))
-        raise UnrecognizedProdnoteException.new
+      prodnotes = imggroup.xpath(".//xmlns:prodnote")
+      our_prodnote = nil
+      prodnotes.each do | prodnote |
+        if(prodnote['id'] == create_prodnote_id(image_id))
+          our_prodnote = prodnote
+        end
+      end
+      if(!our_prodnote)
+        our_prodnote = Nokogiri::XML::Node.new "prodnote", doc 
+        imggroup.add_child our_prodnote 
       end
       
-      prodnote.content = dynamic_description.body
-      prodnote['render'] = 'optional'
-      prodnote['imgref'] = image_id
-      prodnote['id'] = create_prodnote_id(image_id)
-      prodnote['showin'] = 'blp'
+      our_prodnote.content = dynamic_description.body
+      our_prodnote['render'] = 'optional'
+      our_prodnote['imgref'] = image_id
+      our_prodnote['id'] = create_prodnote_id(image_id)
+      our_prodnote['showin'] = 'blp'
     end
     
     return doc.to_xml

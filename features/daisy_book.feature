@@ -128,7 +128,7 @@ Feature: Daisy Book
 		And I press "SaveAs"
 		Then the response should be a zip file
 		
-	Scenario: Uploading a Daisy zip file with unrecognized prodnotes and image not directly inside group
+	Scenario: Downloading a Daisy zip file with unrecognized prodnotes and image not directly inside group
 		When the first description for the image "images/cover.jpg" in book "_id2244343" with title "Information Systems: A Manager’s Guide to Harnessing Technology" is "Prodnote from database"
 		And I go to the daisy upload page
 		And I attach the file "features/fixtures/DaisyZipBookImageNotDirectChildOfGroup.zip" to "book"
@@ -136,8 +136,12 @@ Feature: Daisy Book
 		Then I should be on the description editing page
 		And I go to the header panel
 		And I press "SaveAs"
-		Then I should see "Unable to update descriptions"
-		And I should see "contained descriptions from other sources"
+		Then the response should be a zip file
+		And I go to the raw xml download page
+		Then the response should be xml
+		And the xpath "//imggroup" should exist
+		And the xpath "//imggroup//prodnote[@id='p510-001']" should exist
+		And the xpath "//imggroup//prodnote[@id='pnid_img_000001']" should exist
 	
 	# TODO: Need tests for more non-bookshare Daisy books:
 	#    - Multiple XML content files?
