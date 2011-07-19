@@ -4,6 +4,9 @@ require 'nokogiri'
 require 'tempfile'
 require 'xml/xslt'
 
+class NoImageDescriptions < Exception
+end
+
 class NonDaisyXMLException < Exception
 end
 
@@ -60,6 +63,9 @@ class DaisyBookController < ApplicationController
     xml_file = File.read(contents_filename)
     begin
       xml = get_contents_with_updated_descriptions(xml_file)
+    rescue NoImageDescriptions
+      logger.info "#{caller_info} No descriptions available #{contents_filename}"
+      raise ShowAlertAndGoBack.new("There are no image descriptions available for this book")
     rescue UnrecognizedProdnoteException
       logger.info "#{caller_info} Unrecognized prodnote elements in #{contents_filename}"
       raise ShowAlertAndGoBack.new("Unable to update descriptions because the uploaded book contained descriptions from other sources")
@@ -231,6 +237,10 @@ private
     book_uid = node.attributes['content'].content
   
     matching_images = DynamicImage.where("uid = ?", book_uid)
+    if matching_images.empty?
+      raise NoImageDescriptions.new
+    end
+    
     matching_images.each do | dynamic_image |
       image_location = dynamic_image.image_location
       image = doc.at_xpath( doc, "//xmlns:img[@src='#{image_location}']")

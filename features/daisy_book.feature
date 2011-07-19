@@ -59,7 +59,8 @@ Feature: Daisy Book
 		Then the xpath "//img" should exist
 
 	Scenario: Uploading a valid non-Bookshare Daisy zip file with all files in a subdirectory
-		When I go to the daisy upload page
+		When the first description for the image "image1.jpg" in book "AUTO-UID-4767990567747899000" with title "ARE YOU READY?" is "Prodnote from database"
+		And I go to the daisy upload page
 		And I attach the file "features/fixtures/DaisyZipBookWithTopLevelSubdirectory.zip" to "book"
 		And I press "Upload"
 		Then I should be on the description editing page
@@ -67,17 +68,19 @@ Feature: Daisy Book
 		And I press "SaveAs"
 		Then the response should be a zip file
 
-	Scenario: Uploading an Internet Archive (slightly invalid) Daisy zip file
+	Scenario: Uploading an Internet Archive (slightly invalid) Daisy zip file (and no images)
 		When I go to the daisy upload page
 		And I attach the file "features/fixtures/DaisyZipBookWithSlightlyInvalidEntries.zip" to "book"
 		And I press "Upload"
 		Then I should be on the description editing page
 		And I go to the header panel
 		And I press "SaveAs"
-		Then the response should be a zip file
+		Then the response should be html
+		And I should see "no image descriptions available for this book"
 
 	Scenario: Uploading a Daisy zip file with an image that has no src attribute
-		When I go to the daisy upload page
+		When the first description for the image "images/image001.jpg" in book "en-us-20100226091725" with title "CK-12 Biology I" is "Prodnote from database"
+		And I go to the daisy upload page
 		And I attach the file "features/fixtures/DaisyZipBookWithMissingSrcAttribute.zip" to "book"
 		And I press "Upload"
 		Then I should be on the description editing page
@@ -115,6 +118,15 @@ Feature: Daisy Book
 		And the xpath "//imggroup/prodnote[@id='pnid_img_000003']" should exist
 		And the xpath "//imggroup/prodnote[@id='pnid_img_000003']" should be "Prodnote from database"
 
+	Scenario: Downloading a Daisy book with no descriptions
+		When I go to the daisy upload page
+		And I attach the file "features/fixtures/DaisyZipBookUnencrypted.zip" to "book"
+		And I press "Upload"
+		And I go to the header panel
+		And I press "SaveAs"
+		Then the response should be html
+		And I should see "no image descriptions available for this book"
+		
 	Scenario: Downloading a Daisy book with descriptions
 		When the first description for the image "images/fwk-gallaugher-fig01_001.jpg" in book "_id2244343" with title "Information Systems: A Manager’s Guide to Harnessing Technology" is "Prodnote from database"
 		And I go to the daisy upload page
@@ -131,4 +143,3 @@ Feature: Daisy Book
 		And I press "Upload"
 		And I go to the raw xml download page
 		Then the response should be xml
-				

@@ -232,6 +232,10 @@ Then /^the response should be plain text$/ do
   page.response_headers['Content-Type'].should == 'text/plain; charset=utf-8'
 end
 
+Then /^the response should be html/ do
+  page.response_headers['Content-Type'].should == 'text/html; charset=utf-8'
+end
+
 Then /^the response should be xml$/ do
   page.response_headers['Content-Type'].should == 'application/xml; charset=utf-8'
 end
