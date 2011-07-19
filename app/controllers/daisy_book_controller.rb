@@ -22,6 +22,8 @@ class ShowAlertAndGoBack < Exception
 end
 
 class DaisyBookController < ApplicationController
+  ROOT_XPATH = "/xmlns:dtbook"
+  
   def get_daisy_with_descriptions
     begin
       book_directory = session[:daisy_directory]
@@ -76,6 +78,7 @@ class DaisyBookController < ApplicationController
       logger.info "#{caller_info} Unexpected exception processing #{contents_filename}:"
       logger.info "#{e.class}: #{e.message}"
       logger.info e.backtrace.join("\n")
+      $stderr.puts e
       raise ShowAlertAndGoBack.new("An unexpected error has prevented processing that file")
     end
     
@@ -162,7 +165,6 @@ class DaisyBookController < ApplicationController
   end  
     
   def valid_daisy_zip?(file)
-    puts "valid_daisy_zip?(#{file})"
     begin
       Zip::Archive.open(file) do |zipfile|
         zipfile.each do |entry|
@@ -215,7 +217,7 @@ private
   def get_contents_with_updated_descriptions(file)
     doc = Nokogiri::XML file
     
-    root = doc.xpath(doc, "/xmlns:dtbook")
+    root = doc.xpath(doc, ROOT_XPATH)
     if root.size != 1
       raise NonDaisyXMLException.new
     end
@@ -232,32 +234,31 @@ private
     matching_images.each do | dynamic_image |
       image_location = dynamic_image.image_location
       image = doc.at_xpath( doc, "//xmlns:img[@src='#{image_location}']")
+      if !image
+        logger.info "Missing img element for database description #{book_uid} #{image_location}"
+        next
+      end
+
       dynamic_description = dynamic_image.best_description
       if(!dynamic_description)
         logger.info "Image #{book_uid} #{image_location} is in database but with no descriptions"
         next
       end
 
-      parent = doc.at_xpath( doc, "//xmlns:img[@src='#{image_location}']/..")
-  
-      if !parent
-        logger.info "Missing img element for database description #{book_uid} #{image_location}"
-        next
-      end
-      
-      is_parent_image_group = parent.matches?('//xmlns:imggroup')
-      if(!is_parent_image_group)
-        image_group = Nokogiri::XML::Node.new "imggroup", doc
-        image_group.parent = parent
+      parent = image.at_xpath("..")
+      imggroup = get_imggroup_parent_of(image)
+      if(!imggroup)
+        imggroup = Nokogiri::XML::Node.new "imggroup", doc
+        imggroup.parent = parent
         
         parent.children.delete(image)
-        image.parent = image_group
-        parent = image_group
+        image.parent = imggroup
+        parent = imggroup
       end
   
       image_id = image['id']
   
-      prodnote = parent.at_xpath("./xmlns:prodnote")
+      prodnote = imggroup.at_xpath(".//xmlns:prodnote")
       if(!prodnote)
         prodnote = Nokogiri::XML::Node.new "prodnote", doc 
         image.add_next_sibling prodnote
@@ -273,6 +274,26 @@ private
     end
     
     return doc.to_xml
+  end
+  
+  def get_imggroup_parent_of(image_node)
+    node = image_node
+    prevent_infinite_loop = 100
+    while(node)
+      if(node.node_name == "imggroup")
+        return node
+      end
+      parent = node.at_xpath("..")
+      if(!parent || parent == node || parent.node_name == "dtbook")
+        break
+      end
+      node = parent
+      prevent_infinite_loop -= 1
+      if(prevent_infinite_loop < 0)
+        raise "XML file image was nested more than 100 levels deep"
+      end
+    end
+    return nil
   end
   
   def create_prodnote_id(image_id)
