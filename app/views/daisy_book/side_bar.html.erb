@@ -1,8 +1,8 @@
 <script type="text/javascript">
 <!--
-function click(image_id){
-parent.content.location = "/daisy_book/book/content#" + image_id
+function handleClick(image_id){
 parent.top_bar.document.getElementById("current_image_index").value = image_id
+parent.content.location = "/daisy_book/book/content#" + image_id
 }
 //-->
 </script>
@@ -25,7 +25,7 @@ parent.top_bar.document.getElementById("current_image_index").value = image_id
 <a id="<%= id %>" href="#<%= id %>">
 <img style="border:1px solid black; padding:0.25em; font-size: 80%;" 
 	 width='<%= width %>px' height='<%= height %>px' 
-	onclick="click('<%= id %>')"
+	onclick="handleClick('<%= id %>')"
 	src='<%= src %>'>
 </img>
 </a>
