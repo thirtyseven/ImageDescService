@@ -5,5 +5,6 @@ class DaisyBookControllerTest < ActionController::TestCase
   test "Daisy without DTD is considered valid" do
     controller = DaisyBookController.new
     assert_true controller.valid_daisy_zip?("features/fixtures/DaisyZipBookUnencrypted.zip")
+    assert_true controller.valid_encrypted_daisy_zip?("features/fixtures/EncryptedDaisy.zip", "b3nnythebull")
   end
 end

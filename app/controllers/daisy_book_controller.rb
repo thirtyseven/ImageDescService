@@ -181,6 +181,11 @@ class DaisyBookController < ApplicationController
     
     return false
   end
+
+  def valid_encrypted_daisy_zip?(file, password)
+      Zip::Archive.decrypt(file, password)
+      valid_daisy_zip?(file)
+  end
   
 private
   def unzip_to_temp(zipped_file)
