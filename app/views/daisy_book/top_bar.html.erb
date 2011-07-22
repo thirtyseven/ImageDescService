@@ -48,6 +48,10 @@ function changeImage(delta)
 	parent.side_bar.location = "/daisy_book/side_bar#" + target
 	parent.content.location = "/daisy_book/book/content#" + target
 }
+
+function myPopup() {
+    window.open('/help/DescriptionGuidance.html', '_guide', 'height=400,width=300,status=no,menubar=no,location=no,toolbar=no');
+}
 // -->
 </script>
 <form accept-charset="UTF-8" action="/daisy_book/get_daisy_with_descriptions" method="get">
@@ -57,6 +61,10 @@ function changeImage(delta)
 <div class='right'>
 <a href='/help/DescriptionGuidance.html' target='_blank'>
   <img src='/images/info.png' width='20' height='20'></img>
+</a>
+<a href='#' onClick="myPopup()">
+  <img src='/images/info.png' width='20' height='20'></img>
+
 </a>
 &nbsp; &nbsp;
 <input id="SaveAs" type="submit" value="Save As..."></input>
