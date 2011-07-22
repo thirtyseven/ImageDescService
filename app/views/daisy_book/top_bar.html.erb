@@ -49,8 +49,9 @@ function changeImage(delta)
 	parent.content.location = "/daisy_book/book/content#" + target
 }
 
-function myPopup() {
-    window.open('/help/DescriptionGuidance.html', '_guide', 'height=400,width=300,status=no,menubar=no,location=no,toolbar=no');
+function showGuide() {
+    window.open('/help/DescriptionGuidance.html', '_guide',
+            'height=400,width=600,status=no,menubar=no,location=no,toolbar=no,scrollbars=yes, status=no, left=80');
 }
 // -->
 </script>
@@ -59,10 +60,7 @@ function myPopup() {
 <input type="Button" id="next" value="Next&gt;&gt;" onclick="nextButton()"></input>
 
 <div class='right'>
-<a href='/help/DescriptionGuidance.html' target='_blank'>
-  <img src='/images/info.png' width='20' height='20'></img>
-</a>
-<a href='#' onClick="myPopup()">
+<a href='#' onClick="showGuide()">
   <img src='/images/info.png' width='20' height='20'></img>
 
 </a>
