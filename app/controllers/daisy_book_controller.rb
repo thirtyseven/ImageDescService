@@ -87,12 +87,25 @@ class DaisyBookController < ApplicationController
 
   def submit
     book = params[:book]
+    pwd = params[:pwd]
     if !book
       flash[:alert] = "Must specify a book file to process"
       redirect_to :action => 'upload'
       return
     end
-    
+
+    if pwd
+        begin
+            Zip::Archive.decrypt(book.path, pwd)
+        rescue Zip::Error => e
+            logger.info "#{caller_info} Invalid Password"
+            logger.info "#{e.class}: #{e.message}"
+            flash[:alert] = "Please check your password and re-enter"
+            redirect_to :action => 'upload'
+            return
+        end
+    end
+
     if !valid_daisy_zip?(book.path)
       flash[:alert] = "Uploaded file must be a valid Daisy (zip) file"
       redirect_to :action => 'upload'
@@ -180,11 +193,6 @@ class DaisyBookController < ApplicationController
     end
     
     return false
-  end
-
-  def valid_encrypted_daisy_zip?(file, password)
-      Zip::Archive.decrypt(file, password)
-      valid_daisy_zip?(file)
   end
   
 private
