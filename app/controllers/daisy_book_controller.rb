@@ -94,7 +94,7 @@ class DaisyBookController < ApplicationController
       return
     end
 
-    if pwd
+    if pwd && !pwd.empty?
         begin
             Zip::Archive.decrypt(book.path, pwd)
         rescue Zip::Error => e
