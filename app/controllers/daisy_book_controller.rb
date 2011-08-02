@@ -111,24 +111,33 @@ class DaisyBookController < ApplicationController
       redirect_to :action => 'upload'
       return
     end
-    
-    zip_directory = unzip_to_temp(book.path)
-    session[:zip_directory] = zip_directory
-    top_level_entries = Dir.entries(zip_directory)
-    top_level_entries.delete('.')
-    top_level_entries.delete('..')
-    if(top_level_entries.size == 1)
-      book_directory = File.join(zip_directory, top_level_entries.first)
-    else
-      book_directory = zip_directory
+
+    begin
+        zip_directory = unzip_to_temp(book.path)
+        session[:zip_directory] = zip_directory
+        top_level_entries = Dir.entries(zip_directory)
+        top_level_entries.delete('.')
+        top_level_entries.delete('..')
+        if(top_level_entries.size == 1)
+          book_directory = File.join(zip_directory, top_level_entries.first)
+        else
+          book_directory = zip_directory
+        end
+        session[:daisy_directory] = book_directory
+
+        copy_of_daisy_file = File.join(zip_directory, "Daisy.zip")
+        FileUtils.cp(book.path, copy_of_daisy_file)
+        session[:daisy_file] = copy_of_daisy_file
+
+        redirect_to :action => 'edit'
+    rescue Zip::Error => e
+        logger.info "#{caller_info} Invalid Password"
+        logger.info "#{e.class}: #{e.message}"
+        flash[:alert] = "This book needs a password!"
+        redirect_to :action => 'upload'
+        return
     end
-    session[:daisy_directory] = book_directory
 
-    copy_of_daisy_file = File.join(zip_directory, "Daisy.zip")
-    FileUtils.cp(book.path, copy_of_daisy_file)
-    session[:daisy_file] = copy_of_daisy_file
-
-    redirect_to :action => 'edit'
   end
 
   def edit
