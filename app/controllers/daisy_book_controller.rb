@@ -87,27 +87,32 @@ class DaisyBookController < ApplicationController
 
   def submit
     book = params[:book]
-    pwd = params[:pwd]
+    password = params[:password]
     if !book
       flash[:alert] = "Must specify a book file to process"
       redirect_to :action => 'upload'
       return
     end
 
-    if pwd && !pwd.empty?
+    if password && !password.empty?
         begin
-            Zip::Archive.decrypt(book.path, pwd)
+            Zip::Archive.decrypt(book.path, password)
         rescue Zip::Error => e
-            logger.info "#{caller_info} Invalid Password"
             logger.info "#{e.class}: #{e.message}"
-            flash[:alert] = "Please check your password and re-enter"
+            if e.message.include?("Wrong password")
+                logger.info "#{caller_info} Invalid Password for encyrpted zip"
+                flash[:alert] = "Please check your password and re-enter"
+            else
+                logger.info "#{caller_info} Other problem with encrypted zip"
+                flash[:alert] = "There is a problem with this zip file"
+            end
             redirect_to :action => 'upload'
             return
         end
     end
 
     if !valid_daisy_zip?(book.path)
-      flash[:alert] = "Uploaded file must be a valid Daisy (zip) file"
+
       redirect_to :action => 'upload'
       return
     end
@@ -131,9 +136,15 @@ class DaisyBookController < ApplicationController
 
         redirect_to :action => 'edit'
     rescue Zip::Error => e
-        logger.info "#{caller_info} Invalid Password"
         logger.info "#{e.class}: #{e.message}"
-        flash[:alert] = "This book needs a password!"
+        if e.message.include?("File encrypted")
+            logger.info "#{caller_info} Password needed for zip"
+            flash[:alert] = "Please enter a password for this book"
+        else
+            logger.info "#{caller_info} Other problem with zip"
+            flash[:alert] = "There is a problem with this zip file"
+        end
+
         redirect_to :action => 'upload'
         return
     end
@@ -195,12 +206,20 @@ class DaisyBookController < ApplicationController
           end
         end
       end
-    rescue Exception => e
-      puts e
-      puts e.backtrace.join("\n")
-      return false
+    rescue Zip::Error => e
+        logger.info "#{e.class}: #{e.message}"
+        if e.message.include?("Not a zip archive")
+            logger.info "#{caller_info} Not a ZIP File"
+            flash[:alert] = "This is not a valid ZIP file"
+        else
+            logger.info "#{caller_info} Other problem with zip"
+            flash[:alert] = "There is a problem with this zip file"
+        end
+        puts e
+        puts e.backtrace.join("\n")
+        return false
     end
-    
+    flash[:alert] = "Uploaded file must be a valid Daisy book"
     return false
   end
   
