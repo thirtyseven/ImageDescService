@@ -5,7 +5,7 @@ gem 'rails', '3.0.4'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
-
+gem 'thin' # avoids massive memory consumption (as with webrick) on dev machine
 gem 'mysql2'
 gem 'uuidtools'
 gem 'test-unit'
@@ -39,6 +39,5 @@ group :development, :test do
 	gem 'cucumber-rails'
 	gem 'capybara' # seems to be required by cucumber-rails
 	gem 'database_cleaner' # seems to be required by cucumber-rails
-	gem 'thin' # avoids massive memory consumption (as with webrick) on dev machine
   gem 'sqlite3'
 end
