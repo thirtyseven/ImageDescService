@@ -41,7 +41,24 @@ xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/">
       <title><xsl:value-of select="/dtb:dtbook/dtb:book/dtb:frontmatter/dtb:doctitle"/></title>
 
       <link rel="stylesheet" type="text/css" href="html.css" />
+      <script type="text/javascript" src="../../javascripts/tiny_mce/tiny_mce.js" ></script >
       <script type="text/javascript">
+         tinyMCE.init({
+            // General options
+            mode : "textareas",
+            theme : "advanced",
+            plugins : "autolink,lists,spellchecker,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template",
+
+            // Theme options
+            theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,bullist,numlist,|,formatselect",
+            theme_advanced_buttons2 : "tablecontrols,|,link,unlink",
+            theme_advanced_buttons3 : "undo,redo",
+            theme_advanced_toolbar_location : "top",
+            theme_advanced_toolbar_align : "left",
+            theme_advanced_statusbar_location : "bottom",
+
+         });
+
          function imageDescCallbackHelper(divName, text) {
             var targetDiv = document.getElementById(divName);
             if (targetDiv.innerText != undefined) {
