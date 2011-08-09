@@ -211,7 +211,7 @@ class DaisyBookController < ApplicationController
         logger.info "#{e.class}: #{e.message}"
         if e.message.include?("Not a zip archive")
             logger.info "#{caller_info} Not a ZIP File"
-            flash[:alert] = "This is not a valid ZIP file"
+            flash[:alert] = "Uploaded file must be a valid Daisy (zip) file"
         else
             logger.info "#{caller_info} Other problem with zip"
             flash[:alert] = "There is a problem with this zip file"
@@ -220,7 +220,7 @@ class DaisyBookController < ApplicationController
         puts e.backtrace.join("\n")
         return false
     end
-    flash[:alert] = "Uploaded file must be a valid Daisy book"
+    flash[:alert] = "Uploaded file must be a valid Daisy (zip) file"
     return false
   end
   
