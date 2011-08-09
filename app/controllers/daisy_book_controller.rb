@@ -356,6 +356,7 @@ private
   def create_zip(old_daisy_zip, contents_filename, new_xml_contents)
     new_daisy_zip = Tempfile.new('baked-daisy')
     new_daisy_zip.close
+    logger.info "Copying zip from #{old_daisy_zip} to #{new_daisy_zip} (length=#{File.size(old_daisy_zip)})"
     FileUtils.cp(old_daisy_zip, new_daisy_zip.path)
     Zip::Archive.open(new_daisy_zip.path) do |zipfile|
       zipfile.num_files.times do |index|
