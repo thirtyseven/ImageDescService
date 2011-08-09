@@ -36,6 +36,7 @@ class DaisyBookController < ApplicationController
       xml = get_xml_contents_with_updated_descriptions(contents_filename)
       zip_filename = create_zip(session[:daisy_file], relative_contents_path, xml)    
       basename = File.basename(contents_filename)
+      logger.info "Sending zip #{zip_filename} of length #{File.size(zip_filename)}"
       send_file zip_filename, :type => 'application/zip; charset=utf-8', :filename => basename + '.zip', :disposition => 'attachment' 
     rescue ShowAlertAndGoBack => e
       redirect_to :back, :alert => e.message
@@ -356,7 +357,6 @@ private
   def create_zip(old_daisy_zip, contents_filename, new_xml_contents)
     new_daisy_zip = Tempfile.new('baked-daisy')
     new_daisy_zip.close
-    logger.info "Copying zip from #{old_daisy_zip} to #{new_daisy_zip} (length=#{File.size(old_daisy_zip)})"
     FileUtils.cp(old_daisy_zip, new_daisy_zip.path)
     Zip::Archive.open(new_daisy_zip.path) do |zipfile|
       zipfile.num_files.times do |index|
