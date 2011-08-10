@@ -316,7 +316,7 @@ private
         imggroup.add_child our_prodnote 
       end
       
-      our_prodnote.content = dynamic_description.body
+      our_prodnote.add_child(dynamic_description.body)
       our_prodnote['render'] = 'optional'
       our_prodnote['imgref'] = image_id
       our_prodnote['id'] = create_prodnote_id(image_id)
