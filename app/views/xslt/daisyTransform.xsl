@@ -70,8 +70,8 @@ xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/">
 				"form_base_id" : formBaseId,
 				"authenticity_token" : document.getElementById(tokenId).value,
 				"dynamic_description[body]" : document.getElementById(descriptionId).value,
-				"uid" : document.getElementById(bookTitleId).value,
-				"title" : document.getElementById(bookUidId).value,
+				"uid" : document.getElementById(bookUidId).value,
+				"title" : document.getElementById(bookTitleId).value,
 				"image_location" : document.getElementById(imageSrcId).value
 			}
 			var x = jQuery.post("/imageDesc", data, function(data, status) {handleSubmitResponse(formBaseId, data, status)})
