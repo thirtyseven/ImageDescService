@@ -40,6 +40,47 @@ xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/">
 
       <title><xsl:value-of select="/dtb:dtbook/dtb:book/dtb:frontmatter/dtb:doctitle"/></title>
 
+	  <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.2.min.js"></script>
+      <script type="text/javascript">
+      $(document).ready(function() {
+ 	  });
+
+		function handleImageClick(image_id) {
+			parent.top_bar.document.getElementById("current_image_index").value = image_id
+			parent.side_bar.location = "/daisy_book/side_bar#" + image_id
+		}
+		
+		function handleSubmitResponse(formBaseId, responseText, responseStatus) {
+			var resultId = formBaseId + "_result" 
+			if(responseStatus == "success")
+				document.getElementById(resultId).innerHTML = "The description has been saved."
+			else
+				document.getElementById(resultId).innerHTML = "An error has occurred."
+		}
+		
+		function handleSubmitClick(formBaseId) {
+			var tokenId = formBaseId + "_authenticity_token"
+			var descriptionId = formBaseId + "_description"
+			var bookTitleId = formBaseId + "_book_title"
+			var bookUidId = formBaseId + "_book_uid"
+			var imageSrcId = formBaseId + "_image_src"
+			var resultId = formBaseId + "_result" 
+			
+			data = {
+				"form_base_id" : formBaseId,
+				"authenticity_token" : document.getElementById(tokenId).value,
+				"dynamic_description[body]" : document.getElementById(descriptionId).value,
+				"uid" : document.getElementById(bookTitleId).value,
+				"title" : document.getElementById(bookUidId).value,
+				"image_location" : document.getElementById(imageSrcId).value
+			}
+			var x = jQuery.post("/imageDesc", data, function(data, status) {handleSubmitResponse(formBaseId, data, status)})
+			document.getElementById(resultId).innerHTML = "Submitting updated description..."
+			return false
+		}
+		
+	  </script>
+
       <link rel="stylesheet" type="text/css" href="html.css" />
       <script type="text/javascript" src="../../javascripts/tiny_mce/tiny_mce.js" ></script >
       <script type="text/javascript">
@@ -68,10 +109,6 @@ xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/">
                 targetDiv.textContent = text;
             }
          }
-		function handleImageClick(image_id) {
-			parent.top_bar.document.getElementById("current_image_index").value = image_id
-			parent.side_bar.location = "/daisy_book/side_bar#" + image_id
-		}
          <xsl:for-each select="//dtb:img">
             <xsl:variable name="divId">img<xsl:value-of select="generate-id(.)"/></xsl:variable>
             function <xsl:value-of select="$divId"/>Callback(json) {
@@ -624,37 +661,46 @@ xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/">
         <xsl:attribute name="target">imageDescWindow</xsl:attribute>        
         <xsl:attribute name="action">/imageDesc</xsl:attribute>
         <xsl:element name="input">
+        	<xsl:attribute name="id"><xsl:value-of select="@id"/>_authenticity_token</xsl:attribute>
         	<xsl:attribute name="name">authenticity_token</xsl:attribute>
         	<xsl:attribute name="type">hidden</xsl:attribute>
         	<xsl:attribute name="value"><xsl:value-of select="$form_authenticity_token"></xsl:value-of></xsl:attribute>
         </xsl:element>
         <xsl:element name="textarea">
+        	<xsl:attribute name="id"><xsl:value-of select="@id"/>_description</xsl:attribute>
             <xsl:attribute name="name">dynamic_description[body]</xsl:attribute>
             <xsl:attribute name="rows">2</xsl:attribute>
             <xsl:attribute name="cols">60</xsl:attribute>
-			<xsl:attribute name="onclick">handleImageClick("<xsl:value-of select="@id"/>")</xsl:attribute>
+			<xsl:attribute name="onclick">handleImageClick('<xsl:value-of select="@id"/>')</xsl:attribute>
         </xsl:element>
         <xsl:element name="input">
+        	<xsl:attribute name="id"><xsl:value-of select="@id"/>_book_uid</xsl:attribute>
             <xsl:attribute name="name">uid</xsl:attribute>
             <xsl:attribute name="type">hidden</xsl:attribute>
             <xsl:attribute name="value"><xsl:value-of select="/dtb:dtbook/dtb:head/dtb:meta[@name='dtb:uid']/@content"/></xsl:attribute>
         </xsl:element>
         <xsl:element name="input">
+        	<xsl:attribute name="id"><xsl:value-of select="@id"/>_book_title</xsl:attribute>
             <xsl:attribute name="name">title</xsl:attribute>
             <xsl:attribute name="type">hidden</xsl:attribute>
             <xsl:attribute name="value"><xsl:value-of select="/dtb:dtbook/dtb:head/dtb:meta[@name='dc:Title']/@content"/></xsl:attribute>
         </xsl:element>
         <xsl:element name="input">
+        	<xsl:attribute name="id"><xsl:value-of select="@id"/>_image_src</xsl:attribute>
             <xsl:attribute name="name">image_location</xsl:attribute>
             <xsl:attribute name="type">hidden</xsl:attribute>
             <xsl:attribute name="value"><xsl:value-of select="@src"/></xsl:attribute>
         </xsl:element>
         <xsl:element name="br"/>
         <xsl:element name="input">
-            <xsl:attribute name="type">submit</xsl:attribute>
+            <xsl:attribute name="type">button</xsl:attribute>
             <xsl:attribute name="value">Submit new image description</xsl:attribute>
+			<xsl:attribute name="onclick">handleSubmitClick('<xsl:value-of select="@id"/>')</xsl:attribute>
         </xsl:element>
     </xsl:element>
+    <div>
+        <xsl:attribute name="id"><xsl:value-of select="@id"/>_result</xsl:attribute>
+    </div>
   </xsl:template>
 
   <!-- imggroup maps to div with class -->
