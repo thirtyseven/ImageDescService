@@ -691,6 +691,7 @@ xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/">
             <xsl:attribute name="value"><xsl:value-of select="@src"/></xsl:attribute>
         </xsl:element>
         <xsl:element name="br"/>
+        <button type="button" onclick="tinyMCE.execCommand('mceAddControl', false, '{@id}_description');">Start Editing</button>
         <xsl:element name="input">
             <xsl:attribute name="type">button</xsl:attribute>
             <xsl:attribute name="value">Submit new image description</xsl:attribute>
