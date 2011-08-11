@@ -68,7 +68,7 @@ xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/">
                 targetDiv.textContent = text;
             }
          }
-		function handleClick(image_id) {
+		function handleImageClick(image_id) {
 			parent.top_bar.document.getElementById("current_image_index").value = image_id
 			parent.side_bar.location = "/daisy_book/side_bar#" + image_id
 		}
@@ -612,7 +612,7 @@ xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/">
       <xsl:if test="@width">
         <xsl:attribute name="width"><xsl:value-of select="@width"/></xsl:attribute>
       </xsl:if>
-      <xsl:attribute name="onclick">handleClick("<xsl:value-of select="@id"/>")</xsl:attribute>
+      <xsl:attribute name="onclick">handleImageClick("<xsl:value-of select="@id"/>")</xsl:attribute>
     </xsl:element>
     <xsl:element name="br"/>
     <xsl:variable name="divId">img<xsl:value-of select="generate-id(.)"/></xsl:variable>
@@ -632,7 +632,7 @@ xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/">
             <xsl:attribute name="name">dynamic_description[body]</xsl:attribute>
             <xsl:attribute name="rows">2</xsl:attribute>
             <xsl:attribute name="cols">60</xsl:attribute>
-			<xsl:attribute name="onclick">handleClick("<xsl:value-of select="@id"/>")</xsl:attribute>
+			<xsl:attribute name="onclick">handleImageClick("<xsl:value-of select="@id"/>")</xsl:attribute>
         </xsl:element>
         <xsl:element name="input">
             <xsl:attribute name="name">uid</xsl:attribute>
