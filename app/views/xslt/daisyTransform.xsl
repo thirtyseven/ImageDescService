@@ -48,7 +48,7 @@ xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/">
             // General options
             mode : "textareas",
             theme : "advanced",
-            plugins : "autolink,lists,spellchecker,pagebreak,style,layer,table,save,advhr,advimage,advlink,emotions,iespell,inlinepopups,insertdatetime,preview,media,searchreplace,print,contextmenu,paste,directionality,fullscreen,noneditable,visualchars,nonbreaking,xhtmlxtras,template",
+            plugins : "autolink,lists,advlist, pagebreak,style,table,contextmenu",
 
             // Theme options
             theme_advanced_buttons1 : "bold,italic,underline,strikethrough,|,bullist,numlist,|,formatselect",
