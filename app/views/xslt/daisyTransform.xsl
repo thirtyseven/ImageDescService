@@ -85,9 +85,8 @@ xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/">
       <script type="text/javascript" src="../../javascripts/tiny_mce/tiny_mce.js" ></script >
       <script type="text/javascript">
          tinyMCE.init({
-         return; // Temporarily disable because it is WAY too slow with lots of images
             // General options
-            mode : "textareas",
+            mode : "none",
             theme : "advanced",
             plugins : "autolink,lists,advlist, pagebreak,style,table,contextmenu",
 
