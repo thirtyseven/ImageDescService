@@ -25,17 +25,17 @@ class DynamicImagesControllerTest < ActionController::TestCase
   end
 
   test "should show description" do
-    get :show, :uid => 'book01', :image_location => 'img03.jpg'
+    get :show, :book_uid => 'book01', :image_location => 'img03.jpg'
     assert_response :success
   end
 
   test "non-existent image on json show description" do
-    get :show, :uid =>'blah', :image_location => 'blah', :format => 'json'
+    get :show, :book_uid =>'blah', :image_location => 'blah', :format => 'json'
     assert_response :no_content
   end
 
   test "missing parameters on json show description" do
-    get :show, :uid =>'blah', :format => 'json'
+    get :show, :book_uid =>'blah', :format => 'json'
     assert_response :non_authoritative_information
   end
 

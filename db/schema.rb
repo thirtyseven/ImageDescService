@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110314173210) do
+ActiveRecord::Schema.define(:version => 20110812190511) do
 
   create_table "descriptions", :force => true do |t|
     t.string   "description",   :limit => 16384,                          :null => false
@@ -35,7 +35,7 @@ ActiveRecord::Schema.define(:version => 20110314173210) do
   end
 
   create_table "dynamic_images", :force => true do |t|
-    t.string   "uid",            :null => false
+    t.string   "book_uid",       :null => false
     t.string   "title"
     t.string   "image_location", :null => false
     t.datetime "created_at"

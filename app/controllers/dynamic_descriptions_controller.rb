@@ -40,10 +40,10 @@ class DynamicDescriptionsController < ApplicationController
   # POST /dynamic_descriptions
   # POST /dynamic_descriptions.xml
   def create
-    if params[:uid] && params[:image_location]
-      @dynamic_image = DynamicImage.where("uid = ? AND image_location = ?", params[:uid], params[:image_location]).first
+    if params[:book_uid] && params[:image_location]
+      @dynamic_image = DynamicImage.where("book_uid = ? AND image_location = ?", params[:book_uid], params[:image_location]).first
       if(@dynamic_image.nil?)
-        @dynamic_image = DynamicImage.new(:uid => params[:uid], :image_location => params[:image_location], :title => params[:title])
+        @dynamic_image = DynamicImage.new(:book_uid => params[:book_uid], :image_location => params[:image_location], :title => params[:title])
         @dynamic_image.save
       end
       @dynamic_description = @dynamic_image.dynamic_descriptions.create(params[:dynamic_description])
@@ -63,7 +63,7 @@ class DynamicDescriptionsController < ApplicationController
         format.xml  { render :xml => @dynamic_description, :status => :created, :location => @dynamic_description }
         format.json  { render :json => @dynamic_description, :callback => params[:callback], :status => :created, :location => @dynamic_description }
       else
-        @uid = params[:uid]
+        @book_uid = params[:book_uid]
         @image_location = params[:image_location]
         format.html { render :action => "new" }
         format.xml  { render :xml => @dynamic_description.errors, :status => :non_authoritative_information }

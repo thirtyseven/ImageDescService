@@ -103,20 +103,20 @@ When /^(?:|I )attach the file "([^"]*)" to "([^"]*)"$/ do |path, field|
 end
 
 When /^the image "([^"]*)" in book "([^"]*)" with title "([^"]*)" exists but has no description$/ do |image_location, book_id, book_title|
-  image = DynamicImage.create(:uid => book_id, :title => book_title, :image_location => image_location)
+  image = DynamicImage.create(:book_uid => book_id, :title => book_title, :image_location => image_location)
   image.save
 end
 
 When /^the first description for the image "([^"]*)" in book "([^"]*)" with title "([^"]*)" is "([^"]*)"$/ do |image_location, book_id, book_title, text|
-  image = DynamicImage.create(:uid => book_id, :title => book_title, :image_location => image_location)
+  image = DynamicImage.create(:book_uid => book_id, :title => book_title, :image_location => image_location)
   image.save
-  description = DynamicDescription.create(:dynamic_image_id => image['uid'], :submitter => 'Cucumber', :body => text)
+  description = DynamicDescription.create(:dynamic_image_id => image['book_uid'], :submitter => 'Cucumber', :body => text)
   image.dynamic_descriptions << description
 end
 
 When /^another description for the image "([^"]*)" in book "([^"]*)" is "([^"]*)"$/ do |image_location, book_id, text|
-  image = DynamicImage.where("uid = ? AND image_location = ?", book_id, image_location).first
-  description = DynamicDescription.create(:dynamic_image_id => image['uid'], :submitter => 'Cucumber', :body => text)
+  image = DynamicImage.where("book_uid = ? AND image_location = ?", book_id, image_location).first
+  description = DynamicDescription.create(:dynamic_image_id => image['book_uid'], :submitter => 'Cucumber', :body => text)
   image.dynamic_descriptions << description
 end
 

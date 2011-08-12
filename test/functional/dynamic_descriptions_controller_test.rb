@@ -18,7 +18,7 @@ class DynamicDescriptionsControllerTest < ActionController::TestCase
 
   test "should create dynamic_description" do
     assert_difference('DynamicDescription.count') do
-      post :create, :dynamic_description => @dynamic_description.attributes, :uid => 'book01', :image_location => 'img03.jpg'
+      post :create, :dynamic_description => @dynamic_description.attributes, :book_uid => 'book01', :image_location => 'img03.jpg'
     end
 
     assert_redirected_to dynamic_description_path(assigns(:dynamic_description))

@@ -14,8 +14,8 @@ class DynamicImagesController < ApplicationController
   # GET /dynamic_images/1.xml
   # GET /dynamic_images/1.json
   def show
-    if params[:uid] && params[:image_location] && !params[:uid].empty?
-      @dynamic_image = DynamicImage.where("uid = ? AND image_location = ?", params[:uid], params[:image_location]).first
+    if params[:book_uid] && params[:image_location] && !params[:book_uid].empty?
+      @dynamic_image = DynamicImage.where("book_uid = ? AND image_location = ?", params[:book_uid], params[:image_location]).first
       if @dynamic_image
         @last_desc = @dynamic_image.dynamic_descriptions.last
       else

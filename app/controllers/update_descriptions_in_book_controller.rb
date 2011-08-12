@@ -65,7 +65,7 @@ private
     node = matches.first
     book_uid = node.attributes['content'].content
 
-    matching_images = DynamicImage.where("uid = ?", book_uid)
+    matching_images = DynamicImage.where("book_uid = ?", book_uid)
     matching_images.each do | dynamic_image |
       image_location = dynamic_image.image_location
       image = doc.at_xpath( doc, "//xmlns:img[@src='#{image_location}']")
