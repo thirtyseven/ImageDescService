@@ -103,12 +103,12 @@ When /^(?:|I )attach the file "([^"]*)" to "([^"]*)"$/ do |path, field|
 end
 
 When /^the image "([^"]*)" in book "([^"]*)" with title "([^"]*)" exists but has no description$/ do |image_location, book_id, book_title|
-  image = DynamicImage.create(:book_uid => book_id, :title => book_title, :image_location => image_location)
+  image = DynamicImage.create(:book_uid => book_id, :book_title => book_title, :image_location => image_location)
   image.save
 end
 
 When /^the first description for the image "([^"]*)" in book "([^"]*)" with title "([^"]*)" is "([^"]*)"$/ do |image_location, book_id, book_title, text|
-  image = DynamicImage.create(:book_uid => book_id, :title => book_title, :image_location => image_location)
+  image = DynamicImage.create(:book_uid => book_id, :book_title => book_title, :image_location => image_location)
   image.save
   description = DynamicDescription.create(:dynamic_image_id => image['book_uid'], :submitter => 'Cucumber', :body => text)
   image.dynamic_descriptions << description

@@ -3,7 +3,7 @@ require 'test_helper'
 class DynamicImageTest < ActiveSupport::TestCase
   # Replace this with your real tests.
   test "best_description should return the later record" do
-    image = DynamicImage.new(:book_uid => 'uid', :title => 'title', :image_location => 'image location')
+    image = DynamicImage.new(:book_uid => 'uid', :book_title => 'title', :image_location => 'image location')
     old_description = "this is old"
     new_description = "this one is new"
     desc1 = DynamicDescription.new( {:dynamic_image_id => image.id, :body => old_description} )

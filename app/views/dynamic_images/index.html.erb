@@ -13,7 +13,7 @@
 <% @dynamic_images.each do |dynamic_image| %>
   <tr>
     <td><%= dynamic_image.book_uid %></td>
-    <td><%= dynamic_image.title %></td>
+    <td><%= dynamic_image.book_title %></td>
     <td><%= dynamic_image.image_location %></td>
     <td><%= link_to 'Show', dynamic_image %></td>
     <td><%= link_to 'Edit', edit_dynamic_image_path(dynamic_image) %></td>
