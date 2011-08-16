@@ -40,7 +40,7 @@ xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/">
 
       <title><xsl:value-of select="/dtb:dtbook/dtb:book/dtb:frontmatter/dtb:doctitle"/></title>
 
-	  <script type="text/javascript" src="http://code.jquery.com/jquery-1.6.2.min.js"></script>
+      <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript"></script>
       <script type="text/javascript">
       $(document).ready(function() {
  	  });
