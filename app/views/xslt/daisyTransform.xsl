@@ -51,11 +51,18 @@ xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/">
 		}
 		
 		function handleSubmitResponse(formBaseId, responseText, responseStatus) {
-			var resultId = formBaseId + "_result" 
-			if(responseStatus == "success")
-				document.getElementById(resultId).innerHTML = "The description has been saved."
-			else
-				document.getElementById(resultId).innerHTML = "An error has occurred."
+			var resultId = formBaseId + "_result"
+            var notification = document.getElementById(resultId)
+			if(responseStatus == "success")  {
+				notification.innerHTML = "The description has been saved."
+                notification.style.fontWeight = "bold"
+                notification.style.color = "green"
+            }
+			else {
+				notification.innerHTML = "An error has occurred."
+                notification.style.fontWeight = "bold"
+                notification.style.color = "red"
+            }
 		}
 		
 		function handleSubmitClick(formBaseId) {
@@ -76,7 +83,10 @@ xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/">
 				"image_location" : document.getElementById(imageSrcId).value
 			}
 			var x = jQuery.post("/imageDesc", data, function(data, status) {handleSubmitResponse(formBaseId, data, status)})
-			document.getElementById(resultId).innerHTML = "Submitting updated description..."
+            var notification = document.getElementById(resultId)
+			notification.innerHTML = "Submitting updated description..."
+            notification.style.fontWeight = "bold"
+            notification.style.color = "orange"
 			return false
 		}
 		
