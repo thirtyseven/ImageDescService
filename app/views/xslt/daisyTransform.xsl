@@ -25,7 +25,7 @@ xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/">
         <xsl:for-each select="//dtb:img">
             <xsl:variable name="divId">img<xsl:value-of select="generate-id(.)"/></xsl:variable>
             <script type="text/javascript">
-                <xsl:attribute name="src">/imageDesc.json?uid=<xsl:value-of select="/dtb:dtbook/dtb:head/dtb:meta[@name='dtb:uid']/@content"/>&amp;image_location=<xsl:value-of select="@src"/>&amp;callback=<xsl:value-of select="$divId"/>Callback</xsl:attribute>
+                <xsl:attribute name="src">/imageDesc.json?book_uid=<xsl:value-of select="/dtb:dtbook/dtb:head/dtb:meta[@name='dtb:uid']/@content"/>&amp;image_location=<xsl:value-of select="@src"/>&amp;callback=<xsl:value-of select="$divId"/>Callback</xsl:attribute>
             </script>
         </xsl:for-each>
     </html>
@@ -78,8 +78,8 @@ xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/">
 				"form_base_id" : formBaseId,
 				"authenticity_token" : document.getElementById(tokenId).value,
 				"dynamic_description[body]" : document.getElementById(descriptionId).value,
-				"uid" : document.getElementById(bookUidId).value,
-				"title" : document.getElementById(bookTitleId).value,
+				"book_uid" : document.getElementById(bookUidId).value,
+				"book_title" : document.getElementById(bookTitleId).value,
 				"image_location" : document.getElementById(imageSrcId).value
 			}
 			var x = jQuery.post("/imageDesc", data, function(data, status) {handleSubmitResponse(formBaseId, data, status)})
@@ -685,13 +685,13 @@ xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/">
         </xsl:element>
         <xsl:element name="input">
         	<xsl:attribute name="id"><xsl:value-of select="@id"/>_book_uid</xsl:attribute>
-            <xsl:attribute name="name">uid</xsl:attribute>
+            <xsl:attribute name="name">book_uid</xsl:attribute>
             <xsl:attribute name="type">hidden</xsl:attribute>
             <xsl:attribute name="value"><xsl:value-of select="/dtb:dtbook/dtb:head/dtb:meta[@name='dtb:uid']/@content"/></xsl:attribute>
         </xsl:element>
         <xsl:element name="input">
         	<xsl:attribute name="id"><xsl:value-of select="@id"/>_book_title</xsl:attribute>
-            <xsl:attribute name="name">title</xsl:attribute>
+            <xsl:attribute name="name">book_title</xsl:attribute>
             <xsl:attribute name="type">hidden</xsl:attribute>
             <xsl:attribute name="value"><xsl:value-of select="/dtb:dtbook/dtb:head/dtb:meta[@name='dc:Title']/@content"/></xsl:attribute>
         </xsl:element>

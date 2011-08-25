@@ -255,6 +255,16 @@ private
     engine.parameters = {"form_authenticity_token" => form_authenticity_token}
     return engine.serve
   end
+
+  def extract_book_uid(doc)
+    xpath_uid = "//xmlns:meta[@name='dtb:uid']"
+    matches = doc.xpath(doc, xpath_uid)
+    if matches.size != 1
+      raise MissingBookUIDException.new
+    end
+    node = matches.first
+    return node.attributes['content'].content
+  end
   
   def get_contents_with_updated_descriptions(file)
     doc = Nokogiri::XML file
@@ -264,13 +274,7 @@ private
       raise NonDaisyXMLException.new
     end
   
-    xpath_uid = "//xmlns:meta[@name='dtb:uid']"
-    matches = doc.xpath(doc, xpath_uid)
-    if matches.size != 1
-      raise MissingBookUIDException.new
-    end
-    node = matches.first
-    book_uid = node.attributes['content'].content
+    book_uid = extract_book_uid(doc)
   
     matching_images = DynamicImage.where("book_uid = ?", book_uid)
     if matching_images.empty?
@@ -374,6 +378,7 @@ private
     contents_filename = get_daisy_contents_xml_name(book_directory)
     xml = File.read(contents_filename)
     doc = Nokogiri::XML xml
+    book_uid = extract_book_uid(doc)
     @images = []
     images = doc.xpath( doc, "//xmlns:img")
     images.each do | image_node |
@@ -387,7 +392,7 @@ private
         puts "Skipping image with no src: id=#{img_id}"
         next
       end
-      image_data = {'id' => img_id, 'src' => "book/#{img_src}"}
+      image_data = {'id' => img_id, 'src' => "book/#{img_src}", 'book_uid' => book_uid}
       image_file = File.join(book_directory, img_src)
       if File.exists?(image_file)
         image = Magick::ImageList.new(image_file)[0]
@@ -398,6 +403,7 @@ private
         image_data['width'] = 20
         image_data['height'] = 20
       end
+      image_data['model'] = DynamicImage.find_by_book_uid_and_image_location(book_uid, img_src)
       @images << image_data
     end
   end

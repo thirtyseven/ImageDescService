@@ -25,7 +25,7 @@ class DynamicImagesController < ApplicationController
       end
     else
       @last_desc = DynamicDescription.new
-      @last_desc.body = "missing parameter"
+      @last_desc.body = "missing parameter uid=#{params[:book_uid]}, loc=#{params[:image_location]}"
       @status = :non_authoritative_information
     end
 

@@ -29,5 +29,27 @@ parent.content.location = "/daisy_book/book/content#" + image_id
 	src='<%= src %>'>
 </img>
 </a>
+<p>
+<% 
+	model = image['model'] 
+	if !model
+		model = DynamicImage.new
+		model[:book_uid] = image['book_uid']
+		model[:image_location] = image['src']
+	end
+%>
+<% 
+	form_for model do | form |
+%>
+<!-- Unfinished work...commenting out for a commit
+		<%= form.check_box(:should_be_described) %>
+		<%= form.label(:should_be_described) %>
+		<%= form.text_field(:book_uid) %>
+		<%= form.text_field(:image_location) %>
+-->
+<%
+	end
+%>
+</p>
 <hr/>
 <% end %>
