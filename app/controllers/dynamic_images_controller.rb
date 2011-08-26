@@ -73,5 +73,13 @@ class DynamicImagesController < ApplicationController
       end
     end
   end
+  
+  def update
+    image = DynamicImage.find(params[:id])
+    image_params = params[:dynamic_image]
+    image.should_be_described = image_params[:should_be_described]
+    image.save
+    render :text=>"submitted #{params[:id]}: #{params[:dynamic_image]}",  :content_type => 'text/plain'
+  end
 
 end
