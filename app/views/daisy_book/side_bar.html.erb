@@ -42,10 +42,13 @@ parent.content.location = "/daisy_book/book/content#" + image_id
 	form_for model do | form |
 %>
 <!-- Unfinished work...commenting out for a commit
-		<%= form.check_box(:should_be_described) %>
 		<%= form.label(:should_be_described) %>
-		<%= form.text_field(:book_uid) %>
-		<%= form.text_field(:image_location) %>
+		<%= form.select :should_be_described, [['Yes', true], ['No', false]],
+			{:include_blank => true, :custom_label => 'Essential?'}  %>
+		<%= form.hidden_field(:book_uid) %>
+		<%= form.hidden_field(:book_title) %>
+		<%= form.hidden_field(:image_location) %>
+		<%= form.submit %>
 -->
 <%
 	end
