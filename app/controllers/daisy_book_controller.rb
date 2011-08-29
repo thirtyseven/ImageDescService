@@ -96,60 +96,63 @@ class DaisyBookController < ApplicationController
     end
 
     if password && !password.empty?
-        begin
-            Zip::Archive.decrypt(book.path, password)
-        rescue Zip::Error => e
-            logger.info "#{e.class}: #{e.message}"
-            if e.message.include?("Wrong password")
-                logger.info "#{caller_info} Invalid Password for encyrpted zip"
-                flash[:alert] = "Please check your password and re-enter"
-            else
-                logger.info "#{caller_info} Other problem with encrypted zip"
-                flash[:alert] = "There is a problem with this zip file"
-            end
-            redirect_to :action => 'upload'
-            return
+      begin
+        Zip::Archive.decrypt(book.path, password)
+      rescue Zip::Error => e
+        logger.info "#{e.class}: #{e.message}"
+        if e.message.include?("Wrong password")
+          logger.info "#{caller_info} Invalid Password for encyrpted zip"
+          flash[:alert] = "Please check your password and re-enter"
+        else
+          logger.info "#{caller_info} Other problem with encrypted zip"
+          flash[:alert] = "There is a problem with this zip file"
         end
+        redirect_to :action => 'upload'
+        return
+      end
     end
 
     if !valid_daisy_zip?(book.path)
+      redirect_to :action => 'upload'
+      return
+    end
+    
+    begin
+      process_book(book.path)
+      redirect_to :action => 'edit'
+    rescue Zip::Error => e
+      logger.info "#{e.class}: #{e.message}"
+      if e.message.include?("File encrypted")
+        logger.info "#{caller_info} Password needed for zip"
+        flash[:alert] = "Please enter a password for this book"
+      else
+        logger.info "#{caller_info} Other problem with zip"
+        flash[:alert] = "There is a problem with this zip file"
+      end
 
       redirect_to :action => 'upload'
       return
     end
-
-    begin
-        zip_directory = unzip_to_temp(book.path)
-        session[:zip_directory] = zip_directory
-        top_level_entries = Dir.entries(zip_directory)
-        top_level_entries.delete('.')
-        top_level_entries.delete('..')
-        if(top_level_entries.size == 1)
-          book_directory = File.join(zip_directory, top_level_entries.first)
-        else
-          book_directory = zip_directory
-        end
-        session[:daisy_directory] = book_directory
-
-        copy_of_daisy_file = File.join(zip_directory, "Daisy.zip")
-        FileUtils.cp(book.path, copy_of_daisy_file)
-        session[:daisy_file] = copy_of_daisy_file
-
-        redirect_to :action => 'edit'
-    rescue Zip::Error => e
-        logger.info "#{e.class}: #{e.message}"
-        if e.message.include?("File encrypted")
-            logger.info "#{caller_info} Password needed for zip"
-            flash[:alert] = "Please enter a password for this book"
-        else
-            logger.info "#{caller_info} Other problem with zip"
-            flash[:alert] = "There is a problem with this zip file"
-        end
-
-        redirect_to :action => 'upload'
-        return
+  end
+  
+  def process_book(book_path)
+    zip_directory = unzip_to_temp(book_path)
+    session[:zip_directory] = zip_directory
+    top_level_entries = Dir.entries(zip_directory)
+    top_level_entries.delete('.')
+    top_level_entries.delete('..')
+    if(top_level_entries.size == 1)
+      book_directory = File.join(zip_directory, top_level_entries.first)
+    else
+      book_directory = zip_directory
     end
+    session[:daisy_directory] = book_directory
 
+    copy_of_daisy_file = File.join(zip_directory, "Daisy.zip")
+    FileUtils.cp(book_path, copy_of_daisy_file)
+    session[:daisy_file] = copy_of_daisy_file
+
+    create_images_in_database
   end
 
   def edit
@@ -224,6 +227,41 @@ class DaisyBookController < ApplicationController
     return false
   end
   
+  def extract_book_uid(doc)
+    xpath_uid = "//xmlns:meta[@name='dtb:uid']"
+    matches = doc.xpath(doc, xpath_uid)
+    if matches.size != 1
+      raise MissingBookUIDException.new
+    end
+    node = matches.first
+    return node.attributes['content'].content
+  end
+  
+  def extract_optional_book_title(doc)
+    xpath_title = "//xmlns:meta[@name='dc:Title']"
+    matches = doc.xpath(doc, xpath_title)
+    if matches.size != 1
+      return nil
+    end
+    node = matches.first
+    return node.attributes['content'].content
+  end
+  
+  def create_images_in_database
+    each_image do | book_uid, image_node |
+      image_location = image_node['src']
+      image = DynamicImage.find_by_book_uid_and_image_location(book_uid, image_location)
+      if(!image)
+        book_title = extract_optional_book_title(image_node.document)
+        logger.info("Creating image row #{book_uid}, #{book_title}, #{image_location}")
+        DynamicImage.create(
+              :book_uid => book_uid,
+              :book_title => book_title,
+              :image_location => image_location) 
+      end
+    end
+  end
+  
 private
   def unzip_to_temp(zipped_file)
     dir = Dir.mktmpdir
@@ -256,16 +294,6 @@ private
     return engine.serve
   end
 
-  def extract_book_uid(doc)
-    xpath_uid = "//xmlns:meta[@name='dtb:uid']"
-    matches = doc.xpath(doc, xpath_uid)
-    if matches.size != 1
-      raise MissingBookUIDException.new
-    end
-    node = matches.first
-    return node.attributes['content'].content
-  end
-  
   def get_contents_with_updated_descriptions(file)
     doc = Nokogiri::XML file
     
