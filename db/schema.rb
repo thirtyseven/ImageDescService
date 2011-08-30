@@ -14,13 +14,15 @@ ActiveRecord::Schema.define(:version => 20110824151820) do
 
   create_table "descriptions", :force => true do |t|
     t.string   "description",   :limit => 16384,                          :null => false
-    t.boolean  "is_current",                     :default => false,       :null => false
+    t.boolean  "is_current",                     :default => false
     t.string   "submitter",                      :default => "anonymous", :null => false
     t.datetime "date_approved"
-    t.integer  "image_id",                                                :null => false
+    t.integer  "image_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "descriptions", ["image_id"], :name => "fk_descriptions_image"
 
   create_table "dynamic_descriptions", :force => true do |t|
     t.string   "body",             :limit => 16384,                          :null => false
@@ -33,9 +35,9 @@ ActiveRecord::Schema.define(:version => 20110824151820) do
   end
 
   create_table "dynamic_images", :force => true do |t|
-    t.string   "book_uid"
+    t.string   "book_uid",            :null => false
     t.string   "book_title"
-    t.string   "image_location"
+    t.string   "image_location",      :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "should_be_described"

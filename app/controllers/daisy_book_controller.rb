@@ -246,10 +246,40 @@ class DaisyBookController < ApplicationController
     node = matches.first
     return node.attributes['content'].content
   end
+
+  def get_s3_bucket(s3)
+    Rails.env.production? ? (primary_folder = "org-benetech-poet") : (primary_folder = "org-benetech-poet-test")
+    return s3.buckets[primary_folder]
+  end
   
   def create_images_in_database
+    # get handle to s3 service
+    s3_service = AWS::S3.new
+    # get an s3 bucket
+    bucket = get_s3_bucket(s3_service)
+
     each_image do | book_uid, image_node |
       image_location = image_node['src']
+      dir =  session[:zip_directory]
+
+      # upload a file
+      s3_object = bucket.objects[book_uid + "/" + image_location]
+
+      begin
+        if (! s3_object.exists?)
+          loc = dir + '/' + image_location
+          s3_object.write(:file => loc)
+
+          #puts s3_object.public_url
+        else
+          #puts ("#{image_location} already exists")
+        end
+      rescue AWS::Errors::Base => e
+        logger.info "S3 credentials incorrect"
+        #puts "S3 credentials incorrect"
+      end
+
+
       image = DynamicImage.find_by_book_uid_and_image_location(book_uid, image_location)
       if(!image)
         book_title = extract_optional_book_title(image_node.document)
@@ -265,6 +295,7 @@ class DaisyBookController < ApplicationController
 private
   def unzip_to_temp(zipped_file)
     dir = Dir.mktmpdir
+    puts ("directory is #{dir}")
     Zip::Archive.open(zipped_file) do |zipfile|
       zipfile.each do |entry|
         destination = File.join(dir, entry.name)

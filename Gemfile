@@ -10,6 +10,7 @@ gem 'mysql2'
 gem 'uuidtools'
 gem 'test-unit'
 gem 'zipruby'
+gem 'aws-sdk'
 
 # Use unicorn as the web server
 # gem 'unicorn'
