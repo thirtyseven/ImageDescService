@@ -34,6 +34,7 @@ function handleImageEssentialChange(form){
 <% @images.each do | image | 
 	id = image['id']
 	src = image['src']
+    s3src = image['s3src']
 	raw_width = image['width']
 	raw_height = image['height']
 	ratio = 1.0 * raw_width / raw_height
@@ -49,7 +50,7 @@ function handleImageEssentialChange(form){
 <img style="border:1px solid black; padding:0.25em; font-size: 80%;" 
 	 width='<%= width %>px' height='<%= height %>px' 
 	onclick="handleClick('<%= id %>')"
-	src='<%= src %>'>
+	src='<%= s3src %>'>
 </img>
 </a>
 <p>
