@@ -247,16 +247,16 @@ class DaisyBookController < ApplicationController
     return node.attributes['content'].content
   end
 
-  def get_s3_bucket(s3)
-    Rails.env.production? ? (primary_folder = "org-benetech-poet") : (primary_folder = "org-benetech-poet-test")
-    return s3.buckets[primary_folder]
+  def get_bucket_name
+    Rails.env.production? ? (primary_bucket = "org-benetech-poet") : (primary_bucket = "org-benetech-poet-test")
+    primary_bucket
   end
   
   def create_images_in_database
     # get handle to s3 service
     s3_service = AWS::S3.new
     # get an s3 bucket
-    bucket = get_s3_bucket(s3_service)
+    bucket = s3_service.buckets[get_bucket_name]
 
     each_image do | book_uid, image_node |
       image_location = image_node['src']
@@ -434,6 +434,7 @@ private
 
   def configure_images
     @images = []
+    bucket = get_bucket_name
     each_image do | book_uid, image_node |
       book_directory = session[:daisy_directory]
       img_id = image_node['id']
@@ -446,7 +447,7 @@ private
         puts "Skipping image with no src: id=#{img_id}"
         return
       end
-      image_data = {'id' => img_id, 'src' => "book/#{img_src}", 'book_uid' => book_uid}
+      image_data = {'id' => img_id, 'src' => "book/#{img_src}", 'book_uid' => book_uid, 's3src' => "http://s3.amazonaws.com/#{bucket}/#{book_uid}/#{img_src}"}
       image_file = File.join(book_directory, img_src)
       if File.exists?(image_file)
         image = Magick::ImageList.new(image_file)[0]
