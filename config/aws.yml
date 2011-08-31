@@ -1,0 +1,18 @@
+# Just like the config/database.yml this file requires an entry for each environment
+  # http://aws.amazon.com/security-credentialss
+development:
+  access_key_id: AKIAJWADHNJ5O6PBPSWQ
+  secret_access_key: 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
+
+test:
+  access_key_id: AKIAJWADHNJ5O6PBPSWQ
+  secret_access_key: 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
+
+production:
+  access_key_id: AKIAJWADHNJ5O6PBPSWQ
+  secret_access_key: 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
+
+cucumber:
+  access_key_id: AKIAJWADHNJ5O6PBPSWQ
+  secret_access_key: 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
+
