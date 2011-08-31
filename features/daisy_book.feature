@@ -64,7 +64,9 @@ Feature: Daisy Book
 		And I attach the file "features/fixtures/DaisyZipBookUnencrypted.zip" to "book"
 		And I press "Upload"
 		And I go to the raw xml download page
-		Then the response should be xml
+		Then the response should be html
+		# NOTE: Should look for error message, but we end up back on the 
+		# edit page, and the edit page doesn't display alerts
 
 	Scenario: Downloading a valid non-Bookshare Daisy zip file with all files in a subdirectory
 		When the first description for the image "image1.jpg" in book "AUTO-UID-4767990567747899000" with title "ARE YOU READY?" is "Prodnote from database"
