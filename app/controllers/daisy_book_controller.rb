@@ -295,6 +295,13 @@ class DaisyBookController < ApplicationController
       end
     end
   end
+
+  def get_description_count_for_book(book_uid)
+    return DynamicImage.
+        joins(:dynamic_descriptions).
+        where("dynamic_images.book_uid = ?", book_uid).
+        count
+  end
   
 private
   def unzip_to_temp(zipped_file)
@@ -338,11 +345,11 @@ private
   
     book_uid = extract_book_uid(doc)
   
-    matching_images = DynamicImage.where("book_uid = ?", book_uid)
-    if matching_images.empty?
+    if get_description_count_for_book(book_uid) == 0
       raise NoImageDescriptions.new
     end
     
+    matching_images = DynamicImage.where("book_uid = ?", book_uid)
     matching_images.each do | dynamic_image |
       image_location = dynamic_image.image_location
       image = doc.at_xpath( doc, "//xmlns:img[@src='#{image_location}']")

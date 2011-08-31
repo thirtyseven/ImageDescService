@@ -31,4 +31,16 @@ class DaisyBookControllerTest < ActionController::TestCase
     @controller.process_book('features/fixtures/DaisyZipBookUnencrypted.zip')
     assert_equal after_processing_image_count, DynamicImage.count
   end
+  
+  test "Description count for book" do
+    assert_equal 0, @controller.get_description_count_for_book("_id2244343")
+    @controller.process_book('features/fixtures/DaisyZipBookUnencrypted.zip')
+    assert_equal 0, @controller.get_description_count_for_book("_id2244343")
+    di = DynamicImage.last
+    dd = DynamicDescription.new
+    dd.dynamic_image_id = di.id
+    dd.body = "Sample description"
+    dd.save
+    assert_equal 1, @controller.get_description_count_for_book("_id2244343")
+  end
 end
