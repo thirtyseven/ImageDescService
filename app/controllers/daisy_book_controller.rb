@@ -263,22 +263,26 @@ class DaisyBookController < ApplicationController
       dir =  session[:zip_directory]
 
       # upload a file
-      s3_object = bucket.objects[book_uid + "/" + image_location]
-
-      begin
-        if (! s3_object.exists?)
-          loc = dir + '/' + image_location
-          s3_object.write(:file => loc)
-
-          #puts s3_object.public_url
-        else
-          #puts ("#{image_location} already exists")
+      if (image_location)
+        s3_object = bucket.objects[book_uid + "/" + image_location]
+        begin
+          if (! s3_object.exists?)
+            loc = dir + '/' + image_location
+            if(File.exists?(loc))
+              s3_object.write(:file => loc)
+              #puts s3_object.public_url
+            else
+              logger.info("file does not exist in local dir #{loc}")
+              #puts "file does not exist in local dir #{loc}"
+            end
+          else
+            #puts ("#{image_location} already exists")
+          end
+        rescue AWS::Errors::Base => e
+          logger.info "S3 credentials incorrect"
+          #puts "S3 credentials incorrect"
         end
-      rescue AWS::Errors::Base => e
-        logger.info "S3 credentials incorrect"
-        #puts "S3 credentials incorrect"
       end
-
 
       image = DynamicImage.find_by_book_uid_and_image_location(book_uid, image_location)
       if(!image)
@@ -295,7 +299,6 @@ class DaisyBookController < ApplicationController
 private
   def unzip_to_temp(zipped_file)
     dir = Dir.mktmpdir
-    puts ("directory is #{dir}")
     Zip::Archive.open(zipped_file) do |zipfile|
       zipfile.each do |entry|
         destination = File.join(dir, entry.name)
@@ -321,7 +324,7 @@ private
     engine = XML::XSLT.new
     engine.xml = xml
     engine.xsl = xsl
-    engine.parameters = {"form_authenticity_token" => form_authenticity_token}
+    engine.parameters = {"form_authenticity_token" => form_authenticity_token, "bucket" => get_bucket_name}
     return engine.serve
   end
 
