@@ -269,7 +269,7 @@ class DaisyBookController < ApplicationController
     end
 
     #upload the images, if necessary, to s3 in parallel
-    Parallel.map(image_nodes, :in_threads => 20) do |image_node|
+    Parallel.map(image_nodes, :in_threads => 10) do |image_node|
       image_location = image_node['src']
       dir =  session[:zip_directory]
 
