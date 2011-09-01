@@ -86,7 +86,13 @@ class DaisyBookController < ApplicationController
     return xml
   end
 
+  def reset_session_directories
+    session[:daisy_directory] = nil
+    session[:zip_directory] = nil
+  end
+
   def submit
+    reset_session_directories
     book = params[:book]
     password = params[:password]
     if !book
