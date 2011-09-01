@@ -85,6 +85,7 @@ GEM
     mime-types (1.16)
     mysql2 (0.2.6)
     nokogiri (1.4.4)
+    parallel (0.5.8)
     polyglot (0.3.1)
     rack (1.2.1)
     rack-mount (0.6.13)
@@ -153,6 +154,7 @@ DEPENDENCIES
   foreman
   mysql2
   nokogiri
+  parallel
   rails (= 3.0.4)
   rmagick
   rspec-rails

@@ -152,6 +152,7 @@ class DaisyBookController < ApplicationController
     FileUtils.cp(book_path, copy_of_daisy_file)
     session[:daisy_file] = copy_of_daisy_file
 
+    upload_images_to_s3
     create_images_in_database
   end
 
@@ -251,26 +252,35 @@ class DaisyBookController < ApplicationController
     Rails.env.production? ? (primary_bucket = "org-benetech-poet") : (primary_bucket = "org-benetech-poet-test")
     primary_bucket
   end
-  
-  def create_images_in_database
+
+  def upload_images_to_s3
     # get handle to s3 service
     s3_service = AWS::S3.new
     # get an s3 bucket
     bucket = s3_service.buckets[get_bucket_name]
 
-    each_image do | book_uid, image_node |
+    image_nodes = Array.new
+    buid = ''
+
+    #need an array of image nodes to work with
+    each_image do |book_uid, node|
+      buid = book_uid
+      image_nodes.push(node)
+    end
+
+    #upload the images, if necessary, to s3 in parallel
+    Parallel.map(image_nodes, :in_threads => 20) do |image_node|
       image_location = image_node['src']
       dir =  session[:zip_directory]
 
-      # upload a file
+      # upload image
       if (image_location)
-        s3_object = bucket.objects[book_uid + "/" + image_location]
+        s3_object = bucket.objects[buid + "/" + image_location]
         begin
           if (! s3_object.exists?)
             loc = dir + '/' + image_location
             if(File.exists?(loc))
               s3_object.write(:file => loc)
-              #puts s3_object.public_url
             else
               logger.info("file does not exist in local dir #{loc}")
               #puts "file does not exist in local dir #{loc}"
@@ -283,6 +293,14 @@ class DaisyBookController < ApplicationController
           #puts "S3 credentials incorrect"
         end
       end
+    end
+  end
+  
+  def create_images_in_database
+
+
+    each_image do | book_uid, image_node |
+      image_location = image_node['src']
 
       image = DynamicImage.find_by_book_uid_and_image_location(book_uid, image_location)
       if(!image)
