@@ -86,13 +86,7 @@ class DaisyBookController < ApplicationController
     return xml
   end
 
-  def reset_session_directories
-    session[:daisy_directory] = nil
-    session[:zip_directory] = nil
-  end
-
   def submit
-    reset_session_directories
     book = params[:book]
     password = params[:password]
     if !book
@@ -158,7 +152,7 @@ class DaisyBookController < ApplicationController
     FileUtils.cp(book_path, copy_of_daisy_file)
     session[:daisy_file] = copy_of_daisy_file
 
-    upload_images_to_s3
+    upload_files_to_s3
     create_images_in_database
   end
 
@@ -191,9 +185,7 @@ class DaisyBookController < ApplicationController
   end
   
   def content
-    book_directory = session[:daisy_directory]
-    contents_filename = get_daisy_contents_xml_name(book_directory)
-    xml = File.read(contents_filename)
+    xml = get_xml_from_s3
     xsl_filename = 'app/views/xslt/daisyTransform.xsl'
     xsl = File.read(xsl_filename)
     contents = xslt(xml, xsl)
@@ -259,7 +251,7 @@ class DaisyBookController < ApplicationController
     primary_bucket
   end
 
-  def upload_images_to_s3
+  def upload_files_to_s3
     # get handle to s3 service
     s3_service = AWS::S3.new
     # get an s3 bucket
@@ -269,22 +261,31 @@ class DaisyBookController < ApplicationController
     buid = ''
 
     #need an array of image nodes to work with
-    each_image do |book_uid, node|
+    each_image(get_xml_from_dir) do |book_uid, node|
       buid = book_uid
       image_nodes.push(node)
     end
+    session[:book_uid] = buid
+
+    book_directory = session[:daisy_directory]
+    contents_filename = get_daisy_contents_xml_name(book_directory)
+
+    #upload xml file to S3
+    content = File.basename(contents_filename)
+    session[:content] = content
+    s3_object = bucket.objects[buid + "/" + content]
+    s3_object.write(:file => contents_filename)
 
     #upload the images, if necessary, to s3 in parallel
     Parallel.map(image_nodes, :in_threads => 10) do |image_node|
       image_location = image_node['src']
-      dir =  session[:zip_directory]
 
       # upload image
       if (image_location)
         s3_object = bucket.objects[buid + "/" + image_location]
         begin
           if (! s3_object.exists?)
-            loc = dir + '/' + image_location
+            loc = book_directory + '/' + image_location
             if(File.exists?(loc))
               s3_object.write(:file => loc)
             else
@@ -303,10 +304,18 @@ class DaisyBookController < ApplicationController
   end
   
   def create_images_in_database
-
-
-    each_image do | book_uid, image_node |
+    each_image(get_xml_from_dir) do | book_uid, image_node |
       image_location = image_node['src']
+      book_directory =  session[:daisy_directory]
+      width, height = 20
+
+      image_file = File.join(book_directory, image_location)
+      if File.exists?(image_file)
+        image = Magick::ImageList.new(image_file)[0]
+        width = image.base_columns
+        height = image.base_rows
+        image.destroy!
+      end
 
       image = DynamicImage.find_by_book_uid_and_image_location(book_uid, image_location)
       if(!image)
@@ -315,6 +324,8 @@ class DaisyBookController < ApplicationController
         DynamicImage.create(
               :book_uid => book_uid,
               :book_title => book_title,
+              :width => width,
+              :height => height,
               :image_location => image_location) 
       end
     end
@@ -469,7 +480,7 @@ private
   def configure_images
     @images = []
     bucket = get_bucket_name
-    each_image do | book_uid, image_node |
+    each_image(get_xml_from_s3) do | book_uid, image_node |
       book_directory = session[:daisy_directory]
       img_id = image_node['id']
       if(!img_id)
@@ -482,25 +493,41 @@ private
         return
       end
       image_data = {'id' => img_id, 'src' => "book/#{img_src}", 'book_uid' => book_uid, 's3src' => "http://s3.amazonaws.com/#{bucket}/#{book_uid}/#{img_src}"}
-      image_file = File.join(book_directory, img_src)
-      if File.exists?(image_file)
-        image = Magick::ImageList.new(image_file)[0]
-        image_data['width'] = image.base_columns
-        image_data['height'] = image.base_rows
-        image.destroy!
-      else
-        image_data['width'] = 20
-        image_data['height'] = 20
+      image_model =  DynamicImage.find_by_book_uid_and_image_location(book_uid, img_src)
+
+      # dimension defaults are for images already in db w/out dimensions
+      width = 20
+      height = 20
+      if (image_model.width)
+        width = image_model.width
       end
+      if (image_model.height)
+        height = image_model.height
+      end
+      image_data['width'] = width
+      image_data['height'] = height
+
       image_data['model'] = DynamicImage.find_by_book_uid_and_image_location(book_uid, img_src)
       @images << image_data
     end
   end
-  
-  def each_image
+
+  def get_xml_from_dir
     book_directory = session[:daisy_directory]
     contents_filename = get_daisy_contents_xml_name(book_directory)
-    xml = File.read(contents_filename)
+    File.read(contents_filename)
+  end
+
+  def get_xml_from_s3
+    # get handle to s3 service
+    s3_service = AWS::S3.new
+    # get an s3 bucket
+    bucket = s3_service.buckets[get_bucket_name]
+    s3_object = bucket.objects[session[:book_uid] + "/" + session[:content]]
+    s3_object.read
+  end
+  
+  def each_image (xml)
     doc = Nokogiri::XML xml
     book_uid = extract_book_uid(doc)
     images = doc.xpath( doc, "//xmlns:img")

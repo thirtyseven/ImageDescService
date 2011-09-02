@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110824151820) do
+ActiveRecord::Schema.define(:version => 20110901155430) do
 
   create_table "descriptions", :force => true do |t|
     t.string   "description",   :limit => 16384,                          :null => false
@@ -41,7 +41,11 @@ ActiveRecord::Schema.define(:version => 20110824151820) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "should_be_described"
+    t.integer  "width"
+    t.integer  "height"
   end
+
+  add_index "dynamic_images", ["book_uid", "image_location"], :name => "index_dynamic_images_on_book_uid_and_image_location"
 
   create_table "images", :force => true do |t|
     t.integer  "book_id",                         :null => false
