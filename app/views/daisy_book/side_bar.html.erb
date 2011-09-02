@@ -27,24 +27,34 @@ function handleImageEssentialChange(form){
 	jQuery.post("/imageDesc/dynamic_images/" + id, data, function(data, status) {handleSubmitResponse(data, status)})
 }
 
+function shouldShow(filterValue, essentialFlagValue)
+{
+	showEssential = (filterValue == "essential")
+	showNonEssential = (filterValue == "non-essential")
+	isEssential = essentialFlagValue.indexOf("true") >= 0
+	isNonEssential = essentialFlagValue.indexOf("false") >= 0
+
+	if(showEssential)
+		return isEssential
+		
+	if(showNonEssential)
+		return isNonEssential
+		
+	return true
+}
+
 function handleFilterChange()
 {
 	var desired = document.getElementById("filter").value
-	var showEssential = (desired == "essential")
 	var flags = document.getElementsByName( "should_describe" );
-	var essential_ids = [] 
 	for (var i = 0; i < flags.length; i++) 
 	{
 		essential = flags[i].value
-		isEssential = essential.indexOf("true") >= 0
-		if(showEssential == isEssential)
-		{
+		show = shouldShow(desired, essential)
+		if(show)
 			flags[i].form.parentNode.style.display = "block"
-		}
-		if(showEssential && !isEssential)
-		{
+		else
 			flags[i].form.parentNode.style.display = "none"
-		}
 	}
 }
 
@@ -54,6 +64,7 @@ function handleFilterChange()
 <select id="filter" onChange="handleFilterChange()">
   <option value="">All Images</option>
   <option value="essential">Only Essential Images</option>
+  <option value="non-essential">Only Non-essential Images</option>
 </select>
 <h3><%= @images.size %> Images</h3>
 <% 
