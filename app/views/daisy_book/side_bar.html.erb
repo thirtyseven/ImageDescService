@@ -30,15 +30,19 @@ function handleImageEssentialChange(form){
 function shouldShow(filterValue, essentialFlagValue)
 {
 	showEssential = (filterValue == "essential")
-	showNonEssential = (filterValue == "non-essential")
 	isEssential = essentialFlagValue.indexOf("true") >= 0
-	isNonEssential = essentialFlagValue.indexOf("false") >= 0
-
 	if(showEssential)
 		return isEssential
 		
+	showNonEssential = (filterValue == "non-essential")
+	isNonEssential = essentialFlagValue.indexOf("false") >= 0
 	if(showNonEssential)
 		return isNonEssential
+
+	showUnspecified = (filterValue == "unspecified")
+	isUnspecified = essentialFlagValue == ""
+	if(showUnspecified)
+		return isUnspecified
 		
 	return true
 }
@@ -65,6 +69,7 @@ function handleFilterChange()
   <option value="">All Images</option>
   <option value="essential">Only Essential Images</option>
   <option value="non-essential">Only Non-essential Images</option>
+  <option value="unspecified">Not yet specified</option>
 </select>
 <h3><%= @images.size %> Images</h3>
 <% 
