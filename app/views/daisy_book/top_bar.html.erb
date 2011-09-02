@@ -28,6 +28,7 @@ function changeImage(delta)
 		document.getElementById("current_image_index").value = "no images"
 		return;
 	}
+	
 	currentIndex = 0
 	for (i=0; i<availableImageIds.length; i++)
 	{
@@ -37,16 +38,26 @@ function changeImage(delta)
 			break;
 		}
 	}
-	targetIndex = currentIndex + delta
-	count = availableImageIds.length
-	if(targetIndex < 0 || targetIndex >= count)
+
+	targetIndex = currentIndex;
+	while(true)
 	{
-		return;
+		targetIndex += delta
+		count = availableImageIds.length
+		if(targetIndex < 0 || targetIndex >= count)
+		{
+			return;
+		}
+		target = availableImageIds[targetIndex]
+		side_image_anchor = parent.side_bar.document.getElementById(target)
+		side_div = side_image_anchor.parentNode
+		display = side_div.style.display
+		if(display != "none")
+			break;
 	}
-	target = availableImageIds[targetIndex]
-	document.getElementById("current_image_index").value = target
 	parent.side_bar.location = "/daisy_book/side_bar#" + target
 	parent.content.location = "/daisy_book/book/content#" + target
+	document.getElementById("current_image_index").value = target
 }
 
 function showGuide() {

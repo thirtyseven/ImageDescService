@@ -1,9 +1,17 @@
-<h1>Daisy Book Upload</h1>
-<p>Choose a Daisy book (zip) file to upload.
+<h1>DAISY Book Image Description Tool</h1>
+<p>
+To add image descriptions to a DAISY book in the Bookshare library, follow these steps:
+</p>
+<ol>
+<li>Click the Browse button (below) and choose a DAISY book (zip) file from your local drive to upload.</li>
+<li>If the book is password protected, enter your password in the field.</li>
+<li>Click the Upload button.</li>
+</ol>
+<p>
+After the upload process completes, you will see the book contents in the right frame and the image navigation bar in the left frame.
 </p>
 <p>
-After uploading the book file, you will see the contents and will have the ability 
-to add or edit image descriptions.
+Enter or edit descriptions by typing text in the edit area under each image and clicking the Submit button to save each one. When finished with your session, close the browser.
 </p>
 
 <%= form_tag("/daisy_book/submit", {:multipart => true}) do %>
