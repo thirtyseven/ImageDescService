@@ -27,20 +27,26 @@ function handleImageEssentialChange(form){
 	jQuery.post("/imageDesc/dynamic_images/" + id, data, function(data, status) {handleSubmitResponse(data, status)})
 }
 
-function shouldShow(filterValue, essentialFlagValue)
+function shouldShow(filterValue, essentialFlagValue, descriptionCount)
 {
-	showEssential = (filterValue == "essential")
 	isEssential = essentialFlagValue.indexOf("true") >= 0
+	isNonEssential = essentialFlagValue.indexOf("false") >= 0
+	isUnspecified = essentialFlagValue == ""
+	hasDescriptions = descriptionCount >= 1
+
+	showEssential = (filterValue == "essential")
 	if(showEssential)
 		return isEssential
 		
 	showNonEssential = (filterValue == "non-essential")
-	isNonEssential = essentialFlagValue.indexOf("false") >= 0
 	if(showNonEssential)
 		return isNonEssential
 
+	showNeedsDescription = (filterValue == "missing")
+	if(showNeedsDescription)
+		return (isEssential && !hasDescriptions)
+		
 	showUnspecified = (filterValue == "unspecified")
-	isUnspecified = essentialFlagValue == ""
 	if(showUnspecified)
 		return isUnspecified
 		
@@ -50,11 +56,12 @@ function shouldShow(filterValue, essentialFlagValue)
 function handleFilterChange()
 {
 	var desired = document.getElementById("filter").value
-	var flags = document.getElementsByName( "should_describe" );
+	var flags = document.getElementsByName("should_describe");
 	for (var i = 0; i < flags.length; i++) 
 	{
 		essential = flags[i].value
-		show = shouldShow(desired, essential)
+		descriptionCount = flags[i].form.description_count.value
+		show = shouldShow(desired, essential, descriptionCount)
 		if(show)
 			flags[i].form.parentNode.style.display = "block"
 		else
@@ -69,6 +76,7 @@ function handleFilterChange()
   <option value="">All Images</option>
   <option value="essential">Only Essential Images</option>
   <option value="non-essential">Only Non-essential Images</option>
+  <option value="missing">Description needed</option>
   <option value="unspecified">Not yet specified</option>
 </select>
 <h3><%= @images.size %> Images</h3>
@@ -121,6 +129,11 @@ function handleFilterChange()
 				id='<%= "should_describe_#{model[:image_location]}" %>' 
 				value='<%= model[:should_be_described] %>'
 			/> 
+			<input type='hidden' name='description_count' 
+				id='<%= "description_count_#{model[:image_location]}" %>'
+				value='<%= model.dynamic_descriptions.count %>'
+			/>
+			
 <!--		<%= form.submit %> -->
 <%
 		end
