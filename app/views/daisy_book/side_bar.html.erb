@@ -27,56 +27,91 @@ function handleImageEssentialChange(form){
 	jQuery.post("/imageDesc/dynamic_images/" + id, data, function(data, status) {handleSubmitResponse(data, status)})
 }
 
+function handleFilterChange()
+{
+	var desired = document.getElementById("filter").value
+	var showEssential = (desired == "essential")
+	var flags = document.getElementsByName( "should_describe" );
+	var essential_ids = [] 
+	for (var i = 0; i < flags.length; i++) 
+	{
+		essential = flags[i].value
+		isEssential = essential.indexOf("true") >= 0
+		if(showEssential == isEssential)
+		{
+			flags[i].form.parentNode.style.display = "block"
+		}
+		if(showEssential && !isEssential)
+		{
+			flags[i].form.parentNode.style.display = "none"
+		}
+	}
+}
+
 //-->
 </script>
-
+<h3>Filtering</h3>
+<select id="filter" onChange="handleFilterChange()">
+  <option value="">All Images</option>
+  <option value="essential">Only Essential Images</option>
+</select>
 <h3><%= @images.size %> Images</h3>
-<% @images.each do | image | 
-	id = image['id']
-	src = image['src']
-    s3src = image['s3src']
-	raw_width = image['width']
-	raw_height = image['height']
-	ratio = 1.0 * raw_width / raw_height
-	if(raw_width > raw_height)
-		width = 240
-		height = width / ratio
-	else
-		height = 160
-		width = height * ratio		
-	end
-%>
-<a id="<%= id %>" href="#<%= id %>">
-<img style="border:1px solid black; padding:0.25em; font-size: 80%;" 
-	 width='<%= width %>px' height='<%= height %>px' 
-	onclick="handleClick('<%= id %>')"
-	src='<%= s3src %>'>
-</img>
-</a>
-<p>
 <% 
-	model = image['model'] 
-	if !model
-		model = DynamicImage.new
-		model[:book_uid] = image['book_uid']
-		model[:image_location] = image['src']
-	end
+	@images.each do | image | 
+		id = image['id']
+		src = image['src']
+	    s3src = image['s3src']
+		raw_width = image['width']
+		raw_height = image['height']
+		ratio = 1.0 * raw_width / raw_height
+		if(raw_width > raw_height)
+			width = 240
+			height = width / ratio
+		else
+			height = 160
+			width = height * ratio		
+		end
+%>
+<div id="div_<%= id %>">
+	<a id="<%= id %>" href="#<%= id %>">
+	<img style="border:1px solid black; padding:0.25em; font-size: 80%;" 
+		 width='<%= width %>px' height='<%= height %>px' 
+		onclick="handleClick('<%= id %>')"
+		src='<%= s3src %>'>
+	</img>
+	</a>
+	<p>
+<% 
+		model = image['model'] 
+		if !model
+			model = DynamicImage.new
+			model[:book_uid] = image['book_uid']
+			model[:image_location] = image['src']
+		end
 %>
 <%=
-	form_for model do | form |
+		form_for model do | form |
 %>
-		<%= form.label(:should_be_described) %>
-		<%= form.select :should_be_described, [['Yes', true], ['No', false]],
-			{:include_blank => true, :custom_label => 'Essential?'}, 
-			{:onChange => "handleImageEssentialChange(this.form);" }  %>
-		<%= form.hidden_field(:id) %>
-		<%= form.hidden_field(:book_uid) %>
-		<%= form.hidden_field(:book_title) %>
-		<%= form.hidden_field(:image_location) %>
+			<%= form.label(:should_be_described) %>
+			<%= form.select :should_be_described, [['Yes', true], ['No', false]],
+				{:include_blank => true, :custom_label => 'Essential?'}, 
+				{:onChange => "handleImageEssentialChange(this.form);" }  %>
+			<%= form.hidden_field(:id) %>
+			<%= form.hidden_field(:book_uid) %>
+			<%= form.hidden_field(:book_title) %>
+			<%= form.hidden_field(:image_location) %>
+			
+			<input type='hidden' name='should_describe' 
+				id='<%= "should_describe_#{model[:image_location]}" %>' 
+				value='<%= model[:should_be_described] %>'
+			/> 
 <!--		<%= form.submit %> -->
 <%
-	end
+		end
 %>
 </p>
 <hr/>
-<% end %>
+</div>
+<% 
+	end 
+%>
