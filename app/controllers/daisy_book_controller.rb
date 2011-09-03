@@ -257,39 +257,40 @@ class DaisyBookController < ApplicationController
     # get an s3 bucket
     bucket = s3_service.buckets[get_bucket_name]
 
-    image_nodes = Array.new
-    buid = ''
-
-    #need an array of image nodes to work with
-    each_image(get_xml_from_dir) do |book_uid, node|
-      buid = book_uid
-      image_nodes.push(node)
-    end
-    session[:book_uid] = buid
-
     book_directory = session[:daisy_directory]
     contents_filename = get_daisy_contents_xml_name(book_directory)
 
-    #upload xml file to S3
     content = File.basename(contents_filename)
     session[:content] = content
-    s3_object = bucket.objects[buid + "/" + content]
-    s3_object.write(:file => contents_filename)
+    book_uid = session[:book_uid]
 
-    #upload the images, if necessary, to s3 in parallel
-    Parallel.map(image_nodes, :in_threads => 10) do |image_node|
+    # create map of S3 key to local file location
+    files = Hash.new
+
+    # add xml file to list of files to be uploaded to S3
+    files[book_uid + "/" + content] = contents_filename
+
+    # add image to list of files to be uploaded
+    each_image(get_xml_from_dir) do |image_node|
       image_location = image_node['src']
-
-      # upload image
+      # only want to upload images that have a src attribute
       if (image_location)
-        s3_object = bucket.objects[buid + "/" + image_location]
+        files[book_uid + "/" + image_location] = book_directory + '/' + image_location
+      end
+    end
+
+    #upload the files, if they have not been previously uploaded, to s3 in parallel
+    Parallel.map(files.keys, :in_threads => 16) do |file_key|
+
+      # upload files
+        s3_object = bucket.objects[file_key]
         begin
           if (! s3_object.exists?)
-            loc = book_directory + '/' + image_location
-            if(File.exists?(loc))
-              s3_object.write(:file => loc)
+            file_location = files[file_key]
+            if(File.exists?(file_location))
+              s3_object.write(:file => file_location)
             else
-              logger.info("file does not exist in local dir #{loc}")
+              logger.info("file does not exist in local dir #{file_location}")
               #puts "file does not exist in local dir #{loc}"
             end
           else
@@ -299,12 +300,11 @@ class DaisyBookController < ApplicationController
           logger.info "S3 credentials incorrect"
           #puts "S3 credentials incorrect"
         end
-      end
     end
   end
   
   def create_images_in_database
-    each_image(get_xml_from_dir) do | book_uid, image_node |
+    each_image(get_xml_from_dir) do | image_node |
       image_location = image_node['src']
       book_directory =  session[:daisy_directory]
       width, height = 20
@@ -317,6 +317,7 @@ class DaisyBookController < ApplicationController
         image.destroy!
       end
 
+      book_uid = session[:book_uid]
       image = DynamicImage.find_by_book_uid_and_image_location(book_uid, image_location)
       if(!image)
         book_title = extract_optional_book_title(image_node.document)
@@ -480,7 +481,8 @@ private
   def configure_images
     @images = []
     bucket = get_bucket_name
-    each_image(get_xml_from_s3) do | book_uid, image_node |
+    book_uid = session[:book_uid]
+    each_image(get_xml_from_s3) do | image_node |
       book_directory = session[:daisy_directory]
       img_id = image_node['id']
       if(!img_id)
@@ -530,9 +532,10 @@ private
   def each_image (xml)
     doc = Nokogiri::XML xml
     book_uid = extract_book_uid(doc)
+    session[:book_uid] = book_uid
     images = doc.xpath( doc, "//xmlns:img")
     images.each do | image_node |
-      yield(book_uid, image_node)
+      yield(image_node)
     end
   end
 
