@@ -152,8 +152,8 @@ class DaisyBookController < ApplicationController
     FileUtils.cp(book_path, copy_of_daisy_file)
     session[:daisy_file] = copy_of_daisy_file
 
-    upload_files_to_s3
     create_images_in_database
+    upload_files_to_s3
   end
 
   def edit
