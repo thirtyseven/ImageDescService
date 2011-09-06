@@ -521,9 +521,6 @@ private
       image_data['width'] = width
       image_data['height'] = height
 
-      puts ("book_uid is #{book_uid}")
-      puts ("img_src is #{img_src}")
-      puts ("model is #{DynamicImage.find_by_book_uid_and_image_location(book_uid, img_src)}")
       image_data['model'] = DynamicImage.find_by_book_uid_and_image_location(book_uid, img_src)
       @images << image_data
     end
