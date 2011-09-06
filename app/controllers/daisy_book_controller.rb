@@ -151,9 +151,8 @@ class DaisyBookController < ApplicationController
     copy_of_daisy_file = File.join(zip_directory, "Daisy.zip")
     FileUtils.cp(book_path, copy_of_daisy_file)
     session[:daisy_file] = copy_of_daisy_file
-
-    create_images_in_database
-    upload_files_to_s3
+    create_images_in_database(book_directory)
+    upload_files_to_s3(book_directory)
   end
 
   def edit
@@ -251,13 +250,12 @@ class DaisyBookController < ApplicationController
     primary_bucket
   end
 
-  def upload_files_to_s3
+  def upload_files_to_s3(book_directory)
     # get handle to s3 service
     s3_service = AWS::S3.new
     # get an s3 bucket
     bucket = s3_service.buckets[get_bucket_name]
 
-    book_directory = session[:daisy_directory]
     contents_filename = get_daisy_contents_xml_name(book_directory)
 
     content = File.basename(contents_filename)
@@ -303,31 +301,35 @@ class DaisyBookController < ApplicationController
     end
   end
   
-  def create_images_in_database
+  def create_images_in_database(book_directory)
+    book_uid = session[:book_uid]
     each_image(get_xml_from_dir) do | image_node |
       image_location = image_node['src']
-      book_directory =  session[:daisy_directory]
       width, height = 20
 
-      image_file = File.join(book_directory, image_location)
-      if File.exists?(image_file)
-        image = Magick::ImageList.new(image_file)[0]
-        width = image.base_columns
-        height = image.base_rows
-        image.destroy!
-      end
+      # if src exists
+      if (image_location)
+        # get image dimensions
+        image_file = File.join(book_directory, image_location)
+        if File.exists?(image_file)
+          image = Magick::ImageList.new(image_file)[0]
+          width = image.base_columns
+          height = image.base_rows
+          image.destroy!
+        end
 
-      book_uid = session[:book_uid]
-      image = DynamicImage.find_by_book_uid_and_image_location(book_uid, image_location)
-      if(!image)
-        book_title = extract_optional_book_title(image_node.document)
-        logger.info("Creating image row #{book_uid}, #{book_title}, #{image_location}")
-        DynamicImage.create(
-              :book_uid => book_uid,
-              :book_title => book_title,
-              :width => width,
-              :height => height,
-              :image_location => image_location) 
+        # add image to db if it does not already exist in db
+        image = DynamicImage.find_by_book_uid_and_image_location(book_uid, image_location)
+        if(!image)
+          book_title = extract_optional_book_title(image_node.document)
+          logger.info("Creating image row #{book_uid}, #{book_title}, #{image_location}")
+          DynamicImage.create(
+                :book_uid => book_uid,
+                :book_title => book_title,
+                :width => width,
+                :height => height,
+                :image_location => image_location)
+        end
       end
     end
   end
@@ -486,12 +488,12 @@ private
       book_directory = session[:daisy_directory]
       img_id = image_node['id']
       if(!img_id)
-        puts "Skipping image with no id: #{image_node.path}"
+        #puts "Skipping image with no id: #{image_node.path}"
         return
       end
       img_src = image_node['src']
       if(!img_src)
-        puts "Skipping image with no src: id=#{img_id}"
+        #puts "Skipping image with no src: id=#{img_id}"
         return
       end
       image_data = {'id' => img_id, 'src' => "book/#{img_src}", 'book_uid' => book_uid, 's3src' => "http://s3.amazonaws.com/#{bucket}/#{book_uid}/#{img_src}"}
