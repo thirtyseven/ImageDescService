@@ -322,7 +322,7 @@ class DaisyBookController < ApplicationController
         image = DynamicImage.find_by_book_uid_and_image_location(book_uid, image_location)
         if(!image)
           book_title = extract_optional_book_title(image_node.document)
-          logger.info("Creating image row #{book_uid}, #{book_title}, #{image_location}")
+          #logger.info("Creating image row #{book_uid}, #{book_title}, #{image_location}")
           DynamicImage.create(
                 :book_uid => book_uid,
                 :book_title => book_title,
@@ -502,12 +502,16 @@ private
       # dimension defaults are for images already in db w/out dimensions
       width = 20
       height = 20
-      if (image_model.width)
-        width = image_model.width
+
+      if (image_model)
+        if (image_model.width)
+          width = image_model.width
+        end
+        if (image_model.height)
+          height = image_model.height
+        end
       end
-      if (image_model.height)
-        height = image_model.height
-      end
+
       image_data['width'] = width
       image_data['height'] = height
 
