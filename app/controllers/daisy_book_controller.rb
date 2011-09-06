@@ -87,6 +87,12 @@ class DaisyBookController < ApplicationController
   end
 
   def submit
+
+    #init session vars
+    session[:book_uid] = nil
+    session[:content] = nil
+    session[:daisy_directory] = nil
+
     book = params[:book]
     password = params[:password]
     if !book
@@ -302,7 +308,6 @@ class DaisyBookController < ApplicationController
   end
   
   def create_images_in_database(book_directory)
-    book_uid = session[:book_uid]
     each_image(get_xml_from_dir) do | image_node |
       image_location = image_node['src']
       width, height = 20
@@ -318,6 +323,7 @@ class DaisyBookController < ApplicationController
           image.destroy!
         end
 
+        book_uid = session[:book_uid]
         # add image to db if it does not already exist in db
         image = DynamicImage.find_by_book_uid_and_image_location(book_uid, image_location)
         if(!image)
@@ -515,6 +521,9 @@ private
       image_data['width'] = width
       image_data['height'] = height
 
+      puts ("book_uid is #{book_uid}")
+      puts ("img_src is #{img_src}")
+      puts ("model is #{DynamicImage.find_by_book_uid_and_image_location(book_uid, img_src)}")
       image_data['model'] = DynamicImage.find_by_book_uid_and_image_location(book_uid, img_src)
       @images << image_data
     end
