@@ -313,15 +313,7 @@ class DaisyBookController < ApplicationController
 
       # if src exists
       if (image_location)
-        # get image dimensions
-        image_file = File.join(book_directory, image_location)
-        if File.exists?(image_file)
-          open(image_file, "rb") do |fh|
-              is = ImageSize.new(fh.read)
-              width = is.width
-              height = is.height
-          end
-        end
+        width, height = get_image_size(book_directory, image_location)
 
         book_uid = session[:book_uid]
         # add image to db if it does not already exist in db
@@ -338,6 +330,22 @@ class DaisyBookController < ApplicationController
         end
       end
     end
+  end
+  
+  def get_image_size(book_directory, image_location)
+    width = 0
+    height = 0
+    
+    image_file = File.join(book_directory, image_location)
+    if File.exists?(image_file)
+      open(image_file, "rb") do |fh|
+          is = ImageSize.new(fh.read)
+          width = is.width
+          height = is.height
+      end
+    end
+    
+    return width, height
   end
 
   def get_description_count_for_book(book_uid)
