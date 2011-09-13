@@ -1,5 +1,4 @@
 require 'fileutils'
-require 'RMagick'
 require 'nokogiri'
 require 'tempfile'
 require 'xml/xslt'
@@ -317,10 +316,11 @@ class DaisyBookController < ApplicationController
         # get image dimensions
         image_file = File.join(book_directory, image_location)
         if File.exists?(image_file)
-          image = Magick::ImageList.new(image_file)[0]
-          width = image.base_columns
-          height = image.base_rows
-          image.destroy!
+          open(image_file, "rb") do |fh|
+              is = ImageSize.new(fh.read)
+              width = is.width
+              height = is.height
+          end
         end
 
         book_uid = session[:book_uid]
