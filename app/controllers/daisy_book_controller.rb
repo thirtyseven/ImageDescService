@@ -312,12 +312,12 @@ class DaisyBookController < ApplicationController
 
       # if src exists
       if (image_location)
-        width, height = get_image_size(book_directory, image_location)
 
         book_uid = session[:book_uid]
         # add image to db if it does not already exist in db
         image = DynamicImage.find_by_book_uid_and_image_location(book_uid, image_location)
         if(!image)
+          width, height = get_image_size(book_directory, image_location)
           book_title = extract_optional_book_title(image_node.document)
           #logger.info("Creating image row #{book_uid}, #{book_title}, #{image_location}")
           DynamicImage.create(
