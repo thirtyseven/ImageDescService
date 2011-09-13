@@ -309,7 +309,6 @@ class DaisyBookController < ApplicationController
   def create_images_in_database(book_directory)
     each_image(get_xml_from_dir) do | image_node |
       image_location = image_node['src']
-      width, height = 20
 
       # if src exists
       if (image_location)
@@ -333,8 +332,7 @@ class DaisyBookController < ApplicationController
   end
   
   def get_image_size(book_directory, image_location)
-    width = 0
-    height = 0
+    width, height = 20
     
     image_file = File.join(book_directory, image_location)
     if File.exists?(image_file)
