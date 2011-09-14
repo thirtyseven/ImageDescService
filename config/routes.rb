@@ -7,6 +7,8 @@ DiagramRailsApp::Application.routes.draw do
   get "daisy_book/content_with_top_bar"
   get "daisy_book/get_xml_with_descriptions"
   get "daisy_book/get_daisy_with_descriptions"
+  get "daisy_book/process"
+  post "daisy_book/submit_to_get_descriptions"
 
   resources :dynamic_descriptions
 

@@ -23,6 +23,56 @@ end
 class DaisyBookController < ApplicationController
   ROOT_XPATH = "/xmlns:dtbook"
   
+  def submit_to_get_descriptions
+    book = params[:book]
+    password = params[:password]
+    if !book
+      flash[:alert] = "Must specify a book file to process"
+      redirect_to :action => 'process'
+      return
+    end
+
+    if password && !password.empty?
+      begin
+        Zip::Archive.decrypt(book.path, password)
+      rescue Zip::Error => e
+        logger.info "#{e.class}: #{e.message}"
+        if e.message.include?("Wrong password")
+          logger.info "#{caller_info} Invalid Password for encyrpted zip"
+          flash[:alert] = "Please check your password and re-enter"
+        else
+          logger.info "#{caller_info} Other problem with encrypted zip"
+          flash[:alert] = "There is a problem with this zip file"
+        end
+        redirect_to :action => 'upload'
+        return
+      end
+    end
+
+    if !valid_daisy_zip?(book.path)
+      flash[:alert] = "Not a valid DAISY book"
+      redirect_to :action => 'process'
+      return
+    end
+    
+    begin
+      accept_book(book.path)
+      redirect_to :action => 'get_daisy_with_descriptions'
+    rescue Zip::Error => e
+      logger.info "#{e.class}: #{e.message}"
+      if e.message.include?("File encrypted")
+        logger.info "#{caller_info} Password needed for zip"
+        flash[:alert] = "Please enter a password for this book"
+      else
+        logger.info "#{caller_info} Other problem with zip"
+        flash[:alert] = "There is a problem with this zip file"
+      end
+
+      redirect_to :action => 'upload'
+      return
+    end
+  end
+  
   def get_daisy_with_descriptions
     begin
       book_directory = session[:daisy_directory]
@@ -141,6 +191,12 @@ class DaisyBookController < ApplicationController
   end
   
   def process_book(book_path)
+    book_directory = accept_book(book_path)
+    create_images_in_database(book_directory)
+    upload_files_to_s3(book_directory)
+  end
+
+  def accept_book(book_path)
     zip_directory = unzip_to_temp(book_path)
     session[:zip_directory] = zip_directory
     top_level_entries = Dir.entries(zip_directory)
@@ -156,10 +212,10 @@ class DaisyBookController < ApplicationController
     copy_of_daisy_file = File.join(zip_directory, "Daisy.zip")
     FileUtils.cp(book_path, copy_of_daisy_file)
     session[:daisy_file] = copy_of_daisy_file
-    create_images_in_database(book_directory)
-    upload_files_to_s3(book_directory)
+      
+    return book_directory
   end
-
+  
   def edit
     render :layout => 'frames'
   end
