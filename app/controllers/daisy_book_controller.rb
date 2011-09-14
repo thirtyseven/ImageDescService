@@ -283,7 +283,7 @@ class DaisyBookController < ApplicationController
     end
 
     #upload the files, if they have not been previously uploaded, to s3 in parallel
-    Parallel.map(files.keys, :in_threads => 8) do |file_key|
+    Parallel.map(files.keys, :in_threads => 4) do |file_key|
 
       # upload files
         s3_object = bucket.objects[file_key]
@@ -304,6 +304,8 @@ class DaisyBookController < ApplicationController
           #puts "S3 credentials incorrect"
         end
     end
+    bucket = nil
+    s3_service = nil
   end
   
   def create_images_in_database(book_directory)
@@ -503,7 +505,7 @@ private
     @images = []
     bucket = get_bucket_name
     book_uid = session[:book_uid]
-    db_images = DynamicImage.where(:book_uid => book_uid)
+    db_images = DynamicImage.where(:book_uid => book_uid).order("id ASC")
     db_images.each do | db_image |
       img_id = db_image.xml_id
       if(!img_id)
