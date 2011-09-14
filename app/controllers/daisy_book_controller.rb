@@ -1,5 +1,4 @@
 require 'fileutils'
-require 'RMagick'
 require 'nokogiri'
 require 'tempfile'
 require 'xml/xslt'
@@ -311,23 +310,15 @@ class DaisyBookController < ApplicationController
     each_image(get_xml_from_dir) do | image_node |
       image_location = image_node['src']
       xml_id = image_node['id']
-      width, height = 20
 
       # if src exists
       if (image_location)
-        # get image dimensions
-        image_file = File.join(book_directory, image_location)
-        if File.exists?(image_file)
-          image = Magick::ImageList.new(image_file)[0]
-          width = image.base_columns
-          height = image.base_rows
-          image.destroy!
-        end
 
         book_uid = session[:book_uid]
         # add image to db if it does not already exist in db
         image = DynamicImage.find_by_book_uid_and_image_location(book_uid, image_location)
         if(!image)
+          width, height = get_image_size(book_directory, image_location)
           book_title = extract_optional_book_title(image_node.document)
           #logger.info("Creating image row #{book_uid}, #{book_title}, #{image_location}")
           DynamicImage.create(
@@ -345,6 +336,21 @@ class DaisyBookController < ApplicationController
         end
       end
     end
+  end
+  
+  def get_image_size(book_directory, image_location)
+    width, height = 20
+    
+    image_file = File.join(book_directory, image_location)
+    if File.exists?(image_file)
+      open(image_file, "rb") do |fh|
+          is = ImageSize.new(fh.read)
+          width = is.width
+          height = is.height
+      end
+    end
+    
+    return width, height
   end
 
   def get_description_count_for_book(book_uid)

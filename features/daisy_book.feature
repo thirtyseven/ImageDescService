@@ -6,7 +6,7 @@ Feature: Daisy Book
 	
 	Scenario: Upload page should have the necessary content
 		When I go to the daisy upload page
-		Then I should see "Daisy book (zip) file"
+		Then I should see "DAISY book"
 
 	Scenario: Hitting upload with no book selected
 		When I go to the daisy upload page

@@ -29,7 +29,7 @@ gem 'nokogiri'
 # gem 'aws-s3', :require => 'aws/s3'
 
 gem 'ruby-xslt'
-gem 'rmagick'
+gem 'image_size'
 gem 'parallel'
 
 # Bundle gems for the local environment. Make sure to
