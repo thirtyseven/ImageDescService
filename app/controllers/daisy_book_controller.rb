@@ -519,26 +519,12 @@ private
         #puts "Skipping image with no src: id=#{img_id}"
         return
       end
-      image_data = {'id' => img_id, 'src' => "book/#{img_src}", 'book_uid' => book_uid, 's3src' => "http://s3.amazonaws.com/#{bucket}/#{book_uid}/#{img_src}"}
-      image_model =  DynamicImage.find_by_book_uid_and_image_location(book_uid, img_src)
-
-      # dimension defaults are for images already in db w/out dimensions
-      width = 20
-      height = 20
-
-      if (image_model)
-        if (image_model.width)
-          width = image_model.width
-        end
-        if (image_model.height)
-          height = image_model.height
-        end
-      end
-
-      image_data['width'] = width
-      image_data['height'] = height
-
-      image_data['model'] = DynamicImage.find_by_book_uid_and_image_location(book_uid, img_src)
+      image_data = {
+        'id' => img_id, 
+        'src' => img_src, 
+        'book_uid' => book_uid, 
+        's3src' => "http://s3.amazonaws.com/#{bucket}/#{book_uid}/#{img_src}"
+      }
       @images << image_data
     end
   end

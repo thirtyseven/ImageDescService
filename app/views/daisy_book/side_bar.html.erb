@@ -83,10 +83,23 @@ function handleFilterChange()
 <% 
 	@images.each do | image | 
 		id = image['id']
-		src = image['src']
+		raw_src = image['src']
+		src = "book/#{raw_src}"
 	    s3src = image['s3src']
-		raw_width = image['width']
-		raw_height = image['height']
+
+		book_uid = image['book_uid']
+        model =  DynamicImage.find_by_book_uid_and_image_location(book_uid, raw_src)
+		if !model
+			model = DynamicImage.new
+			model[:book_uid] = image['book_uid']
+			model[:image_location] = image['src']
+		end
+
+		raw_width = model.width || 20
+		raw_height = model.height || 20
+		if(raw_height == 0)
+			raw_height = 1
+		end
 		ratio = 1.0 * raw_width / raw_height
 		if(raw_width > raw_height)
 			width = 240
@@ -105,14 +118,6 @@ function handleFilterChange()
 	</img>
 	</a>
 	<p>
-<% 
-		model = image['model'] 
-		if !model
-			model = DynamicImage.new
-			model[:book_uid] = image['book_uid']
-			model[:image_location] = image['src']
-		end
-%>
 <%=
 		form_for model do | form |
 %>
