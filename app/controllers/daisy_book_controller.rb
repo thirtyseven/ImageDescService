@@ -2,6 +2,7 @@ require 'fileutils'
 require 'nokogiri'
 require 'tempfile'
 require 'xml/xslt'
+include ActionView::Helpers::NumberHelper
 
 class NoImageDescriptions < Exception
 end
@@ -193,7 +194,9 @@ class DaisyBookController < ApplicationController
   def process_book(book_path)
     book_directory = accept_book(book_path)
     create_images_in_database(book_directory)
+    #puts ("begin upload to s3 memory is #{number_to_human_size(`ps -o rss= -p #{Process.pid}`.to_i)}")
     upload_files_to_s3(book_directory)
+    #puts ("end upload to s3 memory is #{number_to_human_size(`ps -o rss= -p #{Process.pid}`.to_i)}")
   end
 
   def accept_book(book_path)
@@ -337,10 +340,10 @@ class DaisyBookController < ApplicationController
         files[book_uid + "/" + image_location] = book_directory + '/' + image_location
       end
     end
-
+    #puts ("pre thread pool is #{number_to_human_size(`ps -o rss= -p #{Process.pid}`.to_i)}")
     #upload the files, if they have not been previously uploaded, to s3 in parallel
-    Parallel.map(files.keys, :in_threads => 8) do |file_key|
-
+    Parallel.map(files.keys, :in_threads => 1) do |file_key|
+      #puts ("begin thread memory is #{number_to_human_size(`ps -o rss= -p #{Process.pid}`.to_i)}")
       # upload files
         s3_object = bucket.objects[file_key]
         begin
@@ -361,6 +364,7 @@ class DaisyBookController < ApplicationController
           #puts "S3 credentials incorrect"
         end
       s3_object = nil
+      #puts ("end thread memory is #{number_to_human_size(`ps -o rss= -p #{Process.pid}`.to_i)}")
     end
     bucket = nil
     s3_service = nil
