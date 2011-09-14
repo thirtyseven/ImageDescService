@@ -310,6 +310,7 @@ class DaisyBookController < ApplicationController
   def create_images_in_database(book_directory)
     each_image(get_xml_from_dir) do | image_node |
       image_location = image_node['src']
+      xml_id = image_node['id']
       width, height = 20
 
       # if src exists
@@ -334,7 +335,13 @@ class DaisyBookController < ApplicationController
                 :book_title => book_title,
                 :width => width,
                 :height => height,
+                :xml_id => xml_id,
                 :image_location => image_location)
+        else
+          # may need to backfill existing rows without xml id
+          if (! image.xml_id)
+            image.update_attribute("xml_id", xml_id)
+          end
         end
       end
     end
@@ -490,14 +497,14 @@ private
     @images = []
     bucket = get_bucket_name
     book_uid = session[:book_uid]
-    each_image(get_xml_from_s3) do | image_node |
-      book_directory = session[:daisy_directory]
-      img_id = image_node['id']
+    db_images = DynamicImage.where(:book_uid => book_uid)
+    db_images.each do | db_image |
+      img_id = db_image.xml_id
       if(!img_id)
         #puts "Skipping image with no id: #{image_node.path}"
         return
       end
-      img_src = image_node['src']
+      img_src = db_image.image_location
       if(!img_src)
         #puts "Skipping image with no src: id=#{img_id}"
         return

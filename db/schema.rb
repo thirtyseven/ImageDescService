@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110901155430) do
+ActiveRecord::Schema.define(:version => 20110908105030) do
 
   create_table "descriptions", :force => true do |t|
     t.string   "description",   :limit => 16384,                          :null => false
@@ -43,6 +43,7 @@ ActiveRecord::Schema.define(:version => 20110901155430) do
     t.boolean  "should_be_described"
     t.integer  "width"
     t.integer  "height"
+    t.string   "xml_id"
   end
 
   add_index "dynamic_images", ["book_uid", "image_location"], :name => "index_dynamic_images_on_book_uid_and_image_location"
