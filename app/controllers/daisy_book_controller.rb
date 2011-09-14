@@ -89,7 +89,8 @@ class DaisyBookController < ApplicationController
       logger.info "Sending zip #{zip_filename} of length #{File.size(zip_filename)}"
       send_file zip_filename, :type => 'application/zip; charset=utf-8', :filename => basename + '.zip', :disposition => 'attachment' 
     rescue ShowAlertAndGoBack => e
-      redirect_to :back, :alert => e.message
+      flash[:alert] = e.message
+      redirect_to :action => 'upload'
       return
     end
   end
