@@ -295,6 +295,7 @@ class DaisyBookController < ApplicationController
             else
               logger.info("file does not exist in local dir #{file_location}")
               #puts "file does not exist in local dir #{loc}"
+              s3_object = nil
             end
           else
             #puts ("#{image_location} already exists")
@@ -303,6 +304,7 @@ class DaisyBookController < ApplicationController
           logger.info "S3 credentials incorrect"
           #puts "S3 credentials incorrect"
         end
+      s3_object = nil
     end
     bucket = nil
     s3_service = nil
