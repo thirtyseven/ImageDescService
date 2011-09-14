@@ -504,9 +504,10 @@ private
   end
 
   def configure_images
+    book_uid = session[:book_uid]
+    @book_uid = book_uid
     @images = []
     bucket = get_bucket_name
-    book_uid = session[:book_uid]
     db_images = DynamicImage.where(:book_uid => book_uid).order("id ASC")
     db_images.each do | db_image |
       img_id = db_image.xml_id
@@ -522,7 +523,6 @@ private
       image_data = {
         'id' => img_id, 
         'src' => img_src, 
-        'book_uid' => book_uid, 
         's3src' => "http://s3.amazonaws.com/#{bucket}/#{book_uid}/#{img_src}"
       }
       @images << image_data

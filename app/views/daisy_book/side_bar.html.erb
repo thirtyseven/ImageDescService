@@ -87,11 +87,10 @@ function handleFilterChange()
 		src = "book/#{raw_src}"
 	    s3src = image['s3src']
 
-		book_uid = image['book_uid']
-        model =  DynamicImage.find_by_book_uid_and_image_location(book_uid, raw_src)
+        model =  DynamicImage.find_by_book_uid_and_image_location(@book_uid, raw_src)
 		if !model
 			model = DynamicImage.new
-			model[:book_uid] = image['book_uid']
+			model[:book_uid] = @book_uid
 			model[:image_location] = image['src']
 		end
 
