@@ -283,7 +283,7 @@ class DaisyBookController < ApplicationController
     end
 
     #upload the files, if they have not been previously uploaded, to s3 in parallel
-    Parallel.map(files.keys, :in_threads => 4) do |file_key|
+    Parallel.map(files.keys, :in_threads => 8) do |file_key|
 
       # upload files
         s3_object = bucket.objects[file_key]
