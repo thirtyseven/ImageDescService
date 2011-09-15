@@ -43,4 +43,5 @@ group :development, :test do
 	gem 'database_cleaner' # seems to be required by cucumber-rails
   gem 'sqlite3'
   gem 'foreman'
+  gem 'oink'
 end

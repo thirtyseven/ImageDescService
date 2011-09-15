@@ -72,6 +72,7 @@ GEM
       thor (>= 0.13.6)
     gherkin (2.3.6)
       json (>= 1.4.6)
+    hodel_3000_compliant_logger (0.1.0)
     httparty (0.7.8)
       crack (= 0.1.8)
     i18n (0.5.0)
@@ -86,6 +87,9 @@ GEM
     mime-types (1.16)
     mysql2 (0.2.6)
     nokogiri (1.4.4)
+    oink (0.9.3)
+      activerecord
+      hodel_3000_compliant_logger
     parallel (0.5.8)
     polyglot (0.3.1)
     rack (1.2.1)
@@ -155,6 +159,7 @@ DEPENDENCIES
   image_size
   mysql2
   nokogiri
+  oink
   parallel
   rails (= 3.0.4)
   rspec-rails
