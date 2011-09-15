@@ -9,6 +9,8 @@ DiagramRailsApp::Application.routes.draw do
   get "daisy_book/get_daisy_with_descriptions"
   get "daisy_book/process"
   post "daisy_book/submit_to_get_descriptions"
+  get "upload_book/upload"
+  post "upload_book/submit"
 
   resources :dynamic_descriptions
 
