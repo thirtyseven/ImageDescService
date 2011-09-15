@@ -343,7 +343,7 @@ class DaisyBookController < ApplicationController
     end
     #puts ("pre thread pool is #{number_to_human_size(`ps -o rss= -p #{Process.pid}`.to_i)}")
     #upload the files, if they have not been previously uploaded, to s3 in parallel
-    Parallel.map(files.keys, :in_threads => 1) do |file_key|
+    Parallel.map(files.keys, :in_threads => 6) do |file_key|
       #puts ("begin thread memory is #{number_to_human_size(`ps -o rss= -p #{Process.pid}`.to_i)}")
       # upload files
         s3_object = bucket.objects[file_key]
