@@ -78,21 +78,37 @@ class UploadBookController < ApplicationController
           if (! s3_object.exists?)
             if(File.exists?(book.path))
               s3_object.write(:file => book.path)
+              job = S3UnzippingJob.new(@book_uid)
+              Delayed::Job.enqueue(job)
             else
               logger.warn("file does not exist in local dir #{book.path}")
               s3_object = nil
             end
           else
-            #puts ("#{image_location} already exists")
+            #puts ("zip file already exists")
           end
         rescue AWS::Errors::Base => e
-          logger.info "S3 credentials incorrect"
+          logger.info "S3 Problem uploading book to S3 for book #{@book_uid}"
+          logger.info "#{e.class}: #{e.message}"
+          logger.info "Line #{e.line}, Column #{e.column}, Code #{e.code}"
+          s3_object = nil
+          s3_service = nil
+          flash[:alert] = "There was a problem uploading"
+          redirect_to :action => 'upload'
+          return
+        rescue Exception => e
+          logger.info "Unknown problem uploading book to S3 for book #{@book_uid}"
+          logger.info "#{e.class}: #{e.message}"
+          logger.info e.backtrace.join("\n")
+          $stderr.puts e
+          s3_object = nil
+          s3_service = nil
+          flash[:alert] = "There was a problem uploading"
+          redirect_to :action => 'upload'
+          return
         end
         s3_object = nil
         s3_service = nil
-
-        job = S3UnzippingJob.new(@book_uid)
-        Delayed::Job.enqueue(job)
       end
       Process.detach(pid)
 

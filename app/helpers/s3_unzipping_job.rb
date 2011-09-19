@@ -6,37 +6,46 @@ class S3UnzippingJob < Struct.new(:book_uid)
 
   def perform
 
-    # get handle to s3 service
+    begin
+        # get handle to s3 service
+        s3_service = AWS::S3.new
 
-    s3_service = AWS::S3.new
+        # get s3 bucket to download zip file
+        holding_bucket = s3_service.buckets[ENV['POET_HOLDING_BUCKET']]
+        s3_object_zip = holding_bucket.objects[book_uid + ".zip"]
 
-    # get s3 bucket to download zip file
-    holding_bucket = s3_service.buckets[ENV['POET_HOLDING_BUCKET']]
-    s3_object_zip = holding_bucket.objects[book_uid + ".zip"]
+        daisy_file = File.join( "", "tmp", "#{book_uid}.zip")
+        File.open(daisy_file, 'wb') {|f| f.write(s3_object_zip.read) }
+        book_directory = accept_book(daisy_file)
 
-    daisy_file = File.join( "", "tmp", "#{book_uid}.zip")
-    File.open(daisy_file, 'wb') {|f| f.write(s3_object_zip.read) }
-    book_directory = accept_book(daisy_file)
+        xml = get_xml_from_dir(book_directory)
+        doc = Nokogiri::XML xml
+        book = create_book_in_db(doc)
 
-    xml = get_xml_from_dir(book_directory)
-    doc = Nokogiri::XML xml
-    book = create_book_in_db(doc)
+        create_images_in_database(book_directory, doc)
+        book.update_attribute("status", 2)
+        upload_files_to_s3(book_directory, doc)
+        book.update_attribute("status", 3)
+        doc = nil
+        xml = nil
 
-    create_images_in_database(book_directory, doc)
-    book.update_attribute("status", 2)
-    upload_files_to_s3(book_directory, doc)
-    book.update_attribute("status", 3)
-    doc = nil
-    xml = nil
+        # remove zip file from holding bucket
+        s3_object_zip.delete
 
-    # remove zip file from holding bucket
-    s3_object_zip.delete
-
-    s3_service = nil
-    holding_bucket = nil
-    s3_object_zip = nil
-    daisy_file = nil
-
+        s3_service = nil
+        holding_bucket = nil
+        s3_object_zip = nil
+        daisy_file = nil
+      rescue AWS::S3::Errors::NoSuchKey => e
+          puts "S3 Problem reading from S3 for book #{book_uid}"
+          puts "#{e.class}: #{e.message}"
+          puts "Line #{e.line}, Column #{e.column}, Code #{e.code}"
+      rescue Exception => e
+          logger.info "Unknown problem reading from S3 for book #{book_uid}"
+          puts "#{e.class}: #{e.message}"
+          puts e.backtrace.join("\n")
+          $stderr.puts e
+    end
   end
 
   def accept_book(book_path)
@@ -71,12 +80,11 @@ class S3UnzippingJob < Struct.new(:book_uid)
   end
 
   def create_book_in_db(doc)
-    @book_uid = extract_book_uid(doc)
     @book_title = extract_optional_book_title(doc)
-    book = Book.find_by_uid(@book_uid)
+    book = Book.find_by_uid(book_uid)
     if (!book)
       Book.create(
-          :uid => @book_uid,
+          :uid => book_uid,
           :title => @book_title,
           :status => 1
       )
@@ -93,11 +101,11 @@ class S3UnzippingJob < Struct.new(:book_uid)
       if (image_location)
 
         # add image to db if it does not already exist in db
-        image = DynamicImage.find_by_book_uid_and_image_location(@book_uid, image_location)
+        image = DynamicImage.find_by_book_uid_and_image_location(book_uid, image_location)
         if(!image && File.exists?(File.join(book_directory, image_location)))
           width, height = get_image_size(book_directory, image_location)
           DynamicImage.create(
-                :book_uid => @book_uid,
+                :book_uid => book_uid,
                 :book_title => @book_title,
                 :width => width,
                 :height => height,
