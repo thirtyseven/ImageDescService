@@ -10,7 +10,20 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110916175319) do
+ActiveRecord::Schema.define(:version => 20110919133530) do
+
+  create_table "books", :force => true do |t|
+    t.string   "uid",                      :null => false
+    t.string   "title"
+    t.string   "isbn",       :limit => 13
+    t.integer  "status"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "books", ["isbn"], :name => "index_books_on_isbn"
+  add_index "books", ["title"], :name => "index_books_on_title"
+  add_index "books", ["uid"], :name => "index_books_on_uid"
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0

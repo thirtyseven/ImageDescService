@@ -14,16 +14,20 @@ class S3UnzippingJob < Struct.new(:book_uid)
     holding_bucket = s3_service.buckets[ENV['POET_HOLDING_BUCKET']]
     s3_object_zip = holding_bucket.objects[book_uid + ".zip"]
 
-    book_file = File.join( "", "tmp", "#{book_uid}.zip")
-    puts ("tmp file could be #{book_file}")
-    daisy_file = "/tmp/#{book_uid}.zip"
+    daisy_file = File.join( "", "tmp", "#{book_uid}.zip")
     File.open(daisy_file, 'wb') {|f| f.write(s3_object_zip.read) }
     book_directory = accept_book(daisy_file)
 
-    puts "book dir = #{book_directory}"
+    xml = get_xml_from_dir(book_directory)
+    doc = Nokogiri::XML xml
+    book = create_book_in_db(doc)
 
-    create_images_in_database(book_directory)
-    upload_files_to_s3(book_directory)
+    create_images_in_database(book_directory, doc)
+    book.update_attribute("status", 2)
+    upload_files_to_s3(book_directory, doc)
+    book.update_attribute("status", 3)
+    doc = nil
+    xml = nil
 
     # remove zip file from holding bucket
     s3_object_zip.delete
@@ -31,6 +35,7 @@ class S3UnzippingJob < Struct.new(:book_uid)
     s3_service = nil
     holding_bucket = nil
     s3_object_zip = nil
+    daisy_file = nil
 
   end
 
@@ -65,8 +70,22 @@ class S3UnzippingJob < Struct.new(:book_uid)
     return dir
   end
 
-  def create_images_in_database(book_directory)
-    each_image(get_xml_from_dir(book_directory)) do | image_node |
+  def create_book_in_db(doc)
+    @book_uid = extract_book_uid(doc)
+    @book_title = extract_optional_book_title(doc)
+    book = Book.find_by_uid(@book_uid)
+    if (!book)
+      Book.create(
+          :uid => @book_uid,
+          :title => @book_title,
+          :status => 1
+      )
+    end
+  end
+
+  def create_images_in_database(book_directory, doc)
+
+    each_image(doc) do | image_node |
       image_location = image_node['src']
       xml_id = image_node['id']
 
@@ -77,10 +96,9 @@ class S3UnzippingJob < Struct.new(:book_uid)
         image = DynamicImage.find_by_book_uid_and_image_location(@book_uid, image_location)
         if(!image && File.exists?(File.join(book_directory, image_location)))
           width, height = get_image_size(book_directory, image_location)
-          book_title = extract_optional_book_title(image_node.document)
           DynamicImage.create(
                 :book_uid => @book_uid,
-                :book_title => book_title,
+                :book_title => @book_title,
                 :width => width,
                 :height => height,
                 :xml_id => xml_id,
@@ -95,7 +113,7 @@ class S3UnzippingJob < Struct.new(:book_uid)
     end
   end
 
-  def upload_files_to_s3(book_directory)
+  def upload_files_to_s3(book_directory, doc)
     # get handle to s3 service
     s3_service = AWS::S3.new
     # get an s3 bucket
@@ -112,7 +130,7 @@ class S3UnzippingJob < Struct.new(:book_uid)
     files[book_uid + "/" + content] = contents_filename
 
     # add image to list of files to be uploaded
-    each_image(get_xml_from_dir(book_directory)) do |image_node|
+    each_image(doc) do |image_node|
       image_location = image_node['src']
       # only want to upload images that have a src attribute
       if (image_location)
@@ -131,7 +149,7 @@ class S3UnzippingJob < Struct.new(:book_uid)
             if(File.exists?(file_location))
               s3_object.write(:file => file_location)
             else
-              puts("file does not exist in local dir #{file_location}")
+              #puts("file does not exist in local dir #{file_location}")
               s3_object = nil
             end
           else
@@ -156,9 +174,7 @@ class S3UnzippingJob < Struct.new(:book_uid)
     return Dir.glob(File.join(book_directory, '*.xml'))[0]
   end
 
-  def each_image (xml)
-    doc = Nokogiri::XML xml
-    @book_uid = extract_book_uid(doc)
+  def each_image (doc)
     images = doc.xpath( doc, "//xmlns:img")
     images.each do | image_node |
       yield(image_node)
