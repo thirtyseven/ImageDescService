@@ -90,6 +90,9 @@ class UploadBookController < ApplicationController
         end
         s3_object = nil
         s3_service = nil
+
+        job = S3UnzippingJob.new(@book_uid)
+        Delayed::Job.enqueue(job)
       end
       Process.detach(pid)
 
@@ -110,6 +113,7 @@ class UploadBookController < ApplicationController
     end
   end
 
+
   def accept_book(book_path)
     zip_directory = unzip_to_temp(book_path)
     session[:zip_directory] = zip_directory
@@ -128,6 +132,25 @@ class UploadBookController < ApplicationController
     session[:daisy_file] = copy_of_daisy_file
 
     return book_directory
+  end
+
+  def unzip_to_temp(zipped_file)
+    dir = Dir.mktmpdir
+    Zip::Archive.open(zipped_file) do |zipfile|
+      zipfile.each do |entry|
+        destination = File.join(dir, entry.name)
+        if entry.directory?
+          FileUtils.mkdir_p(destination)
+        else
+          dirname = File.join(dir, File.dirname(entry.name))
+          FileUtils.mkdir_p(dirname) unless File.exist?(dirname)
+          open(destination, 'wb') do |f|
+            f << entry.read
+          end
+        end
+      end
+    end
+    return dir
   end
 
   def valid_daisy_zip?(file)
@@ -167,24 +190,7 @@ class UploadBookController < ApplicationController
   end
 
 private
-  def unzip_to_temp(zipped_file)
-    dir = Dir.mktmpdir
-    Zip::Archive.open(zipped_file) do |zipfile|
-      zipfile.each do |entry|
-        destination = File.join(dir, entry.name)
-        if entry.directory?
-          FileUtils.mkdir_p(destination)
-        else
-          dirname = File.join(dir, File.dirname(entry.name))
-          FileUtils.mkdir_p(dirname) unless File.exist?(dirname)
-          open(destination, 'wb') do |f|
-            f << entry.read
-          end
-        end
-      end
-    end
-    return dir
-  end
+
 
   def get_xml_from_dir
     book_directory = session[:daisy_directory]
