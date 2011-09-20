@@ -1,26 +1,28 @@
-<div style="margin: auto; width:650px;" >
-<h1>Welcome to the DIAGRAM project</h1>
+<div style="margin: auto; width:700px;" >
+    <h1>Welcome to the Poet Image Description Tool</h1>
+    </br>
+    </br>
 
-<h3>Upload</h3>
-<form action="/upload_book/upload" method="get">
-To upload a Daisy book, 
-which will allow image descriptions to be added later, 
-click Upload:
-<input type="submit" value="Upload" />
-</form>
+    <h3>Upload</h3>
+    To upload a Daisy book,
+    which will allow image descriptions to be added later,
+    click <a href="/upload_book/upload">Upload</a>
+    </br>
+    </br>
 
-<h3>Edit</h3>
-<form action="/daisy_book/edit" method="get">
-To enter descriptions for a Daisy book that was previously uploaded, 
-enter the book uid here, and click Edit:
-Book UID: <input type="text" name="book_uid"></input>
-<input type="submit" value="Edit" />
-</form>
 
-<h3>Process a Book</h3>
-<form action="/daisy_book/process" method="get">
-To update your copy of a Daisy book
-with the latest image descriptions, click Process:
-<input type="submit" value="Process" />
-</form>
+    <h3>Edit</h3>
+    <form action="/daisy_book/edit" method="get">
+    To enter descriptions for a Daisy book that was previously uploaded,
+    enter the book ID, and click Edit.
+    </br>
+    Book ID: <input type="text" name="book_uid"/>
+    <input type="submit" value="Edit" />
+    </form>
+    </br>
+    </br>
+
+    <h3>Process a Book</h3>
+    To update your copy of a Daisy book
+    with the latest image descriptions, click <a href="/daisy_book/process">Process</a>
 </div>

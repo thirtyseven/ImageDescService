@@ -583,10 +583,12 @@ private
   end
 
   def configure_images(book_uid)
+    logger.info("starting configure images")
     @book_uid = book_uid
     @images = []
     bucket = get_bucket_name
     db_images = DynamicImage.where(:book_uid => book_uid).order("id ASC")
+    logger.info("got images from db")
     db_images.each do | db_image |
       img_id = db_image.xml_id
       if(!img_id)
