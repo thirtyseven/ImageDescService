@@ -249,7 +249,25 @@ class DaisyBookController < ApplicationController
   end
   
   def content
-    xml = get_xml_from_s3
+    book_uid = params[:book_uid]
+    if(!book_uid)
+      redirect_to '/?error=NoBookUid'
+      return
+    end
+    
+    book = Book.find_by_uid(book_uid)
+    if(!book)
+      redirect_to '/?error=UnknownBookUid'
+      return
+    end
+    
+    if(book.status != 3)
+      redirect_to "/?error=BookNotReady&status=#{book.status}"
+      return
+    end
+    
+    xml_filename = book.xml_file
+    xml = get_xml_from_s3(book_uid, xml_filename)
     xsl_filename = 'app/views/xslt/daisyTransform.xsl'
     xsl = File.read(xsl_filename)
     contents = xslt(xml, xsl)
@@ -257,11 +275,11 @@ class DaisyBookController < ApplicationController
   end
   
   def side_bar
-    configure_images
+    configure_images(params[:book_uid])
   end
 
   def top_bar
-    configure_images
+    configure_images(params[:book_uid])
   end  
     
   def valid_daisy_zip?(file)
@@ -564,8 +582,7 @@ private
     return new_daisy_zip.path
   end
 
-  def configure_images
-    book_uid = session[:book_uid]
+  def configure_images(book_uid)
     @book_uid = book_uid
     @images = []
     bucket = get_bucket_name
@@ -596,12 +613,12 @@ private
     File.read(contents_filename)
   end
 
-  def get_xml_from_s3
+  def get_xml_from_s3(book_uid, xml_filename)
     # get handle to s3 service
     s3_service = AWS::S3.new
     # get an s3 bucket
     bucket = s3_service.buckets[get_bucket_name]
-    s3_object = bucket.objects[session[:book_uid] + "/" + session[:content]]
+    s3_object = bucket.objects[book_uid + "/" + xml_filename]
     s3_object.read
   end
   
