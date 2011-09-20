@@ -328,16 +328,11 @@ class DaisyBookController < ApplicationController
     return node.attributes['content'].content
   end
 
-  def get_bucket_name
-    Rails.env.production? ? (primary_bucket = "org-benetech-poet") : (primary_bucket = "org-benetech-poet-test")
-    primary_bucket
-  end
-
   def upload_files_to_s3(book_directory)
     # get handle to s3 service
     s3_service = AWS::S3.new
     # get an s3 bucket
-    bucket = s3_service.buckets[get_bucket_name]
+    bucket = s3_service.buckets[ENV['POET_HOLDING_BUCKET']]
 
     contents_filename = get_daisy_contents_xml_name(book_directory)
 
@@ -471,7 +466,7 @@ private
     engine = XML::XSLT.new
     engine.xml = xml
     engine.xsl = xsl
-    engine.parameters = {"form_authenticity_token" => form_authenticity_token, "bucket" => get_bucket_name}
+    engine.parameters = {"form_authenticity_token" => form_authenticity_token, "bucket" => ENV['POET_HOLDING_BUCKET']}
     return engine.serve
   end
 
@@ -586,7 +581,6 @@ private
     logger.info("starting configure images")
     @book_uid = book_uid
     @images = []
-    bucket = get_bucket_name
     db_images = DynamicImage.where(:book_uid => book_uid).order("id ASC")
     logger.info("got images from db")
     db_images.each do | db_image |
@@ -619,7 +613,7 @@ private
     # get handle to s3 service
     s3_service = AWS::S3.new
     # get an s3 bucket
-    bucket = s3_service.buckets[get_bucket_name]
+    bucket = s3_service.buckets[ENV['POET_HOLDING_BUCKET']]
     s3_object = bucket.objects[book_uid + "/" + xml_filename]
     s3_object.read
   end
