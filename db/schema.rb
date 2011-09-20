@@ -10,15 +10,16 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110919133530) do
+ActiveRecord::Schema.define(:version => 20110920115430) do
 
   create_table "books", :force => true do |t|
-    t.string   "uid",                      :null => false
+    t.string   "uid",                                          :null => false
     t.string   "title"
     t.string   "isbn",       :limit => 13
     t.integer  "status"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "xml_file",                 :default => "none", :null => false
   end
 
   add_index "books", ["isbn"], :name => "index_books_on_isbn"
