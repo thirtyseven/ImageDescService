@@ -4,6 +4,7 @@ require 'tempfile'
 
 include ActionView::Helpers::NumberHelper
 
+
 class NoImageDescriptions < Exception
 end
 
@@ -22,7 +23,9 @@ class ShowAlertAndGoBack < Exception
 end
 
 class UploadBookController < ApplicationController
+
   ROOT_XPATH = "/xmlns:dtbook"
+  include S3Repository
 
   def submit
 
@@ -30,6 +33,8 @@ class UploadBookController < ApplicationController
     session[:book_uid] = nil
     session[:content] = nil
     session[:daisy_directory] = nil
+
+
 
     book = params[:book]
     password = params[:password]
@@ -68,31 +73,15 @@ class UploadBookController < ApplicationController
       @book_uid = extract_book_uid(doc)
 
       pid = fork do
-        # get handle to s3 service
-        s3_service = AWS::S3.new
-        # get an s3 bucket
-        bucket = s3_service.buckets[ENV['POET_HOLDING_BUCKET']]
 
-        s3_object = bucket.objects[@book_uid + ".zip"]
         begin
-          if (! s3_object.exists?)
-            if(File.exists?(book.path))
-              s3_object.write(:file => book.path)
-              job = S3UnzippingJob.new(@book_uid)
-              Delayed::Job.enqueue(job)
-            else
-              logger.warn("file does not exist in local dir #{book.path}")
-              s3_object = nil
-            end
-          else
-            #puts ("zip file already exists")
-          end
+          store_file(ENV['POET_HOLDING_BUCKET'], book.path, @book_uid)
+          job = S3UnzippingJob.new(@book_uid)
+          Delayed::Job.enqueue(job)
         rescue AWS::Errors::Base => e
           logger.info "S3 Problem uploading book to S3 for book #{@book_uid}"
           logger.info "#{e.class}: #{e.message}"
           logger.info "Line #{e.line}, Column #{e.column}, Code #{e.code}"
-          s3_object = nil
-          s3_service = nil
           flash[:alert] = "There was a problem uploading"
           redirect_to :action => 'upload'
           return
@@ -101,14 +90,10 @@ class UploadBookController < ApplicationController
           logger.info "#{e.class}: #{e.message}"
           logger.info e.backtrace.join("\n")
           $stderr.puts e
-          s3_object = nil
-          s3_service = nil
           flash[:alert] = "There was a problem uploading"
           redirect_to :action => 'upload'
           return
         end
-        s3_object = nil
-        s3_service = nil
       end
       Process.detach(pid)
 
@@ -132,7 +117,6 @@ class UploadBookController < ApplicationController
 
   def accept_book(book_path)
     zip_directory = unzip_to_temp(book_path)
-    session[:zip_directory] = zip_directory
     top_level_entries = Dir.entries(zip_directory)
     top_level_entries.delete('.')
     top_level_entries.delete('..')
@@ -145,7 +129,6 @@ class UploadBookController < ApplicationController
 
     copy_of_daisy_file = File.join(zip_directory, "Daisy.zip")
     FileUtils.cp(book_path, copy_of_daisy_file)
-    session[:daisy_file] = copy_of_daisy_file
 
     return book_directory
   end

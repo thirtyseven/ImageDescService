@@ -20,7 +20,8 @@ class S3UnzippingJob < Struct.new(:book_uid)
 
         xml = get_xml_from_dir(book_directory)
         doc = Nokogiri::XML xml
-        book = create_book_in_db(doc)
+        contents_filename = get_daisy_contents_xml_name(book_directory)
+        book = create_book_in_db(doc, File.basename(contents_filename))
 
         create_images_in_database(book_directory, doc)
         book.update_attribute("status", 2)
@@ -41,7 +42,7 @@ class S3UnzippingJob < Struct.new(:book_uid)
           puts "#{e.class}: #{e.message}"
           puts "Line #{e.line}, Column #{e.column}, Code #{e.code}"
       rescue Exception => e
-          logger.info "Unknown problem reading from S3 for book #{book_uid}"
+          puts "Unknown problem reading from S3 for book #{book_uid}"
           puts "#{e.class}: #{e.message}"
           puts e.backtrace.join("\n")
           $stderr.puts e
@@ -79,14 +80,15 @@ class S3UnzippingJob < Struct.new(:book_uid)
     return dir
   end
 
-  def create_book_in_db(doc)
+  def create_book_in_db(doc, xml_file)
     @book_title = extract_optional_book_title(doc)
     book = Book.find_by_uid(book_uid)
     if (!book)
       Book.create(
           :uid => book_uid,
           :title => @book_title,
-          :status => 1
+          :status => 1,
+          :xml_file => xml_file
       )
     end
   end
@@ -179,7 +181,7 @@ class S3UnzippingJob < Struct.new(:book_uid)
   end
 
   def get_daisy_contents_xml_name(book_directory)
-    return Dir.glob(File.join(book_directory, '*.xml'))[0]
+    Dir.glob(File.join(book_directory, '*.xml'))[0]
   end
 
   def each_image (doc)
