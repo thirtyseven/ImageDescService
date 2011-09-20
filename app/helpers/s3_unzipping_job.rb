@@ -90,6 +90,8 @@ class S3UnzippingJob < Struct.new(:book_uid)
           :status => 1,
           :xml_file => xml_file
       )
+    elsif (!xml_file.eql?(book.xml_file))
+      book.update_attributes(:xml_file => xml_file, :status => 1)
     end
   end
 
