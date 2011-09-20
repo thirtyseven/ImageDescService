@@ -84,7 +84,7 @@ class S3UnzippingJob < Struct.new(:book_uid)
     @book_title = extract_optional_book_title(doc)
     book = Book.find_by_uid(book_uid)
     if (!book)
-      Book.create(
+      book = Book.create(
           :uid => book_uid,
           :title => @book_title,
           :status => 1,
@@ -93,6 +93,7 @@ class S3UnzippingJob < Struct.new(:book_uid)
     elsif (!xml_file.eql?(book.xml_file))
       book.update_attributes(:xml_file => xml_file, :status => 1)
     end
+    return book
   end
 
   def create_images_in_database(book_directory, doc)
