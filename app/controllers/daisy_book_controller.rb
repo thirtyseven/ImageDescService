@@ -250,19 +250,19 @@ class DaisyBookController < ApplicationController
   
   def content
     book_uid = params[:book_uid]
-    if(!book_uid)
-      redirect_to '/?error=NoBookUid'
+    if(!book_uid || book_uid.length == 0)
+      render :text=>"Must specify a book UID"
       return
     end
     
     book = Book.find_by_uid(book_uid)
     if(!book)
-      redirect_to '/?error=UnknownBookUid'
+      render :text=>"There is no book in the system with that UID (#{book_uid})"
       return
     end
     
     if(book.status != 3)
-      redirect_to "/?error=BookNotReady&status=#{book.status}"
+      render :text=>"That book (#{book_uid}) is still being processed (status=#{book.status}). Please try again later"
       return
     end
     
