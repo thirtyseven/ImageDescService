@@ -3,10 +3,12 @@
 function getAvailableImageIds()
 {
 	return [
-	<% @images.each do | image | %>
-		"<%= image['id'] %>",
-	<% end %>
+	    <% my_images =  DynamicImage.where(:book_uid => session[:book_uid]).order("id ASC")
+        my_images.each do |image|%>
+        "<%= image.xml_id %>",
+        <% end %>
 	]
+
 }
 
 function nextButton()

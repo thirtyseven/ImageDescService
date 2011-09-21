@@ -221,7 +221,62 @@ class DaisyBookController < ApplicationController
   end
   
   def edit
+    book_uid = params[:book_uid]
+    session[:book_uid] = book_uid
+
+    if(!book_uid || book_uid.length == 0)
+      flash[:alert] = "Must specify a book UID"
+      #redirect_to :action => 'index'
+      render :template => 'home/index'
+      return
+    end
+
+    book = Book.find_by_uid(book_uid)
+    if(!book)
+      flash[:alert] = "There is no book in the system with that UID (#{book_uid})"
+      #redirect_to :action => 'index'
+      render :template => 'home/index'
+      return
+    end
+
+    if(book.status != 3)
+      flash[:alert] = "That book (#{book_uid}) is still being processed. Please try again later"
+      #redirect_to :action => 'index'
+      render :template => 'home/index'
+      return
+    end
+
+
     render :layout => 'frames'
+  end
+
+  def edit_check
+    book_uid = params[:book_uid]
+    session[:book_uid] = book_uid
+
+
+    if(!book_uid || book_uid.length == 0)
+      flash[:alert] = "You must enter a book ID"
+      #redirect_to :action => 'index'
+      render :template => 'home/index'
+      return
+    end
+
+    book = Book.find_by_uid(book_uid)
+    if(!book)
+      flash[:alert] = "There is no book in the system with that ID (#{book_uid})"
+      #redirect_to :action => 'index'
+      render :template => 'home/index'
+      return
+    end
+
+    if(book.status != 3)
+      flash[:alert] = "That book (#{book_uid}) is still being processed (status=#{book.status}). Please try again later"
+      #redirect_to :action => 'index'
+      render :template => 'home/index'
+      return
+    end
+    render :template => 'daisy_book/edit'
   end
   
   def file
@@ -249,23 +304,9 @@ class DaisyBookController < ApplicationController
   end
   
   def content
-    book_uid = params[:book_uid]
-    if(!book_uid || book_uid.length == 0)
-      render :text=>"Must specify a book UID"
-      return
-    end
-    
+    book_uid = session[:book_uid]
+
     book = Book.find_by_uid(book_uid)
-    if(!book)
-      render :text=>"There is no book in the system with that UID (#{book_uid})"
-      return
-    end
-    
-    if(book.status != 3)
-      render :text=>"That book (#{book_uid}) is still being processed (status=#{book.status}). Please try again later"
-      return
-    end
-    
     xml_filename = book.xml_file
     xml = get_xml_from_s3(book_uid, xml_filename)
     xsl_filename = 'app/views/xslt/daisyTransform.xsl'
@@ -275,11 +316,11 @@ class DaisyBookController < ApplicationController
   end
   
   def side_bar
-    configure_images(params[:book_uid])
+    configure_images(session[:book_uid])
   end
 
   def top_bar
-    configure_images(params[:book_uid])
+    return
   end  
     
   def valid_daisy_zip?(file)
@@ -579,12 +620,9 @@ private
   end
 
   def configure_images(book_uid)
-    logger.info("starting configure images")
-    @book_uid = book_uid
     @images = []
     bucket = ENV['POET_ASSET_BUCKET']
     db_images = DynamicImage.where(:book_uid => book_uid).order("id ASC")
-    logger.info("got images from db")
     db_images.each do | db_image |
       img_id = db_image.xml_id
       if(!img_id)
