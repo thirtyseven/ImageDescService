@@ -621,6 +621,7 @@ private
 
   def configure_images(book_uid)
     @images = []
+    @book_uid = book_uid
     bucket = ENV['POET_ASSET_BUCKET']
     db_images = DynamicImage.where(:book_uid => book_uid).order("id ASC")
     db_images.each do | db_image |
