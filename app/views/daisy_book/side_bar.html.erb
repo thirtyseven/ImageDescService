@@ -100,10 +100,10 @@ function handleFilterChange()
 			raw_height = 1
 		end
 		ratio = 1.0 * raw_width / raw_height
-		if((raw_width > raw_height) && raw_width > 240)
+		if(raw_width > raw_height)
 			width = 240
 			height = width / ratio
-		elsif ((raw_height > raw_width) && raw_height > 160)
+		else
 			height = 160
 			width = height * ratio		
 		end
