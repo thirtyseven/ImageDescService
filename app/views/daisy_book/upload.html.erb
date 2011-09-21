@@ -15,7 +15,7 @@ Enter or edit descriptions by typing text in the edit area under each image and 
 </p>
 
 <%= form_tag("/daisy_book/submit", {:multipart => true}) do %>
-<p><label for="upload_file">Select Daisy book file</label> : 
+<p><label for="upload_file">Select DAISY book file</label> :
 <%= file_field_tag 'book' %> </p>
 <p><label for="upload_file">Enter password (if needed)</label> :
 <%= password_field_tag 'password' %> </p>
