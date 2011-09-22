@@ -92,7 +92,7 @@ xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/">
 		
 	  </script>
 
-      <link rel="stylesheet" type="text/css" href="html.css" />
+      <link rel="stylesheet" type="text/css" href="//s3.amazonaws.com/org-benetech-poet/html.css" />
       <script type="text/javascript" src="../../javascripts/tiny_mce/tiny_mce.js" ></script >
       <script type="text/javascript">
          tinyMCE.init({
@@ -113,11 +113,7 @@ xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/">
 
          function imageDescCallbackHelper(divName, text) {
             var targetDiv = document.getElementById(divName);
-            if (targetDiv.innerText != undefined) {
-                targetDiv.innerText = text;
-            } else if (targetDiv.textContent != undefined) {
-                targetDiv.textContent = text;
-            }
+            targetDiv.innerHTML = text;
          }
          <xsl:for-each select="//dtb:img">
             <xsl:variable name="divId">img<xsl:value-of select="generate-id(.)"/></xsl:variable>
@@ -649,7 +645,7 @@ xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/">
     <xsl:element name="img">
       <xsl:call-template name="base-attributes"/>
       <xsl:attribute name="alt"><xsl:value-of select="@alt"/></xsl:attribute>
-      <xsl:attribute name="src">http://s3.amazonaws.com/<xsl:value-of select="$bucket"></xsl:value-of>/<xsl:value-of select="/dtb:dtbook/dtb:head/dtb:meta[@name='dtb:uid']/@content"/>/<xsl:value-of select="@src"/></xsl:attribute>
+      <xsl:attribute name="src">//s3.amazonaws.com/<xsl:value-of select="$bucket"></xsl:value-of>/<xsl:value-of select="/dtb:dtbook/dtb:head/dtb:meta[@name='dtb:uid']/@content"/>/<xsl:value-of select="@src"/></xsl:attribute>
       <xsl:if test="@longdesc">
         <xsl:attribute name="longdesc"><xsl:value-of select="@longdesc"/></xsl:attribute>
       </xsl:if>
