@@ -80,19 +80,15 @@ function handleFilterChange()
   <option value="unspecified">Not yet specified</option>
 </select>
 <h3><%= @images.size %> Images</h3>
-<% 
-	@images.each do | image | 
-		id = image['id']
-		raw_src = image['src']
+<%
+    bucket = ENV['POET_ASSET_BUCKET']
+	@images.each do | image |
+		id = image.xml_id
+		raw_src = image.image_location
 		src = "book/#{raw_src}"
-	    s3src = image['s3src']
+        s3src = "//s3.amazonaws.com/#{bucket}/#{session[:book_uid]}/#{image.image_location}"
 
-        model =  DynamicImage.find_by_book_uid_and_image_location(@book_uid, raw_src)
-		if !model
-			model = DynamicImage.new
-			model[:book_uid] = @book_uid
-			model[:image_location] = image['src']
-		end
+        model =  image
 
 		raw_width = model.width || 20
 		raw_height = model.height || 20

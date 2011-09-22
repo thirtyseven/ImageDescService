@@ -316,7 +316,7 @@ class DaisyBookController < ApplicationController
   end
   
   def side_bar
-    configure_images(session[:book_uid])
+    @images = DynamicImage.where(:book_uid => session[:book_uid]).order("id ASC")
   end
 
   def top_bar
@@ -617,31 +617,6 @@ private
       end
     end
     return new_daisy_zip.path
-  end
-
-  def configure_images(book_uid)
-    @images = []
-    @book_uid = book_uid
-    bucket = ENV['POET_ASSET_BUCKET']
-    db_images = DynamicImage.where(:book_uid => book_uid).order("id ASC")
-    db_images.each do | db_image |
-      img_id = db_image.xml_id
-      if(!img_id)
-        #puts "Skipping image with no id: #{image_node.path}"
-        return
-      end
-      img_src = db_image.image_location
-      if(!img_src)
-        #puts "Skipping image with no src: id=#{img_id}"
-        return
-      end
-      image_data = {
-        'id' => img_id, 
-        'src' => img_src, 
-        's3src' => "http://s3.amazonaws.com/#{bucket}/#{book_uid}/#{img_src}"
-      }
-      @images << image_data
-    end
   end
 
   def get_xml_from_dir
