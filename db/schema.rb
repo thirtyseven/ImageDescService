@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110920115430) do
+ActiveRecord::Schema.define(:version => 201109211852030) do
 
   create_table "books", :force => true do |t|
     t.string   "uid",                                          :null => false
@@ -60,6 +60,8 @@ ActiveRecord::Schema.define(:version => 20110920115430) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "dynamic_descriptions", ["dynamic_image_id"], :name => "index_dynamic_descriptions_on_dynamic_image_id"
 
   create_table "dynamic_images", :force => true do |t|
     t.string   "book_uid",            :null => false
