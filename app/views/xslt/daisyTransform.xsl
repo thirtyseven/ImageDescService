@@ -25,7 +25,7 @@ xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/">
         <xsl:for-each select="//dtb:img">
             <xsl:variable name="divId">img<xsl:value-of select="generate-id(.)"/></xsl:variable>
             <script type="text/javascript">
-                <xsl:attribute name="src">/imageDesc.json?book_uid=<xsl:value-of select="/dtb:dtbook/dtb:head/dtb:meta[@name='dtb:uid']/@content"/>&amp;image_location=<xsl:value-of select="@src"/>&amp;callback=<xsl:value-of select="$divId"/>Callback</xsl:attribute>
+                <xsl:attribute name="src">//<xsl:value-of select="$poet_host"></xsl:value-of>/imageDesc.json?book_uid=<xsl:value-of select="/dtb:dtbook/dtb:head/dtb:meta[@name='dtb:uid']/@content"/>&amp;image_location=<xsl:value-of select="@src"/>&amp;callback=<xsl:value-of select="$divId"/>Callback</xsl:attribute>
             </script>
         </xsl:for-each>
     </html>
@@ -47,7 +47,7 @@ xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/">
 
 		function handleImageClick(image_id) {
 			parent.top_bar.document.getElementById("current_image_index").value = image_id
-			parent.side_bar.location = "/daisy_book/side_bar#" + image_id
+			parent.side_bar.location = "//<xsl:value-of select="$poet_host"/>/daisy_book/side_bar#" + image_id
 		}
 		
 		function handleSubmitResponse(formBaseId, responseText, responseStatus) {
@@ -82,7 +82,7 @@ xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/">
 				"book_title" : document.getElementById(bookTitleId).value,
 				"image_location" : document.getElementById(imageSrcId).value
 			}
-			var x = jQuery.post("/imageDesc", data, function(data, status) {handleSubmitResponse(formBaseId, data, status)})
+			var x = jQuery.post("//<xsl:value-of select="$poet_host"/>/imageDesc", data, function(data, status) {handleSubmitResponse(formBaseId, data, status)})
             var notification = document.getElementById(resultId)
 			notification.innerHTML = "Submitting updated description..."
             notification.style.fontWeight = "bold"
@@ -93,7 +93,7 @@ xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/">
 	  </script>
 
       <link rel="stylesheet" type="text/css" href="//s3.amazonaws.com/org-benetech-poet/html.css" />
-      <script type="text/javascript" src="../../javascripts/tiny_mce/tiny_mce.js" ></script >
+      <script type="text/javascript"><xsl:attribute name="src">//<xsl:value-of select="$poet_host"/>/javascripts/tiny_mce/tiny_mce.js</xsl:attribute></script>
       <script type="text/javascript">
          tinyMCE.init({
             // General options

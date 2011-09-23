@@ -1,4 +1,6 @@
-class S3UnzippingJob < Struct.new(:book_uid)
+require 'xml/xslt'
+
+class S3UnzippingJob < Struct.new(:book_uid, :poet_host, :form_authenticity_token)
 
   def enqueue(job)
 
@@ -26,7 +28,22 @@ class S3UnzippingJob < Struct.new(:book_uid)
         create_images_in_database(book_directory, doc)
         book.update_attribute("status", 2)
         upload_files_to_s3(book_directory, doc)
+
+
+        xsl_filename = 'app/views/xslt/daisyTransform.xsl'
+        xsl = File.read(xsl_filename)
+        contents = xslt(xml, xsl, poet_host)
+        content_html = File.join("","tmp", "#{book_uid}.html")
+        File.open(content_html, 'wb'){|f|f.write(contents)}
+        # get an s3 bucket
+        bucket = s3_service.buckets[ENV['POET_ASSET_BUCKET']]
+        s3_object = bucket.objects[book_uid + "/" + book_uid + ".html"]
+        if (! s3_object.exists?)
+          s3_object.write(:file => content_html)
+        end
+
         book.update_attribute("status", 3)
+
         doc = nil
         xml = nil
 
@@ -36,6 +53,7 @@ class S3UnzippingJob < Struct.new(:book_uid)
         s3_service = nil
         holding_bucket = nil
         s3_object_zip = nil
+        s3_object = nil
         daisy_file = nil
       rescue AWS::S3::Errors::NoSuchKey => e
           puts "S3 Problem reading from S3 for book #{book_uid}"
@@ -227,6 +245,16 @@ class S3UnzippingJob < Struct.new(:book_uid)
     end
 
     return width, height
+  end
+
+  def xslt(xml, xsl, poet_host)
+    puts("host is #{poet_host}")
+    engine = XML::XSLT.new
+    engine.xml = xml
+    engine.xsl = xsl
+    bucket_name = ENV['POET_ASSET_BUCKET'].dup
+    engine.parameters = {"form_authenticity_token" => form_authenticity_token, "bucket" => bucket_name, "poet_host" => poet_host}
+    return engine.serve
   end
 
 

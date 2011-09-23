@@ -306,15 +306,22 @@ class DaisyBookController < ApplicationController
   def content
     book_uid = session[:book_uid]
 
-    book = Book.find_by_uid(book_uid)
-    xml_filename = book.xml_file
-    xml = get_xml_from_s3(book_uid, xml_filename)
-    xsl_filename = 'app/views/xslt/daisyTransform.xsl'
-    xsl = File.read(xsl_filename)
-    contents = xslt(xml, xsl)
-    render :text => contents, :content_type => 'text/html'
+    file_name = book_uid + ".html"
+    html = get_html_from_s3(book_uid, file_name)
+    if (html)
+      render :text => html, :content_type => 'text/html'
+    else
+
+      book = Book.find_by_uid(book_uid)
+      xml_filename = book.xml_file
+      xml = get_xml_from_s3(book_uid, xml_filename)
+      xsl_filename = 'app/views/xslt/daisyTransform.xsl'
+      xsl = File.read(xsl_filename)
+      contents = xslt(xml, xsl, request.host_with_port)
+      render :text => contents, :content_type => 'text/html'
+    end
   end
-  
+
   def side_bar
     @images = DynamicImage.where(:book_uid => session[:book_uid]).order("id ASC")
   end
@@ -503,12 +510,13 @@ private
     return Dir.glob(File.join(book_directory, '*.xml'))[0]
   end
   
-  def xslt(xml, xsl)
+  def xslt(xml, xsl, poet_host)
+    puts("host is #{poet_host}")
     engine = XML::XSLT.new
     engine.xml = xml
     engine.xsl = xsl
     bucket_name = ENV['POET_ASSET_BUCKET'].dup
-    engine.parameters = {"form_authenticity_token" => form_authenticity_token, "bucket" => bucket_name}
+    engine.parameters = {"form_authenticity_token" => form_authenticity_token, "bucket" => bucket_name, "poet_host" => poet_host}
     return engine.serve
   end
 
@@ -633,7 +641,20 @@ private
     s3_object = bucket.objects[book_uid + "/" + xml_filename]
     s3_object.read
   end
-  
+
+  def get_html_from_s3(book_uid, file_name)
+    # get handle to s3 service
+    s3_service = AWS::S3.new
+    # get an s3 bucket
+    bucket = s3_service.buckets[ENV['POET_ASSET_BUCKET']]
+    s3_object = bucket.objects[book_uid + "/" + file_name]
+    if (s3_object.exists?)
+      s3_object.read
+    else
+      return nil
+    end
+  end
+
   def each_image (xml)
     doc = Nokogiri::XML xml
     book_uid = extract_book_uid(doc)
