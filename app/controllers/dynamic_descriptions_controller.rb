@@ -46,7 +46,7 @@ class DynamicDescriptionsController < ApplicationController
         @dynamic_image = DynamicImage.new(:book_uid => params[:book_uid], :image_location => params[:image_location], :book_title => params[:book_title])
         @dynamic_image.save
       end
-      @dynamic_description = @dynamic_image.dynamic_descriptions.create(params[:dynamic_description])
+      @dynamic_description = @dynamic_image.dynamic_descriptions.create(:body => params[:dynamic_description]["body"], :book_uid => params[:book_uid])
     else
       @dynamic_description = DynamicDescription.new
       @dynamic_description.body = "missing parameters"

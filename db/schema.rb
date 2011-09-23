@@ -59,8 +59,10 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.integer  "dynamic_image_id",                                           :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "book_uid"
   end
 
+  add_index "dynamic_descriptions", ["book_uid", "dynamic_image_id"], :name => "index_dynamic_descriptions_on_book_uid_and_dynamic_image_id"
   add_index "dynamic_descriptions", ["dynamic_image_id"], :name => "index_dynamic_descriptions_on_dynamic_image_id"
 
   create_table "dynamic_images", :force => true do |t|
@@ -76,6 +78,7 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
   end
 
   add_index "dynamic_images", ["book_uid", "image_location"], :name => "index_dynamic_images_on_book_uid_and_image_location"
+  add_index "dynamic_images", ["book_uid", "should_be_described"], :name => "index_dynamic_images_on_book_uid_and_should_be_described"
 
   create_table "images", :force => true do |t|
     t.integer  "book_id",                         :null => false
