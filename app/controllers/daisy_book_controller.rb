@@ -221,7 +221,7 @@ class DaisyBookController < ApplicationController
   end
   
   def edit
-    book_uid = params[:book_uid]
+    book_uid = params[:book_uid].strip
     session[:book_uid] = book_uid
 
     if(!book_uid || book_uid.length == 0)
@@ -246,37 +246,7 @@ class DaisyBookController < ApplicationController
       return
     end
 
-
     render :layout => 'frames'
-  end
-
-  def edit_check
-    book_uid = params[:book_uid]
-    session[:book_uid] = book_uid
-
-
-    if(!book_uid || book_uid.length == 0)
-      flash[:alert] = "You must enter a book ID"
-      #redirect_to :action => 'index'
-      render :template => 'home/index'
-      return
-    end
-
-    book = Book.find_by_uid(book_uid)
-    if(!book)
-      flash[:alert] = "There is no book in the system with that ID (#{book_uid})"
-      #redirect_to :action => 'index'
-      render :template => 'home/index'
-      return
-    end
-
-    if(book.status != 3)
-      flash[:alert] = "That book (#{book_uid}) is still being processed (status=#{book.status}). Please try again later"
-      #redirect_to :action => 'index'
-      render :template => 'home/index'
-      return
-    end
-    render :template => 'daisy_book/edit'
   end
   
   def file
