@@ -2,7 +2,6 @@ DiagramRailsApp::Application.routes.draw do
   get "daisy_book/upload"
   post "daisy_book/submit"
   get "daisy_book/edit"
-  get "daisy_book/edit_check"
   get "daisy_book/side_bar"
   get "daisy_book/top_bar"
   get "daisy_book/content_with_top_bar"
