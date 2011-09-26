@@ -1,5 +1,3 @@
-<frameset rows='100px, *'>
-	<frame name='top_bar' src='/daisy_book/top_bar<%= "?book_uid=#{params[:book_uid]}" %>'></frame>
 	<frameset cols='300px, *'>
 		<frame name='side_bar' src='/daisy_book/side_bar<%= "?book_uid=#{params[:book_uid]}" %>'></frame>
 		<frame name='content' src='/daisy_book/book/content<%= "?book_uid=#{params[:book_uid]}" %>'></frame>
@@ -7,4 +5,3 @@
 	</frameset>
 	
 	<noframes>Frames are required for this feature to work.</noframes>
-</frameset>

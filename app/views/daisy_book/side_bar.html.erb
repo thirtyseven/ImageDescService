@@ -1,9 +1,17 @@
+
+<style type="text/css">
+	.toolbar	{ position:fixed; top:1px; left:1px; padding:10px; font-family:Arial; background:#fffea1; border:1px solid #fc0;}
+	</style>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript"></script>
 <script type="text/javascript">
 <!--
 function handleClick(image_id){
-	parent.top_bar.document.getElementById("current_image_index").value = image_id
 	parent.content.location = "/daisy_book/book/content#" + image_id
+}
+
+function showGuide() {
+    window.open('/help/DescriptionGuidance.html', '_guide',
+            'height=400,width=700,status=false,menubar=0,location=0,toolbar=1,scrollbars=yes,left=100,top=100');
 }
 
 function handleSubmitResponse(responseText, responseStatus) {
@@ -55,31 +63,22 @@ function shouldShow(filterValue, essentialFlagValue, descriptionCount)
 
 function handleFilterChange()
 {
-	var desired = document.getElementById("filter").value
-	var flags = document.getElementsByName("should_describe");
-	for (var i = 0; i < flags.length; i++) 
-	{
-		essential = flags[i].value
-		descriptionCount = flags[i].form.description_count.value
-		show = shouldShow(desired, essential, descriptionCount)
-		if(show)
-			flags[i].form.parentNode.style.display = "block"
-		else
-			flags[i].form.parentNode.style.display = "none"
-	}
+    var desired = document.getElementById("filter").value ;
+    window.location.href = "/daisy_book/side_bar?book_uid=<%=session[:book_uid]%>" + "&filter=" + desired
 }
 
 //-->
 </script>
-<h3>Filtering</h3>
-<select id="filter" onChange="handleFilterChange()">
-  <option value="">All Images</option>
-  <option value="essential">Only Essential Images</option>
-  <option value="non-essential">Only Non-essential Images</option>
-  <option value="missing">Description needed</option>
-  <option value="unspecified">Not yet specified</option>
-</select>
-<h3><%= @images.size %> Images</h3>
+<div class="toolbar" style="width:250px;">
+<%= select_tag(:filter, options_for_select([['All Images', 0], ['Only Essential', 1], ['Only Non-essential', 2], ['Description needed', 3], ['Unspecified', 4]], @filter),{ :onchange => "handleFilterChange()"})%>
+<b><%= @images.size %> Images <a href='#' onClick="showGuide()">
+  <div class='right'><img src='/images/info.png' width='20' height='20'></img></div>
+
+</a></b></br>
+</div>
+
+</br></br>
+
 <%
     bucket = ENV['POET_ASSET_BUCKET']
 	@images.each do | image |
@@ -118,21 +117,12 @@ function handleFilterChange()
 %>
 			<%= form.label(:should_be_described) %>
 			<%= form.select :should_be_described, [['Yes', true], ['No', false]],
-				{:include_blank => true, :custom_label => 'Essential?'}, 
+				{:include_blank => 'Unspecified', :custom_label => 'Essential?'},
 				{:onChange => "handleImageEssentialChange(this.form);" }  %>
 			<%= form.hidden_field(:id) %>
 			<%= form.hidden_field(:book_uid) %>
 			<%= form.hidden_field(:book_title) %>
 			<%= form.hidden_field(:image_location) %>
-			
-			<input type='hidden' name='should_describe' 
-				id='<%= "should_describe_#{model[:image_location]}" %>' 
-				value='<%= model[:should_be_described] %>'
-			/> 
-			<input type='hidden' name='description_count' 
-				id='<%= "description_count_#{model[:image_location]}" %>'
-				value='<%= model.dynamic_descriptions.count %>'
-			/>
 			
 <!--		<%= form.submit %> -->
 <%

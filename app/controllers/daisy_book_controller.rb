@@ -222,7 +222,11 @@ class DaisyBookController < ApplicationController
   
   def edit
     book_uid = params[:book_uid].strip
-    session[:book_uid] = book_uid
+    if (book_uid)
+      session[:book_uid] = book_uid
+    else
+      book_uid = session[:book_uid]
+    end
 
     if(!book_uid || book_uid.length == 0)
       flash[:alert] = "Must specify a book UID"
@@ -293,7 +297,29 @@ class DaisyBookController < ApplicationController
   end
 
   def side_bar
-    @images = DynamicImage.where(:book_uid => session[:book_uid]).order("id ASC")
+    book_uid = session[:book_uid]
+    if (!book_uid)
+      book_uid = params[:book_uid]
+      session[:book_uid] = book_uid
+    end
+    filter = params[:filter]
+    @filter = filter
+    @filters = {'All' => 1, 'Essential' => 2, 'Non Essentail' => 3}
+    case filter
+      when "0"
+        @images = DynamicImage.where(:book_uid => book_uid).order("id ASC")
+      when "1"
+        @images = DynamicImage.where(:book_uid => book_uid, :should_be_described => true).order("id ASC")
+      when "2"
+        @images = DynamicImage.where(:book_uid => book_uid, :should_be_described => false).order("id ASC")
+      when "3"
+        @images = DynamicImage.find_by_sql("SELECT * FROM dynamic_images WHERE book_uid = '#{book_uid}' and should_be_described = true and id not in (select dynamic_image_id from dynamic_descriptions where dynamic_descriptions.book_uid = '#{book_uid}') ORDER BY id ASC;")
+      when "4"
+        @images = DynamicImage.where(:book_uid => book_uid, :should_be_described => nil).order("id ASC")
+      else
+        @filter = "0"
+        @images = DynamicImage.where(:book_uid => book_uid).order("id ASC")
+      end
   end
 
   def top_bar
