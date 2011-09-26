@@ -5,7 +5,7 @@
 # http://blog.lathi.net/articles/2006/03/02/config-database-yml-goodness-for-teams
 # http://yanpritzker.com/2006/08/29/encrypted-db-passwords-for-rails-with-databaseyml-and-erb/
 <% socket = "/tmp/mysql.sock" %>
-<% file = File.join(RAILS_ROOT, "config", "dbsocket.txt")
+<% file = File.join(::Rails.root.to_s, "config", "dbsocket.txt")
     socket = IO.read(file).strip if File.exist?(file) %>
     
 # SQLite version 3.x

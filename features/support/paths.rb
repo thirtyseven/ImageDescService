@@ -20,7 +20,7 @@ module NavigationHelpers
     when /the xml upload page/
       '/update_descriptions_in_book'
     when /the daisy upload page/
-      '/daisy_book/upload'
+      '/upload_book/upload'
     when /the description editing page/
       '/daisy_book/edit'
     when /the content page/
@@ -35,6 +35,8 @@ module NavigationHelpers
       '/daisy_book/process'
     when /the raw xml download page/
       '/daisy_book/get_xml_with_descriptions'
+    when /the upload for edit success page/
+      '/upload_book/submit'
       
     else
       begin

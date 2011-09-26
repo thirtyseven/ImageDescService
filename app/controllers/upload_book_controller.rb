@@ -164,10 +164,10 @@ class UploadBookController < ApplicationController
     rescue Zip::Error => e
         logger.info "#{e.class}: #{e.message}"
         if e.message.include?("Not a zip archive")
-            logger.info "#{caller_info} Not a ZIP File"
+            logger.info " Not a ZIP File"
             flash[:alert] = "Uploaded file must be a valid Daisy (zip) file"
         else
-            logger.info "#{caller_info} Other problem with zip"
+            logger.info " Other problem with zip"
             flash[:alert] = "There is a problem with this zip file"
         end
         puts e
