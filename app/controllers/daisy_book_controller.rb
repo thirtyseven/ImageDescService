@@ -304,7 +304,6 @@ class DaisyBookController < ApplicationController
     end
     filter = params[:filter]
     @filter = filter
-    @filters = {'All' => 1, 'Essential' => 2, 'Non Essentail' => 3}
     case filter
       when "0"
         @images = DynamicImage.where(:book_uid => book_uid).order("id ASC")
