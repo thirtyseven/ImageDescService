@@ -229,7 +229,7 @@ class DaisyBookController < ApplicationController
     end
 
     if(!book_uid || book_uid.length == 0)
-      flash[:alert] = "Must specify a book UID"
+      flash[:alert] = "Must specify a book ID"
       #redirect_to :action => 'index'
       render :template => 'home/index'
       return
@@ -237,7 +237,7 @@ class DaisyBookController < ApplicationController
 
     book = Book.find_by_uid(book_uid)
     if(!book)
-      flash[:alert] = "There is no book in the system with that UID (#{book_uid})"
+      flash[:alert] = "There is no book in the system with that ID (#{book_uid})"
       #redirect_to :action => 'index'
       render :template => 'home/index'
       return
