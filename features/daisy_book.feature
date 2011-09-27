@@ -65,7 +65,7 @@ Feature: Daisy Book
 		When the image "images/fwk-gallaugher-fig01_001.jpg" in book "_id2244343" with title "Information Systems: A Manager’s Guide to Harnessing Technology" exists but has no description
 		And I go to the daisy process page
 		And I attach the file "features/fixtures/DaisyZipBookUnencrypted.zip" to "book"
-		And I press "Upload"
+		And I press "Process"
 		And I go to the raw xml download page
 		Then the response should be html
 		# NOTE: Should look for error message, but we end up back on the 

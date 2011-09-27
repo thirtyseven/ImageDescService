@@ -1,5 +1,22 @@
 module S3Repository
   def store_file (location, file_path, book_uid)
+
+    local_dir = ENV['POET_LOCAL_STORAGE_DIR']
+    if (local_dir)
+      begin
+        if(File.exists?(file_path))
+          FileUtils.cp(file_path, File.join(local_dir, book_uid + ".zip"))
+        else
+          puts "file does not exist in local dir #{file_path} for copy to local store"
+        end
+      rescue Exception => e
+         puts "Unknown problem copying to local storage dir for book #{book_uid}"
+          puts "#{e.class}: #{e.message}"
+          puts e.backtrace.join("\n")
+          $stderr.puts e
+      end
+    else
+
     # get handle to s3 service
         s3_service = AWS::S3.new
         # get an s3 bucket
@@ -35,5 +52,6 @@ module S3Repository
         end
         s3_object = nil
         s3_service = nil
+    end
   end
 end
