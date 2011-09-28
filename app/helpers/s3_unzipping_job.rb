@@ -154,11 +154,8 @@ class S3UnzippingJob < Struct.new(:book_uid, :poet_host, :form_authenticity_toke
 
     content = File.basename(contents_filename)
 
-    # create map of S3 key to local file location
-    files = Hash.new
-
     # add xml file to list of files to be uploaded to S3
-    files[book_uid + "/" + content] = contents_filename
+    # files[book_uid + "/" + content] = contents_filename
 
     # add image to list of files to be uploaded
     each_image(doc) do |image_node|
@@ -166,8 +163,6 @@ class S3UnzippingJob < Struct.new(:book_uid, :poet_host, :form_authenticity_toke
       # only want to upload images that have a src attribute
       if (image_location)
         file_key = book_uid + "/" + image_location
-        file_location = File.join(book_directory, image_location)
-        files[book_uid + "/" + image_location] = File.join(book_directory, image_location)
 
         #puts ("begin thread memory is #{number_to_human_size(`ps -o rss= -p #{Process.pid}`.to_i)}")
         # upload files
@@ -186,6 +181,11 @@ class S3UnzippingJob < Struct.new(:book_uid, :poet_host, :form_authenticity_toke
             end
           rescue AWS::Errors::Base => e
             puts "S3 credentials incorrect"
+          rescue Exception => e
+            puts "Unknown problem uploading image #{image_location} to S3 for book #{book_uid}"
+            puts "#{e.class}: #{e.message}"
+            puts e.backtrace.join("\n")
+            $stderr.puts e
           end
         s3_object = nil
         #puts ("end thread memory is #{number_to_human_size(`ps -o rss= -p #{Process.pid}`.to_i)}")
