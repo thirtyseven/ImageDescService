@@ -72,8 +72,10 @@ class UploadBookController < ApplicationController
       doc = Nokogiri::XML xml
       @book_uid = extract_book_uid(doc)
 
-      pid = fork do
+      doc = nil
+      xml = nil
 
+      pid = fork do
         begin
           store_file(ENV['POET_HOLDING_BUCKET'], book.path, @book_uid)
           job = S3UnzippingJob.new(@book_uid, request.host_with_port, form_authenticity_token)

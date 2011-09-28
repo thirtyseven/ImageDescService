@@ -165,32 +165,31 @@ class S3UnzippingJob < Struct.new(:book_uid, :poet_host, :form_authenticity_toke
       image_location = image_node['src']
       # only want to upload images that have a src attribute
       if (image_location)
+        file_key = book_uid + "/" + image_location
+        file_location = File.join(book_directory, image_location)
         files[book_uid + "/" + image_location] = File.join(book_directory, image_location)
-      end
-    end
-    #puts ("pre thread pool is #{number_to_human_size(`ps -o rss= -p #{Process.pid}`.to_i)}")
-    #upload the files, if they have not been previously uploaded, to s3 in parallel
-    Parallel.map(files.keys, :in_threads => 2) do |file_key|
-      #puts ("begin thread memory is #{number_to_human_size(`ps -o rss= -p #{Process.pid}`.to_i)}")
-      # upload files
-        s3_object = bucket.objects[file_key]
-        begin
-          if (! s3_object.exists?)
-            file_location = files[file_key]
-            if(File.exists?(file_location))
-              s3_object.write(:file => file_location)
+
+        #puts ("begin thread memory is #{number_to_human_size(`ps -o rss= -p #{Process.pid}`.to_i)}")
+        # upload files
+          s3_object = bucket.objects[file_key]
+          begin
+            if (! s3_object.exists?)
+              file_location = files[file_key]
+              if(File.exists?(file_location))
+                s3_object.write(:file => file_location)
+              else
+                #puts("file does not exist in local dir #{file_location}")
+                s3_object = nil
+              end
             else
-              #puts("file does not exist in local dir #{file_location}")
-              s3_object = nil
+              #puts ("#{image_location} already exists")
             end
-          else
-            #puts ("#{image_location} already exists")
+          rescue AWS::Errors::Base => e
+            puts "S3 credentials incorrect"
           end
-        rescue AWS::Errors::Base => e
-          puts "S3 credentials incorrect"
-        end
-      s3_object = nil
-      #puts ("end thread memory is #{number_to_human_size(`ps -o rss= -p #{Process.pid}`.to_i)}")
+        s3_object = nil
+        #puts ("end thread memory is #{number_to_human_size(`ps -o rss= -p #{Process.pid}`.to_i)}")
+      end
     end
     bucket = nil
     s3_service = nil
