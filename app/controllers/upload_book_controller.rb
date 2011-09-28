@@ -50,10 +50,10 @@ class UploadBookController < ApplicationController
       rescue Zip::Error => e
         logger.info "#{e.class}: #{e.message}"
         if e.message.include?("Wrong password")
-          logger.info "#{caller_info} Invalid Password for encyrpted zip"
+          logger.info "#{request.remote_addr} Invalid Password for encyrpted zip"
           flash[:alert] = "Please check your password and re-enter"
         else
-          logger.info "#{caller_info} Other problem with encrypted zip"
+          logger.info "#{request.remote_addr} Other problem with encrypted zip"
           flash[:alert] = "There is a problem with this zip file"
         end
         redirect_to :action => 'upload'
@@ -102,10 +102,10 @@ class UploadBookController < ApplicationController
     rescue Zip::Error => e
       logger.info "#{e.class}: #{e.message}"
       if e.message.include?("File encrypted")
-        logger.info "#{caller_info} Password needed for zip"
+        logger.info "#{request.remote_addr} Password needed for zip"
         flash[:alert] = "Please enter a password for this book"
       else
-        logger.info "#{caller_info} Other problem with zip"
+        logger.info "#{request.remote_addr} Other problem with zip"
         flash[:alert] = "There is a problem with this zip file"
       end
 
