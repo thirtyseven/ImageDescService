@@ -150,26 +150,24 @@ class S3UnzippingJob < Struct.new(:book_uid, :poet_host, :form_authenticity_toke
     # get an s3 bucket
     bucket = s3_service.buckets[ENV['POET_ASSET_BUCKET']]
 
-    contents_filename = get_daisy_contents_xml_name(book_directory)
-
-    content = File.basename(contents_filename)
-
+    #contents_filename = get_daisy_contents_xml_name(book_directory)
+    #content = File.basename(contents_filename)
     # add xml file to list of files to be uploaded to S3
-    # files[book_uid + "/" + content] = contents_filename
+    #files[book_uid + "/" + content] = contents_filename
 
-    # add image to list of files to be uploaded
+    # upload image to S3
     each_image(doc) do |image_node|
       image_location = image_node['src']
       # only want to upload images that have a src attribute
       if (image_location)
         file_key = book_uid + "/" + image_location
+        file_location = File.join(book_directory, image_location)
 
         #puts ("begin thread memory is #{number_to_human_size(`ps -o rss= -p #{Process.pid}`.to_i)}")
         # upload files
           s3_object = bucket.objects[file_key]
           begin
             if (! s3_object.exists?)
-              file_location = files[file_key]
               if(File.exists?(file_location))
                 s3_object.write(:file => file_location)
               else
