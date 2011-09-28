@@ -221,6 +221,12 @@ class DaisyBookController < ApplicationController
   end
   
   def edit
+    return_to = params[:return_to]
+    error_redirect = 'home/index'
+    if (return_to.eql?("describe"))
+      error_redirect = 'daisy_book/describe'
+    end
+
     book_uid = params[:book_uid].strip
     if (book_uid)
       session[:book_uid] = book_uid
@@ -231,7 +237,7 @@ class DaisyBookController < ApplicationController
     if(!book_uid || book_uid.length == 0)
       flash[:alert] = "Must specify a book ID"
       #redirect_to :action => 'index'
-      render :template => 'home/index'
+      render :template => error_redirect
       return
     end
 
@@ -239,14 +245,14 @@ class DaisyBookController < ApplicationController
     if(!book)
       flash[:alert] = "There is no book in the system with that ID (#{book_uid})"
       #redirect_to :action => 'index'
-      render :template => 'home/index'
+      render :template => error_redirect
       return
     end
 
     if(book.status != 3)
       flash[:alert] = "That book (#{book_uid}) is still being processed. Please try again later"
       #redirect_to :action => 'index'
-      render :template => 'home/index'
+      render :template => error_redirect
       return
     end
 
