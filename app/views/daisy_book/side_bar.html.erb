@@ -1,6 +1,6 @@
 
 <style type="text/css">
-	.toolbar	{ position:fixed; top:1px; left:1px; padding:10px; font-family:Arial; background:#fffea1; border:1px solid #fc0;}
+	.toolbar	{ position:fixed; top:1px; left:1px; padding:10px; font-family:Arial; background:#fffea1; border:2px solid #fc0;}
 	</style>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript"></script>
 <script type="text/javascript">
@@ -70,15 +70,14 @@ function handleFilterChange()
 
 //-->
 </script>
-<div class="toolbar" style="width:250px;">
+<div class="toolbar" style="width:259px;">
 <%= select_tag(:filter, options_for_select([['All Images', 0], ['Only Essential', 1], ['Only Non-essential', 2], ['Description needed', 3], ['Unspecified', 4]], @filter),{ :onchange => "handleFilterChange()"})%>
 <b><%= @images.size %> Images <a href='#' onClick="showGuide()">
   <div class='right'><img src='/images/info.png' width='20' height='20'></img></div>
-
 </a></b></br>
 </div>
 
-</br></br>
+</br></br></br>
 
 <%
     bucket = ENV['POET_ASSET_BUCKET']
