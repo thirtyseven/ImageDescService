@@ -512,7 +512,6 @@ private
   end
   
   def xslt(xml, xsl, poet_host)
-    puts("host is #{poet_host}")
     engine = XML::XSLT.new
     engine.xml = xml
     engine.xsl = xsl

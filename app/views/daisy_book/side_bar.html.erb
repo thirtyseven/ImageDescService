@@ -5,8 +5,9 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript"></script>
 <script type="text/javascript">
 <!--
-function handleClick(image_id){
-	parent.content.location = "/daisy_book/book/content#" + image_id
+function handleClick(image_id, src){
+	parent.content.location = "/daisy_book/book/content#" + image_id;
+    parent.content.getDescription(image_id, src);
 }
 
 function showGuide() {
@@ -107,7 +108,7 @@ function handleFilterChange()
 	<a id="<%= id %>" href="#<%= id %>">
 	<img style="border:1px solid black; padding:0.25em; font-size: 80%;" 
 		 width='<%= width %>px' height='<%= height %>px' 
-		onclick="handleClick('<%= id %>')"
+		onclick="handleClick('<%= id %>', '<%= raw_src %>')"
 		src='<%= s3src %>'>
 	</img>
 	</a>

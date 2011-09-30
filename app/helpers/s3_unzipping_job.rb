@@ -245,7 +245,6 @@ class S3UnzippingJob < Struct.new(:book_uid, :poet_host, :form_authenticity_toke
   end
 
   def xslt(xml, xsl, poet_host)
-    puts("host is #{poet_host}")
     engine = XML::XSLT.new
     engine.xml = xml
     engine.xsl = xsl

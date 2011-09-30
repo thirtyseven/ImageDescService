@@ -21,13 +21,6 @@ xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/">
   <xsl:template match="dtb:dtbook">
     <html>
         <xsl:apply-templates/>
-        <!-- defer image description loading -->
-        <xsl:for-each select="//dtb:img">
-            <xsl:variable name="divId">img<xsl:value-of select="generate-id(.)"/></xsl:variable>
-            <script type="text/javascript">
-                <xsl:attribute name="src">//<xsl:value-of select="$poet_host"></xsl:value-of>/imageDesc.json?book_uid=<xsl:value-of select="/dtb:dtbook/dtb:head/dtb:meta[@name='dtb:uid']/@content"/>&amp;image_location=<xsl:value-of select="@src"/>&amp;callback=<xsl:value-of select="$divId"/>Callback</xsl:attribute>
-            </script>
-        </xsl:for-each>
     </html>
   </xsl:template>
 
@@ -44,6 +37,23 @@ xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/">
       <script type="text/javascript">
       $(document).ready(function() {
  	  });
+
+
+        function getDescription(imgId, src) {
+          var bookUid = "<xsl:value-of select="/dtb:dtbook/dtb:head/dtb:meta[@name='dtb:uid']/@content"/>" ;
+          var image_location = src;
+          var divId = "desc_" + imgId;
+          data = { "book_uid" : bookUid, "image_location" : image_location }
+          var x = jQuery.get("//<xsl:value-of select="$poet_host"/>/imageDesc.json", data, function(data) {descriptionCallback(data, divId)}) ;
+
+        }
+
+        function descriptionCallback(json, divName) {
+        	var targetDiv = document.getElementById(divName);
+            targetDiv.innerHTML = json['body'];
+        }
+
+
 		
 		function handleSubmitResponse(formBaseId, responseText, responseStatus) {
 			var resultId = formBaseId + "_result"
@@ -110,12 +120,6 @@ xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/">
             var targetDiv = document.getElementById(divName);
             targetDiv.innerHTML = text;
          }
-         <xsl:for-each select="//dtb:img">
-            <xsl:variable name="divId">img<xsl:value-of select="generate-id(.)"/></xsl:variable>
-            function <xsl:value-of select="$divId"/>Callback(json) {
-                imageDescCallbackHelper('<xsl:value-of select="$divId"/>', json['body']);
-            }
-         </xsl:for-each>
       </script>
       <xsl:apply-templates/>
     </xsl:element>
@@ -652,7 +656,7 @@ xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/">
       </xsl:if>
     </xsl:element>
     <xsl:element name="br"/>
-    <xsl:variable name="divId">img<xsl:value-of select="generate-id(.)"/></xsl:variable>
+    <xsl:variable name="divId">desc_<xsl:value-of select="@id"/></xsl:variable>
     <div class="imageDescBox" style="border:1px solid black; padding:0.25em; font-size: 80%;">
         <xsl:attribute name="id"><xsl:value-of select="$divId"/></xsl:attribute>
     </div>
