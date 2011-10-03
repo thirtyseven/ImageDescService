@@ -37,6 +37,8 @@ module NavigationHelpers
       '/daisy_book/get_xml_with_descriptions'
     when /the upload for edit success page/
       '/upload_book/submit'
+    when /the home page/
+      '/'
       
     else
       begin

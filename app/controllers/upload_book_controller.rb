@@ -78,7 +78,7 @@ class UploadBookController < ApplicationController
 
       pid = fork do
         begin
-          store_file(ENV['POET_HOLDING_BUCKET'], book.path, @book_uid)
+          store_file(ENV['POET_HOLDING_BUCKET'], book.path, @book_uid, @book_uid + ".zip", nil)
           job = S3UnzippingJob.new(@book_uid, request.host_with_port, form_authenticity_token)
           Delayed::Job.enqueue(job)
         rescue AWS::Errors::Base => e

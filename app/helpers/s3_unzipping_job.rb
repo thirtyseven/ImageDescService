@@ -1,6 +1,7 @@
 require 'xml/xslt'
 
 class S3UnzippingJob < Struct.new(:book_uid, :poet_host, :form_authenticity_token)
+  include S3Repository
 
   def enqueue(job)
 
@@ -9,15 +10,7 @@ class S3UnzippingJob < Struct.new(:book_uid, :poet_host, :form_authenticity_toke
   def perform
 
     begin
-        # get handle to s3 service
-        s3_service = AWS::S3.new
-
-        # get s3 bucket to download zip file
-        holding_bucket = s3_service.buckets[ENV['POET_HOLDING_BUCKET']]
-        s3_object_zip = holding_bucket.objects[book_uid + ".zip"]
-
-        daisy_file = File.join( "", "tmp", "#{book_uid}.zip")
-        File.open(daisy_file, 'wb') {|f| f.write(s3_object_zip.read) }
+        daisy_file = read_file(ENV['POET_HOLDING_BUCKET'], book_uid + ".zip", File.join( "", "tmp", "#{book_uid}.zip"))
         book_directory = accept_book(daisy_file)
 
         xml = get_xml_from_dir(book_directory)
@@ -29,18 +22,13 @@ class S3UnzippingJob < Struct.new(:book_uid, :poet_host, :form_authenticity_toke
         book.update_attribute("status", 2)
         upload_files_to_s3(book_directory, doc)
 
-
         xsl_filename = 'app/views/xslt/daisyTransform.xsl'
         xsl = File.read(xsl_filename)
         contents = xslt(xml, xsl, poet_host)
         content_html = File.join("","tmp", "#{book_uid}.html")
         File.open(content_html, 'wb'){|f|f.write(contents)}
-        # get an s3 bucket
-        bucket = s3_service.buckets[ENV['POET_ASSET_BUCKET']]
-        s3_object = bucket.objects[book_uid + "/" + book_uid + ".html"]
-        if (! s3_object.exists?)
-          s3_object.write(:file => content_html)
-        end
+        puts "about to call store_file for transformed html"
+        store_file(ENV['POET_ASSET_BUCKET'], content_html, book_uid, book_uid + "/" + book_uid + ".html", nil)
 
         book.update_attribute("status", 3)
 
@@ -48,19 +36,11 @@ class S3UnzippingJob < Struct.new(:book_uid, :poet_host, :form_authenticity_toke
         xml = nil
 
         # remove zip file from holding bucket
-        s3_object_zip.delete
+        remove_file(ENV['POET_HOLDING_BUCKET'], book_uid + ".zip")
 
-        s3_service = nil
-        holding_bucket = nil
-        s3_object_zip = nil
-        s3_object = nil
         daisy_file = nil
-      rescue AWS::S3::Errors::NoSuchKey => e
-          puts "S3 Problem reading from S3 for book #{book_uid}"
-          puts "#{e.class}: #{e.message}"
-          puts "Line #{e.line}, Column #{e.column}, Code #{e.code}"
       rescue Exception => e
-          puts "Unknown problem reading from S3 for book #{book_uid}"
+          puts "Unknown problem in unzipping job for book #{book_uid}"
           puts "#{e.class}: #{e.message}"
           puts e.backtrace.join("\n")
           $stderr.puts e
@@ -145,15 +125,12 @@ class S3UnzippingJob < Struct.new(:book_uid, :poet_host, :form_authenticity_toke
   end
 
   def upload_files_to_s3(book_directory, doc)
-    # get handle to s3 service
-    s3_service = AWS::S3.new
-    # get an s3 bucket
-    bucket = s3_service.buckets[ENV['POET_ASSET_BUCKET']]
 
-    #contents_filename = get_daisy_contents_xml_name(book_directory)
-    #content = File.basename(contents_filename)
-    # add xml file to list of files to be uploaded to S3
-    #files[book_uid + "/" + content] = contents_filename
+    s3_service = nil
+    if (!ENV['POET_LOCAL_STORAGE_DIR'])
+      # get handle to s3 service
+      s3_service = AWS::S3.new
+    end
 
     # upload image to S3
     each_image(doc) do |image_node|
@@ -164,33 +141,9 @@ class S3UnzippingJob < Struct.new(:book_uid, :poet_host, :form_authenticity_toke
         file_location = File.join(book_directory, image_location)
 
         #puts ("begin thread memory is #{number_to_human_size(`ps -o rss= -p #{Process.pid}`.to_i)}")
-        # upload files
-          s3_object = bucket.objects[file_key]
-          begin
-            if (! s3_object.exists?)
-              if(File.exists?(file_location))
-                s3_object.write(:file => file_location)
-              else
-                #puts("file does not exist in local dir #{file_location}")
-                s3_object = nil
-              end
-            else
-              #puts ("#{image_location} already exists")
-            end
-          rescue AWS::Errors::Base => e
-            puts "S3 credentials incorrect"
-          rescue Exception => e
-            puts "Unknown problem uploading image #{image_location} to S3 for book #{book_uid}"
-            puts "#{e.class}: #{e.message}"
-            puts e.backtrace.join("\n")
-            $stderr.puts e
-          end
-        s3_object = nil
-        #puts ("end thread memory is #{number_to_human_size(`ps -o rss= -p #{Process.pid}`.to_i)}")
+        store_file(ENV['POET_ASSET_BUCKET'], file_location, book_uid, file_key, s3_service)
       end
     end
-    bucket = nil
-    s3_service = nil
   end
 
   def get_xml_from_dir (book_directory)
@@ -244,14 +197,6 @@ class S3UnzippingJob < Struct.new(:book_uid, :poet_host, :form_authenticity_toke
     return width, height
   end
 
-  def xslt(xml, xsl, poet_host)
-    engine = XML::XSLT.new
-    engine.xml = xml
-    engine.xsl = xsl
-    bucket_name = ENV['POET_ASSET_BUCKET'].dup
-    engine.parameters = {"form_authenticity_token" => form_authenticity_token, "bucket" => bucket_name, "poet_host" => poet_host}
-    return engine.serve
-  end
 
 
   def before(job)

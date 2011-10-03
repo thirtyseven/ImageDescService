@@ -40,22 +40,21 @@ Feature: Daisy Book
 		And I press "Upload"
 		Then I should be on the upload for edit success page
 		Then I should see "_id2244343"
-		
+
 	Scenario: Uploading a Bookshare Daisy zip file with missing images directory
 		When I go to the daisy upload page
 		And I attach the file "features/fixtures/DaisyZipBookWithMissingImages.zip" to "book"
 		And I press "Upload"
 		Then I should be on the upload for edit success page
 
-#    Scenario: Editing a valid Daisy zip
-#		When I go to the daisy upload page
-#		And I attach the file "features/fixtures/DaisyZipBookUnencrypted.zip" to "book"
-#		And I press "Upload"
+#    Scenario: Editing a valid Daisy zip file with images
+#		When I go to the home page
+#		And I fill in "book_uid" with "_id2244343"
+#		And I press "Edit"
 #		Then I should be on the description editing page
 #		And there should be frames
-#		And the xpath "//frameset/frame[@name='top_bar']" should exist
-#		And the xpath "//frameset/frameset/frame[@name='side_bar']" should exist
-#		And the xpath "//frameset/frameset/frame[@name='content']" should exist
+#		And the xpath "//frameset/frame[@name='side_bar']" should exist
+#		And the xpath "//frameset/frame[@name='content']" should exist
 #		When I go to the content page
 #		Then I should see "John Gallaugher"
 #		When I go to the sidebar page

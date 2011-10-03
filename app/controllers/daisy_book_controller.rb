@@ -23,6 +23,7 @@ end
 
 class DaisyBookController < ApplicationController
   before_filter :authenticate_user!
+  include S3Repository
 
   ROOT_XPATH = "/xmlns:dtbook"
   
@@ -513,15 +514,6 @@ private
   
   def get_daisy_contents_xml_name(book_directory)
     return Dir.glob(File.join(book_directory, '*.xml'))[0]
-  end
-  
-  def xslt(xml, xsl, poet_host)
-    engine = XML::XSLT.new
-    engine.xml = xml
-    engine.xsl = xsl
-    bucket_name = ENV['POET_ASSET_BUCKET'].dup
-    engine.parameters = {"form_authenticity_token" => form_authenticity_token, "bucket" => bucket_name, "poet_host" => poet_host}
-    return engine.serve
   end
 
   def get_contents_with_updated_descriptions(file)

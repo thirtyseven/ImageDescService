@@ -644,7 +644,7 @@ xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/">
     <xsl:element name="img">
       <xsl:call-template name="base-attributes"/>
       <xsl:attribute name="alt"><xsl:value-of select="@alt"/></xsl:attribute>
-      <xsl:attribute name="src">//s3.amazonaws.com/<xsl:value-of select="$bucket"></xsl:value-of>/<xsl:value-of select="/dtb:dtbook/dtb:head/dtb:meta[@name='dtb:uid']/@content"/>/<xsl:value-of select="@src"/></xsl:attribute>
+      <xsl:attribute name="src">/<xsl:value-of select="$bucket"></xsl:value-of>/<xsl:value-of select="/dtb:dtbook/dtb:head/dtb:meta[@name='dtb:uid']/@content"/>/<xsl:value-of select="@src"/></xsl:attribute>
       <xsl:if test="@longdesc">
         <xsl:attribute name="longdesc"><xsl:value-of select="@longdesc"/></xsl:attribute>
       </xsl:if>

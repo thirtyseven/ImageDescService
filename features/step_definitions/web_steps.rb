@@ -121,6 +121,7 @@ When /^another description for the image "([^"]*)" in book "([^"]*)" is "([^"]*)
 end
 
 Then /^(?:|I )should see "([^"]*)"$/ do |text|
+  puts page.body
   if page.respond_to? :should
     page.should have_content(text)
   else
@@ -268,4 +269,8 @@ end
 
 Then /^dump the page to stderr$/ do
   $stderr.puts page.body
+end
+
+When /^I wait for (\d+) seconds?$/ do |secs|
+  sleep secs.to_i
 end
