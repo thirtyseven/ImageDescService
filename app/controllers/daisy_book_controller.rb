@@ -268,7 +268,8 @@ class DaisyBookController < ApplicationController
       directory_name = ''
     end
     file_name = params[:file]
-    book_directory = session[:daisy_directory]
+    book_directory = ENV['POET_LOCAL_STORAGE_DIR']
+
     directory = File.join(book_directory, directory_name)
     file = File.join(directory, file_name)
     timestamp = File.stat(file).ctime
@@ -313,6 +314,10 @@ class DaisyBookController < ApplicationController
     end
     filter = params[:filter]
     @filter = filter
+    @host = "//s3.amazonaws.com/" + ENV['POET_ASSET_BUCKET']
+    if (ENV['POET_LOCAL_STORAGE_DIR'])
+      @host = "//" + request.host_with_port + "/daisy_book/book"
+    end
     case filter
       when "0"
         @images = DynamicImage.where(:book_uid => book_uid).order("id ASC")
