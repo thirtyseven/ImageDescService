@@ -32,6 +32,7 @@ gem 'ruby-xslt'
 gem 'image_size'
 gem 'parallel'
 gem 'delayed_job'
+gem 'devise'
 
 # Bundle gems for the local environment. Make sure to
 # put test-only gems in this group so their generators

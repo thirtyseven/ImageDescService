@@ -1,4 +1,6 @@
 DiagramRailsApp::Application.routes.draw do
+  devise_for :users
+
   get "daisy_book/upload"
   post "daisy_book/submit"
   get "daisy_book/edit"

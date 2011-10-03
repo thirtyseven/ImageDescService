@@ -1,8 +1,4 @@
 
-<div style="margin: auto; width:700px;" >
-
-    <%= render "shared/error_display" %>
-
     <h1>Welcome to the Poet Image Description Tool</h1>
     </br>
     </br>
@@ -16,17 +12,11 @@
 
 
     <h3>Edit</h3>
-    <form action="/daisy_book/edit" method="get">
     To enter descriptions for a DAISY book that was previously uploaded,
-    enter the book ID, and click Edit.
-    </br>
-    Book ID: <input type="text" name="book_uid"/>
-    <input type="submit" value="Edit" />
-    </form>
+    click <a href="/daisy_book/describe">Edit</a>
     </br>
     </br>
 
     <h3>Process a Book</h3>
     To update your copy of a DAISY book
     with the latest image descriptions, click <a href="/daisy_book/process">Process</a>
-</div>

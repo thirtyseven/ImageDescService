@@ -22,6 +22,8 @@ class ShowAlertAndGoBack < Exception
 end
 
 class DaisyBookController < ApplicationController
+  before_filter :authenticate_user!
+
   ROOT_XPATH = "/xmlns:dtbook"
   
   def submit_to_get_descriptions
@@ -324,7 +326,9 @@ class DaisyBookController < ApplicationController
       else
         @filter = "0"
         @images = DynamicImage.where(:book_uid => book_uid).order("id ASC")
-      end
+    end
+
+    render :layout => 'nav_bar'
   end
 
   def top_bar

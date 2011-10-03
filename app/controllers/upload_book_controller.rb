@@ -23,6 +23,7 @@ class ShowAlertAndGoBack < Exception
 end
 
 class UploadBookController < ApplicationController
+  before_filter :authenticate_user!
 
   ROOT_XPATH = "/xmlns:dtbook"
   include S3Repository
