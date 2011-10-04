@@ -22,7 +22,6 @@ class ShowAlertAndGoBack < Exception
 end
 
 class DaisyBookController < ApplicationController
-  before_filter :authenticate_user!
   include S3Repository
 
   ROOT_XPATH = "/xmlns:dtbook"
@@ -223,45 +222,6 @@ class DaisyBookController < ApplicationController
     return book_directory
   end
   
-  def edit
-    return_to = params[:return_to]
-    error_redirect = 'home/index'
-    if (return_to.eql?("describe"))
-      error_redirect = 'daisy_book/describe'
-    end
-
-    book_uid = params[:book_uid].strip
-    if (book_uid)
-      session[:book_uid] = book_uid
-    else
-      book_uid = session[:book_uid]
-    end
-
-    if(!book_uid || book_uid.length == 0)
-      flash[:alert] = "Must specify a book ID"
-      #redirect_to :action => 'index'
-      render :template => error_redirect
-      return
-    end
-
-    book = Book.find_by_uid(book_uid)
-    if(!book)
-      flash[:alert] = "There is no book in the system with that ID (#{book_uid})"
-      #redirect_to :action => 'index'
-      render :template => error_redirect
-      return
-    end
-
-    if(book.status != 3)
-      flash[:alert] = "That book (#{book_uid}) is still being processed. Please try again later"
-      #redirect_to :action => 'index'
-      render :template => error_redirect
-      return
-    end
-
-    render :layout => 'frames'
-  end
-  
   def file
     directory_name = params[:directory]
     if !directory_name
@@ -286,56 +246,7 @@ class DaisyBookController < ApplicationController
       render :text => contents, :content_type => content_type
     end
   end
-  
-  def content
-    book_uid = session[:book_uid]
 
-    file_name = book_uid + ".html"
-    html = get_html_from_s3(book_uid, file_name)
-    if (html)
-      render :text => html, :content_type => 'text/html'
-    else
-
-      book = Book.find_by_uid(book_uid)
-      xml_filename = book.xml_file
-      xml = get_xml_from_s3(book_uid, xml_filename)
-      xsl_filename = 'app/views/xslt/daisyTransform.xsl'
-      xsl = File.read(xsl_filename)
-      contents = xslt(xml, xsl, request.host_with_port)
-      render :text => contents, :content_type => 'text/html'
-    end
-  end
-
-  def side_bar
-    book_uid = session[:book_uid]
-    if (!book_uid)
-      book_uid = params[:book_uid]
-      session[:book_uid] = book_uid
-    end
-    filter = params[:filter]
-    @filter = filter
-    @host = "//s3.amazonaws.com/" + ENV['POET_ASSET_BUCKET']
-    if (ENV['POET_LOCAL_STORAGE_DIR'])
-      @host = "//" + request.host_with_port + "/daisy_book/book"
-    end
-    case filter
-      when "0"
-        @images = DynamicImage.where(:book_uid => book_uid).order("id ASC")
-      when "1"
-        @images = DynamicImage.where(:book_uid => book_uid, :should_be_described => true).order("id ASC")
-      when "2"
-        @images = DynamicImage.where(:book_uid => book_uid, :should_be_described => false).order("id ASC")
-      when "3"
-        @images = DynamicImage.find_by_sql("SELECT * FROM dynamic_images WHERE book_uid = '#{book_uid}' and should_be_described = true and id not in (select dynamic_image_id from dynamic_descriptions where dynamic_descriptions.book_uid = '#{book_uid}') ORDER BY id ASC;")
-      when "4"
-        @images = DynamicImage.where(:book_uid => book_uid, :should_be_described => nil).order("id ASC")
-      else
-        @filter = "0"
-        @images = DynamicImage.where(:book_uid => book_uid).order("id ASC")
-    end
-
-    render :layout => 'nav_bar'
-  end
 
   def top_bar
     return

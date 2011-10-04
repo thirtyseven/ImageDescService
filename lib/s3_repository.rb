@@ -131,7 +131,7 @@ module S3Repository
     return engine.serve
   end
 
-  def get_html_from_s3(book_uid, file_name)
+  def get_cached_html(book_uid, file_name)
     local_dir = ENV['POET_LOCAL_STORAGE_DIR']
     if (local_dir)
       return File.read(File.join(local_dir, book_uid, file_name))

@@ -3,17 +3,21 @@ DiagramRailsApp::Application.routes.draw do
 
   get "daisy_book/upload"
   post "daisy_book/submit"
-  get "daisy_book/edit"
-  get "daisy_book/side_bar"
   get "daisy_book/top_bar"
   get "daisy_book/content_with_top_bar"
   get "daisy_book/get_xml_with_descriptions"
   get "daisy_book/get_daisy_with_descriptions"
   get "daisy_book/process"
-  get "daisy_book/describe"
   post "daisy_book/submit_to_get_descriptions"
-  get "upload_book/upload"
+
   post "upload_book/submit"
+  get "upload_book/upload"
+
+  get "edit_book/content"
+  get "edit_book/describe"
+  get "edit_book/edit"
+  get "edit_book/side_bar"
+
 
   resources :dynamic_descriptions
 
@@ -26,6 +30,8 @@ DiagramRailsApp::Application.routes.draw do
   end
 
   resources :libraries
+
+  match "daisy_book/describe", :controller => 'edit_book', :action => 'describe'
   
   match "update_descriptions_in_book/upload" => "update_descriptions_in_book#upload", :via => "post"
   match "update_descriptions_in_book" => "update_descriptions_in_book#index", :via => "get"
@@ -38,7 +44,6 @@ DiagramRailsApp::Application.routes.draw do
   # match "imageDesc/uid/:uid/image_location/:image_location", :to => "dynamic_images#show", :via => "get"
   match "imageDesc", :to => "dynamic_descriptions#create", :via => "post"
 
-  get "daisy_book/book/content", :controller => 'daisy_book', :action => 'content'
   match "daisy_book/book/*directory/*file", :controller => 'daisy_book', :action => 'file'
   match "daisy_book/book/*file", :controller => 'daisy_book', :action => 'file'
   

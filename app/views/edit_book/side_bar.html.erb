@@ -6,7 +6,7 @@
 <script type="text/javascript">
 <!--
 function handleClick(image_id, src){
-	parent.content.location = "/daisy_book/book/content#" + image_id;
+	parent.content.location = "/edit_book/content#" + image_id;
     parent.content.getDescription(image_id, src);
 }
 
@@ -65,7 +65,7 @@ function shouldShow(filterValue, essentialFlagValue, descriptionCount)
 function handleFilterChange()
 {
     var desired = document.getElementById("filter").value ;
-    window.location.href = "/daisy_book/side_bar?book_uid=<%=session[:book_uid]%>" + "&filter=" + desired
+    window.location.href = "/edit_book/side_bar?book_uid=<%=session[:book_uid]%>" + "&filter=" + desired
 }
 
 //-->
