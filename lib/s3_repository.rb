@@ -118,7 +118,7 @@ module S3Repository
     end
   end
 
-  def xslt(xml, xsl, poet_host)
+  def xslt(xml, xsl, poet_host, form_authenticity_token)
     engine = XML::XSLT.new
     engine.xml = xml
     engine.xsl = xsl

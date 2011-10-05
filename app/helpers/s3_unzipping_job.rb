@@ -24,7 +24,7 @@ class S3UnzippingJob < Struct.new(:book_uid, :poet_host, :form_authenticity_toke
 
         xsl_filename = 'app/views/xslt/daisyTransform.xsl'
         xsl = File.read(xsl_filename)
-        contents = xslt(xml, xsl, poet_host)
+        contents = xslt(xml, xsl, poet_host, form_authenticity_token)
         content_html = File.join("","tmp", "#{book_uid}.html")
         File.open(content_html, 'wb'){|f|f.write(contents)}
         puts "about to call store_file for transformed html"
