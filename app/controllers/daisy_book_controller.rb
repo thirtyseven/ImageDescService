@@ -139,68 +139,6 @@ class DaisyBookController < ApplicationController
     return xml
   end
 
-  def submit
-
-    #init session vars
-    session[:book_uid] = nil
-    session[:content] = nil
-    session[:daisy_directory] = nil
-
-    book = params[:book]
-    password = params[:password]
-    if !book
-      flash[:alert] = "Must specify a book file to process"
-      redirect_to :action => 'upload'
-      return
-    end
-
-    if password && !password.empty?
-      begin
-        Zip::Archive.decrypt(book.path, password)
-      rescue Zip::Error => e
-        logger.info "#{e.class}: #{e.message}"
-        if e.message.include?("Wrong password")
-          logger.info "#{caller_info} Invalid Password for encyrpted zip"
-          flash[:alert] = "Please check your password and re-enter"
-        else
-          logger.info "#{caller_info} Other problem with encrypted zip"
-          flash[:alert] = "There is a problem with this zip file"
-        end
-        redirect_to :action => 'upload'
-        return
-      end
-    end
-
-    if !valid_daisy_zip?(book.path)
-      redirect_to :action => 'upload'
-      return
-    end
-    
-    begin
-      process_book(book.path)
-      redirect_to :action => 'edit'
-    rescue Zip::Error => e
-      logger.info "#{e.class}: #{e.message}"
-      if e.message.include?("File encrypted")
-        logger.info "#{caller_info} Password needed for zip"
-        flash[:alert] = "Please enter a password for this book"
-      else
-        logger.info "#{caller_info} Other problem with zip"
-        flash[:alert] = "There is a problem with this zip file"
-      end
-
-      redirect_to :action => 'upload'
-      return
-    end
-  end
-  
-  def process_book(book_path)
-    book_directory = accept_book(book_path)
-    create_images_in_database(book_directory)
-    #puts ("begin upload to s3 memory is #{number_to_human_size(`ps -o rss= -p #{Process.pid}`.to_i)}")
-    upload_files_to_s3(book_directory)
-    #puts ("end upload to s3 memory is #{number_to_human_size(`ps -o rss= -p #{Process.pid}`.to_i)}")
-  end
 
   def accept_book(book_path)
     zip_directory = unzip_to_temp(book_path)
@@ -246,11 +184,6 @@ class DaisyBookController < ApplicationController
       render :text => contents, :content_type => content_type
     end
   end
-
-
-  def top_bar
-    return
-  end  
     
   def valid_daisy_zip?(file)
     begin
@@ -287,119 +220,7 @@ class DaisyBookController < ApplicationController
     node = matches.first
     return node.attributes['content'].content
   end
-  
-  def extract_optional_book_title(doc)
-    xpath_title = "//xmlns:meta[@name='dc:Title']"
-    matches = doc.xpath(doc, xpath_title)
-    if matches.size != 1
-      return nil
-    end
-    node = matches.first
-    return node.attributes['content'].content
-  end
 
-  def upload_files_to_s3(book_directory)
-    # get handle to s3 service
-    s3_service = AWS::S3.new
-    # get an s3 bucket
-    bucket = s3_service.buckets[ENV['POET_ASSET_BUCKET']]
-
-    contents_filename = get_daisy_contents_xml_name(book_directory)
-
-    content = File.basename(contents_filename)
-    session[:content] = content
-    book_uid = session[:book_uid]
-
-    # create map of S3 key to local file location
-    files = Hash.new
-
-    # add xml file to list of files to be uploaded to S3
-    files[book_uid + "/" + content] = contents_filename
-
-    # add image to list of files to be uploaded
-    each_image(get_xml_from_dir) do |image_node|
-      image_location = image_node['src']
-      # only want to upload images that have a src attribute
-      if (image_location)
-        files[book_uid + "/" + image_location] = book_directory + '/' + image_location
-      end
-    end
-    #puts ("pre thread pool is #{number_to_human_size(`ps -o rss= -p #{Process.pid}`.to_i)}")
-    #upload the files, if they have not been previously uploaded, to s3 in parallel
-    Parallel.map(files.keys, :in_threads => 6) do |file_key|
-      #puts ("begin thread memory is #{number_to_human_size(`ps -o rss= -p #{Process.pid}`.to_i)}")
-      # upload files
-        s3_object = bucket.objects[file_key]
-        begin
-          if (! s3_object.exists?)
-            file_location = files[file_key]
-            if(File.exists?(file_location))
-              s3_object.write(:file => file_location)
-            else
-              logger.info("file does not exist in local dir #{file_location}")
-              #puts "file does not exist in local dir #{loc}"
-              s3_object = nil
-            end
-          else
-            #puts ("#{image_location} already exists")
-          end
-        rescue AWS::Errors::Base => e
-          logger.info "S3 credentials incorrect"
-          #puts "S3 credentials incorrect"
-        end
-      s3_object = nil
-      #puts ("end thread memory is #{number_to_human_size(`ps -o rss= -p #{Process.pid}`.to_i)}")
-    end
-    bucket = nil
-    s3_service = nil
-  end
-  
-  def create_images_in_database(book_directory)
-    each_image(get_xml_from_dir) do | image_node |
-      image_location = image_node['src']
-      xml_id = image_node['id']
-
-      # if src exists
-      if (image_location)
-
-        book_uid = session[:book_uid]
-        # add image to db if it does not already exist in db
-        image = DynamicImage.find_by_book_uid_and_image_location(book_uid, image_location)
-        if(!image)
-          width, height = get_image_size(book_directory, image_location)
-          book_title = extract_optional_book_title(image_node.document)
-          #logger.info("Creating image row #{book_uid}, #{book_title}, #{image_location}")
-          DynamicImage.create(
-                :book_uid => book_uid,
-                :book_title => book_title,
-                :width => width,
-                :height => height,
-                :xml_id => xml_id,
-                :image_location => image_location)
-        else
-          # may need to backfill existing rows without xml id
-          if (! image.xml_id)
-            image.update_attribute("xml_id", xml_id)
-          end
-        end
-      end
-    end
-  end
-  
-  def get_image_size(book_directory, image_location)
-    width, height = 20
-    
-    image_file = File.join(book_directory, image_location)
-    if File.exists?(image_file)
-      open(image_file, "rb") do |fh|
-          is = ImageSize.new(fh.read)
-          width = is.width
-          height = is.height
-      end
-    end
-    
-    return width, height
-  end
 
   def get_description_count_for_book(book_uid)
     return DynamicImage.
@@ -539,42 +360,6 @@ private
     return new_daisy_zip.path
   end
 
-  def get_xml_from_dir
-    book_directory = session[:daisy_directory]
-    contents_filename = get_daisy_contents_xml_name(book_directory)
-    File.read(contents_filename)
-  end
 
-  def get_xml_from_s3(book_uid, xml_filename)
-    # get handle to s3 service
-    s3_service = AWS::S3.new
-    # get an s3 bucket
-    bucket = s3_service.buckets[ENV['POET_ASSET_BUCKET']]
-    s3_object = bucket.objects[book_uid + "/" + xml_filename]
-    s3_object.read
-  end
-
-  def get_html_from_s3(book_uid, file_name)
-    # get handle to s3 service
-    s3_service = AWS::S3.new
-    # get an s3 bucket
-    bucket = s3_service.buckets[ENV['POET_ASSET_BUCKET']]
-    s3_object = bucket.objects[book_uid + "/" + file_name]
-    if (s3_object.exists?)
-      s3_object.read
-    else
-      return nil
-    end
-  end
-
-  def each_image (xml)
-    doc = Nokogiri::XML xml
-    book_uid = extract_book_uid(doc)
-    session[:book_uid] = book_uid
-    images = doc.xpath( doc, "//xmlns:img")
-    images.each do | image_node |
-      yield(image_node)
-    end
-  end
 
 end
