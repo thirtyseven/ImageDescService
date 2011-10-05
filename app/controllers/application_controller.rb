@@ -1,3 +1,4 @@
 class ApplicationController < ActionController::Base
-  protect_from_forgery
+  # needed to commment out the following to allow cached, transformed html to make authenticated post requests
+  #protect_from_forgery
 end

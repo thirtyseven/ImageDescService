@@ -1,4 +1,5 @@
 class DynamicDescriptionsController < ApplicationController
+  before_filter :authenticate_user!
   # GET /dynamic_descriptions
   # GET /dynamic_descriptions.xml
   def index
@@ -13,6 +14,7 @@ class DynamicDescriptionsController < ApplicationController
   # GET /dynamic_descriptions/1
   # GET /dynamic_descriptions/1.xml
   def show
+
     @dynamic_description = DynamicDescription.find(params[:id])
 
     respond_to do |format|
@@ -46,7 +48,7 @@ class DynamicDescriptionsController < ApplicationController
         @dynamic_image = DynamicImage.new(:book_uid => params[:book_uid], :image_location => params[:image_location], :book_title => params[:book_title])
         @dynamic_image.save
       end
-      @dynamic_description = @dynamic_image.dynamic_descriptions.create(:body => params[:dynamic_description]["body"], :book_uid => params[:book_uid])
+      @dynamic_description = @dynamic_image.dynamic_descriptions.create(:body => params[:dynamic_description]["body"], :book_uid => params[:book_uid], :submitter => current_user.username)
     else
       @dynamic_description = DynamicDescription.new
       @dynamic_description.body = "missing parameters"
