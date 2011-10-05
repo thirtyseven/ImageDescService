@@ -39,6 +39,11 @@ module NavigationHelpers
       '/upload_book/submit'
     when /the home page/
       '/'
+    when /the sign up page/
+      '/users/sign_up'
+
+    when /the sign in page/
+      '/users/sign_in'
       
     else
       begin

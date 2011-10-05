@@ -5,16 +5,22 @@ Feature: Daisy Book
 	So that I can edit the image descriptions
 	
 	Scenario: Upload page should have the necessary content
+        Given I am a user named "john" with an email "john.smith@dot.com" and password "123456" and username "johns"
+        When I sign in as "john.smith@dot.com/123456"
 		When I go to the daisy upload page
-		Then I should see "DAISY book"
+		Then I should see "DAISY Book"
 
 	Scenario: Hitting upload with no book selected
+        Given I am a user named "john" with an email "john.smith@dot.com" and password "123456" and username "johns"
+        When I sign in as "john.smith@dot.com/123456"
 		When I go to the daisy upload page
 		And I press "Upload"
 		Then I should be on the daisy upload page
 		And I should see "Must specify a book file to process"
 		
 	Scenario: Uploading a non-zip file
+        Given I am a user named "john" with an email "john.smith@dot.com" and password "123456" and username "johns"
+        When I sign in as "john.smith@dot.com/123456"
 		When I go to the daisy upload page
 		And I attach the file "features/fixtures/NonXMLFile" to "book"
 		And I press "Upload"
@@ -22,6 +28,8 @@ Feature: Daisy Book
 		And I should see "Uploaded file must be a valid Daisy (zip) file"
 	
 	Scenario: Uploading a non-Daisy zip file
+        Given I am a user named "john" with an email "john.smith@dot.com" and password "123456" and username "johns"
+        When I sign in as "john.smith@dot.com/123456"
 		When I go to the daisy upload page
 		And I attach the file "features/fixtures/NonDaisyZip.zip" to "book"
 		And I press "Upload"
@@ -29,12 +37,16 @@ Feature: Daisy Book
 		And I should see "Uploaded file must be a valid Daisy (zip) file"
 		
 	Scenario: Uploading a valid non-Bookshare Daisy zip file with no DTD file
+        Given I am a user named "john" with an email "john.smith@dot.com" and password "123456" and username "johns"
+        When I sign in as "john.smith@dot.com/123456"
 		When I go to the daisy upload page
 		And I attach the file "features/fixtures/DaisyZipBookWithoutDTD.zip" to "book"
 		And I press "Upload"
 		Then I should be on the upload for edit success page
 
 	Scenario: Uploading a valid Daisy zip file with images
+        Given I am a user named "john" with an email "john.smith@dot.com" and password "123456" and username "johns"
+        When I sign in as "john.smith@dot.com/123456"
 		When I go to the daisy upload page
 		And I attach the file "features/fixtures/DaisyZipBookUnencrypted.zip" to "book"
 		And I press "Upload"
@@ -42,6 +54,8 @@ Feature: Daisy Book
 		Then I should see "_id2244343"
 
 	Scenario: Uploading a Bookshare Daisy zip file with missing images directory
+        Given I am a user named "john" with an email "john.smith@dot.com" and password "123456" and username "johns"
+        When I sign in as "john.smith@dot.com/123456"
 		When I go to the daisy upload page
 		And I attach the file "features/fixtures/DaisyZipBookWithMissingImages.zip" to "book"
 		And I press "Upload"
@@ -92,6 +106,8 @@ Feature: Daisy Book
 		Then the response should be a zip file
 
 	Scenario: Downloading an XML file with descriptions
+       Given I am a user named "john" with an email "john.smith@dot.com" and password "123456" and username "johns"
+        When I sign in as "john.smith@dot.com/123456"
 		When the first description for the image "images/fwk-gallaugher-fig01_001.jpg" in book "_id2244343" with title "Information Systems: A Manager’s Guide to Harnessing Technology" is "Prodnote from database"
 		And I go to the daisy upload page
 		And I attach the file "features/fixtures/DaisyZipBookUnencrypted.zip" to "book"

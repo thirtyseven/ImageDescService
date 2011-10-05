@@ -121,7 +121,6 @@ When /^another description for the image "([^"]*)" in book "([^"]*)" is "([^"]*)
 end
 
 Then /^(?:|I )should see "([^"]*)"$/ do |text|
-  puts page.body
   if page.respond_to? :should
     page.should have_content(text)
   else
