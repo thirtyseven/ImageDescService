@@ -1,0 +1,7 @@
+<% size = @descriptions.size %>
+<% @descriptions.each_with_index do |description, i| %>
+    <div style="padding: 6px; "><%= description.body.html_safe %></div>
+    <% if (i+1 < size) %>  <hr/> <% end %>
+<% end %>
+
+

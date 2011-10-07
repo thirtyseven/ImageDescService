@@ -44,13 +44,13 @@ xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/">
           var image_location = src;
           var divId = "desc_" + imgId;
           data = { "book_uid" : bookUid, "image_location" : image_location }
-          var x = jQuery.get("//<xsl:value-of select="$poet_host"/>/imageDesc.json", data, function(data) {descriptionCallback(data, divId)}) ;
+          var x = jQuery.get("//<xsl:value-of select="$poet_host"/>/imageDescriptions", data, function(data) {descriptionCallback(data, divId)}) ;
 
         }
 
-        function descriptionCallback(json, divName) {
+        function descriptionCallback(body, divName) {
         	var targetDiv = document.getElementById(divName);
-            targetDiv.innerHTML = json['body'];
+            targetDiv.innerHTML = body;
         }
 
 
@@ -62,6 +62,10 @@ xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/">
 				notification.innerHTML = "The description has been saved."
                 notification.style.fontWeight = "bold"
                 notification.style.color = "green"
+
+                var imageSrcId = formBaseId + "_image_src"
+                var image_location =  document.getElementById(imageSrcId).value
+                getDescription(formBaseId, image_location)
             }
 			else {
 				notification.innerHTML = "An error has occurred."
@@ -657,9 +661,12 @@ xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/">
     </xsl:element>
     <xsl:element name="br"/>
     <xsl:variable name="divId">desc_<xsl:value-of select="@id"/></xsl:variable>
-    <div class="imageDescBox" style="border:1px solid black; padding:0.25em; font-size: 80%;">
+    <br/>
+    Previous Description(s)
+    <div class="imageDescBox" style="border:2px solid gray; border-style: groove; padding:0.25em; font-size: 80%; overflow: auto; height: 150px; margin-top: 4px; margin-bottom: 12px;">
         <xsl:attribute name="id"><xsl:value-of select="$divId"/></xsl:attribute>
     </div>
+    New Description
     <xsl:element name="form">
         <xsl:attribute name="method">POST</xsl:attribute>
         <xsl:attribute name="target">imageDescWindow</xsl:attribute>        
@@ -673,8 +680,8 @@ xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/">
         <xsl:element name="textarea">
         	<xsl:attribute name="id"><xsl:value-of select="@id"/>_description</xsl:attribute>
             <xsl:attribute name="name">dynamic_description[body]</xsl:attribute>
-            <xsl:attribute name="rows">2</xsl:attribute>
-            <xsl:attribute name="cols">60</xsl:attribute>
+            <xsl:attribute name="rows">10</xsl:attribute>
+            <xsl:attribute name="cols">90</xsl:attribute>
         </xsl:element>
         <xsl:element name="input">
         	<xsl:attribute name="id"><xsl:value-of select="@id"/>_book_uid</xsl:attribute>

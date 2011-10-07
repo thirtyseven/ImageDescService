@@ -42,6 +42,14 @@ class DynamicImagesController < ApplicationController
     end
   end
 
+  def show_history
+    if params[:book_uid] && params[:image_location] && !params[:book_uid].empty?
+      @descriptions = DynamicImage.find_by_sql("select d.* from dynamic_images as i, dynamic_descriptions as d where i.book_uid = '#{params[:book_uid]}' and image_location = '#{params[:image_location]}' and i.id = d.dynamic_image_id order by created_at desc")
+      render :layout => false
+    end
+
+  end
+
   # GET /dynamic_images/new
   # GET /dynamic_images/new.xml
   def new
