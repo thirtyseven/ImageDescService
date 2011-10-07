@@ -71,8 +71,8 @@ function handleFilterChange()
 //-->
 </script>
 <div class="toolbar" style="width:259px;">
-<%= select_tag(:filter, options_for_select([['All Images', 0], ['Only Essential', 1], ['Only Non-essential', 2], ['Description needed', 3], ['Unspecified', 4]], @filter),{ :onchange => "handleFilterChange()"})%>
-<b><%= @images.size %> Images <a href='#' onClick="showGuide()">
+<%= select_tag(:filter, options_for_select([[t(:filter_all), EditBookController::FILTER_ALL], [t(:filter_essential), EditBookController::FILTER_ESSENTIAL], [t(:filter_non_essential), EditBookController::FILTER_NON_ESSENTIAL], [t(:filter_description_needed), EditBookController::FILTER_DESCRIPTION_NEEDED], [t(:filter_unspecified), EditBookController::FILTER_UNSPECIFIED]], @filter),{ :onchange => "handleFilterChange()"})%>
+<b><%= @images.size %> <%= t(:filter_result)%> <a href='#' onClick="showGuide()">
   <div class='right'><img src='/images/info.png' width='20' height='20'/></div>
 </a></b></br>
 </div>

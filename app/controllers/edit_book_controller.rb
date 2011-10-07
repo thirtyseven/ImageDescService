@@ -2,6 +2,12 @@ class EditBookController < ApplicationController
   before_filter :authenticate_user!
   include S3Repository
 
+  FILTER_ALL = 0
+  FILTER_ESSENTIAL = 1
+  FILTER_NON_ESSENTIAL = 2
+  FILTER_DESCRIPTION_NEEDED = 3
+  FILTER_UNSPECIFIED = 4
+
   def edit
     return_to = params[:return_to]
     error_redirect = 'edit_book/describe'
@@ -74,16 +80,16 @@ class EditBookController < ApplicationController
     if (ENV['POET_LOCAL_STORAGE_DIR'])
       @host = "//" + request.host_with_port + "/daisy_book/book"
     end
-    case filter
-      when "0"
+    case filter.to_i
+      when FILTER_ALL
         @images = DynamicImage.where(:book_uid => book_uid).order("id ASC")
-      when "1"
+      when FILTER_ESSENTIAL
         @images = DynamicImage.where(:book_uid => book_uid, :should_be_described => true).order("id ASC")
-      when "2"
+      when FILTER_NON_ESSENTIAL
         @images = DynamicImage.where(:book_uid => book_uid, :should_be_described => false).order("id ASC")
-      when "3"
+      when FILTER_DESCRIPTION_NEEDED
         @images = DynamicImage.find_by_sql("SELECT * FROM dynamic_images WHERE book_uid = '#{book_uid}' and should_be_described = true and id not in (select dynamic_image_id from dynamic_descriptions where dynamic_descriptions.book_uid = '#{book_uid}') ORDER BY id ASC;")
-      when "4"
+      when FILTER_UNSPECIFIED
         @images = DynamicImage.where(:book_uid => book_uid, :should_be_described => nil).order("id ASC")
       else
         @filter = "0"

@@ -4,6 +4,13 @@
 en:
   hello: "Hello world"
 
+  filter_all: "All Images"
+  filter_essential: "Only Essential"
+  filter_non_essential: "Only Non-essential"
+  filter_description_needed: "Description Needed"
+  filter_unspecified: "Unspecified"
+  filter_result: "Images"
+
 
   activerecord:
     attributes:
