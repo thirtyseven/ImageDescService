@@ -28,15 +28,19 @@ class EditBookController < ApplicationController
 
     book = Book.find_by_uid(book_uid)
     if(!book)
-      flash[:alert] = "There is no book in the system with that ID (#{book_uid})"
-      #redirect_to :action => 'index'
+      flash[:alert] = "There is no book in the system with that ID (#{book_uid}) ."
+      render :template => error_redirect
+      return
+    end
+
+    if(book.status = 0)
+      flash[:alert] = "That book (#{book_uid}) needs to be re-uploaded as its files have expired."
       render :template => error_redirect
       return
     end
 
     if(book.status != 3)
-      flash[:alert] = "That book (#{book_uid}) is still being processed. Please try again later"
-      #redirect_to :action => 'index'
+      flash[:alert] = "That book (#{book_uid}) is still being processed. Please try again later."
       render :template => error_redirect
       return
     end
