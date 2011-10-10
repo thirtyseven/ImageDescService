@@ -3,6 +3,7 @@ require 'nokogiri'
 require 'tempfile'
 require 'xml/xslt'
 include ActionView::Helpers::NumberHelper
+include DaisyUtils, UnzipUtils
 
 class NoImageDescriptions < Exception
 end
@@ -22,7 +23,6 @@ class ShowAlertAndGoBack < Exception
 end
 
 class DaisyBookController < ApplicationController
-  include S3Repository
 
   ROOT_XPATH = "/xmlns:dtbook"
   
@@ -139,116 +139,16 @@ class DaisyBookController < ApplicationController
     return xml
   end
 
-
-  def accept_book(book_path)
-    zip_directory = unzip_to_temp(book_path)
-    session[:zip_directory] = zip_directory
-    top_level_entries = Dir.entries(zip_directory)
-    top_level_entries.delete('.')
-    top_level_entries.delete('..')
-    if(top_level_entries.size == 1)
-      book_directory = File.join(zip_directory, top_level_entries.first)
-    else
-      book_directory = zip_directory
-    end
-    session[:daisy_directory] = book_directory
-
-    copy_of_daisy_file = File.join(zip_directory, "Daisy.zip")
-    FileUtils.cp(book_path, copy_of_daisy_file)
-    session[:daisy_file] = copy_of_daisy_file
-      
-    return book_directory
-  end
-  
-  def file
-    directory_name = params[:directory]
-    if !directory_name
-      directory_name = ''
-    end
-    file_name = params[:file]
-    book_directory = ENV['POET_LOCAL_STORAGE_DIR']
-
-    directory = File.join(book_directory, directory_name)
-    file = File.join(directory, file_name)
-    timestamp = File.stat(file).ctime
-    if(stale?(:last_modified => timestamp))
-      content_type = 'text/plain'
-      case File.extname(file).downcase
-      when '.jpg', '.jpeg'
-        content_type = 'image/jpeg'
-      when '.png'
-        content_type = 'image/png'
-      end
-      contents = File.read(file)
-      response.headers['Last-Modified'] = timestamp.httpdate
-      render :text => contents, :content_type => content_type
-    end
-  end
-    
-  def valid_daisy_zip?(file)
-    begin
-      Zip::Archive.open(file) do |zipfile|
-        zipfile.each do |entry|
-          if entry.name =~ /\.ncx$/
-            return true
-          end
-        end
-      end
-    rescue Zip::Error => e
-        logger.info "#{e.class}: #{e.message}"
-        if e.message.include?("Not a zip archive")
-            logger.info "#{caller_info} Not a ZIP File"
-            flash[:alert] = "Uploaded file must be a valid Daisy (zip) file"
-        else
-            logger.info "#{caller_info} Other problem with zip"
-            flash[:alert] = "There is a problem with this zip file"
-        end
-        puts e
-        puts e.backtrace.join("\n")
-        return false
-    end
-    flash[:alert] = "Uploaded file must be a valid Daisy (zip) file"
-    return false
-  end
-  
-  def extract_book_uid(doc)
-    xpath_uid = "//xmlns:meta[@name='dtb:uid']"
-    matches = doc.xpath(doc, xpath_uid)
-    if matches.size != 1
-      raise MissingBookUIDException.new
-    end
-    node = matches.first
-    return node.attributes['content'].content
-  end
-
-
   def get_description_count_for_book(book_uid)
     return DynamicImage.
         joins(:dynamic_descriptions).
         where("dynamic_images.book_uid = ?", book_uid).
         count
   end
-  
+
+
 private
-  def unzip_to_temp(zipped_file)
-    dir = Dir.mktmpdir
-    Zip::Archive.open(zipped_file) do |zipfile|
-      zipfile.each do |entry|
-        destination = File.join(dir, entry.name)
-        if entry.directory?
-          FileUtils.mkdir_p(destination)
-        else
-          dirname = File.join(dir, File.dirname(entry.name))
-          FileUtils.mkdir_p(dirname) unless File.exist?(dirname)
-          open(destination, 'wb') do |f|
-            f << entry.read
-          end
-        end
-      end
-    end    
-    return dir
-  end
-  
+
   def get_daisy_contents_xml_name(book_directory)
     return Dir.glob(File.join(book_directory, '*.xml'))[0]
   end
@@ -359,7 +259,5 @@ private
     end
     return new_daisy_zip.path
   end
-
-
 
 end

@@ -2,18 +2,12 @@ require 'spec_helper'
 
 describe DaisyBookController do
 
-  describe "GET 'upload'" do
+  describe "GET 'process'" do
     it "should be successful" do
-      get 'upload'
+      get 'process'
       response.should be_success
     end
   end
 
-  describe "GET 'edit'" do
-    it "should be successful" do
-      get 'edit'
-      response.should be_success
-    end
-  end
 
 end

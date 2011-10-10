@@ -1,7 +1,7 @@
 require 'fileutils'
 require 'nokogiri'
 require 'tempfile'
-
+include DaisyUtils, UnzipUtils
 include ActionView::Helpers::NumberHelper
 
 
@@ -26,7 +26,12 @@ class UploadBookController < ApplicationController
   before_filter :authenticate_user!
 
   ROOT_XPATH = "/xmlns:dtbook"
-  include S3Repository
+  include RepositoryChooser
+
+  def initialize
+    super
+    @repository = RepositoryChooser.choose
+  end
 
   def submit
 
@@ -78,8 +83,8 @@ class UploadBookController < ApplicationController
 
       pid = fork do
         begin
-          store_file(ENV['POET_HOLDING_BUCKET'], book.path, @book_uid, @book_uid + ".zip", nil)
-          job = S3UnzippingJob.new(@book_uid, request.host_with_port, form_authenticity_token)
+          @repository.store_file(book.path, @book_uid, @book_uid + ".zip", nil)
+          job = S3UnzippingJob.new(@book_uid, request.host_with_port, form_authenticity_token, @repository)
           Delayed::Job.enqueue(job)
         rescue AWS::Errors::Base => e
           logger.info "S3 Problem uploading book to S3 for book #{@book_uid}"
@@ -117,83 +122,7 @@ class UploadBookController < ApplicationController
     end
   end
 
-
-  def accept_book(book_path)
-    zip_directory = unzip_to_temp(book_path)
-    top_level_entries = Dir.entries(zip_directory)
-    top_level_entries.delete('.')
-    top_level_entries.delete('..')
-    if(top_level_entries.size == 1)
-      book_directory = File.join(zip_directory, top_level_entries.first)
-    else
-      book_directory = zip_directory
-    end
-    session[:daisy_directory] = book_directory
-
-    copy_of_daisy_file = File.join(zip_directory, "Daisy.zip")
-    FileUtils.cp(book_path, copy_of_daisy_file)
-
-    return book_directory
-  end
-
-  def unzip_to_temp(zipped_file)
-    dir = Dir.mktmpdir
-    Zip::Archive.open(zipped_file) do |zipfile|
-      zipfile.each do |entry|
-        destination = File.join(dir, entry.name)
-        if entry.directory?
-          FileUtils.mkdir_p(destination)
-        else
-          dirname = File.join(dir, File.dirname(entry.name))
-          FileUtils.mkdir_p(dirname) unless File.exist?(dirname)
-          open(destination, 'wb') do |f|
-            f << entry.read
-          end
-        end
-      end
-    end
-    return dir
-  end
-
-  def valid_daisy_zip?(file)
-    begin
-      Zip::Archive.open(file) do |zipfile|
-        zipfile.each do |entry|
-          if entry.name =~ /\.ncx$/
-            return true
-          end
-        end
-      end
-    rescue Zip::Error => e
-        logger.info "#{e.class}: #{e.message}"
-        if e.message.include?("Not a zip archive")
-            logger.info " Not a ZIP File"
-            flash[:alert] = "Uploaded file must be a valid Daisy (zip) file"
-        else
-            logger.info " Other problem with zip"
-            flash[:alert] = "There is a problem with this zip file"
-        end
-        puts e
-        puts e.backtrace.join("\n")
-        return false
-    end
-    flash[:alert] = "Uploaded file must be a valid Daisy (zip) file"
-    return false
-  end
-
-  def extract_book_uid(doc)
-    xpath_uid = "//xmlns:meta[@name='dtb:uid']"
-    matches = doc.xpath(doc, xpath_uid)
-    if matches.size != 1
-      raise MissingBookUIDException.new
-    end
-    node = matches.first
-    return node.attributes['content'].content
-  end
-
 private
-
-
   def get_xml_from_dir
     book_directory = session[:daisy_directory]
     contents_filename = get_daisy_contents_xml_name(book_directory)

@@ -1,10 +1,6 @@
 DiagramRailsApp::Application.routes.draw do
   devise_for :users
 
-  get "daisy_book/upload"
-  post "daisy_book/submit"
-  get "daisy_book/top_bar"
-  get "daisy_book/content_with_top_bar"
   get "daisy_book/get_xml_with_descriptions"
   get "daisy_book/get_daisy_with_descriptions"
   get "daisy_book/process"
@@ -45,8 +41,8 @@ DiagramRailsApp::Application.routes.draw do
   # match "imageDesc/uid/:uid/image_location/:image_location", :to => "dynamic_images#show", :via => "get"
   match "imageDesc", :to => "dynamic_descriptions#create", :via => "post"
 
-  match "daisy_book/book/*directory/*file", :controller => 'daisy_book', :action => 'file'
-  match "daisy_book/book/*file", :controller => 'daisy_book', :action => 'file'
+  match "file/*directory/*file", :controller => 'file', :action => 'file'
+  match "file/*file", :controller => 'file', :action => 'file'
   
   # match 'imageDesc/uid/:uid => 'dynamic_image#show'
 

@@ -1,6 +1,11 @@
 class EditBookController < ApplicationController
   before_filter :authenticate_user!
-  include S3Repository
+  include RepositoryChooser
+
+  def initialize
+    super()
+    @repository = RepositoryChooser.choose
+  end
 
   FILTER_ALL = 0
   FILTER_ESSENTIAL = 1
@@ -9,7 +14,6 @@ class EditBookController < ApplicationController
   FILTER_UNSPECIFIED = 4
 
   def edit
-    return_to = params[:return_to]
     error_redirect = 'edit_book/describe'
 
     book_uid = params[:book_uid].strip
@@ -33,7 +37,7 @@ class EditBookController < ApplicationController
       return
     end
 
-    if(book.status = 0)
+    if(book.status == 0)
       flash[:alert] = "That book (#{book_uid}) needs to be re-uploaded as its files have expired."
       render :template => error_redirect
       return
@@ -52,7 +56,7 @@ class EditBookController < ApplicationController
     book_uid = session[:book_uid]
 
     file_name = book_uid + ".html"
-    html = get_cached_html(book_uid, file_name)
+    html = @repository.get_cached_html(book_uid, file_name)
     if (html)
       render :text => html, :content_type => 'text/html'
     else
@@ -80,10 +84,7 @@ class EditBookController < ApplicationController
     end
     filter = params[:filter]
     @filter = filter
-    @host = "//s3.amazonaws.com/" + ENV['POET_ASSET_BUCKET']
-    if (ENV['POET_LOCAL_STORAGE_DIR'])
-      @host = "//" + request.host_with_port + "/daisy_book/book"
-    end
+    @host = @repository.get_host(request)
     case filter.to_i
       when FILTER_ALL
         @images = DynamicImage.where(:book_uid => book_uid).order("id ASC")

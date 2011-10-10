@@ -1,16 +1,14 @@
 require 'xml/xslt'
 
-class S3UnzippingJob < Struct.new(:book_uid, :poet_host, :form_authenticity_token)
-  include S3Repository
+class S3UnzippingJob < Struct.new(:book_uid, :poet_host, :form_authenticity_token, :repository)
 
   def enqueue(job)
 
   end
 
   def perform
-
     begin
-        daisy_file = read_file(ENV['POET_HOLDING_BUCKET'], book_uid + ".zip", File.join( "", "tmp", "#{book_uid}.zip"))
+        daisy_file = repository.read_file(book_uid + ".zip", File.join( "", "tmp", "#{book_uid}.zip"))
         book_directory = accept_book(daisy_file)
 
         xml = get_xml_from_dir(book_directory)
@@ -24,11 +22,11 @@ class S3UnzippingJob < Struct.new(:book_uid, :poet_host, :form_authenticity_toke
 
         xsl_filename = 'app/views/xslt/daisyTransform.xsl'
         xsl = File.read(xsl_filename)
-        contents = xslt(xml, xsl, poet_host, form_authenticity_token)
+        contents = repository.xslt(xml, xsl, poet_host, form_authenticity_token)
         content_html = File.join("","tmp", "#{book_uid}.html")
         File.open(content_html, 'wb'){|f|f.write(contents)}
         puts "about to call store_file for transformed html"
-        store_file(ENV['POET_ASSET_BUCKET'], content_html, book_uid, book_uid + "/" + book_uid + ".html", nil)
+        repository.store_file(content_html, book_uid, book_uid + "/" + book_uid + ".html", nil)
 
         book.update_attribute("status", 3)
 
@@ -36,7 +34,7 @@ class S3UnzippingJob < Struct.new(:book_uid, :poet_host, :form_authenticity_toke
         xml = nil
 
         # remove zip file from holding bucket
-        remove_file(ENV['POET_HOLDING_BUCKET'], book_uid + ".zip")
+        repository.remove_file(book_uid + ".zip")
 
         daisy_file = nil
       rescue Exception => e
@@ -141,7 +139,7 @@ class S3UnzippingJob < Struct.new(:book_uid, :poet_host, :form_authenticity_toke
         file_location = File.join(book_directory, image_location)
 
         #puts ("begin thread memory is #{number_to_human_size(`ps -o rss= -p #{Process.pid}`.to_i)}")
-        store_file(ENV['POET_ASSET_BUCKET'], file_location, book_uid, file_key, s3_service)
+        repository.store_file(file_location, book_uid, file_key, s3_service)
       end
     end
   end

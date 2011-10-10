@@ -46,4 +46,5 @@ group :development, :test do
   gem 'sqlite3'
   gem 'foreman'
   gem 'oink'
+  gem 'factory_girl_rails'
 end

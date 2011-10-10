@@ -1,27 +1,8 @@
-module S3Repository
+class S3Repository
   require 'find'
 
-  def store_file (bucket_name, file_path, book_uid, new_file_name, s3_service)
-    local_dir = ENV['POET_LOCAL_STORAGE_DIR']
-    if (local_dir)
-      begin
-        if (File.exists?(file_path))
-          qualified_new_file = File.join(local_dir, new_file_name)
-          dir = File.dirname(qualified_new_file)
-
-          make_nested_dirs(dir, local_dir)
-
-          FileUtils.copy_entry(file_path, qualified_new_file)
-        else
-          puts "file does not exist in local dir #{file_path} for copy to local store"
-        end
-      rescue Exception => e
-         puts "Unknown problem copying to local storage dir for book #{book_uid}"
-          puts "#{e.class}: #{e.message}"
-          puts e.backtrace.join("\n")
-          $stderr.puts e
-      end
-    else
+  def self.store_file (file_path, book_uid, new_file_name, s3_service)
+        bucket_name = ENV['POET_ASSET_BUCKET']
         if (!s3_service)
           # get handle to s3 service
           s3_service = AWS::S3.new
@@ -51,24 +32,10 @@ module S3Repository
           puts e.backtrace.join("\n")
           $stderr.puts e
         end
-    end
   end
 
-  def read_file(bucket_name, file_path, new_local_file)
-    local_dir = ENV['POET_LOCAL_STORAGE_DIR']
-    if (local_dir)
-      qualified_file = File.join(local_dir, file_path)
-      if (File.exists?(qualified_file))
-        dir = File.dirname(new_local_file)
-        if (! File.exists?(dir))
-          Dir.mkdir(dir)
-        end
-        FileUtils.copy_entry(qualified_file, new_local_file)
-      else
-        puts ("local file  to read doesn't exist, #{qualified_file}'")
-      end
-      return new_local_file
-    else
+  def self.read_file(file_path, new_local_file)
+      bucket_name = ENV['POET_ASSET_BUCKET']
       begin
         # get handle to s3 service
         s3_service = AWS::S3.new
@@ -89,14 +56,10 @@ module S3Repository
       end
 
       return new_local_file
-    end
   end
 
-  def remove_file(bucket_name, file_path)
-    local_dir = ENV['POET_LOCAL_STORAGE_DIR']
-    if (local_dir)
-      File.delete(File.join(local_dir, file_path))
-    else
+  def self.remove_file(file_path)
+      bucket_name = ENV['POET_ASSET_BUCKET']
       begin
         # get handle to s3 service
         s3_service = AWS::S3.new
@@ -115,27 +78,19 @@ module S3Repository
           puts e.backtrace.join("\n")
           $stderr.puts e
       end
-    end
   end
 
-  def xslt(xml, xsl, poet_host, form_authenticity_token)
+  def self.xslt(xml, xsl, poet_host, form_authenticity_token)
     engine = XML::XSLT.new
     engine.xml = xml
     engine.xsl = xsl
     bucket_name = "/s3.amazonaws.com/" + ENV['POET_ASSET_BUCKET'].dup
-    local_dir = ENV['POET_LOCAL_STORAGE_DIR']
-    if (local_dir)
-      bucket_name = "/" + poet_host + "/daisy_book/book"
-    end
+
     engine.parameters = {"form_authenticity_token" => form_authenticity_token, "bucket" => bucket_name, "poet_host" => poet_host}
     return engine.serve
   end
 
-  def get_cached_html(book_uid, file_name)
-    local_dir = ENV['POET_LOCAL_STORAGE_DIR']
-    if (local_dir)
-      return File.read(File.join(local_dir, book_uid, file_name))
-    else
+  def self.get_cached_html(book_uid, file_name)
       # get handle to s3 service
       s3_service = AWS::S3.new
       # get an s3 bucket
@@ -146,23 +101,10 @@ module S3Repository
       else
         return nil
       end
-    end
   end
 
-  def make_nested_dirs (nested_dir, root_dir)
-    dirs = nested_dir.split(File::SEPARATOR)
-    root_dirs = root_dir.split(File::SEPARATOR)
-    root_dir_nest = root_dirs.size
-    new_dir = "";
-    dirs.each_index do |i|
-      dir = dirs[i]
-      new_dir = File.join(new_dir, dir)
-      if (i >= root_dir_nest)
-        if (! File.exists?(new_dir))
-          Dir.mkdir(new_dir)
-        end
-      end
-    end
+  def self.get_host(request)
+    return "//s3.amazonaws.com/" + ENV['POET_ASSET_BUCKET']
   end
 
 end
