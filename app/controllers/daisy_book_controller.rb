@@ -47,7 +47,7 @@ class DaisyBookController < ApplicationController
           logger.info "#{caller_info} Other problem with encrypted zip"
           flash[:alert] = "There is a problem with this zip file"
         end
-        redirect_to :action => 'upload'
+        redirect_to :action => 'process'
         return
       end
     end
@@ -71,7 +71,7 @@ class DaisyBookController < ApplicationController
         flash[:alert] = "There is a problem with this zip file"
       end
 
-      redirect_to :action => 'upload'
+      redirect_to :action => 'process'
       return
     end
   end
@@ -92,7 +92,7 @@ class DaisyBookController < ApplicationController
       send_file zip_filename, :type => 'application/zip; charset=utf-8', :filename => basename + '.zip', :disposition => 'attachment' 
     rescue ShowAlertAndGoBack => e
       flash[:alert] = e.message
-      redirect_to :action => 'upload'
+      redirect_to :action => 'process'
       return
     end
   end
@@ -239,10 +239,6 @@ private
   
   def create_prodnote_id(image_id)
     "pnid_#{image_id}"
-  end
-  
-  def caller_info
-    return "#{request.remote_addr}"
   end
   
   def create_zip(old_daisy_zip, contents_filename, new_xml_contents)

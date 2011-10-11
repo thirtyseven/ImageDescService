@@ -36,4 +36,8 @@ module DaisyUtils
     return node.attributes['content'].content
   end
 
+  def caller_info
+    return "#{request.remote_addr}"
+  end
+
 end

@@ -18,9 +18,22 @@ describe DynamicDescriptionsController do
     it "should be successful" do
       get 'index'
       response.should be_success
-      assert_not_nil assigns(:dynamic_descriptions)
     end
   end
 
+  describe 'should create new description' do
+    it "should be successful" do
+      post 'create', :dynamic_description => 'new description', :book_uid => 'book01', :image_location => 'img03.jpg'
+      DynamicImage.count.should eq(1)
+      response.should be_success
+    end
+  end
+
+  describe "missing parameters on json create" do
+    it "should be successful" do
+      post 'create', :dynamic_description => 'new description', :format => 'json'
+      assert_response :non_authoritative_information
+    end
+  end
 
 end
