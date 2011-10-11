@@ -27,4 +27,11 @@ class S3UnzippingJobTest < Test::Unit::TestCase
     doc = Nokogiri::XML xml_without_title
     assert_nil @job.extract_optional_book_title(doc)
   end
+
+  def test_extract_isbn
+    xml = File.read('features/fixtures/Sample.opf')
+    doc = Nokogiri::XML xml
+    isbn = @job.extract_optional_isbn(doc)
+    assert_equal '9781583719015', isbn
+  end
 end

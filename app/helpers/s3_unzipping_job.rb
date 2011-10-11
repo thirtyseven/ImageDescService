@@ -13,8 +13,9 @@ class S3UnzippingJob < Struct.new(:book_uid, :poet_host, :form_authenticity_toke
 
         xml = get_xml_from_dir(book_directory)
         doc = Nokogiri::XML xml
+        opf = get_opf_from_dir(book_directory)
         contents_filename = get_daisy_contents_xml_name(book_directory)
-        book = create_book_in_db(doc, File.basename(contents_filename))
+        book = create_book_in_db(doc, File.basename(contents_filename), opf)
 
         create_images_in_database(book_directory, doc)
         book.update_attribute("status", 2)
@@ -25,7 +26,6 @@ class S3UnzippingJob < Struct.new(:book_uid, :poet_host, :form_authenticity_toke
         contents = repository.xslt(xml, xsl, poet_host, form_authenticity_token)
         content_html = File.join("","tmp", "#{book_uid}.html")
         File.open(content_html, 'wb'){|f|f.write(contents)}
-        puts "about to call store_file for transformed html"
         repository.store_file(content_html, book_uid, book_uid + "/" + book_uid + ".html", nil)
 
         book.update_attribute("status", 3)
@@ -76,7 +76,12 @@ class S3UnzippingJob < Struct.new(:book_uid, :poet_host, :form_authenticity_toke
     return dir
   end
 
-  def create_book_in_db(doc, xml_file)
+  def create_book_in_db(doc, xml_file, opf)
+    isbn = nil
+    if (opf)
+      opf_doc = Nokogiri::XML opf
+      isbn = extract_optional_isbn(opf_doc)
+    end
     @book_title = extract_optional_book_title(doc)
     book = Book.find_by_uid(book_uid)
     if (!book)
@@ -84,6 +89,7 @@ class S3UnzippingJob < Struct.new(:book_uid, :poet_host, :form_authenticity_toke
           :uid => book_uid,
           :title => @book_title,
           :status => 1,
+          :isbn => isbn,
           :xml_file => xml_file
       )
     elsif (!xml_file.eql?(book.xml_file))
@@ -153,6 +159,15 @@ class S3UnzippingJob < Struct.new(:book_uid, :poet_host, :form_authenticity_toke
     Dir.glob(File.join(book_directory, '*.xml'))[0]
   end
 
+  def get_opf_from_dir (book_directory)
+    opf_filename =  get_opf_name(book_directory)
+    File.read(opf_filename)
+  end
+
+  def get_opf_name(book_directory)
+    Dir.glob(File.join(book_directory, '*.opf'))[0]
+  end
+
   def each_image (doc)
     images = doc.xpath( doc, "//xmlns:img")
     images.each do | image_node |
@@ -178,6 +193,15 @@ class S3UnzippingJob < Struct.new(:book_uid, :poet_host, :form_authenticity_toke
     end
     node = matches.first
     return node.attributes['content'].content
+  end
+
+  def extract_optional_isbn(doc)
+    matches = doc.xpath("//dc:Identifier[@scheme='ISBN']", 'dc' => 'http://purl.org/dc/elements/1.1/')
+    if matches.size != 1
+      return nil
+    end
+    node = matches.first
+    return node.text
   end
 
   def get_image_size(book_directory, image_location)
