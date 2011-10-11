@@ -16,9 +16,9 @@ class EditBookController < ApplicationController
   def edit
     error_redirect = 'edit_book/describe'
 
-    book_uid = params[:book_uid].strip
+    book_uid = params[:book_uid]
     if (book_uid)
-      session[:book_uid] = book_uid
+      session[:book_uid] = book_uid.strip
     else
       book_uid = session[:book_uid]
     end
