@@ -6,13 +6,17 @@ class LocalRepository
       begin
         if (File.exists?(file_path))
           qualified_new_file = File.join(local_dir, new_file_name)
-          dir = File.dirname(qualified_new_file)
 
+          if (qualified_new_file.eql?(file_path))
+            return
+          end
+
+          dir = File.dirname(qualified_new_file)
           make_nested_dirs(dir, local_dir)
 
           FileUtils.copy_entry(file_path, qualified_new_file)
         else
-          puts "file does not exist in local dir #{file_path} for copy to local store"
+          # puts "file does not exist in local dir #{file_path} for copy to local store"
         end
       rescue Exception => e
          puts "Unknown problem copying to local storage dir for book #{book_uid}"
@@ -25,6 +29,11 @@ class LocalRepository
   def self.read_file(file_path, new_local_file)
       local_dir = choose_base_dir
       qualified_file = File.join(local_dir, file_path)
+
+      if (qualified_file.eql?(new_local_file))
+        return new_local_file
+      end
+
       if (File.exists?(qualified_file))
         dir = File.dirname(new_local_file)
         if (! File.exists?(dir))

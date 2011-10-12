@@ -43,8 +43,10 @@ Feature: Daisy Book
 		And I attach the file "features/fixtures/DaisyZipBookWithoutDTD.zip" to "book"
 		And I press "Upload"
 		Then I should be on the upload for edit success page
+        When I wait for 8 seconds
 
 	Scenario: Uploading a valid Daisy zip file with images
+        Given the system clears the cached files for "_id2244343"
         Given I am a user named "john" with an email "john.smith@dot.com" and password "123456" and username "johns"
         When I sign in as "john.smith@dot.com/123456"
 		When I go to the daisy upload page
@@ -52,6 +54,9 @@ Feature: Daisy Book
 		And I press "Upload"
 		Then I should be on the upload for edit success page
 		Then I should see "_id2244343"
+        When I wait for 8 seconds
+        Then a cached html for book with id "_id2244343" should be created
+        Then at least 10 images should have been unzipped into the "_id2244343" book directory
 
 	Scenario: Uploading a Bookshare Daisy zip file with missing images directory
         Given I am a user named "john" with an email "john.smith@dot.com" and password "123456" and username "johns"

@@ -120,6 +120,7 @@ When /^another description for the image "([^"]*)" in book "([^"]*)" is "([^"]*)
   image.dynamic_descriptions << description
 end
 
+
 Then /^(?:|I )should see "([^"]*)"$/ do |text|
   if page.respond_to? :should
     page.should have_content(text)
@@ -272,4 +273,37 @@ end
 
 When /^I wait for (\d+) seconds?$/ do |secs|
   sleep secs.to_i
+end
+
+Given /^the system clears the cached html files$/ do
+  html_files = Dir.glob(File.join("","tmp", '*.html'))
+  html_files.each do |file|
+    File.delete(file)
+  end
+end
+
+Given /^the system clears the cached files for "([^"]*)"$/ do |book_id|
+  html_files = Dir.glob(File.join("","tmp", '*.html'))
+  html_files.each do |file|
+    File.delete(file)
+  end
+
+  specific_files = Dir.glob(File.join("", "tmp", book_id, '*.html'))
+  specific_files.each do |file|
+    File.delete(file)
+  end
+
+  image_files = Dir.glob(File.join("", "tmp", book_id, '*.jpg'))
+  image_files.each do |file|
+    File.delete(file)
+  end
+end
+
+Then /^at least (\d+) images should have been unzipped into the "([^"]*)" book directory$/ do |num_images, book_id|
+  images = Dir.glob(File.join("", "tmp", book_id, "images", '*.jpg'))
+  assert images.size > num_images.to_i
+end
+
+Then /^a cached html for book with id "([^"]*)" should be created$/ do |book_id|
+  assert File.exists?(File.join("", "tmp", book_id, book_id + ".html"))
 end

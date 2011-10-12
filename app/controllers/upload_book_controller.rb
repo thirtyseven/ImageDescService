@@ -86,6 +86,12 @@ class UploadBookController < ApplicationController
           @repository.store_file(book.path, @book_uid, @book_uid + ".zip", nil)
           job = S3UnzippingJob.new(@book_uid, request.host_with_port, form_authenticity_token, @repository)
           Delayed::Job.enqueue(job)
+
+          # hack for testing
+          if (Rails.env.test?)
+            Delayed::Worker.new.work_off
+          end
+
         rescue AWS::Errors::Base => e
           logger.info "S3 Problem uploading book to S3 for book #{@book_uid}"
           logger.info "#{e.class}: #{e.message}"
