@@ -1,6 +1,6 @@
 	<frameset onload='document.getElementById("content").focus()'cols='300px, *'>
 		<frame name='side_bar' src='/edit_book/side_bar<%= "?book_uid=#{params[:book_uid]}" %>'></frame>
-		<frame name='content' src='/edit_book/content<%= "?book_uid=#{params[:book_uid]}" %>'></frame>
+		<frame name='content' src='/edit_book/content#top<%= "?book_uid=#{params[:book_uid]}" %>'></frame>
 		<noframes>Frames are required for this feature to work.</noframes>
 	</frameset>
 	
