@@ -14,8 +14,12 @@ DiagramRailsApp::Application.routes.draw do
   get "edit_book/edit"
   get "edit_book/side_bar"
 
+  get "books/get_books_with_images"
+  get "books/get_latest_descriptions"
+
 
   resources :dynamic_descriptions
+  resources :books
 
   resources :dynamic_images
 
