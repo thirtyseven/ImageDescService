@@ -663,7 +663,7 @@ xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/">
     <xsl:variable name="divId">desc_<xsl:value-of select="@id"/></xsl:variable>
     <br/>
     Previous Description(s)
-    <div class="imageDescBox" style="border:2px solid gray; border-style: groove; padding:0.25em; font-size: 80%; overflow: auto; height: 150px; margin-top: 4px; margin-bottom: 12px;">
+    <div class="imageDescBox" style="border:2px solid gray; border-style: groove; padding:0.25em; font-size: 100%; overflow: auto; height: 150px; margin-top: 4px; margin-bottom: 12px;">
         <xsl:attribute name="id"><xsl:value-of select="$divId"/></xsl:attribute>
     </div>
     New Description
