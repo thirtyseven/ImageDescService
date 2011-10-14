@@ -99,6 +99,7 @@ GEM
       treetop (~> 1.4.8)
     mime-types (1.16)
     mysql2 (0.2.6)
+    newrelic_rpm (3.2.0)
     nokogiri (1.4.4)
     oink (0.9.3)
       activerecord
@@ -177,6 +178,7 @@ DEPENDENCIES
   foreman
   image_size
   mysql2
+  newrelic_rpm
   nokogiri
   oink
   parallel
