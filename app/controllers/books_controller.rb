@@ -25,14 +25,14 @@ class BooksController < ApplicationController
     #@descriptions = DynamicImage.find_by_sql("select i.image_location from dynamic_images i where book_uid = '#{params[:book_uid]}'")
     #@descriptions = DynamicDescription.connection.select_all("select d.body, max(d.updated_at) date, i.image_location from dynamic_descriptions d, dynamic_images i where d.book_uid = '#{params[:book_uid]}' and i.id = d.dynamic_image_id group by d.dynamic_image_id ")
     @descriptions = DynamicDescription.connection.select_all("select i.image_location, d.body from dynamic_images i, (select d1.body, d1.dynamic_image_id
-from dynamic_descriptions d1
-left join dynamic_descriptions d2
-   on d1.book_uid = d2.book_uid
-   and d1.dynamic_image_id = d2.dynamic_image_id
-   and d1.created_at < d2.created_at
-where d1.book_uid = '#{params[:book_uid]}'
-and d2.created_at is null) as d
-where i.id = d.dynamic_image_id")
+      from dynamic_descriptions d1
+      left join dynamic_descriptions d2
+         on d1.book_uid = d2.book_uid
+         and d1.dynamic_image_id = d2.dynamic_image_id
+         and d1.created_at < d2.created_at
+      where d1.book_uid = '#{params[:book_uid]}'
+      and d2.created_at is null) as d
+      where i.id = d.dynamic_image_id")
     respond_to do |format|
       format.xml  { render :xml => @descriptions }
       format.json  { render :json => @descriptions, :callback => params[:callback] }

@@ -1,14 +1,4 @@
 class DynamicImagesController < ApplicationController
-  # GET /dynamic_images
-  # GET /dynamic_images.xml
-  def index
-    @dynamic_images = DynamicImage.all
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render :xml => @dynamic_images }
-    end
-  end
 
   # GET /dynamic_images/1
   # GET /dynamic_images/1.xml
