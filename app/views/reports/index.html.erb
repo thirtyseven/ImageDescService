@@ -1,0 +1,20 @@
+<h1>Reports</h1>
+<br/>
+
+<h3>Books with at least one image description: <%= @books_total %></h3>
+<h3>Total images described: <%= @images_described %> </h3>
+<h3>Total descriptions: <%= @descriptions_total %></h3>
+
+</br>
+</br>
+
+<form action="/reports/view_book" method="get">
+To view stats for a DAISY book that was previously uploaded,</br>
+enter the book ID, and click view.
+</br></br>
+Book ID: <input type="text" name="book_uid"/>
+<input type="submit" value="View" />
+</form>
+
+
+<br />

@@ -17,6 +17,10 @@ DiagramRailsApp::Application.routes.draw do
   get "books/get_books_with_images"
   get "books/get_latest_descriptions"
 
+  get "reports/index"
+  get "reports/view_book"
+  match "reports", :controller => 'reports', :action => 'index'
+
 
   resources :dynamic_descriptions
   resources :books
