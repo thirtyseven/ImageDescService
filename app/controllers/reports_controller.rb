@@ -12,11 +12,9 @@ class ReportsController < ApplicationController
 
   def view_book
 
-    puts "start view_book"
     book_uid = params[:book_uid]
 
     if(!book_uid || book_uid.length == 0)
-      puts "bad book_uid"
       flash[:alert] = "Must specify a book ID"
       redirect_to :action => 'index'
       return
