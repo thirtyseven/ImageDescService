@@ -12,7 +12,7 @@
 <% @books.each do |book| %>
   <tr>
     <td><%= book.isbn %></td>
-    <td><%= book.uid %></td>
+    <td><a href="/reports/view_book?book_uid=<%= book.uid %>"><%= book.uid %></a></td>
     <td><%= book.title %></td>
     <td><%= book.status %></td>
 
