@@ -21,6 +21,8 @@ DiagramRailsApp::Application.routes.draw do
   get "reports/view_book"
   match "reports", :controller => 'reports', :action => 'index'
 
+  get "repository/cleanup"
+
 
   resources :dynamic_descriptions
   resources :books

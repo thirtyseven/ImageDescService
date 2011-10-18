@@ -147,16 +147,13 @@ private
         s3_object = bucket.objects[content.key]
         if (Time.now - s3_object.last_modified > num_seconds)
           if (! db_updated)
-            puts "should update db for #{book_uid}"
             book = Book.find_by_uid(book_uid)
             book.update_attribute("status", 0)
             db_updated = true
           end
-          puts "should remove #{content.key}"
           s3_object.delete
         end
       else
-        puts "sub directory is #{content.prefix}"
         remove_files(bucket, content.children, book_uid, num_seconds)
       end
     end
