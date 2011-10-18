@@ -34,6 +34,7 @@ gem 'parallel'
 gem 'delayed_job'
 gem 'devise'
 gem 'newrelic_rpm'
+gem "will_paginate", "~> 3.0.2"
 
 # Bundle gems for the local environment. Make sure to
 # put test-only gems in this group so their generators

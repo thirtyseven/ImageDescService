@@ -1,6 +1,8 @@
 class S3Repository
   require 'find'
 
+  SECONDS_IN_DAY = 86400
+
   def self.store_file (file_path, book_uid, new_file_name, s3_service)
         bucket_name = ENV['POET_ASSET_BUCKET']
         if (!s3_service)
@@ -80,6 +82,36 @@ class S3Repository
       end
   end
 
+  def self.cleanup(older_than_days)
+    num_seconds = older_than_days * SECONDS_IN_DAY
+    bucket_name = ENV['POET_ASSET_BUCKET']
+    begin
+      # get handle to s3 service
+      s3_service = AWS::S3.new
+
+      bucket = s3_service.buckets[bucket_name]
+      tree = bucket.as_tree
+      tree.children.each do |book_dir|
+        book_uid = book_dir.prefix.chop
+        puts "book_uid is #{book_uid}"
+        contents = book_dir.children
+        remove_files(bucket, contents, book_uid, num_seconds)
+      end
+
+      rescue AWS::Errors::Base => e
+        puts "S3 Problem uploading book to S3"
+        puts "#{e.class}: #{e.message}"
+        puts "Line #{e.line}, Column #{e.column}, Code #{e.code}"
+      rescue Exception => e
+        puts "Unknown problem uploading book to S3"
+        puts "#{e.class}: #{e.message}"
+        puts e.backtrace.join("\n")
+        $stderr.puts e
+    end
+  end
+
+
+
   def self.xslt(xml, xsl, poet_host, form_authenticity_token)
     engine = XML::XSLT.new
     engine.xml = xml
@@ -105,6 +137,29 @@ class S3Repository
 
   def self.get_host(request)
     return "//s3.amazonaws.com/" + ENV['POET_ASSET_BUCKET']
+  end
+
+private
+  def self.remove_files(bucket, contents, book_uid, num_seconds)
+    db_updated = false
+    contents.each do |content|
+      if (content.leaf?)
+        s3_object = bucket.objects[content.key]
+        if (Time.now - s3_object.last_modified > num_seconds)
+          if (! db_updated)
+            puts "should update db for #{book_uid}"
+            book = Book.find_by_uid(book_uid)
+            book.update_attribute("status", 0)
+            db_updated = true
+          end
+          puts "should remove #{content.key}"
+          s3_object.delete
+        end
+      else
+        puts "sub directory is #{content.prefix}"
+        remove_files(bucket, content.children, book_uid, num_seconds)
+      end
+    end
   end
 
 end
