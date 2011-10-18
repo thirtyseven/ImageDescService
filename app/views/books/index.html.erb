@@ -10,6 +10,7 @@
     <th>Title</th>
     <th>ISBN</th>
     <th>Status</th>
+    <th>Added</th>
   </tr>
 
 <% @books.each do |book| %>
@@ -18,6 +19,7 @@
     <td><a href="/edit_book/edit?book_uid=<%= book.uid %>"><%= book.title %></a></td>
     <td><%= book.isbn %></td>
     <td><%= book.status %></td>
+    <td width="100px"><%= book.created_at.to_s(:poet_default) %></td>
 
   </tr>
 <% end %>
