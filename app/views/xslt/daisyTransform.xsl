@@ -45,11 +45,12 @@ xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/">
           var divId = "desc_" + imgId;
           data = { "book_uid" : bookUid, "image_location" : image_location }
           var x = jQuery.get("//<xsl:value-of select="$poet_host"/>/imageDescriptions", data, function(data) {descriptionCallback(data, divId)}) ;
-
         }
 
         function descriptionCallback(body, divName) {
-        	var targetDiv = document.getElementById(divName);
+            var containerDiv = document.getElementById("container_" + divName);
+            containerDiv.style.display = "block";
+            var targetDiv = document.getElementById(divName);
             targetDiv.innerHTML = body;
         }
 
@@ -662,6 +663,7 @@ xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/">
     <xsl:element name="br"/>
     <xsl:variable name="divId">desc_<xsl:value-of select="@id"/></xsl:variable>
     <br/>
+    <div style="display:none;"><xsl:attribute name="id">container_<xsl:value-of select="$divId"/></xsl:attribute>
     Previous Description(s)
     <div class="imageDescBox" style="border:2px solid gray; border-style: groove; padding:0.25em; font-size: 100%; overflow: auto; height: 150px; margin-top: 4px; margin-bottom: 12px;">
         <xsl:attribute name="id"><xsl:value-of select="$divId"/></xsl:attribute>
@@ -682,6 +684,7 @@ xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/">
             <xsl:attribute name="name">dynamic_description[body]</xsl:attribute>
             <xsl:attribute name="rows">10</xsl:attribute>
             <xsl:attribute name="cols">90</xsl:attribute>
+            <xsl:attribute name="style">font-size: 120%;</xsl:attribute>
         </xsl:element>
         <xsl:element name="input">
         	<xsl:attribute name="id"><xsl:value-of select="@id"/>_book_uid</xsl:attribute>
@@ -709,6 +712,7 @@ xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/">
 			<xsl:attribute name="onclick">handleSubmitClick('<xsl:value-of select="@id"/>')</xsl:attribute>
         </xsl:element>
     </xsl:element>
+    </div>
     <div>
         <xsl:attribute name="id"><xsl:value-of select="@id"/>_result</xsl:attribute>
     </div>
