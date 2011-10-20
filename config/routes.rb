@@ -22,6 +22,7 @@ DiagramRailsApp::Application.routes.draw do
   match "reports", :controller => 'reports', :action => 'index'
 
   get "repository/cleanup"
+  get "repository/expire_cached"
 
 
   resources :dynamic_descriptions

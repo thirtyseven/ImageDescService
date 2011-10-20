@@ -9,4 +9,9 @@ class RepositoryController < ApplicationController
     Delayed::Job.enqueue(job)
   end
 
+  def expire_cached
+    job = S3RemoveCachedHTMLJob.new
+    Delayed::Job.enqueue(job)
+  end
+
 end
