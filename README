@@ -11,3 +11,32 @@ Redistribution and use in source and binary forms, with or without modification,
 - Neither the name of Benetech nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
 
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+This image description editing web application is intended to be run as a Ruby on Rails application.
+
+
+The following environment variables need to be set for the application to function as intended:
+
+RACK_ENV {should be set to production (most likely) or development for dev purposes}
+POET_HOST {Name of the host of your web application, example: www.myapp.com }
+
+The repository of DAISY book files can be stored in the local file system or Amazon S3. For Amazon S3:
+AWS_ACCESS_KEY_ID     {AWS Access Key}
+AWS_SECRET_ACCESS_KEY {AWS Secret Access Key}
+POET_ASSET_BUCKET     {Name of the bucket in S3 where you want to store your files}
+POET_S3_EXPIRE_DAYS   {Number of days after which you want to expire your S3 files (to save money)}
+
+If you wish, instead, to use a local file system:
+POET_LOCAL_STORAGE_DIR {fully qualified name of directory. *Make Sure* your application has permissions to this dir}
+
+
+The application uses Sendgrid by default to send user registration emails. If you wish to use Sendgrid, you will also need to set
+the following environment variables:
+SENDGRID_USERNAME     {Sendgrid username}
+SENDGRID_PASSWORD     {Sendgrid password}
+
+
+After downloading the source code and setting the environment variables, you should run the application using:
+"foreman start"
+
