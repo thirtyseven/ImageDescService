@@ -12,6 +12,14 @@ en:
   filter_result: "Images"
 
 
+  home:
+    index:
+      heading: "Welcome to the Poet Image Description Tool"
+      describe_header: "Describe Images for Uploaded Book"
+      upload_header: "Upload Book for Describing"
+      update_header: "Update Your Book"
+
+
   activerecord:
     attributes:
       user:
