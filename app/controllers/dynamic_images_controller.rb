@@ -80,4 +80,13 @@ class DynamicImagesController < ApplicationController
     render :text=>"submitted #{params[:id]}: #{params[:dynamic_image]}",  :content_type => 'text/plain'
   end
 
+  def mark_all_essential
+    update_all(params[:book_id], EditBookController::FILTER_ESSENTIAL)
+  end
+
+  def update_all(book_id, should_be_described)
+    DynamicImage.connection.update("update dynamic_images set should_be_described = #{should_be_described} where book_uid = '#{book_id}'")
+    render :text=>"submitted #{params[:id]}: #{params[:dynamic_image]}",  :content_type => 'text/plain'
+  end
+
 end

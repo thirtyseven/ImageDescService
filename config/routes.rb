@@ -51,6 +51,7 @@ DiagramRailsApp::Application.routes.draw do
   match "imageDesc/dynamic_images/:id", :to => "dynamic_images#update", :via => "post"
   # match "imageDesc/uid/:uid/image_location/:image_location", :to => "dynamic_images#show", :via => "get"
   match "imageDesc", :to => "dynamic_descriptions#create", :via => "post"
+  match "imageDesc/mark_all_essential", :to => "dynamic_images#mark_all_essential", :via => "post"
 
   match "file/*directory/*file", :controller => 'file', :action => 'file'
   match "file/*file", :controller => 'file', :action => 'file'
