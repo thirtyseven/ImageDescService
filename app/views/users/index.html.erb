@@ -1,0 +1,23 @@
+<h1>Users</h1>
+
+<table cellpadding="4" cellspacing="0" border="1" width="100%">
+  <tr>
+    <th>Email</th>
+    <th>Username</th>
+    <th>Date Created</th>
+    <th>Last Login</th>
+    <th>Number of Logins</th>
+  </tr>
+
+<% @users.each do |user| %>
+  <tr>
+    <td><%= user.email %></td>
+    <td><%= user.username %></td>
+    <td><%= user.created_at.to_s(:poet_default) %></td>
+    <td><%= user.last_sign_in_at.to_s(:poet_default) %></td>
+    <td width="100px"><%= user.sign_in_count %></td>
+
+
+  </tr>
+<% end %>
+</table>

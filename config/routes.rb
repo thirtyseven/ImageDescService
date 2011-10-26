@@ -25,6 +25,8 @@ DiagramRailsApp::Application.routes.draw do
   get "repository/cleanup"
   get "repository/expire_cached"
 
+  match "users", :controller => 'users', :action => 'index'
+
 
   resources :dynamic_descriptions
   resources :books
@@ -56,7 +58,8 @@ DiagramRailsApp::Application.routes.draw do
 
   match "file/*directory/*file", :controller => 'file', :action => 'file'
   match "file/*file", :controller => 'file', :action => 'file'
-  
+
+
   # match 'imageDesc/uid/:uid => 'dynamic_image#show'
 
   # The priority is based upon order of creation:
