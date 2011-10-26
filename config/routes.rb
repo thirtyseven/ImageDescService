@@ -18,6 +18,7 @@ DiagramRailsApp::Application.routes.draw do
   get "books/get_latest_descriptions"
 
   get "reports/index"
+  get "reports/update_book_stats"
   get "reports/view_book"
   match "reports", :controller => 'reports', :action => 'index'
 

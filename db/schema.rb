@@ -12,6 +12,14 @@
 
 ActiveRecord::Schema.define(:version => 201109211852030) do
 
+  create_table "book_stats", :force => true do |t|
+    t.string  "book_uid"
+    t.integer "total_images"
+    t.integer "total_essential_images", :default => 0
+    t.integer "total_images_described", :default => 0
+    t.string  "book_title"
+  end
+
   create_table "books", :force => true do |t|
     t.string   "uid",                                          :null => false
     t.string   "title"

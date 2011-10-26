@@ -1,4 +1,5 @@
 <h1>Reports</h1>
+
 <br/>
 
 <h3>Books with at least one image description: <%= @books_total %></h3>
@@ -8,13 +9,30 @@
 </br>
 </br>
 
-<form action="/reports/view_book" method="get">
-To view stats for a DAISY book that was previously uploaded,</br>
-enter the book ID, and click view.
-</br></br>
-Book ID: <input type="text" name="book_uid"/>
-<input type="submit" value="View" />
-</form>
+<a href="/reports/update_book_stats">(Update book stats)</a>
+<br/><br/>
 
+<table cellpadding="4" cellspacing="0" border="1" width="100%">
+  <tr>
+    <th>ID</th>
+    <th>Title</th>
+    <th>Total Images</th>
+    <th>Total Essential Images</th>
+    <th>% Essential</th>
+    <th>Total Images Described</th>
+    <th>% Described</th>
+  </tr>
 
-<br />
+<% @book_stats.each do |book_stat| %>
+  <tr>
+    <td><%= book_stat.book_uid %></td>
+    <td><%= book_stat.book_title %></td>
+    <td><%= book_stat.total_images %></td>
+    <td><%= book_stat.total_essential_images %></td>
+    <td><%= number_to_percentage(book_stat.total_essential_images * 100.00/book_stat.total_images) %></td>
+    <td><%= book_stat.total_images_described %></td>
+    <td><%= number_to_percentage(book_stat.total_images_described * 100.00/book_stat.total_essential_images)  %></td>
+
+  </tr>
+<% end %>
+</table>
