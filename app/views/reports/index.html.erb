@@ -24,6 +24,14 @@
   </tr>
 
 <% @book_stats.each do |book_stat| %>
+  <%
+     if (book_stat.total_essential_images == 0 && book_stat.total_images_described == 0)
+        percent_described = 0
+     else
+       percent_described = book_stat.total_images_described * 100.00/book_stat.total_essential_images
+     end
+  %>
+
   <tr>
     <td><%= book_stat.book_uid %></td>
     <td><%= book_stat.book_title %></td>
@@ -31,7 +39,7 @@
     <td><%= book_stat.total_essential_images %></td>
     <td><%= number_to_percentage(book_stat.total_essential_images * 100.00/book_stat.total_images) %></td>
     <td><%= book_stat.total_images_described %></td>
-    <td><%= number_to_percentage(book_stat.total_images_described * 100.00/book_stat.total_essential_images)  %></td>
+    <td><%= number_to_percentage(percent_described)  %></td>
 
   </tr>
 <% end %>
