@@ -5,11 +5,12 @@ class ReportsController < ApplicationController
   def index
 
     @books_total = Book.connection.select_value("select count(uid) from books where uid in (select distinct(book_uid) from dynamic_descriptions)")
-    @descriptions_total = DynamicDescription.connection.select_value("select count(id) from dynamic_descriptions")
-    @images_described = DynamicDescription.connection.select_value("select count(distinct(dynamic_image_id)) from dynamic_descriptions")
+    #@descriptions_total = DynamicDescription.connection.select_value("select count(id) from dynamic_descriptions")
 
     @book_stats = BookStats.find(:all, :order => "book_title")
-
+    @total_essential_images = BookStats.sum("total_essential_images")
+    @total_images_described = BookStats.sum("total_images_described")
+    @total_images = BookStats.sum("total_images")
 
   end
 

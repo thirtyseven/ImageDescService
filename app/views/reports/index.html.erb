@@ -3,8 +3,6 @@
 <br/>
 
 <h3>Books with at least one image description: <%= @books_total %></h3>
-<h3>Total images described: <%= @images_described %> </h3>
-<h3>Total descriptions: <%= @descriptions_total %></h3>
 
 </br>
 </br>
@@ -22,6 +20,15 @@
     <th>Total Images Described</th>
     <th>% Described</th>
   </tr>
+  <tr>
+     <th></th>
+     <th>Totals</th>
+     <th></th>
+     <th align="right"><%= @total_essential_images %></th>
+     <th></th>
+     <th align="right"><%= @total_images_described %></th>
+     <th></th>
+  </tr>
 
 <% @book_stats.each do |book_stat| %>
   <%
@@ -35,12 +42,21 @@
   <tr>
     <td><%= book_stat.book_uid %></td>
     <td><%= book_stat.book_title %></td>
-    <td><%= book_stat.total_images %></td>
-    <td><%= book_stat.total_essential_images %></td>
-    <td><%= number_to_percentage(book_stat.total_essential_images * 100.00/book_stat.total_images) %></td>
-    <td><%= book_stat.total_images_described %></td>
-    <td><%= number_to_percentage(percent_described)  %></td>
+    <td align="right"><%= book_stat.total_images %></td>
+    <td align="right"><%= book_stat.total_essential_images %></td>
+    <td align="right"><%= number_to_percentage(book_stat.total_essential_images * 100.00/book_stat.total_images, :precision => 1) %></td>
+    <td align="right"><%= book_stat.total_images_described %></td>
+    <td align="right"><%= number_to_percentage(percent_described, :precision => 1)  %></td>
 
   </tr>
 <% end %>
+  <tr>
+     <th></th>
+     <th>Totals</th>
+     <th align="right"><%= @total_images %></th>
+     <th align="right"><%= @total_essential_images %></th>
+     <th align="right"><%= number_to_percentage(@total_essential_images * 100.00/@total_images, :precision => 1) %></th>
+     <th align="right"><%= @total_images_described %></th>
+     <th align="right"><%= number_to_percentage(@total_images_described * 100.00/@total_essential_images, :precision => 1) %></th>
+  </tr>
 </table>
