@@ -39,7 +39,7 @@
      end
   %>
 
-  <tr>
+  <tr class="<%= cycle('oddrow', 'evenrow') %>">
     <td><%= book_stat.book_uid %></td>
     <td><%= book_stat.book_title %></td>
     <td align="right"><%= book_stat.total_images %></td>
