@@ -46,7 +46,11 @@ class User < ActiveRecord::Base
        required_attributes.each do |key|
          value = attributes[key]
          record.send("#{key}=", value)
-         record.errors.add(key, value.present? ? error : :blank)
+         if login
+           record.errors.add(key, value.present? ? error : "has not been previously registered")
+         else
+           record.errors.add(key, value.present? ? error : :blank)
+         end
        end
      end
      record
