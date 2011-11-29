@@ -21,13 +21,14 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
   end
 
   create_table "books", :force => true do |t|
-    t.string   "uid",                                          :null => false
+    t.string   "uid",                                             :null => false
     t.string   "title"
-    t.string   "isbn",       :limit => 13
+    t.string   "isbn",          :limit => 13
     t.integer  "status"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "xml_file",                 :default => "none", :null => false
+    t.string   "xml_file",                    :default => "none", :null => false
+    t.datetime "last_approved"
   end
 
   add_index "books", ["isbn"], :name => "index_books_on_isbn"
