@@ -41,4 +41,21 @@ class BooksController < ApplicationController
 
   end
 
+  def get_approved_book_stats
+    @stats = BookStats.connection.select_all("select bs.book_uid, bs.total_images, bs.total_essential_images,
+      bs.total_images_described, b.last_approved from book_stats bs left join books b on bs.book_uid = b.uid")
+    respond_to do |format|
+      format.xml  { render :xml => @stats }
+      format.json  { render :json => @stats, :callback => params[:callback] }
+    end
+  end
+
+  def mark_approved
+    books = Book.find_all_by_uid(params[:book_id])
+    book = books[0]
+    book.update_attribute("last_approved", Time.now)
+    BookStats.create_book_row(book)
+    render :text=>"approved",  :content_type => 'text/plain'
+  end
+
 end

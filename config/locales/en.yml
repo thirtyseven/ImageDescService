@@ -13,8 +13,9 @@ en:
 
   books:
     index:
+      approval_started: "(marking approved ...)"
+      success: "(success!)"
       update_essential_field_started: "(Updating should describe field for images in this book ...)"
-      update_essential_field_success: "(All images have been marked essential.)"
       update_error: "(An update error has occurred.)"
 
   home:
