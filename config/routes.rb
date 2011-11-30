@@ -19,6 +19,10 @@ DiagramRailsApp::Application.routes.draw do
   get "books/get_approved_book_stats"
   post "books/mark_approved"
 
+  get "api/get_books_with_images"
+  get "api/get_latest_descriptions"
+  get "api/get_approved_book_stats"
+
   get "reports/index"
   get "reports/update_book_stats"
   get "reports/view_book"
@@ -57,6 +61,7 @@ DiagramRailsApp::Application.routes.draw do
   # match "imageDesc/uid/:uid/image_location/:image_location", :to => "dynamic_images#show", :via => "get"
   match "imageDesc", :to => "dynamic_descriptions#create", :via => "post"
   match "imageDesc/mark_all_essential", :to => "dynamic_images#mark_all_essential", :via => "post"
+
 
   #match "books/mark_approved", :to => "books#mark_approved", :via => "post"
 
