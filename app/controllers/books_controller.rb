@@ -14,14 +14,11 @@ class BooksController < ApplicationController
     end
   end
 
-
-
   def mark_approved
-
     books = Book.find_all_by_uid(params[:book_id])
     book = books[0]
-    book.update_attribute("last_approved", Time.now)
-    BookStats.create_book_row(book)
+    book.mark_approved
+
     render :text=>"approved",  :content_type => 'text/plain'
   end
 

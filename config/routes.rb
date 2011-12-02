@@ -19,9 +19,9 @@ DiagramRailsApp::Application.routes.draw do
   get "books/get_approved_book_stats"
   post "books/mark_approved"
 
-  get "api/get_books_with_images"
-  get "api/get_latest_descriptions"
   get "api/get_approved_book_stats"
+  get "api/get_approved_descriptions"
+  get "api/get_approved_stats"
 
   get "reports/index"
   get "reports/update_book_stats"
