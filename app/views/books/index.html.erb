@@ -57,7 +57,7 @@ function handleSubmitResponse(responseText, responseStatus) {
 <h1>Books</h1>
 <div id="messageBox"></div>
 <div class="flickr_pagination">
-<%= will_paginate @books %>
+<%= paginate @books %>
 </div>
 
 <table cellpadding="4" cellspacing="0" border="1" width="100%">
@@ -96,7 +96,7 @@ function handleSubmitResponse(responseText, responseStatus) {
 </table>
 
 <div class="flickr_pagination">
-<%= will_paginate @books %>
+<%= paginate @books %>
 </div>
 
 <br />
