@@ -1,5 +1,5 @@
 class Book < ActiveRecord::Base
-  self.paginates_per = 25
+  paginates_per 25
 
   validates :uid,  :presence => true, :length => { :maximum => 255 }
   validates :isbn, :length => { :maximum => 13 }
