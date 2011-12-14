@@ -11,6 +11,21 @@
     <h1><%=t '.heading' %></h1>
     </br>
     </br>
+     
+	<strong>Test Permissions:</strong><br/>
+    <% if can? :read, @all %>
+     User can read<br/>
+    <% end %>
+
+    <% if can? :update, @all %>
+      User can update<br/>
+    <% end %>
+ 
+    <% if can? :manage, @all %>
+     User can manage<br/>
+    <% end %>
+
+</br>
 
     <h3><%=t '.describe_header' %></h3>
     To enter descriptions for a DAISY book that was previously uploaded,

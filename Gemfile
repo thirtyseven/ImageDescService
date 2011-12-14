@@ -11,6 +11,8 @@ gem 'uuidtools'
 gem 'test-unit'
 gem 'zipruby'
 gem 'aws-sdk'
+gem 'activeadmin'
+gem 'cancan'
 
 # Use unicorn as the web server
 # gem 'unicorn'
@@ -34,7 +36,7 @@ gem 'parallel'
 gem 'delayed_job'
 gem 'devise'
 gem 'newrelic_rpm'
-gem "will_paginate", "~> 3.0.2"
+gem 'kaminari'
 gem "airbrake"
 
 # Bundle gems for the local environment. Make sure to

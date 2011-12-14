@@ -6,8 +6,26 @@ class User < ActiveRecord::Base
 
   # Setup accessible (or protected) attributes for your model
   attr_accessor :login
-  attr_accessible :email, :password, :password_confirmation, :remember_me, :username, :login
+  attr_accessible :email, :password, :password_confirmation, :remember_me, :username, :login, :role_ids
+  has_many :user_roles
+  has_many :roles, :through => :user_roles
+  
+  def has_role?(role_sym)
+    roles.any? { |r| r.name.underscore.to_sym == role_sym }
+  end
+  
+  def admin?
+    has_role? :admin
+  end
 
+  def moderator?
+    has_role? :moderator
+  end
+  
+  def describer?
+     has_role? :describer
+  end
+  
   protected
 
    def self.find_for_database_authentication(warden_conditions)
@@ -59,5 +77,6 @@ class User < ActiveRecord::Base
    def self.find_record(login)
      where(["username = :value OR email = :value", { :value => login }]).first
    end
-
+ 
 end
+

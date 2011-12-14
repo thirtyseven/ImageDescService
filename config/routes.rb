@@ -1,4 +1,10 @@
 DiagramRailsApp::Application.routes.draw do
+  devise_for :admin_users, ActiveAdmin::Devise.config
+
+  ActiveAdmin.routes(self)
+
+  #devise_for :admin_users, ActiveAdmin::Devise.config, ActiveAdmin::Devise.config
+
   devise_for :users
 
   get "daisy_book/get_xml_with_descriptions"
