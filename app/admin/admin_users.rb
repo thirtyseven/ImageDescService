@@ -21,7 +21,8 @@ ActiveAdmin.register AdminUser do
     default_actions
   end
   
-  filter :login
+  filter :login 
+  filter :email
   
   show do
       attributes_table :id, :login, :email

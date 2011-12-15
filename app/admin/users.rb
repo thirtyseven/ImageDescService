@@ -20,6 +20,7 @@ ActiveAdmin.register User do
   end
   
   filter :username
+  filter :email
   
   show do
       attributes_table :id, :username, :email

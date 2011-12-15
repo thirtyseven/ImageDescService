@@ -13,6 +13,7 @@ gem 'zipruby'
 gem 'aws-sdk'
 gem 'activeadmin'
 gem 'cancan'
+gem 'jquery-rails', '>= 1.0.12'
 
 # Use unicorn as the web server
 # gem 'unicorn'
