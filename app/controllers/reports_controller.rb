@@ -10,6 +10,7 @@ class ReportsController < ApplicationController
     @book_stats = BookStats.find(:all, :order => "book_title")
     @total_essential_images = BookStats.sum("total_essential_images")
     @total_images_described = BookStats.sum("total_images_described")
+    @total_essential_images_described = BookStats.sum("essential_images_described")
     @total_images = BookStats.sum("total_images")
 
   end

@@ -32,7 +32,7 @@ class ApiController < ApplicationController
 
     if book && book.last_approved
       @stats = BookStats.connection.select_all("select bs.book_uid, bs.total_images, bs.total_essential_images,
-      bs.total_images_described, b.last_approved from book_stats bs left join books b on bs.book_uid = b.uid
+      bs.total_images_described - bs.essential_images_described as unessential_images_described, bs.essential_images_described, b.last_approved from book_stats bs left join books b on bs.book_uid = b.uid
       where b.uid = '#{params[:book_uid]}'")
     else
       @stats = Array.new
