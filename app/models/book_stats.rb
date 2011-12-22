@@ -1,4 +1,6 @@
 class BookStats < ActiveRecord::Base
+  belongs_to :book
+  
   def self.create_book_row (book)
     book_stats = BookStats.where(:book_id => book.id).first
 

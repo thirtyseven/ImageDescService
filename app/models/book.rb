@@ -29,6 +29,7 @@ class Book < ActiveRecord::Base
   end
 
   def current_images_and_descriptions
+    # TODO ESH: test and remove this:
     # Used to be:
     # @results = DynamicDescription.connection.select_all("select i.image_location, d.body from dynamic_images i
     #  left join dynamic_descriptions d on i.id = d.dynamic_image_id where d.book_uid = '#{params[:book_uid]}' and d.is_current = 1")
