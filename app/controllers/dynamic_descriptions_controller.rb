@@ -42,13 +42,14 @@ class DynamicDescriptionsController < ApplicationController
   # POST /dynamic_descriptions
   # POST /dynamic_descriptions.xml
   def create
-    if params[:book_id] && params[:image_location]
-      @dynamic_image = DynamicImage.where("book_id = ? AND image_location = ?", params[:book_id], params[:image_location]).first
+    book = load_book
+    if book && params[:image_location]
+      @dynamic_image = DynamicImage.where("book_id = ? AND image_location = ?", book.id, params[:image_location]).first
       if(@dynamic_image.nil?)
-        @dynamic_image = DynamicImage.new(:book_id => params[:book_id], :image_location => params[:image_location])
+        @dynamic_image = DynamicImage.new(:book_id => book.id, :image_location => params[:image_location])
         @dynamic_image.save
       end
-      @dynamic_description = @dynamic_image.dynamic_descriptions.create(:body => params[:dynamic_description]["body"], :book_id => params[:book_id], :submitter => current_user.username)
+      @dynamic_description = @dynamic_image.dynamic_descriptions.create(:body => params[:dynamic_description]["body"], :book_id => book.id, :submitter => current_user.username)
     else
       @dynamic_description = DynamicDescription.new
       @dynamic_description.body = "missing parameters"
@@ -65,7 +66,7 @@ class DynamicDescriptionsController < ApplicationController
         format.xml  { render :xml => @dynamic_description, :status => :created, :location => @dynamic_description }
         format.json  { render :json => @dynamic_description, :callback => params[:callback], :status => :created, :location => @dynamic_description }
       else
-        @book_id = params[:book_id]
+        @book_id = book.id
         @image_location = params[:image_location]
         format.html { render :action => "new" }
         format.xml  { render :xml => @dynamic_description.errors, :status => :non_authoritative_information }

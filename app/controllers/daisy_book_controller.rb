@@ -35,7 +35,7 @@ class DaisyBookController < ApplicationController
       return
     end
 
-    if password && !password.empty?
+    unless password.blank?
       begin
         Zip::Archive.decrypt(book.path, password)
       rescue Zip::Error => e

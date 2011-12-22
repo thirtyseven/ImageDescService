@@ -13,11 +13,13 @@ ActiveAdmin.register Book do
     column :isbn
     column :status
     column "Added", :created_at
+    if can? :tag_all_images, @all
     column  do |book| 
       div :class => :action do
         link_to "Mark All Essential", imageDesc_mark_all_essential_path(:book_id => book.id), :remote => true, :method => "post", :format => :js, :class => "book-link-ajax"
       end
     end
+    end 
     column  do |book| 
       div :class => :action do
         link_to "Approve Image Description", books_mark_approved_path(:book_id => book.id), :remote => true, :method => "post", :format => :js, :class => "book-link-ajax"

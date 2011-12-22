@@ -28,8 +28,8 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
   add_index "active_admin_comments", ["resource_type", "resource_id"], :name => "index_admin_notes_on_resource_type_and_resource_id"
 
   create_table "admin_users", :force => true do |t|
-    t.string   "email",                                                :null => false
-    t.string   "encrypted_password",     :limit => 128,                :null => false
+    t.string   "email",                                 :default => "", :null => false
+    t.string   "encrypted_password",     :limit => 128, :default => "", :null => false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
@@ -106,7 +106,9 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
   add_index "dynamic_descriptions", ["dynamic_image_id"], :name => "index_dynamic_descriptions_on_dynamic_image_id"
 
   create_table "dynamic_images", :force => true do |t|
-    t.string   "image_location",      :null => false
+    t.string   "book_uid"
+    t.string   "book_title"
+    t.string   "image_location"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "should_be_described"
@@ -163,7 +165,7 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.string   "last_sign_in_ip"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "username",                                             :null => false
+    t.string   "username",                                              :null => false
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

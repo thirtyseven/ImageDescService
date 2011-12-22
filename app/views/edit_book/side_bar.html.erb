@@ -4,8 +4,9 @@
 	</style>
 <script type="text/javascript">
 <!--
-function handleClick(image_id, src){
+function handleClick(book_id, image_id, src){
 	parent.content.location = "/edit_book/content#" + image_id;
+    // TODO ESH: consider a different way of doing this
     parent.content.getDescription(image_id, src);
 }
 
@@ -82,10 +83,10 @@ function handleFilterChange()
   book = Book.find session[:book_id] rescue nil
   if book
   	@images.each do | image |
-  		id = image.xml_id
+  		xml_id = image.xml_id
   		raw_src = image.image_location
   		src = "book/#{raw_src}"
-          s3src = "#{@host}/#{session[:book_uid]}/#{image.image_location}"
+          s3src = "#{@host}/#{book.uid}/#{image.image_location}"
 
           model =  image
 
@@ -104,10 +105,10 @@ function handleFilterChange()
   		end
 %>
 <div id="div_<%= src %>">
-	<a id="<%= id %>" href="#<%= id %>">
+	<a id="<%= xml_id %>" href="#<%= xml_id %>">
 	<img style="border:1px solid black; padding:0.25em; font-size: 80%;" 
 		 width='<%= width %>px' height='<%= height %>px' 
-		onclick="handleClick('<%= id %>', '<%= raw_src %>')"
+		onclick="handleClick('<%= book.id %>', '<%= xml_id %>', '<%= raw_src %>')"
 		src='<%= s3src %>'>
 	</img>
 	</a>

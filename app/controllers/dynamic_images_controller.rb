@@ -4,8 +4,9 @@ class DynamicImagesController < ApplicationController
   # GET /dynamic_images/1.xml
   # GET /dynamic_images/1.json
   def show
-    if params[:image_location] && !params[:book_id].empty?
-      @dynamic_image = DynamicImage.where(:book_id => params[:book_id], :image_location => params[:image_location]).first
+    book = load_book
+    if params[:image_location] && book
+      @dynamic_image = DynamicImage.where(:book_id => book.id, :image_location => params[:image_location]).first
       if @dynamic_image
         @last_desc = @dynamic_image.dynamic_descriptions.last
       else
@@ -15,7 +16,7 @@ class DynamicImagesController < ApplicationController
       end
     else
       @last_desc = DynamicDescription.new
-      @last_desc.body = "missing parameter book_id=#{params[:book_id]}, loc=#{params[:image_location]}"
+      @last_desc.body = "missing parameter book_id=#{book.id}, loc=#{params[:image_location]}"
       @status = :non_authoritative_information
     end
 
@@ -33,8 +34,9 @@ class DynamicImagesController < ApplicationController
   end
 
   def show_history
-    if params[:image_location] && !params[:book_id].empty?
-      @descriptions = DynamicDescription.joins(:dynamic_image).where(:book_id => params[:book_id], :dynamic_image => {:image_location => params[:image_location]}).order('created_at desc').all
+    book = load_book
+    if params[:image_location] && book
+      @descriptions = DynamicDescription.joins(:dynamic_image).where(:book_id => book.id, :dynamic_images => {:image_location => params[:image_location]}).order('created_at desc').all
       render :layout => false
     end
 
@@ -81,7 +83,10 @@ class DynamicImagesController < ApplicationController
   end
 
   def mark_all_essential
-    DynamicImage.update_all({:should_be_described => EditBookController::FILTER_ESSENTIAL}, {book_id => params[:book_id]})
-    render :text=>"submitted #{params[:id]}: #{params[:dynamic_image]}",  :content_type => 'text/plain'
+    book = load_book
+    if book
+      DynamicImage.update_all({:should_be_described => EditBookController::FILTER_ESSENTIAL}, {book_id => book.id})
+      render :text=>"submitted #{params[:id]}: #{params[:dynamic_image]}",  :content_type => 'text/plain'
+    end
   end
 end
