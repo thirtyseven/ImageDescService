@@ -12,6 +12,7 @@ ActiveAdmin.register User do
     f.buttons
   end
   
+ # TODO ESH: consider adding a column for user's roles 
   index do
     column :id
     column :username
