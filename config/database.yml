@@ -20,7 +20,6 @@ development:
   database: diagram
   pool: 5
   username: diagram
-  username: root
   password:
   socket: <%= socket %>
 
