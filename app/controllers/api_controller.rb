@@ -3,7 +3,7 @@ class ApiController < ApplicationController
   STATUS_NOT_APPROVED = 203
   STATUS_NOT_FOUND = 203
   STATUS_APPROVED = 200
-  
+
   def get_approved_descriptions_and_book_states
     # TODO ESH: return a combination of get_approved_descriptions and get_approved_book_stats
   end
@@ -32,7 +32,7 @@ class ApiController < ApplicationController
     book = Book.where(:uid => params[:book_uid]).first
 
     if book && book.last_approved
-      @stats = book.book_stats
+      @stats = book.book_stats.select("book_stats.*, total_images_described - essential_images_described as unessential_images_described
     else
       @stats = Array.new
 

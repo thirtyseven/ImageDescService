@@ -11,6 +11,7 @@ class ReportsController < ApplicationController
     
     @total_essential_images = BookStats.sum("total_essential_images")
     @total_images_described = BookStats.sum("total_images_described")
+    @total_essential_images_described = BookStats.sum("essential_images_described")
     @total_images = BookStats.sum("total_images")
 
   end
