@@ -1,7 +1,6 @@
 class DynamicImage < ActiveRecord::Base
-  validates :book_uid,  :presence => true, :length => { :maximum => 255 }
+  validates_presence_of :book_id
   validates :image_location,  :presence => true, :length => { :maximum => 255 }
-  validates :book_title, :length => { :maximum => 255 }
 
   has_many :dynamic_descriptions
   

@@ -40,8 +40,8 @@
   %>
 
   <tr class="<%= cycle('oddrow', 'evenrow') %>">
-    <td><%= book_stat.book_uid %></td>
-    <td><%= book_stat.book_title %></td>
+    <td><%= book_stat.book.uid if book_stat.book %></td>
+    <td><%= book_stat.book.title if book_stat.book %></td>
     <td align="right"><%= book_stat.total_images %></td>
     <td align="right"><%= book_stat.total_essential_images %></td>
     <td align="right"><%= number_to_percentage(book_stat.total_essential_images * 100.00/book_stat.total_images, :precision => 1) %></td>

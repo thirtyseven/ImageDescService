@@ -3,16 +3,18 @@ class ApiController < ApplicationController
   STATUS_NOT_APPROVED = 203
   STATUS_NOT_FOUND = 203
   STATUS_APPROVED = 200
+  
+  def get_approved_descriptions_and_book_states
+    # TODO ESH: return a combination of get_approved_descriptions and get_approved_book_stats
+  end
 
   def get_approved_descriptions
 
     status = STATUS_APPROVED
-    books = Book.find_all_by_uid(params[:book_uid])
-    book = books[0]
+    book = Book.where(:uid => params[:book_uid]).first
 
     if book && book.last_approved
-      @results = DynamicDescription.connection.select_all("select i.image_location, d.body from dynamic_images i
-        left join dynamic_descriptions d on i.id = d.dynamic_image_id where d.book_uid = '#{params[:book_uid]}' and d.is_current = 1")
+      @results = book.current_images_and_descriptions.all
     else
       @results = Array.new
       @results[0] = "error: not approved"
@@ -27,13 +29,10 @@ class ApiController < ApplicationController
 
   def get_approved_book_stats
     status = STATUS_APPROVED
-    books = Book.find_all_by_uid(params[:book_uid])
-    book = books[0]
+    book = Book.where(:uid => params[:book_uid]).first
 
     if book && book.last_approved
-      @stats = BookStats.connection.select_all("select bs.book_uid, bs.total_images, bs.total_essential_images,
-      bs.total_images_described, b.last_approved from book_stats bs left join books b on bs.book_uid = b.uid
-      where b.uid = '#{params[:book_uid]}'")
+      @stats = book.book_stats
     else
       @stats = Array.new
 
@@ -47,15 +46,15 @@ class ApiController < ApplicationController
     end
 
     respond_to do |format|
-      format.xml  { render :xml => @stats, :status => status }
-      format.json  { render :json => @stats, :callback => params[:callback], :status => status }
+      format.xml  { render :xml => {:stats => @stats, :book => book}, :status => status }
+      format.json  { render :json => {:stats => @stats, :book => book}, :callback => params[:callback], :status => status }
     end
 
   end
 
   def get_approved_stats
-    @stats = BookStats.connection.select_all("select bs.book_uid, bs.total_images, bs.total_essential_images,
-      bs.total_images_described, b.last_approved from book_stats bs left join books b on bs.book_uid = b.uid
+    @stats = BookStats.connection.select_all("select bs.book_id, bs.total_images, bs.total_essential_images,
+      bs.total_images_described, b.last_approved from book_stats bs left join books b on bs.book_id = b.id
       where b.last_approved > '#{params[:since]}'")
     respond_to do |format|
       format.xml  { render :xml => @stats }

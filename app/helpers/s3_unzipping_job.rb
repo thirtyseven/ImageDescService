@@ -15,20 +15,32 @@ class S3UnzippingJob < Struct.new(:book_uid, :poet_host, :form_authenticity_toke
         doc = Nokogiri::XML xml
         opf = get_opf_from_dir(book_directory)
         contents_filename = get_daisy_contents_xml_name(book_directory)
+        p "ESH: 1111 #{book_uid}"
         book = create_book_in_db(doc, File.basename(contents_filename), opf)
+        p "ESH: 2222 #{book_uid}"
 
         create_images_in_database(book_directory, doc)
+        p "ESH: 3333 #{book_uid}"
         book.update_attribute("status", 2)
+        p "ESH: 4444 #{book_uid}"
         upload_files_to_s3(book_directory, doc)
+        p "ESH: 5555 #{book_uid}"
 
         xsl_filename = 'app/views/xslt/daisyTransform.xsl'
+        p "ESH: 6666 #{book_uid}"
         xsl = File.read(xsl_filename)
+        p "ESH: 7777 #{book_uid}"
         contents = repository.xslt(xml, xsl, poet_host, form_authenticity_token)
+        p "ESH: 8888 #{book_uid}"
         content_html = File.join("","tmp", "#{book_uid}.html")
+        p "ESH: 9999 #{book_uid}"
         File.open(content_html, 'wb'){|f|f.write(contents)}
+        p "ESH: 10000 #{book_uid}"
         repository.store_file(content_html, book_uid, book_uid + "/" + book_uid + ".html", nil)
+        p "ESH: 11000 #{book_uid}"
 
         book.update_attribute("status", 3)
+        p "ESH: 12000 #{book_uid}"
 
         doc = nil
         xml = nil
@@ -36,6 +48,7 @@ class S3UnzippingJob < Struct.new(:book_uid, :poet_host, :form_authenticity_toke
         # remove zip file from holding bucket
         repository.remove_file(book_uid + ".zip")
 
+        p "ESH: 13000 #{book_uid}"
         daisy_file = nil
       rescue Exception => e
           puts "Unknown problem in unzipping job for book #{book_uid}"
@@ -83,7 +96,7 @@ class S3UnzippingJob < Struct.new(:book_uid, :poet_host, :form_authenticity_toke
       isbn = extract_optional_isbn(opf_doc)
     end
     @book_title = extract_optional_book_title(doc)
-    book = Book.find_by_uid(book_uid)
+    book = Book.where(:uid => book_uid).first
     if (!book)
       book = Book.create(
           :uid => book_uid,
@@ -99,7 +112,7 @@ class S3UnzippingJob < Struct.new(:book_uid, :poet_host, :form_authenticity_toke
   end
 
   def create_images_in_database(book_directory, doc)
-
+    book = Book.where(:uid => book_uid).first
     each_image(doc) do | image_node |
       image_location = image_node['src']
       xml_id = image_node['id']
@@ -108,12 +121,11 @@ class S3UnzippingJob < Struct.new(:book_uid, :poet_host, :form_authenticity_toke
       if (image_location)
 
         # add image to db if it does not already exist in db
-        image = DynamicImage.find_by_book_uid_and_image_location(book_uid, image_location)
+        image = DynamicImage.where(:book_id => book.id, :image_location => image_location).first
         if(!image && File.exists?(File.join(book_directory, image_location)))
           width, height = get_image_size(book_directory, image_location)
           DynamicImage.create(
-                :book_uid => book_uid,
-                :book_title => @book_title,
+                :book_id => book.id,
                 :width => width,
                 :height => height,
                 :xml_id => xml_id,

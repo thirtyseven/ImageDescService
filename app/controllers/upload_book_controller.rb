@@ -36,7 +36,7 @@ class UploadBookController < ApplicationController
   def submit
 
     #init session vars
-    session[:book_uid] = nil
+    session[:book_id] = nil
     session[:content] = nil
     session[:daisy_directory] = nil
 

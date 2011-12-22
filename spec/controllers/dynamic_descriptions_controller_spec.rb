@@ -23,8 +23,8 @@ describe DynamicDescriptionsController do
 
   describe 'should create new description' do
     it "should be successful" do
-      post 'create', :dynamic_description => 'new description', :book_uid => 'book01', :image_location => 'img03.jpg'
-      DynamicImage.count.should eq(1)
+      post 'create', :dynamic_description => 'new description', :book_id => 1, :image_location => 'img03.jpg'
+      DynamicImage.count.should eq(2)
       response.should be_success
     end
   end

@@ -139,10 +139,10 @@ class DaisyBookController < ApplicationController
     return xml
   end
 
-  def get_description_count_for_book(book_uid)
+  def get_description_count_for_book_uid(book_uid)
     return DynamicImage.
-        joins(:dynamic_descriptions).
-        where("dynamic_images.book_uid = ?", book_uid).
+        joins(:books).
+        where(:books => {:uid => book_uid}).
         count
   end
 
@@ -163,11 +163,12 @@ private
   
     book_uid = extract_book_uid(doc)
   
-    if get_description_count_for_book(book_uid) == 0
+    if get_description_count_for_book_uid(book_uid) == 0
       raise NoImageDescriptions.new
     end
     
-    matching_images = DynamicImage.where("book_uid = ?", book_uid)
+    book = Book.where(:uid => book_uid).first
+    matching_images = DynamicImage.where("book_id = ?", book.id).all
     matching_images.each do | dynamic_image |
       image_location = dynamic_image.image_location
       image = doc.at_xpath( doc, "//xmlns:img[@src='#{image_location}']")

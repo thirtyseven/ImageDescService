@@ -15,8 +15,7 @@ class BooksController < ApplicationController
   end
 
   def mark_approved
-    books = Book.find_all_by_uid(params[:book_id])
-    book = books[0]
+    book = Book.find params[:book_id] rescue nil
     book.mark_approved
 
     render :text=>"approved",  :content_type => 'text/plain'

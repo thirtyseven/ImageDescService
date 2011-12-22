@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111213191950) do
+ActiveRecord::Schema.define(:version => 201109211852030) do
 
   create_table "active_admin_comments", :force => true do |t|
     t.integer  "resource_id",   :null => false
@@ -28,8 +28,8 @@ ActiveRecord::Schema.define(:version => 20111213191950) do
   add_index "active_admin_comments", ["resource_type", "resource_id"], :name => "index_admin_notes_on_resource_type_and_resource_id"
 
   create_table "admin_users", :force => true do |t|
-    t.string   "email",                                 :default => "", :null => false
-    t.string   "encrypted_password",     :limit => 128, :default => "", :null => false
+    t.string   "email",                                                :null => false
+    t.string   "encrypted_password",     :limit => 128,                :null => false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
@@ -47,11 +47,10 @@ ActiveRecord::Schema.define(:version => 20111213191950) do
   add_index "admin_users", ["reset_password_token"], :name => "index_admin_users_on_reset_password_token", :unique => true
 
   create_table "book_stats", :force => true do |t|
-    t.string  "book_uid"
     t.integer "total_images"
     t.integer "total_essential_images", :default => 0
     t.integer "total_images_described", :default => 0
-    t.string  "book_title"
+    t.integer "book_id"
   end
 
   create_table "books", :force => true do |t|
@@ -67,7 +66,7 @@ ActiveRecord::Schema.define(:version => 20111213191950) do
 
   add_index "books", ["isbn"], :name => "index_books_on_isbn"
   add_index "books", ["title"], :name => "index_books_on_title"
-  add_index "books", ["uid"], :name => "index_books_on_uid"
+  add_index "books", ["uid"], :name => "index_books_on_uid", :unique => true
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -100,26 +99,24 @@ ActiveRecord::Schema.define(:version => 20111213191950) do
     t.integer  "dynamic_image_id",                                           :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "book_uid"
+    t.integer  "book_id"
   end
 
-  add_index "dynamic_descriptions", ["book_uid", "dynamic_image_id", "is_current"], :name => "dynamic_descriptions_uid_image_id_current"
+  add_index "dynamic_descriptions", ["dynamic_image_id", "is_current"], :name => "dynamic_descriptions_uid_image_id_current"
   add_index "dynamic_descriptions", ["dynamic_image_id"], :name => "index_dynamic_descriptions_on_dynamic_image_id"
 
   create_table "dynamic_images", :force => true do |t|
-    t.string   "book_uid"
-    t.string   "book_title"
-    t.string   "image_location"
+    t.string   "image_location",      :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "should_be_described"
     t.integer  "width"
     t.integer  "height"
     t.string   "xml_id"
+    t.integer  "book_id"
   end
 
-  add_index "dynamic_images", ["book_uid", "image_location"], :name => "index_dynamic_images_on_book_uid_and_image_location"
-  add_index "dynamic_images", ["book_uid", "should_be_described"], :name => "index_dynamic_images_on_book_uid_and_should_be_described"
+  add_index "dynamic_images", ["should_be_described"], :name => "index_dynamic_images_on_book_uid_and_should_be_described"
 
   create_table "images", :force => true do |t|
     t.integer  "book_id",                         :null => false
@@ -154,8 +151,8 @@ ActiveRecord::Schema.define(:version => 20111213191950) do
   end
 
   create_table "users", :force => true do |t|
-    t.string   "email",                                 :default => "", :null => false
-    t.string   "encrypted_password",     :limit => 128, :default => "", :null => false
+    t.string   "email",                                                :null => false
+    t.string   "encrypted_password",     :limit => 128,                :null => false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
@@ -166,7 +163,7 @@ ActiveRecord::Schema.define(:version => 20111213191950) do
     t.string   "last_sign_in_ip"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "username",                                              :null => false
+    t.string   "username",                                             :null => false
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

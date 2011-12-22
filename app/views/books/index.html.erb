@@ -72,8 +72,8 @@ function handleSubmitResponse(responseText, responseStatus) {
 
 <% @books.each do |book| %>
   <tr>
-    <td><a href="/reports/view_book?book_uid=<%= book.uid %>"><%= book.uid %></a></td>
-    <td><a href="/edit_book/edit?book_uid=<%= book.uid %>"><%= book.title %></a></td>
+    <td><a href="/reports/view_book?book_id=<%= book.id %>"><%= book.uid %></a></td>
+    <td><a href="/edit_book/edit?book_id=<%= book.id %>"><%= book.title %></a></td>
     <td><%= book.isbn %></td>
     <td><%= book.status %></td>
     <td width="100px"><%= book.created_at.to_s(:poet_default) %></td>

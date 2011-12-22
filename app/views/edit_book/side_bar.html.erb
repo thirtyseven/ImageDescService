@@ -64,7 +64,7 @@ function shouldShow(filterValue, essentialFlagValue, descriptionCount)
 function handleFilterChange()
 {
     var desired = document.getElementById("filter").value ;
-    window.location.href = "/edit_book/side_bar?book_uid=<%=session[:book_uid]%>" + "&filter=" + desired
+    window.location.href = "/edit_book/side_bar?book_id=<%=session[:book_id]%>" + "&filter=" + desired
 }
 
 //-->
@@ -79,27 +79,29 @@ function handleFilterChange()
 </br></br></br>
 
 <%
-	@images.each do | image |
-		id = image.xml_id
-		raw_src = image.image_location
-		src = "book/#{raw_src}"
-        s3src = "#{@host}/#{session[:book_uid]}/#{image.image_location}"
+  book = Book.find session[:book_id] rescue nil
+  if book
+  	@images.each do | image |
+  		id = image.xml_id
+  		raw_src = image.image_location
+  		src = "book/#{raw_src}"
+          s3src = "#{@host}/#{session[:book_uid]}/#{image.image_location}"
 
-        model =  image
+          model =  image
 
-		raw_width = model.width || 20
-		raw_height = model.height || 20
-		if(raw_height == 0)
-			raw_height = 1
-		end
-		ratio = 1.0 * raw_width / raw_height
-		if(raw_width > raw_height)
-			width = 240
-			height = width / ratio
-		else
-			height = 160
-			width = height * ratio		
-		end
+  		raw_width = model.width || 20
+  		raw_height = model.height || 20
+  		if(raw_height == 0)
+  			raw_height = 1
+  		end
+  		ratio = 1.0 * raw_width / raw_height
+  		if(raw_width > raw_height)
+  			width = 240
+  			height = width / ratio
+  		else
+  			height = 160
+  			width = height * ratio		
+  		end
 %>
 <div id="div_<%= src %>">
 	<a id="<%= id %>" href="#<%= id %>">
@@ -118,8 +120,7 @@ function handleFilterChange()
 				{:include_blank => 'Unspecified', :custom_label => 'Essential?'},
 				{:onChange => "handleImageEssentialChange(this.form);" }  %>
 			<%= form.hidden_field(:id) %>
-			<%= form.hidden_field(:book_uid) %>
-			<%= form.hidden_field(:book_title) %>
+			<%= form.hidden_field(:book_id) %>
 			<%= form.hidden_field(:image_location) %>
 			
 <!--		<%= form.submit %> -->
@@ -130,5 +131,6 @@ function handleFilterChange()
 <hr/>
 </div>
 <% 
+    end
 	end 
 %>

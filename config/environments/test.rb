@@ -35,5 +35,5 @@ DiagramRailsApp::Application.configure do
 
 
   require 'test/unit/testresult'
-  Test::Unit.run = true
+  # Test::Unit.run = true
 end
