@@ -32,7 +32,7 @@ class ApiController < ApplicationController
     book = Book.where(:uid => params[:book_uid]).first
 
     if book && book.last_approved
-      @stats = book.book_stats.select("book_stats.*, total_images_described - essential_images_described as unessential_images_described
+      @stats = book.book_stats.select("book_stats.*, total_images_described - essential_images_described as unessential_images_described")
     else
       @stats = Array.new
 

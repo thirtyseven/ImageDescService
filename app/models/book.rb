@@ -6,7 +6,8 @@ class Book < ActiveRecord::Base
   
   has_many :dynamic_descriptions
   has_many :dynamic_images
-  has_many :book_stats
+  has_many :book_stats, :class_name => 'BookStats', :foreign_key => :book_id
+  
 
   def mark_approved
 
