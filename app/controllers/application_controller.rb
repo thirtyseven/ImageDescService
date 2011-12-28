@@ -9,5 +9,12 @@ class ApplicationController < ActionController::Base
       Book.where(:uid => params[:book_uid]).first
     end
   end
+  def authenticate_admin_user!
+    authenticate_user!
+    redirect_to '/' unless current_admin_user
+  end
   
+  def current_admin_user
+    current_user if can? :view_admin, @all
+  end
 end

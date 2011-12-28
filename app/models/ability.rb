@@ -5,14 +5,16 @@ class Ability
     # Define abilities for the passed in user here. For example:
     #
      user ||= User.new # guest user (not logged in) 
-    can :tag_images, :all
-    can :describe_images, :all   
-    can :tag_all_images, :all if user.moderator? or user.admin?   
-    can :review_images, :all if user.moderator? or user.admin?
+    can :tag_images, :all if user.screener? || user.describer? || user.moderator? || user.admin?
+    can :describe_images, :all if user.screener? || user.describer? || user.moderator? || user.admin?
+    can :tag_all_images, :all if user.moderator? || user.admin?
+    can :review_images, :all if user.moderator? || user.admin?
     can :approve_book, :all if user.admin?
     can :complete_book, :all if user.admin?
     can :reports, :all if user.admin?
     can :data_cleanup, :all if user.admin?
+    can :view_admin, :all if user.admin? || user.moderator?
+    can :admin_user, :all if user.admin?
          
     #
     # The first argument to `can` is the action you are giving the user permission to do.

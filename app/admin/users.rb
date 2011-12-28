@@ -1,4 +1,5 @@
 ActiveAdmin.register User do
+  menu :if => proc{ can? :admin_user, @all }
   
   form do |f|
      f.inputs "Admin Details" do
