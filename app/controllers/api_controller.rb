@@ -49,12 +49,11 @@ class ApiController < ApplicationController
     if @book && @book.last_approved
       @results = yield @book
     else
-      @results = []
       if @book
-        @results << "error: not approved"
+        @results = {:error_message => "error: not approved"}
         @status = STATUS_NOT_APPROVED
       else
-        @results << "error: book not found"
+        @results = {:error_message => "error: book not found"}
         @status = STATUS_NOT_FOUND
       end
     end
