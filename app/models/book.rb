@@ -37,4 +37,8 @@ class Book < ActiveRecord::Base
     
     dynamic_images.includes(:dynamic_descriptions).where(:dynamic_descriptions => {:is_current => true}).select('dynamic_images.image_location, dynamic_descriptions.body')
   end
+  
+  def book_stats_plus_unessential_images_described
+    book_stats.select("book_stats.*, total_images_described - essential_images_described as unessential_images_described") 
+  end
 end
