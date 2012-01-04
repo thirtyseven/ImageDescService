@@ -6,7 +6,7 @@ class ApiController < ApplicationController
 
   def get_approved_descriptions_and_book_stats
     book_stats_from_uid(params[:book_uid]) do |book|
-      images_and_descriptions = book.current_images_and_descriptions.all
+      images_and_descriptions = book.current_images_and_descriptions
       stats = strip_attributes(book.book_stats_plus_unessential_images_described.all)
       {:stats => stats, :images_and_descriptions => images_and_descriptions}
     end
@@ -14,7 +14,7 @@ class ApiController < ApplicationController
 
   def get_approved_descriptions
     book_stats_from_uid(params[:book_uid]) do |book|
-      images_and_descriptions = book.current_images_and_descriptions.all
+      images_and_descriptions = book.current_images_and_descriptions
       {:images_and_descriptions => images_and_descriptions}
     end
   end
