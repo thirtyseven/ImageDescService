@@ -31,8 +31,8 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.integer "total_images"
     t.integer "total_essential_images",     :default => 0
     t.integer "total_images_described",     :default => 0
-    t.integer "book_id"
     t.integer "essential_images_described", :default => 0
+    t.integer "book_id"
   end
 
   create_table "books", :force => true do |t|
@@ -98,6 +98,7 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.integer  "book_id"
   end
 
+  add_index "dynamic_images", ["image_location"], :name => "index_dynamic_images_on_book_uid_and_image_location"
   add_index "dynamic_images", ["should_be_described"], :name => "index_dynamic_images_on_book_uid_and_should_be_described"
 
   create_table "images", :force => true do |t|
