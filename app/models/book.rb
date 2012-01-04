@@ -35,7 +35,7 @@ class Book < ActiveRecord::Base
     # @results = DynamicDescription.connection.select_all("select i.image_location, d.body from dynamic_images i
     #  left join dynamic_descriptions d on i.id = d.dynamic_image_id where d.book_uid = '#{params[:book_uid]}' and d.is_current = 1")
     
-    dynamic_images.includes(:dynamic_descriptions).where(:dynamic_descriptions => {:is_current => true}).select('dynamic_images.image_location, dynamic_descriptions.body')
+    dynamic_images.includes(:dynamic_descriptions).where(:dynamic_descriptions => {:is_current => true}).group('dynamic_descriptions.id').all.map {|image| {:image => image, :description => image.dynamic_descriptions.first}}
   end
   
   def book_stats_plus_unessential_images_described
