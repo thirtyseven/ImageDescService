@@ -15,7 +15,7 @@ class Book < ActiveRecord::Base
     begin
       DynamicDescription.update_all({:is_current => false}, {:book_id => self.id})
       # TODO ESH: may be able to AREL-ize this:
-      Book.connection.execute("update dynamic_descriptions set is_current = 1 where id in (select id from
+      Book.connection.execute("update dynamic_descriptions set is_current = 1, date_approved = now() where id in (select id from
          (select max(id) as id from dynamic_descriptions where book_id = '#{self.id}' group by dynamic_image_id) temptable)")
     rescue Exception => e
       puts e.message

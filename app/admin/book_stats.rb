@@ -2,11 +2,11 @@ ActiveAdmin.register BookStats, :as => "Reports" do
   menu :if => proc{ can? :admin_user, @all }
   
   index do
-    column "Uid", do |book_stats|
-      link_to book_stats.book.uid, reports_view_book_path(:book_id => book_stats.book.id)
+    column "Uid" do |book_stats|
+       book_stats.book.uid
     end  
     column "Title" do |book_stats| 
-       link_to  book_stats.book.title, edit_book_edit_path(:book_id => book_stats.book.id)  
+       book_stats.book.title
     end
     column :total_images
     column :total_essential_images
@@ -22,6 +22,7 @@ ActiveAdmin.register BookStats, :as => "Reports" do
         number_to_percentage(book_stats.essential_images_described * 100.00/book_stats.total_essential_images, :precision => 1)
      end
     end
+    column :approved_descriptions
   end
   
   sidebar "Totals" do
@@ -29,7 +30,7 @@ ActiveAdmin.register BookStats, :as => "Reports" do
       render 'image_totals' 
     end
   end
-  
+
   sidebar "Update" do
     div :class => :action do
       link_to "Update Book Stats", reports_update_book_stats_path( ), :remote => true, :method => "get", :format => :js, :class => "book-link-ajax"
