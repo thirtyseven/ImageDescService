@@ -29,8 +29,8 @@ ActiveAdmin.register BookStats, :as => "Reports" do
       render 'image_totals' 
     end
   end
-
-  filter :book
   
+  filter :book_title, as: :string
+  filter :book_uid, as: :string
 end
 
