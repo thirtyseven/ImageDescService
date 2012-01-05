@@ -30,6 +30,12 @@ ActiveAdmin.register BookStats, :as => "Reports" do
     end
   end
   
+  sidebar "Update" do
+    div :class => :action do
+      link_to "Update Book Stats", reports_update_book_stats_path( ), :remote => true, :method => "get", :format => :js, :class => "book-link-ajax"
+    end
+  end
+  
   filter :book_title, as: :string
   filter :book_uid, as: :string
 end

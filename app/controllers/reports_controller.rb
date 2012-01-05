@@ -46,11 +46,7 @@ class ReportsController < ApplicationController
       BookStats.create_book_row(book)
     end
 
-    redirect_to :action => :index
-=begin
-    index
-    render :action => "reports/index"
-=end
+    render :text => 'success'
   end
 
   def report_all
