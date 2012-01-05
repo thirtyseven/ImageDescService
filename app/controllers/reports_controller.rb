@@ -42,11 +42,11 @@ class ReportsController < ApplicationController
   end
 
   def update_book_stats
-    Book.find_each do |book|
-      BookStats.create_book_row(book)
-    end
 
-    render :text => 'success'
+    job = UpdateReportsJob.new
+    Delayed::Job.enqueue(job)
+
+    render :text => 'updating reports data'
   end
 
   def report_all
