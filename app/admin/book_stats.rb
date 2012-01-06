@@ -1,5 +1,6 @@
 ActiveAdmin.register BookStats, :as => "Reports" do
   menu :if => proc{ can? :admin_user, @all }
+  actions :index
   
   index do
     column "Uid" do |book_stats|
