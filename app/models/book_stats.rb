@@ -1,6 +1,14 @@
 class BookStats < ActiveRecord::Base
   belongs_to :book
-  
+
+  def percent_essential
+    self.total_essential_images * 100.00 / self.total_images
+  end
+
+  def percent_essential_described
+    self.essential_images_described * 100.00/self.total_essential_images
+  end
+
   def self.create_book_row (book)
     book_stats = BookStats.where(:book_id => book.id).first
 
