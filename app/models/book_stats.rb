@@ -22,6 +22,7 @@ class BookStats < ActiveRecord::Base
     (select dynamic_image_id from dynamic_descriptions where dynamic_descriptions.book_id = '#{book.id}') as essential
     WHERE book_id = '#{book.id}' and should_be_described = true and di.id = essential.dynamic_image_id ;")
     book_stats.approved_descriptions = DynamicDescription.connection.select_value("SELECT count(id) from dynamic_descriptions where is_current = 1 and book_id = '#{book.id}'")
+    book_stats.percent_essential_described = book_stats.essential_images_described * 100.00/book_stats.total_essential_images
     book_stats.save!
   end
 end
