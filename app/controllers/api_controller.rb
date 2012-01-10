@@ -49,7 +49,7 @@ class ApiController < ApplicationController
     models.map{|model| model.attributes}
   end
   # Load up a book based on a UID.  If found, call a block to process it and return the results in XML or JSON
-  API_BOOK_ATTRIBUTE_NAMES = ['id', 'uid', 'title', 'isbn', 'last_approved']
+  API_BOOK_ATTRIBUTE_NAMES = ['uid', 'title', 'isbn', 'last_approved']
   def book_stats_from_uid book_uid
     @status = STATUS_APPROVED
     @book = Book.where(:uid => book_uid).first
