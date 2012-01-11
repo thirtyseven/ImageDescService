@@ -12,15 +12,15 @@ ActiveAdmin.register BookStats, :as => "Reports" do
     column :total_images
     column :total_essential_images
     column "% Essential" do |book_stats|
-       number_to_percentage(book_stats.total_essential_images * 100.00/book_stats.total_images, :precision => 1)
+       number_to_percentage(book_stats.percent_essential, :precision => 1)
     end
     column :total_images_described
     column :essential_images_described
-    column "% Essential Described"  do |book_stats|
+    column "% Essential Described", :sortable => :percent_essential_described  do |book_stats|
       if (book_stats.total_essential_images == 0 || book_stats.total_images_described == 0)
         number_to_percentage(0, :precision => 1)
       else
-        number_to_percentage(book_stats.essential_images_described * 100.00/book_stats.total_essential_images, :precision => 1)
+        number_to_percentage(book_stats.percent_essential_described, :precision => 1)
      end
     end
     column :approved_descriptions
@@ -37,8 +37,10 @@ ActiveAdmin.register BookStats, :as => "Reports" do
       link_to "Update Book Stats", reports_update_book_stats_path( ), :remote => true, :method => "get", :format => :js, :class => "book-link-ajax"
     end
   end
-  
+
+  filter :percent_essential_described
   filter :book_title, as: :string
   filter :book_uid, as: :string
+
 end
 

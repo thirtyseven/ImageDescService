@@ -33,7 +33,8 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.integer "total_images_described",     :default => 0
     t.integer "book_id"
     t.integer "essential_images_described", :default => 0
-    t.integer "approved_descriptions",      :default => 0
+    t.integer "book_id"
+    t.integer "approved_descriptions"
   end
 
   create_table "books", :force => true do |t|
