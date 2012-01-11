@@ -27,12 +27,12 @@ class ApiController < ApplicationController
   end
 
   def get_approved_stats
-    @stats = BookStats.connection.select_all("select bs.book_id, bs.total_images, bs.total_essential_images,
-      bs.total_images_described, b.last_approved from book_stats bs left join books b on bs.book_id = b.id
+    @stats = BookStats.connection.select_all("select b.uid, b.title, b.isbn, bs.total_images, bs.total_essential_images,
+      bs.total_images_described, bs.approved_descriptions, b.last_approved from book_stats bs left join books b on bs.book_id = b.id
       where b.last_approved > '#{params[:since]}'")
     respond_to do |format|
-      format.xml  { render :xml => @results }
-      format.json  { render :json => @results, :callback => params[:callback] }
+      format.xml  { render :xml => @stats }
+      format.json  { render :json => @stats, :callback => params[:callback] }
     end
   end
   
