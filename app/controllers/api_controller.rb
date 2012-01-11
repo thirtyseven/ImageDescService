@@ -31,8 +31,8 @@ class ApiController < ApplicationController
       bs.total_images_described, b.last_approved from book_stats bs left join books b on bs.book_id = b.id
       where b.last_approved > '#{params[:since]}'")
     respond_to do |format|
-      format.xml  { render :xml => @results }
-      format.json  { render :json => @results, :callback => params[:callback] }
+      format.xml  { render :xml => @stats }
+      format.json  { render :json => @stats, :callback => params[:callback] }
     end
   end
   
