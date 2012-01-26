@@ -6,9 +6,13 @@ class User < ActiveRecord::Base
 
   # Setup accessible (or protected) attributes for your model
   attr_accessor :login
-  attr_accessible :email, :password, :password_confirmation, :remember_me, :username, :role_ids
+  attr_accessible :first_name, :address, :geo_city, :geo_state, :zip_code, :last_name, :email, :password, :password_confirmation, 
+                   :remember_me, :username, :role_ids, :telephone, :subject_expertise_ids, :bookshare_volunteer, :other_subject_expertise
   has_many :user_roles
   has_many :roles, :through => :user_roles
+  
+  has_many :user_subject_expertises
+  has_many :subject_expertises, :through => :user_subject_expertises
   
   validates_length_of :email, :within => 6..250 
   validates_uniqueness_of :email
@@ -21,8 +25,7 @@ class User < ActiveRecord::Base
   validates_presence_of :password, :if => lambda {|user| user.new_record? }
   validates_length_of :password, :within => 6..40, :if => lambda {|user| !user.password.blank? }
   validates_confirmation_of :password
-  
-
+ 
   def has_role?(role_sym)
     roles.any? { |r| r.name.underscore.to_sym == role_sym }
   end
@@ -94,6 +97,8 @@ class User < ActiveRecord::Base
    def self.find_record(login)
      where(["username = :value OR email = :value", { :value => login }]).first
    end
+   
+   
  
 end
 

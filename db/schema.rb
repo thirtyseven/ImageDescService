@@ -29,12 +29,12 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
 
   create_table "book_stats", :force => true do |t|
     t.integer "total_images"
-    t.integer "total_essential_images",     :default => 0
-    t.integer "total_images_described",     :default => 0
+    t.integer "total_essential_images",                                     :default => 0
+    t.integer "total_images_described",                                     :default => 0
+    t.integer "essential_images_described",                                 :default => 0
     t.integer "book_id"
-    t.integer "essential_images_described", :default => 0
-    t.integer "book_id"
-    t.integer "approved_descriptions"
+    t.integer "approved_descriptions",                                      :default => 0
+    t.decimal "percent_essential_described", :precision => 10, :scale => 0, :default => 0
   end
 
   create_table "books", :force => true do |t|
@@ -100,6 +100,7 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.integer  "book_id"
   end
 
+  add_index "dynamic_images", ["image_location"], :name => "index_dynamic_images_on_book_uid_and_image_location"
   add_index "dynamic_images", ["should_be_described"], :name => "index_dynamic_images_on_book_uid_and_should_be_described"
 
   create_table "images", :force => true do |t|
@@ -127,6 +128,12 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.datetime "updated_at"
   end
 
+  create_table "subject_expertises", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "user_roles", :force => true do |t|
     t.integer  "user_id"
     t.integer  "role_id"
@@ -134,20 +141,36 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.datetime "updated_at"
   end
 
+  create_table "user_subject_expertises", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "subject_expertise_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "users", :force => true do |t|
-    t.string   "email",                                                :null => false
-    t.string   "encrypted_password",     :limit => 128,                :null => false
+    t.string   "email",                                                     :null => false
+    t.string   "encrypted_password",      :limit => 128,                    :null => false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",                         :default => 0
+    t.integer  "sign_in_count",                          :default => 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "username",                                             :null => false
+    t.string   "username",                                                  :null => false
+    t.boolean  "bookshare_volunteer",                    :default => false
+    t.string   "first_name"
+    t.string   "last_name"
+    t.string   "address"
+    t.string   "geo_city"
+    t.string   "geo_state"
+    t.string   "zip_code"
+    t.string   "telephone"
+    t.string   "other_subject_expertise"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
