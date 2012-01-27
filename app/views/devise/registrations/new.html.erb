@@ -1,24 +1,10 @@
 <h2>Sign up</h2>
 
-<%= semantic_form_for  @user, :as => resource_name, :url => registration_path(resource_name) do |f| %>
-  <%= devise_error_messages! %>
-  <%= f.inputs "New User Sign Up" do %>
-  <%= f.input :first_name %>
-  <%= f.input :last_name %>
-  <%= f.input :username %>
-  <%= f.input :bookshare_volunteer, :label => 'Bookshare Volunteer', :as => :select, :collection =>   {'true' => 1, 'false' => 0}, :include_blank => nil%>
-  <%= f.input :address %>
-  <%= f.input :geo_city,  :label => 'City' %>
-  <%= f.input :geo_state,  :label => 'State' %>
-  <%= f.input :zip_code %>
-  <%= f.input :email %>
-  <%= f.input :telephone %>
-  <%= f.input :subject_expertises, :as => :select, :collection =>  SubjectExpertise.all.map {|subject| [subject.name, subject.id]}, :include_blank => nil,  :label => 'Subject Matter Expertise'%>
-  <%= f.input :other_subject_expertise, :label => 'Other Expertise' %>
-  <%= f.input :password %>
-  <%= f.input :password_confirmation %>
-  <%= f.submit "Sign up" %>
-  <% end %>
+<% semantic_form_for  @user, :as => resource_name, :url => registration_path(resource_name) do |f| %>
+<%= devise_error_messages! %>
+<% f.inputs "New User Sign Up" do %>
+<%= render :partial => "users/form", :locals => {:f => f} %>
+<%= f.submit "Sign up" %>
 <% end %>
-
+<% end %>
 <%= render :partial => "devise/shared/links" %>

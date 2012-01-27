@@ -36,7 +36,7 @@ DiagramRailsApp::Application.routes.draw do
   get "repository/cleanup"
   get "repository/expire_cached"
 
-  match "users", :controller => 'users', :action => 'index'
+  resources :users
 
 
   resources :dynamic_descriptions
@@ -125,6 +125,7 @@ DiagramRailsApp::Application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
+  
   root :to => "home#index"
 
   # See how all your routes lay out with "rake routes"

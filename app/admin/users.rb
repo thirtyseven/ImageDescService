@@ -5,7 +5,6 @@ ActiveAdmin.register User do
       f.inputs "User Details" do
       f.input :first_name
       f.input :last_name
-      f.input :username
       f.input :address
       f.input :geo_city, :label => "City"
       f.input :geo_state, :label => "State"

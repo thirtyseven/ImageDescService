@@ -19,7 +19,11 @@
     </div>
 
     <div id="home_link" style="float:left; text-align: left;">
-        <a href="/">Home</a> &nbsp; &nbsp; <% if can? :view_admin, @all %> <a href="/admin">Admin</a> <% end %>
+        <a href="/">Home</a> &nbsp; &nbsp; 
+        <% if can? :view_admin, @all %> <a href="/admin">Admin</a> <% end %> &nbsp;
+        <% if current_user %>
+           <%= link_to 'My Settings', edit_user_path(current_user) %>
+        <% end %>
     </div>
 
 <div style="margin: auto; width:700px; padding-top: 40px;" >
