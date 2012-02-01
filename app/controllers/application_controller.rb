@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   # needed to commment out the following to allow cached, transformed html to make authenticated post requests
   #protect_from_forgery
+  require 'active_admin_views_pages_base.rb'
   
   def load_book
     if !params[:book_id].blank?

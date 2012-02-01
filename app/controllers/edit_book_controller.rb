@@ -51,18 +51,21 @@ class EditBookController < ApplicationController
       render :template => error_redirect
       return
     end
-
     render :layout => 'frames'
+  end
+  
+  def book_header
+    render :layout => 'simple_layout'
   end
 
   def content
     book_id = session[:book_id]
-    book = Book.find book_id rescue nil
-    book_uid = book.uid
+    @book = Book.find book_id rescue nil
+    book_uid = @book.uid
     file_name = book_uid + ".html"
     html = @repository.get_cached_html(book_uid, file_name)
     if (html)
-      render :text => html, :content_type => 'text/html'
+      render :layout => 'content_layout', :text => html, :content_type => 'text/html'
     else
 
 =begin
@@ -106,18 +109,20 @@ class EditBookController < ApplicationController
         @filter = "0"
         @images = DynamicImage.where(:book_id => book_id).order("id ASC")
     end
-
     render :layout => 'nav_bar'
   end
 
   def top_bar
-    return
   end
 
   def describe
-    return
   end
 
-
+ def help
+ end
+ 
+ def description_guidance
+   render :layout =>'guidelines_layout'
+ end
 
 end

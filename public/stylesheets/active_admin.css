@@ -1112,9 +1112,21 @@ body {
 #footer {
   padding: 30px 30px;
   font-size: 0.8em;
+	bottom: 0px;
   clear: both; }
-  #footer p {
-    padding-top: 10px; }
+ 
+#footer p {
+    padding-top: 0px; }
+ 
+#poet_footer {
+	   padding-top: 140px;
+     font-size: 1.2em;
+     text-align: center;
+     bottom: 0px;
+     left: 0px;
+		height: 85px;
+		width: 700px;
+}
 
 a, a:link, a:visited {
   color: #38678b;

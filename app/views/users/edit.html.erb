@@ -1,8 +1,8 @@
-<h1>Editing Your Settings</h1>
+<h1>Editing Your Profile</h1>
 
 
 <% semantic_form_for  @user do |f| %>
-<% f.inputs "Edit Settings for username: #{@user.username}" do %>
+<% f.inputs "Username &nbsp; &nbsp; #{@user.username}" do %>
 <%= render :partial => "users/form", :locals => {:f => f} %>
 <%= f.submit "Update" %>
 <% end %>

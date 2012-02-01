@@ -7,34 +7,47 @@
 
   <%= csrf_meta_tag %>
 </head>
-<body>
 
-    <div id="user_nav" style="float:right; text-align: right; ">
-        <% if user_signed_in? %>
-            Signed in as <%= current_user.email %> </br>
-             <%= link_to "Sign out", destroy_user_session_path, :method => :delete %>
-        <% else %>
-            <%= link_to 'Register', new_user_registration_path %> or <%= link_to 'Sign in', new_user_session_path %>
-        <% end %>
-    </div>
+  <body class="index admin_books logged_in">
+     <div id="wrapper">
+       <div id="header">
+         <h1 id="site_title"><a href="/">Poet Image Description</a></h1>
+         <ul class="tabbed_navigation" id="tabs"></ul>       
+         <p id="utility_nav">
+              <% if can? :view_admin, @all %> 
+              <%= link_to "Books", admin_books_path %> &nbsp;
+              <% end %>
+              <%= link_to "Guidelines", edit_book_description_guidance_path %> &nbsp;
+              <%= link_to "Help", edit_book_help_path %> &nbsp;
+              <% if current_user %>
+                 <%= link_to 'User Profile', edit_user_path(current_user) %> &nbsp;
+              <% end %>
+               <% if can? :view_admin, @all %> 
+                   <%= link_to "Admin", admin_dashboard_path %> &nbsp;
+              <% end %>
+              <% if user_signed_in? %>
+                   <%= current_user.username %> 
+                  <%= link_to "Sign out", destroy_user_session_path, :method => :delete %>
+              <% else %>
+                 <%= link_to 'Register', new_user_registration_path %> or <%= link_to 'Sign in', new_user_session_path %>
+              <% end %>
+          </p>
+       </div>
+     </div>
+     </div>
+   <%= render "shared/error_display" %>
+   
+   <div style="margin: auto; width:700px; padding-top: 40px;" >
 
-    <div id="home_link" style="float:left; text-align: left;">
-        <a href="/">Home</a> &nbsp; &nbsp; 
-        <% if can? :view_admin, @all %> <a href="/admin">Admin</a> <% end %> &nbsp;
-        <% if current_user %>
-           <%= link_to 'My Settings', edit_user_path(current_user) %>
-        <% end %>
-    </div>
-
-<div style="margin: auto; width:700px; padding-top: 40px;" >
-
-    <%= render "shared/error_display" %>
+   <%= yield %>
 
 
-
-<%= yield %>
-
-</div>
-
-</body>
+   </div>
+   
+   <div id="poet_footer"> <!-- TODO -- footer font smaller !-->
+    <p>Copyright &copy; 2012 <a href="http://www.benetech.org">Benetech</a>.</p> 
+   <div> 
+     
+   </body>    
+  
 </html>
