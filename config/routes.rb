@@ -37,6 +37,7 @@ DiagramRailsApp::Application.routes.draw do
   get "repository/cleanup"
   get "repository/expire_cached"
 
+
   resources :users
   resources :dynamic_descriptions
   resources :books
@@ -50,6 +51,7 @@ DiagramRailsApp::Application.routes.draw do
 
   resources :libraries
 
+  match "book_list", :controller => 'books', :action => 'book_list'
   match "daisy_book/describe", :controller => 'edit_book', :action => 'describe'
   match "edit_book/help", :controller => 'edit_book', :action => 'help'
   match "edit_book/description_guidance", :controller => 'edit_book', :action => 'description_guidance'

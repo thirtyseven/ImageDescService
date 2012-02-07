@@ -77,14 +77,13 @@ class UploadBookController < ApplicationController
       xml = get_xml_from_dir
       doc = Nokogiri::XML xml
       @book_uid = extract_book_uid(doc)
-
       doc = nil
       xml = nil
 
       pid = fork do
         begin
           @repository.store_file(book.path, @book_uid, @book_uid + ".zip", nil)
-          job = S3UnzippingJob.new(@book_uid, request.host_with_port, form_authenticity_token, @repository)
+          job = S3UnzippingJob.new(@book_uid, request.host_with_port, form_authenticity_token, @repository, current_library)
           Delayed::Job.enqueue(job)
 
           # hack for testing

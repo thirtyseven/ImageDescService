@@ -4,7 +4,6 @@ class BooksController < ApplicationController
   # GET /books
   # GET /books.xml
   def index
-
     #@books = Book.all
     @books = Book.page(params[:page]).order('title ASC')
 
@@ -20,5 +19,10 @@ class BooksController < ApplicationController
 
     render :text=>"approved",  :content_type => 'text/plain'
   end
+  
 
+  def book_list
+    @books = Book.all
+    #only books belonging to user library
+  end
 end

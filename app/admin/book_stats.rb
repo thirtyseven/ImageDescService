@@ -1,5 +1,7 @@
 ActiveAdmin.register BookStats, :as => "Reports" do
   menu :if => proc{ can? :admin_user, @all }
+  scope_to :current_library, :association_method => :related_book_stats
+  
   actions :index
   
   index do

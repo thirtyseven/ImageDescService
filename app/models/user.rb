@@ -6,10 +6,14 @@ class User < ActiveRecord::Base
 
   # Setup accessible (or protected) attributes for your model
   attr_accessor :login
-  attr_accessible :first_name, :address, :geo_city, :geo_state, :zip_code, :last_name, :email, :password, :password_confirmation, 
-                   :remember_me, :username, :role_ids, :telephone, :subject_expertise_ids, :bookshare_volunteer, :other_subject_expertise
+  attr_accessible :first_name, :geo_city, :geo_state, :zip_code, :last_name, :email, :password, :password_confirmation, 
+                   :remember_me, :username, :role_ids, :subject_expertise_ids,  :other_subject_expertise, :library_ids
   has_many :user_roles
   has_many :roles, :through => :user_roles
+  
+  has_many :user_libraries
+  has_many :libraries, :through => :user_libraries
+  validates_presence_of :libraries
   
   has_many :user_subject_expertises
   has_many :subject_expertises, :through => :user_subject_expertises

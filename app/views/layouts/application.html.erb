@@ -14,9 +14,10 @@
          <h1 id="site_title"><a href="/">Poet Image Description</a></h1>
          <ul class="tabbed_navigation" id="tabs"></ul>       
          <p id="utility_nav">
-              <% if can? :view_admin, @all %> 
+            <% if can? :view_admin, @all %> 
               <%= link_to "Books", admin_books_path %> &nbsp;
-              <% end %>
+            <% end %>  
+            <%= link_to "Book List", book_list_path %> &nbsp;
               <%= link_to "Guidelines", edit_book_description_guidance_path %> &nbsp;
               <%= link_to "Help", edit_book_help_path %> &nbsp;
               <% if current_user %>
@@ -36,10 +37,10 @@
      </div>
      </div>
    <%= render "shared/error_display" %>
-   
+     <%= yield %>
    <div style="margin: auto; width:700px; padding-top: 40px;" >
 
-   <%= yield %>
+ 
 
 
    </div>
