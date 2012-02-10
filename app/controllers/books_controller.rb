@@ -5,7 +5,7 @@ class BooksController < ApplicationController
   # GET /books.xml
   def index
     #@books = Book.all
-    @books = Book.page(params[:page]).order('title ASC')
+    @books = Book.where(:library_id => current_library.id).page(params[:page]).order('title ASC')
 
     respond_to do |format|
       format.html # index.html.erb
