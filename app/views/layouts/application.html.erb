@@ -17,7 +17,7 @@
            <% if can? :view_admin, @all %> 
              <%= link_to "Books", admin_books_path %> &nbsp;
            <% else %>
-             <%= link_to "Books", book_list_path %> &nbsp;
+             <%#= link_to "Books", book_list_path %> &nbsp;
            <% end %>
           <%= link_to "Guidelines", edit_book_description_guidance_path %> &nbsp;
           <%= link_to "Help", edit_book_help_path %> &nbsp;
