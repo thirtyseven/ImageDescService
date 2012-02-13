@@ -1,3 +1,4 @@
 Airbrake.configure do |config|
-  config.api_key = '6ad7a2a133facac3c1c95c84fea8db62'
+  config.api_key = 'c4c05698069fc1c45c6289d79339ad0c'
+  config.environment_name = ENV['RACK_ENV']
 end
