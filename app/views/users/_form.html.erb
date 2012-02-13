@@ -3,9 +3,6 @@
   <% if @user.new_record? %>
     <%= f.input :username %>
   <% end %>
-  <%= f.input :geo_city,  :label => 'City' %>
-  <%= f.input :geo_state,  :label => 'State' %>
-  <%= f.input :zip_code %>
   <%= f.input :email %>
   <%= f.input :subject_expertises, :as => :select, :collection =>  SubjectExpertise.all.map {|subject| [subject.name, subject.id]}, :include_blank => nil,  :label => 'Subject Matter Expertise'%>
   <%= f.input :other_subject_expertise, :label => 'Other Expertise' %>

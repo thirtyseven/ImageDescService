@@ -7,9 +7,6 @@ ActiveAdmin.register User do
       f.input :username
       f.input :first_name
       f.input :last_name
-      f.input :geo_city, :label => "City"
-      f.input :geo_state, :label => "State"
-      f.input :zip_code
       f.input :email
       f.input :subject_expertises, :label => 'Subject Matter Expertises', :as => :select, :collection =>  SubjectExpertise.all.map {|subject| [subject.name, subject.id]}, :include_blank => nil
       f.input :other_subject_expertise, :label => 'Other Expertise'
@@ -33,9 +30,6 @@ ActiveAdmin.register User do
            user_subject_expertises.user_id = #{user.id} and user_subject_expertises.subject_expertise_id = subject_expertises.id"     
     end
     column "Other Expertise", :other_subject_expertise
-    column "City", :geo_city
-    column "State", :geo_state
-    column :zip_code
     column :email
     column "Library" do |user|
       User.connection.select_value "select group_concat(libraries.name separator ' ') from user_libraries, libraries where 
@@ -63,9 +57,6 @@ ActiveAdmin.register User do
                         row ("Subject Matter Expertise") {  User.connection.select_value "select group_concat(subject_expertises.name separator ', ') from user_subject_expertises, subject_expertises where 
                                user_subject_expertises.user_id = #{user.id} and user_subject_expertises.subject_expertise_id = subject_expertises.id"}
                         row ("Other Expertise") { user.other_subject_expertise }
-                        row ("City") { user.geo_city }
-                        row ("State") { user.geo_state }
-                        row ("Zip Code") { user.zip_code }
                         row ("Email") { user.email }
                         row ("Library") { User.connection.select_value "select group_concat(libraries.name separator ', ') from user_libraries, libraries where 
                                  user_libraries.user_id = #{user.id} and user_libraries.library_id = libraries.id"}

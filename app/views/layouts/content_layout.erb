@@ -3,7 +3,10 @@
  	</style>
  	
  	<div class="toolbar" style="width:870px;">
- 	  	 <b> Title: <%= @book.title %></b>
+ 	  
+    
+   	 <b> Title: <%= @book.title %></b><div style="float:right;"><%= link_to root_path, :target => '_top', :title => 'close' do %>   <b>Close</b> <% end %></div>
+   </div>
  
  	</div>
  	
