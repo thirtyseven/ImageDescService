@@ -45,11 +45,6 @@ Feature: Upload Page
 		And the xpath "//img" should exist
 		And the xpath "//prodnote" should not exist
 		
-	Scenario: Make sure an image description can be added to the database (directly)
-		When the first description for the image "images/image001.jpg" in book "en-us-20100517111839" with title "Outline of U.S. History" is "Prodnote from database"
-		And I go to the images list page
-		Then I should see "images/image001.jpg"
-		
 	Scenario: Uploading a book with known images but no existing prodnotes
 		When the first description for the image "images/image001.jpg" in book "en-us-20100517111839" with title "Outline of U.S. History" is "Prodnote from database"
 		And I go to the xml upload page

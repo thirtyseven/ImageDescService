@@ -83,7 +83,7 @@ class S3UnzippingJob < Struct.new(:book_uid, :poet_host, :form_authenticity_toke
       isbn = extract_optional_isbn(opf_doc)
     end
     @book_title = extract_optional_book_title(doc)
-    book = Book.find_by_uid(book_uid)
+    book = Book.where(:uid => book_uid).first
     if (!book)
       book = Book.create(
           :uid => book_uid,
@@ -99,7 +99,7 @@ class S3UnzippingJob < Struct.new(:book_uid, :poet_host, :form_authenticity_toke
   end
 
   def create_images_in_database(book_directory, doc)
-
+    book = Book.where(:uid => book_uid).first
     each_image(doc) do | image_node |
       image_location = image_node['src']
       xml_id = image_node['id']
@@ -108,12 +108,11 @@ class S3UnzippingJob < Struct.new(:book_uid, :poet_host, :form_authenticity_toke
       if (image_location)
 
         # add image to db if it does not already exist in db
-        image = DynamicImage.find_by_book_uid_and_image_location(book_uid, image_location)
+        image = DynamicImage.where(:book_id => book.id, :image_location => image_location).first
         if(!image && File.exists?(File.join(book_directory, image_location)))
           width, height = get_image_size(book_directory, image_location)
           DynamicImage.create(
-                :book_uid => book_uid,
-                :book_title => @book_title,
+                :book_id => book.id,
                 :width => width,
                 :height => height,
                 :xml_id => xml_id,

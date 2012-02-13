@@ -36,7 +36,7 @@ class UploadBookController < ApplicationController
   def submit
 
     #init session vars
-    session[:book_uid] = nil
+    session[:book_id] = nil
     session[:content] = nil
     session[:daisy_directory] = nil
 
@@ -50,7 +50,7 @@ class UploadBookController < ApplicationController
       return
     end
 
-    if password && !password.empty?
+    unless password.blank?
       begin
         Zip::Archive.decrypt(book.path, password)
       rescue Zip::Error => e

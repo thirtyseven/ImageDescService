@@ -18,7 +18,8 @@
     <th>Total Essential Images</th>
     <th>% Essential</th>
     <th>Total Images Described</th>
-    <th>% Described</th>
+    <th>Total Essential Images Described</th>
+    <th>% Essential Described</th>
   </tr>
   <tr>
      <th></th>
@@ -35,17 +36,18 @@
      if (book_stat.total_essential_images == 0 && book_stat.total_images_described == 0)
         percent_described = 0
      else
-       percent_described = book_stat.total_images_described * 100.00/book_stat.total_essential_images
+       percent_described = book_stat.essential_images_described * 100.00/book_stat.total_essential_images
      end
   %>
 
   <tr class="<%= cycle('oddrow', 'evenrow') %>">
-    <td><%= book_stat.book_uid %></td>
-    <td><%= book_stat.book_title %></td>
+    <td><%= book_stat.book.uid if book_stat.book %></td>
+    <td><%= book_stat.book.title if book_stat.book %></td>
     <td align="right"><%= book_stat.total_images %></td>
     <td align="right"><%= book_stat.total_essential_images %></td>
     <td align="right"><%= number_to_percentage(book_stat.total_essential_images * 100.00/book_stat.total_images, :precision => 1) %></td>
     <td align="right"><%= book_stat.total_images_described %></td>
+    <td align="right"><%= book_stat.essential_images_described %></td>
     <td align="right"><%= number_to_percentage(percent_described, :precision => 1)  %></td>
 
   </tr>
@@ -57,6 +59,7 @@
      <th align="right"><%= @total_essential_images %></th>
      <th align="right"><%= number_to_percentage(@total_essential_images * 100.00/@total_images, :precision => 1) %></th>
      <th align="right"><%= @total_images_described %></th>
-     <th align="right"><%= number_to_percentage(@total_images_described * 100.00/@total_essential_images, :precision => 1) %></th>
+     <th align="right"><%= @total_essential_images_described %></th>
+     <th align="right"><%= number_to_percentage(@total_essential_images_described * 100.00/@total_essential_images, :precision => 1) %></th>
   </tr>
 </table>

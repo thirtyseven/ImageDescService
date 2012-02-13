@@ -1,5 +1,9 @@
 DiagramRailsApp::Application.routes.draw do
-  devise_for :users
+  devise_for :users, ActiveAdmin::Devise.config
+
+  ActiveAdmin.routes(self)
+
+  #devise_for :admin_users, ActiveAdmin::Devise.config, ActiveAdmin::Devise.config
 
   get "daisy_book/get_xml_with_descriptions"
   get "daisy_book/get_daisy_with_descriptions"
@@ -16,6 +20,13 @@ DiagramRailsApp::Application.routes.draw do
 
   get "books/get_books_with_images"
   get "books/get_latest_descriptions"
+  get "books/get_approved_book_stats"
+  post "books/mark_approved"
+
+  get "api/get_approved_descriptions_and_book_stats"
+  get "api/get_approved_book_stats"
+  get "api/get_approved_descriptions"
+  get "api/get_approved_stats"
 
   get "reports/index"
   get "reports/update_book_stats"
@@ -55,6 +66,9 @@ DiagramRailsApp::Application.routes.draw do
   # match "imageDesc/uid/:uid/image_location/:image_location", :to => "dynamic_images#show", :via => "get"
   match "imageDesc", :to => "dynamic_descriptions#create", :via => "post"
   match "imageDesc/mark_all_essential", :to => "dynamic_images#mark_all_essential", :via => "post"
+
+
+  #match "books/mark_approved", :to => "books#mark_approved", :via => "post"
 
   match "file/*directory/*file", :controller => 'file', :action => 'file'
   match "file/*file", :controller => 'file', :action => 'file'

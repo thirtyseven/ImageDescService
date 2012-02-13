@@ -184,7 +184,7 @@ private
         s3_object = bucket.objects[content.key]
         if (Time.now - s3_object.last_modified > num_seconds)
           if (! db_updated)
-            book = Book.find_by_uid(book_uid)
+            book = Book.where(:uid => book_uid).first
             book.update_attribute("status", 0)
             db_updated = true
           end
@@ -201,7 +201,8 @@ private
   def self.remove_cached_html(bucket, book_uid)
     s3_object = bucket.objects[book_uid + "/" + book_uid + ".html"]
     if (s3_object.exists?)
-      book = Book.find_by_uid(book_uid)
+      book = Book.where(:uid => book_uid).first
+      
       book.update_attribute("status", 0)
       s3_object.delete
     end

@@ -6,8 +6,6 @@ Factory.define :user do |u|
   u.username 'johns'
 end
 Factory.define :dynamic_image do |i|
-  i.book_uid 'tst1234'
-  i.book_title 'sample book'
   i.image_location 'images/first.jpg'
 end
 

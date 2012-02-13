@@ -16,35 +16,38 @@ class EditBookController < ApplicationController
   def edit
     error_redirect = 'edit_book/describe'
 
-    book_uid = params[:book_uid]
-    if (book_uid)
-      session[:book_uid] = book_uid.strip
+    book_id = params[:book_id]
+    if (params[:book_uid])
+      book = Book.where(:uid => params[:book_uid]).first
+      book_id = session[:book_id] = book.id.to_s if book
+    elsif (book_id)
+      session[:book_id] = book_id.strip
     else
-      book_uid = session[:book_uid]
+      book_id = session[:book_id]
     end
 
-    if(!book_uid || book_uid.length == 0)
+    if(!book_id || book_id.length == 0)
       flash[:alert] = "Must specify a book ID"
       #redirect_to :action => 'index'
       render :template => error_redirect
       return
     end
 
-    book = Book.find_by_uid(book_uid)
+    book = Book.find(book_id) rescue nil
     if(!book)
-      flash[:alert] = "There is no book in the system with that ID (#{book_uid}) ."
+      flash[:alert] = "There is no book in the system with that ID (#{book_id}) ."
       render :template => error_redirect
       return
     end
 
     if(book.status == 0)
-      flash[:alert] = "That book (#{book_uid}) needs to be re-uploaded as its files have expired."
+      flash[:alert] = "That book (#{book.uid}) needs to be re-uploaded as its files have expired."
       render :template => error_redirect
       return
     end
 
     if(book.status != 3)
-      flash[:alert] = "That book (#{book_uid}) is still being processed. Please try again later."
+      flash[:alert] = "That book (#{book.uid}) is still being processed. Please try again later."
       render :template => error_redirect
       return
     end
@@ -53,8 +56,9 @@ class EditBookController < ApplicationController
   end
 
   def content
-    book_uid = session[:book_uid]
-
+    book_id = session[:book_id]
+    book = Book.find book_id rescue nil
+    book_uid = book.uid
     file_name = book_uid + ".html"
     html = @repository.get_cached_html(book_uid, file_name)
     if (html)
@@ -62,43 +66,45 @@ class EditBookController < ApplicationController
     else
 
 =begin
-      book = Book.find_by_uid(book_uid)
+      book = Book.find_by_id(book_id)
       xml_filename = book.xml_file
-      xml = get_xml_from_s3(book_uid, xml_filename)
+      xml = get_xml_from_s3(book.uid, xml_filename)
       xsl_filename = 'app/views/xslt/daisyTransform.xsl'
       xsl = File.read(xsl_filename)
       contents = xslt(xml, xsl, request.host_with_port)
       render :text => contents, :content_type => 'text/html'
 =end
 
-      logger.warn "could not find cached html for book uid, #{book_uid}"
+      logger.warn "could not find cached html for book id, #{book_id}"
       render :status => 404
     end
   end
 
   def side_bar
-    book_uid = session[:book_uid]
-    if (!book_uid)
-      book_uid = params[:book_uid]
-      session[:book_uid] = book_uid
+    book_id = session[:book_id]
+    if (!book_id)
+      book_id = params[:book_id]
+      session[:book_id] = book_id
     end
     filter = params[:filter]
     @filter = filter
     @host = @repository.get_host(request)
     case filter.to_i
       when FILTER_ALL
-        @images = DynamicImage.where(:book_uid => book_uid).order("id ASC")
+        @images = DynamicImage.where(:book_id => book_id).order("id ASC")
       when FILTER_ESSENTIAL
-        @images = DynamicImage.where(:book_uid => book_uid, :should_be_described => true).order("id ASC")
+        @images = DynamicImage.where(:book_id => book_id, :should_be_described => true).order("id ASC")
       when FILTER_NON_ESSENTIAL
-        @images = DynamicImage.where(:book_uid => book_uid, :should_be_described => false).order("id ASC")
+        @images = DynamicImage.where(:book_id => book_id, :should_be_described => false).order("id ASC")
       when FILTER_DESCRIPTION_NEEDED
-        @images = DynamicImage.find_by_sql("SELECT * FROM dynamic_images WHERE book_uid = '#{book_uid}' and should_be_described = true and id not in (select dynamic_image_id from dynamic_descriptions where dynamic_descriptions.book_uid = '#{book_uid}') ORDER BY id ASC;")
+        # ESH: used to be:::
+        # @images = DynamicImage.find_by_sql("SELECT * FROM dynamic_images WHERE book_uid = '#{book_uid}' and should_be_described = true and id not in (select dynamic_image_id from dynamic_descriptions where dynamic_descriptions.book_uid = '#{book_uid}') ORDER BY id ASC;")
+        @images = DynamicImage.includes(:dynamic_descriptions).where(:book_id => book_id, :should_be_described => true, :dynamic_descriptions => {:id => nil}).order('dynamic_images.id asc')
       when FILTER_UNSPECIFIED
-        @images = DynamicImage.where(:book_uid => book_uid, :should_be_described => nil).order("id ASC")
+        @images = DynamicImage.where(:book_id => book_id, :should_be_described => nil).order("id ASC")
       else
         @filter = "0"
-        @images = DynamicImage.where(:book_uid => book_uid).order("id ASC")
+        @images = DynamicImage.where(:book_id => book_id).order("id ASC")
     end
 
     render :layout => 'nav_bar'

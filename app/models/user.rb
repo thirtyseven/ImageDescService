@@ -2,12 +2,47 @@ class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :token_authenticatable, :encryptable, :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable
+         :recoverable, :rememberable, :trackable
 
   # Setup accessible (or protected) attributes for your model
   attr_accessor :login
-  attr_accessible :email, :password, :password_confirmation, :remember_me, :username, :login
+  attr_accessible :email, :password, :password_confirmation, :remember_me, :username, :role_ids
+  has_many :user_roles
+  has_many :roles, :through => :user_roles
+  
+  validates_length_of :email, :within => 6..250 
+  validates_uniqueness_of :email
+  validates_presence_of  :email
 
+  validates_length_of :username, :within => 5..40 
+  validates_uniqueness_of :username 
+  validates_presence_of  :username
+
+  validates_presence_of :password, :if => lambda {|user| user.new_record? }
+  validates_length_of :password, :within => 6..40, :if => lambda {|user| !user.password.blank? }
+  validates_confirmation_of :password
+  
+
+  def has_role?(role_sym)
+    roles.any? { |r| r.name.underscore.to_sym == role_sym }
+  end
+  
+  def admin?
+    has_role? :admin
+  end
+
+  def moderator?
+    has_role? :moderator
+  end
+  
+  def describer?
+     has_role? :describer
+  end
+  
+  def screener?
+     has_role? :screener
+  end
+  
   protected
 
    def self.find_for_database_authentication(warden_conditions)
@@ -46,7 +81,11 @@ class User < ActiveRecord::Base
        required_attributes.each do |key|
          value = attributes[key]
          record.send("#{key}=", value)
-         record.errors.add(key, value.present? ? error : :blank)
+         if login
+           record.errors.add(key, value.present? ? error : "has not been previously registered")
+         else
+           record.errors.add(key, value.present? ? error : :blank)
+         end
        end
      end
      record
@@ -55,5 +94,6 @@ class User < ActiveRecord::Base
    def self.find_record(login)
      where(["username = :value OR email = :value", { :value => login }]).first
    end
-
+ 
 end
+

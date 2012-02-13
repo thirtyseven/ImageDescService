@@ -1,0 +1,26 @@
+<table>  
+	<tr>
+     <td align="right">Images </td>
+     <td align="right"> <%= BookStats.sum("total_images") %></td>
+    </tr>
+    <tr>
+	 <td align="right">Essential Images </td>
+	 <td align="right"> <%= BookStats.sum("total_essential_images") %></td> 
+	</tr>
+	<tr>
+	 <td align="right">% Essential </td>
+	 <td align="right"> <%= number_to_percentage(BookStats.sum("total_essential_images") * 100.00/BookStats.sum("total_images"), :precision => 1) %></td>
+	</tr>
+	<tr> 
+	 <td align="right">Images Described </td>
+     <td align="right"> <%= BookStats.sum("total_images_described") %></td>
+    </tr>
+    <tr> 
+     <td align="right">Essential Images Described </td>
+	 <td align="right"> <%= BookStats.sum("essential_images_described") %> </td>
+	</tr>
+	<tr> 
+     <td align="right">% Essential Described </td>
+	 <td align="right"> <%= number_to_percentage(BookStats.sum("essential_images_described")* 100.00/BookStats.sum("total_essential_images"), :precision => 1) %> </td>
+	</tr>
+</table>

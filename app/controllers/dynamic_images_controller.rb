@@ -4,8 +4,9 @@ class DynamicImagesController < ApplicationController
   # GET /dynamic_images/1.xml
   # GET /dynamic_images/1.json
   def show
-    if params[:book_uid] && params[:image_location] && !params[:book_uid].empty?
-      @dynamic_image = DynamicImage.where("book_uid = ? AND image_location = ?", params[:book_uid], params[:image_location]).first
+    book = load_book
+    if params[:image_location] && book
+      @dynamic_image = DynamicImage.where(:book_id => book.id, :image_location => params[:image_location]).first
       if @dynamic_image
         @last_desc = @dynamic_image.dynamic_descriptions.last
       else
@@ -15,7 +16,7 @@ class DynamicImagesController < ApplicationController
       end
     else
       @last_desc = DynamicDescription.new
-      @last_desc.body = "missing parameter uid=#{params[:book_uid]}, loc=#{params[:image_location]}"
+      @last_desc.body = "missing parameter book_id=#{book.id}, loc=#{params[:image_location]}"
       @status = :non_authoritative_information
     end
 
@@ -33,8 +34,9 @@ class DynamicImagesController < ApplicationController
   end
 
   def show_history
-    if params[:book_uid] && params[:image_location] && !params[:book_uid].empty?
-      @descriptions = DynamicImage.find_by_sql("select d.* from dynamic_images as i, dynamic_descriptions as d where i.book_uid = '#{params[:book_uid]}' and image_location = '#{params[:image_location]}' and i.id = d.dynamic_image_id order by created_at desc")
+    book = load_book
+    if params[:image_location] && book
+      @descriptions = DynamicDescription.joins(:dynamic_image).where(:book_id => book.id, :dynamic_images => {:image_location => params[:image_location]}).order('created_at desc').all
       render :layout => false
     end
 
@@ -81,12 +83,10 @@ class DynamicImagesController < ApplicationController
   end
 
   def mark_all_essential
-    update_all(params[:book_id], EditBookController::FILTER_ESSENTIAL)
+    book = load_book
+    if book
+      DynamicImage.update_all({:should_be_described => EditBookController::FILTER_ESSENTIAL}, {book_id => book.id})
+      render :text=>"submitted #{params[:id]}: #{params[:dynamic_image]}",  :content_type => 'text/plain'
+    end
   end
-
-  def update_all(book_id, should_be_described)
-    DynamicImage.connection.update("update dynamic_images set should_be_described = #{should_be_described} where book_uid = '#{book_id}'")
-    render :text=>"submitted #{params[:id]}: #{params[:dynamic_image]}",  :content_type => 'text/plain'
-  end
-
 end

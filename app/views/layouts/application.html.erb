@@ -4,6 +4,7 @@
   <title>Poet Image Description</title>
   <%= stylesheet_link_tag :all %>
   <%= javascript_include_tag :defaults %>
+
   <%= csrf_meta_tag %>
 </head>
 <body>
@@ -11,14 +12,14 @@
     <div id="user_nav" style="float:right; text-align: right; ">
         <% if user_signed_in? %>
             Signed in as <%= current_user.email %> </br>
-            <%= link_to "Sign out", destroy_user_session_path, :method => :delete %>
+             <%= link_to "Sign out", destroy_user_session_path, :method => :delete %>
         <% else %>
             <%= link_to 'Register', new_user_registration_path %> or <%= link_to 'Sign in', new_user_session_path %>
         <% end %>
     </div>
 
     <div id="home_link" style="float:left; text-align: left;">
-        <a href="/">Home</a>
+        <a href="/">Home</a> &nbsp; &nbsp; <% if can? :view_admin, @all %> <a href="/admin">Admin</a> <% end %>
     </div>
 
 <div style="margin: auto; width:700px; padding-top: 40px;" >

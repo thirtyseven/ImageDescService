@@ -5,12 +5,6 @@ class DynamicImagesControllerTest < ActionController::TestCase
     @dynamic_image = dynamic_images(:one)
   end
 
-  test "should get index" do
-    get :index
-    assert_response :success
-    assert_not_nil assigns(:dynamic_images)
-  end
-
   test "should get new" do
     get :new
     assert_response :success
@@ -25,17 +19,17 @@ class DynamicImagesControllerTest < ActionController::TestCase
   end
 
   test "should show description" do
-    get :show, :book_uid => 'book01', :image_location => 'img03.jpg'
+    get :show, :book_id => '1', :image_location => 'img03.jpg'
     assert_response :success
   end
 
   test "non-existent image on json show description" do
-    get :show, :book_uid =>'blah', :image_location => 'blah', :format => 'json'
+    get :show, :book_id => '1', :image_location => 'blah', :format => 'json'
     assert_response :no_content
   end
 
   test "missing parameters on json show description" do
-    get :show, :book_uid =>'blah', :format => 'json'
+    get :show, :book_id => '1', :format => 'json'
     assert_response :non_authoritative_information
   end
 
