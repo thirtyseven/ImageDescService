@@ -1,0 +1,36 @@
+
+ <div style="margin-left: 50px; width:900px; padding-top: 40px;" >
+ <p><p><p>
+ <table border="0" cellspacing="0" cellpadding="4" id="books" class="index_table">
+  
+  <thead>
+    <tr>
+    <th class="inputs" colspan="6">
+       Library &nbsp; &nbsp; <%=current_user.user_libraries.first.library.name%>
+    </th>
+    </tr>
+    <tr>
+    <th>Id</th>
+    <th>Uid</th>
+    <th>Title</th>
+    <th>Isbn</a></th>
+    <th>Status</a></th>
+    <th>Added</a></th>
+    </tr>
+  </thead>
+  <tbody>
+  <% @books.each do |book| %>                  
+    <tr class="odd" id="book_<%= book.id %>">
+      <td><%= book.id %></td>
+      <td><a href="/reports/view_book?book_id=<%= book.id %>"><%= book.uid %></a></td>
+      <td><a href="/edit_book/edit?book_id=<%= book.id %>"><%=book.title%></a></td>
+      <td><%= book.isbn %></td>
+      <td><%= book.status %></td>
+      <td><%= book.created_at.to_s(:poet_default) %></td>
+    </tr>
+   <% end%>
+  </tbody>
+ <table>
+  <%= paginate @books %>
+</div>
+</div>

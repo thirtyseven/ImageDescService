@@ -1,6 +1,6 @@
 require 'xml/xslt'
 
-class S3UnzippingJob < Struct.new(:book_uid, :poet_host, :form_authenticity_token, :repository)
+class S3UnzippingJob < Struct.new(:book_uid, :poet_host, :form_authenticity_token, :repository, :library)
 
   def enqueue(job)
 
@@ -90,7 +90,8 @@ class S3UnzippingJob < Struct.new(:book_uid, :poet_host, :form_authenticity_toke
           :title => @book_title,
           :status => 1,
           :isbn => isbn,
-          :xml_file => xml_file
+          :xml_file => xml_file,
+          :library => library
       )
     elsif (!xml_file.eql?(book.xml_file))
       book.update_attributes(:xml_file => xml_file, :status => 1)

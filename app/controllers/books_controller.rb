@@ -4,9 +4,8 @@ class BooksController < ApplicationController
   # GET /books
   # GET /books.xml
   def index
-
     #@books = Book.all
-    @books = Book.page(params[:page]).order('title ASC')
+    @books = Book.where(:library_id => current_library.id).page(params[:page]).order('title ASC')
 
     respond_to do |format|
       format.html # index.html.erb
@@ -20,5 +19,9 @@ class BooksController < ApplicationController
 
     render :text=>"approved",  :content_type => 'text/plain'
   end
+  
 
+  def book_list
+    @books = Book.where(:library_id => current_library.id).page(params[:page]).order('title ASC')
+  end
 end

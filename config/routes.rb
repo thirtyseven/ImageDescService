@@ -17,6 +17,7 @@ DiagramRailsApp::Application.routes.draw do
   get "edit_book/describe"
   get "edit_book/edit"
   get "edit_book/side_bar"
+  get "edit_book/book_header"
 
   get "books/get_books_with_images"
   get "books/get_latest_descriptions"
@@ -36,12 +37,10 @@ DiagramRailsApp::Application.routes.draw do
   get "repository/cleanup"
   get "repository/expire_cached"
 
-  match "users", :controller => 'users', :action => 'index'
 
-
+  resources :users
   resources :dynamic_descriptions
   resources :books
-
   resources :dynamic_images
 
   resources :descriptions
@@ -52,8 +51,10 @@ DiagramRailsApp::Application.routes.draw do
 
   resources :libraries
 
+  match "book_list", :controller => 'books', :action => 'book_list'
   match "daisy_book/describe", :controller => 'edit_book', :action => 'describe'
-  
+  match "edit_book/help", :controller => 'edit_book', :action => 'help'
+  match "edit_book/description_guidance", :controller => 'edit_book', :action => 'description_guidance'
   match "update_descriptions_in_book/upload" => "update_descriptions_in_book#upload", :via => "post"
   match "update_descriptions_in_book" => "update_descriptions_in_book#index", :via => "get"
 
@@ -125,6 +126,7 @@ DiagramRailsApp::Application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
+  
   root :to => "home#index"
 
   # See how all your routes lay out with "rake routes"

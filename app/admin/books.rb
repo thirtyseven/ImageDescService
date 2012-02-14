@@ -1,4 +1,5 @@
 ActiveAdmin.register Book do
+  scope_to :current_library, :association_method => :related_books
   
   actions :index
 
@@ -7,9 +8,12 @@ ActiveAdmin.register Book do
     column  :uid do |book|
       link_to book.uid, reports_view_book_path(:book_id => book.id)
       end
-    column   :title do |book|
+    column  :title do |book|
       link_to book.title, edit_book_edit_path(:book_id => book.id)
       end
+    column "Library" do |book|
+      Book.connection.select_value "select libraries.name from libraries where libraries.id = #{book.library_id}"  
+    end
     column :isbn
     column :status
     column "Added", :created_at

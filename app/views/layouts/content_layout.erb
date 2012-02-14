@@ -1,0 +1,13 @@
+ <style type="text/css">
+ 	.toolbar	{ position:fixed; top:1px; left:1px; padding:10px; font-family:Arial;  background:#fffea1; border:2px solid #fc0; font-size: 80%;}
+ 	</style>
+ 	
+ 	<div class="toolbar" style="width:870px;">
+ 	  
+    
+   	 <b> Title: <%= @book.title %></b><div style="float:right;"><%= link_to root_path, :target => '_top', :title => 'close' do %>   <b>Close</b> <% end %></div>
+   </div>
+ 
+ 	</div>
+ 	
+ 	<%=yield%>

@@ -5,10 +5,18 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessor :login
-  attr_accessible :email, :password, :password_confirmation, :remember_me, :username, :role_ids
-  has_many :user_roles
+  attr_accessor :login, :new_library, :use_new_library
+  attr_accessible :first_name, :last_name, :email, :password, :password_confirmation, 
+                   :remember_me, :username, :role_ids, :subject_expertise_ids,  :other_subject_expertise, :library_ids, :new_library, :use_new_library
+  has_many :user_roles, :dependent => :destroy
   has_many :roles, :through => :user_roles
+  
+  has_many :user_libraries, :dependent => :destroy
+  has_many :libraries, :through => :user_libraries
+  validates_presence_of :libraries #,  :if => lambda{|user| !user.new_record?}
+  
+  has_many :user_subject_expertises, :dependent => :destroy
+  has_many :subject_expertises, :through => :user_subject_expertises
   
   validates_length_of :email, :within => 6..250 
   validates_uniqueness_of :email
@@ -22,7 +30,9 @@ class User < ActiveRecord::Base
   validates_length_of :password, :within => 6..40, :if => lambda {|user| !user.password.blank? }
   validates_confirmation_of :password
   
-
+  before_validation_on_create :populate_new_library
+   
+ 
   def has_role?(role_sym)
     roles.any? { |r| r.name.underscore.to_sym == role_sym }
   end
@@ -94,6 +104,18 @@ class User < ActiveRecord::Base
    def self.find_record(login)
      where(["username = :value OR email = :value", { :value => login }]).first
    end
- 
+   
+   
+   def populate_new_library
+     if use_new_library.eql? "1"
+        library = Library.where(:name => new_library).first
+        if (!library)
+          library = Library.create :name => new_library
+        end   
+        self.libraries = [library]   
+     end
+   end
+   
+
 end
 
