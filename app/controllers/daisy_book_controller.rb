@@ -60,7 +60,7 @@ class DaisyBookController < ApplicationController
     
     begin
       accept_book(book.path)
-      redirect_to :action => 'get_daisy_with_descriptions'
+      get_daisy_with_descriptions
     rescue Zip::Error => e
       logger.info "#{e.class}: #{e.message}"
       if e.message.include?("File encrypted")
