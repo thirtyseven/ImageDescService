@@ -142,7 +142,7 @@ class DaisyBookController < ApplicationController
   def get_description_count_for_book_uid(book_uid)
     return DynamicImage.
         joins(:book).
-        where(:books => {:uid => book_uid}).
+        where(:books => {:uid => book_uid, :library_id => current_library.id}).
         count
   end
 
@@ -167,7 +167,7 @@ private
       raise NoImageDescriptions.new
     end
 
-    book = Book.where(:uid => book_uid).first
+    book = Book.where(:uid => book_uid, :library_id => current_library.id).first
     matching_images = DynamicImage.where("book_id = ?", book.id).all
     matching_images.each do | dynamic_image |
       image_location = dynamic_image.image_location

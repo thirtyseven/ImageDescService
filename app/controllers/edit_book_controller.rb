@@ -18,7 +18,7 @@ class EditBookController < ApplicationController
 
     book_id = params[:book_id]
     if (params[:book_uid])
-      book = Book.where(:uid => params[:book_uid]).first
+      book = Book.where(:uid => params[:book_uid], :library_id => current_library.id).first
       book_id = session[:book_id] = book.id.to_s if book
     elsif (book_id)
       session[:book_id] = book_id.strip
