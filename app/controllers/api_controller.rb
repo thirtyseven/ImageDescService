@@ -72,8 +72,8 @@ class ApiController < ApplicationController
     end || {}
     respond_to do |format|
       @results ||= {}
-      format.xml  { render :xml => {:book => book_attributes, :status => @status}.merge(@results) }
-      format.json  { render :json => {:book => book_attributes, :callback => params[:callback], :status => @status}.merge(@results) }
+      format.xml  { render :xml => {:book => book_attributes, :status => @status}.merge(@results), :status => @status }
+      format.json  { render :json => {:book => book_attributes, :callback => params[:callback], :status => @status}.merge(@results), :status => @status }
     end
   end
 end
