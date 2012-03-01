@@ -15,10 +15,11 @@ class EditBookController < ApplicationController
 
   def edit
     error_redirect = 'edit_book/describe'
-
     book_id = params[:book_id]
-    if (params[:book_uid])
-      book = Book.where(:uid => params[:book_uid], :library_id => current_library.id).first
+    book_uid = params[:book_uid]
+    
+    if (:book_uid)
+      book = Book.where(:uid => :book_uid, :library_id => current_library.id).first
       book_id = session[:book_id] = book.id.to_s if book
     elsif (book_id)
       session[:book_id] = book_id.strip
@@ -27,6 +28,11 @@ class EditBookController < ApplicationController
     end
 
     if(!book_id || book_id.length == 0)
+      if (:book_uid && book_uid.length > 0 )
+         flash[:alert] = "Book not found"
+         render :template => error_redirect
+         return
+      end
       flash[:alert] = "Must specify a book ID"
       #redirect_to :action => 'index'
       render :template => error_redirect
