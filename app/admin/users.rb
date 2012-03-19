@@ -1,7 +1,7 @@
-ActiveAdmin.register User do
+ActiveAdmin.register User do  
   menu :if => proc{ can? :admin_user, @all }
   scope_to :current_library, :association_method => :related_users
- 
+  
   form do |f|
       f.inputs "User Details" do
       f.input :username

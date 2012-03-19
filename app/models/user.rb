@@ -5,7 +5,7 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessor :login, :new_library, :use_new_library
+  attr_accessor :login, :new_library, :use_new_library, :current_user
   attr_accessible :first_name, :last_name, :email, :password, :password_confirmation, 
                    :remember_me, :username, :role_ids, :subject_expertise_ids,  :other_subject_expertise, :library_ids, :new_library, :use_new_library
   has_many :user_roles, :dependent => :destroy
@@ -31,7 +31,7 @@ class User < ActiveRecord::Base
   validates_confirmation_of :password
   
   before_validation_on_create :populate_new_library
-   
+
  
   def has_role?(role_sym)
     roles.any? { |r| r.name.underscore.to_sym == role_sym }
@@ -87,7 +87,6 @@ class User < ActiveRecord::Base
 
      unless record
        record = new
-
        required_attributes.each do |key|
          value = attributes[key]
          record.send("#{key}=", value)
@@ -116,6 +115,5 @@ class User < ActiveRecord::Base
      end
    end
    
-
 end
 

@@ -29,7 +29,7 @@ class EditBookController < ApplicationController
 
     if(!book_id || book_id.length == 0)
       if (:book_uid && book_uid.length > 0 )
-         flash.now[:alert] = "Book not found"
+         flash.now[:alert] = "That book isn't in your library"
          render :template => error_redirect
          return
       end
