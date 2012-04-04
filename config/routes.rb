@@ -8,7 +8,9 @@ DiagramRailsApp::Application.routes.draw do
   get "daisy_book/get_xml_with_descriptions"
   get "daisy_book/get_daisy_with_descriptions"
   get "daisy_book/process"
+  get "daisy_book/image_check"
   post "daisy_book/submit_to_get_descriptions"
+  post "daisy_book/check_image_coverage"
 
   post "upload_book/submit"
   get "upload_book/upload"

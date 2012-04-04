@@ -14,6 +14,7 @@ end
 class MissingBookUIDException < Exception
 end
 
+
 class ShowAlertAndGoBack < Exception
   def initialize(message)
     @message = message
@@ -25,6 +26,33 @@ end
 class DaisyBookController < ApplicationController
 
   ROOT_XPATH = "/xmlns:dtbook"
+
+  def check_image_coverage
+    book = params[:book]
+    if !book
+      flash[:alert] = "Must specify a book file to check"
+      redirect_to :action => 'image_check'
+      return
+    end
+
+    if !valid_daisy_zip?(book.path)
+      flash[:alert] = "Not a valid DAISY book"
+      redirect_to :action => 'image_check'
+      return
+    end
+
+    begin
+      accept_book(book.path)
+      display_image_coverage
+    rescue Zip::Error => e
+      logger.info "#{e.class}: #{e.message}"
+      logger.info "#{caller_info} Other problem with zip"
+      flash[:alert] = "There is a problem with this zip file"
+      redirect_to :action => 'image_check'
+      return
+    end
+
+  end
   
   def submit_to_get_descriptions
     book = params[:book]
@@ -75,6 +103,49 @@ class DaisyBookController < ApplicationController
       return
     end
   end
+
+  def display_image_coverage
+    begin
+      book_directory = session[:daisy_directory]
+      contents_filename = get_daisy_contents_xml_name(book_directory)
+
+      xml_file = File.read(contents_filename)
+      begin
+        doc = Nokogiri::XML xml_file
+
+        root = doc.xpath(doc, ROOT_XPATH)
+        if root.size != 1
+          raise NonDaisyXMLException.new
+        end
+
+        @book_title = extract_book_title(doc)
+        images = doc.xpath("//xmlns:img")
+        prodnotes = doc.xpath("//xmlns:imggroup//xmlns:prodnote")
+        captions = doc.xpath("//xmlns:imggroup//xmlns:caption")
+        @num_images = images.size()
+        @prodnotes_hash = Hash.new()
+        prodnotes.each do |node|
+          @prodnotes_hash[node['imgref']] = node.inner_text
+        end
+        @captions_hash = Hash.new()
+        captions.each do |node|
+          @captions_hash[node['imgref']] = node.inner_text
+        end
+        @alt_text_hash = Hash.new()
+        images.each do |node|
+          alt_text =  node['alt']
+          id = node['id']
+          if alt_text.size > 1
+            alt_text_hash[id] = alt_text
+          end
+        end
+      rescue NonDaisyXMLException => e
+        logger.info "#{caller_info} Uploaded non-dtbook #{contents_filename}"
+        raise ShowAlertAndGoBack.new("Uploaded file must be a valid Daisy book XML content file")
+      end
+
+    end
+  end
   
   def get_daisy_with_descriptions
     begin
@@ -84,7 +155,7 @@ class DaisyBookController < ApplicationController
       relative_contents_path = contents_filename[zip_directory.length..-1]
       if(relative_contents_path[0,1] == '/')
         relative_contents_path = relative_contents_path[1..-1]
-    end
+      end
       xml = get_xml_contents_with_updated_descriptions(contents_filename)
       zip_filename = create_zip(session[:daisy_file], relative_contents_path, xml)
       basename = File.basename(contents_filename)

@@ -24,6 +24,7 @@ en:
       describe_header: "Describe Images for Uploaded Book"
       upload_header: "Upload Book for Describing"
       update_header: "Update Your Book"
+      image_checker: "Image Coverage Checker"
 
 
   activerecord:
