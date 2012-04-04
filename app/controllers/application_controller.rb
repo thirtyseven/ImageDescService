@@ -7,9 +7,9 @@ class ApplicationController < ActionController::Base
   
   def load_book
     if !params[:book_id].blank?
-      Book.find params[:book_id] rescue nil
-    elsif !params[:book_uid].blank?
-      Book.where(:uid => params[:book_uid], :library_id => current_library.id).first
+      Book.where(:uid => params[:book_id], :library_id => current_library.id).first rescue nil
+    elsif !(params[:book_uid] || params[:book_id]).blank?
+      Book.where(:uid => (params[:book_uid] || params[:book_id]), :library_id => current_library.id).first
     end
   end
   def authenticate_admin_user!
