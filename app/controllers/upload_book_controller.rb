@@ -73,8 +73,8 @@ class UploadBookController < ApplicationController
     end
 
     begin
-      accept_book(book.path)
-      xml = get_xml_from_dir
+      daisy_directory = accept_book(book.path)
+      xml = get_xml_from_dir daisy_directory
       doc = Nokogiri::XML xml
       @book_uid = extract_book_uid(doc)
       doc = nil
@@ -128,8 +128,8 @@ class UploadBookController < ApplicationController
   end
 
 private
-  def get_xml_from_dir
-    book_directory = session[:daisy_directory]
+  def get_xml_from_dir daisy_directory = nil
+    book_directory = daisy_directory || session[:daisy_directory]
     contents_filename = get_daisy_contents_xml_name(book_directory)
     File.read(contents_filename)
   end
