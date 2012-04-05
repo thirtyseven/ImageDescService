@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
   
   def load_book
     if !params[:book_id].blank?
-      Book.where(:uid => params[:book_id], :library_id => current_library.id).first rescue nil
+      Book.where(:id => params[:book_id], :library_id => current_library.id).first rescue nil
     elsif !(params[:book_uid] || params[:book_id]).blank?
       Book.where(:uid => (params[:book_uid] || params[:book_id]), :library_id => current_library.id).first
     end
