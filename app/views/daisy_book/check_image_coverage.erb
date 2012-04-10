@@ -11,7 +11,7 @@
       <% @prodnotes_hash.keys.each do |key| %>
        <tr class= "odd"><td width="50%">
         <% if (key.is_a? DynamicImage) %>
-           <img style="border:1px solid black; padding:0.25em; font-size: 80%;"  width='100px' height='100px' src='<%= key.image_source(@host) %>'>
+           <%= key.xml_id%>
         <% else %>
            <%= key %>
         <% end %>
