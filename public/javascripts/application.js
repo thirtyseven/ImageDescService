@@ -12,6 +12,9 @@ jQuery(function($) {
 		var selectorForOffElement = $(element).attr('data-related-off');
 	  return $(selectorForOffElement, $(element).parents());
 	}
+	function htmlDecode(value){ 
+	  return $('<div/>').html(value).text(); 
+	}
 	
 	$(".book-toggle").each(function() {
 		if($(this).attr('checked')) {
@@ -29,4 +32,11 @@ jQuery(function($) {
 			bookToggleOffElement(this).toggle();
 			bookToggleOnElement(this).toggle();
 		});
+
+	$('.convert-to-iframe').each(function(index, item) {
+		console.log("Entering convert-to-iframe " + index);
+			$frame = $('<iframe width="100%" height="100" scrolling="yes"/>');
+			$($frame).insertAfter(item).contents().find('body').append(htmlDecode($(item).html()));
+			$(item).remove();
+	 });
 });

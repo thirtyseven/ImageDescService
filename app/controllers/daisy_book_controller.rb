@@ -26,6 +26,13 @@ end
 class DaisyBookController < ApplicationController
 
   ROOT_XPATH = "/xmlns:dtbook"
+  
+  def initialize
+    super()
+    @repository = RepositoryChooser.choose
+  end
+  
+  
 
   def check_image_coverage
     book = params[:book]
@@ -103,9 +110,10 @@ class DaisyBookController < ApplicationController
       return
     end
   end
-
+  
   def display_image_coverage
     begin
+      @host = @repository.get_host(request)
       book_directory = session[:daisy_directory]
       contents_filename = get_daisy_contents_xml_name(book_directory)
 
@@ -124,8 +132,13 @@ class DaisyBookController < ApplicationController
         captions = doc.xpath("//xmlns:imggroup//xmlns:caption")
         @num_images = images.size()
         @prodnotes_hash = Hash.new()
-        prodnotes.each do |node|
-          @prodnotes_hash[node['imgref']] = node.inner_text
+        prodnotes.each do |node|   
+          dynamic_image = DynamicImage.where(:xml_id => node['imgref']).first
+          if (dynamic_image)
+            @prodnotes_hash[dynamic_image] = node.inner_text
+          else
+            @prodnotes_hash[node['imgref']] = node.inner_text
+          end
         end
         @captions_hash = Hash.new()
         captions.each do |node|

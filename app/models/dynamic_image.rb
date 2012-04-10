@@ -8,4 +8,8 @@ class DynamicImage < ActiveRecord::Base
   def best_description
     return dynamic_descriptions.last
   end
+  
+  def image_source(host)
+    return "#{host}/#{book.uid}/#{image_location}"
+  end
 end
