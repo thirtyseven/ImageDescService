@@ -40,7 +40,7 @@ class ApiController < ApplicationController
   def extract_image_and_description book
     book.current_images_and_descriptions.all.map do |image| 
       description = image.dynamic_descriptions.first
-      img_description = "<![CDATA[" + description.body.to_s + "]]"
+      img_description = "<![CDATA[" + description.body.to_s + "]]>"
       {:image => (image ? image.image_location : nil), :description => (description ? img_description : nil)}
     end
   end
