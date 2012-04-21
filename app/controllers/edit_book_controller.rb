@@ -13,6 +13,16 @@ class EditBookController < ApplicationController
   FILTER_DESCRIPTION_NEEDED = 3
   FILTER_UNSPECIFIED = 4
 
+  # just to help determine page size limits
+  def edit_side_bar_only
+    edit
+  end
+
+  # just to help determine page size limits
+  def edit_content_only
+    edit
+  end
+
   def edit
     error_redirect = 'edit_book/describe'
     book_id = params[:book_id]
