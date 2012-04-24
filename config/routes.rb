@@ -18,6 +18,11 @@ DiagramRailsApp::Application.routes.draw do
   get "edit_book/content"
   get "edit_book/describe"
   get "edit_book/edit"
+
+  # just to help determine page size limits
+  get "edit_book/edit_side_bar_only"
+  get "edit_book/edit_content_only"
+
   get "edit_book/side_bar"
   get "edit_book/book_header"
 

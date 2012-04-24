@@ -149,7 +149,7 @@ class DaisyBookController < ApplicationController
           alt_text =  node['alt']
           id = node['id']
           if alt_text.size > 1
-            alt_text_hash[id] = alt_text
+            @alt_text_hash[id] = alt_text
           end
         end
       rescue NonDaisyXMLException => e
