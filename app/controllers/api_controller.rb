@@ -39,9 +39,7 @@ class ApiController < ApplicationController
   protected
   def extract_image_and_description book
     book.current_images_and_descriptions.all.map do |image| 
-      description = image.dynamic_descriptions.first
-      img_description = "<![CDATA[" + description.body.to_s + "]]>"
-      {:image => (image ? image.image_location : nil), :description => (description ? img_description : nil)}
+      {:image => (image ? image.image_location : nil), :description => image.dynamic_descriptions.first}
     end
   end
   
@@ -72,8 +70,46 @@ class ApiController < ApplicationController
     end || {}
     respond_to do |format|
       @results ||= {}
-      format.xml  { render :xml => {:book => book_attributes, :status => @status}.merge(@results), :status => @status }
+      format.xml  do
+        builder = Nokogiri::XML::Builder.new do |xml|
+          xml.root {
+            xml.book {render_xml_attributes xml, book_attributes}
+            xml.status @status
+            if @results
+              @results.each do |k, v|
+                if v.is_a?(Array)
+                  if k == :images_and_descriptions
+                    v.each do |image_desc|
+                      xml.send k do
+                        xml.image image_desc[:image]
+                        xml.description { xml.cdata image_desc[:description] ? image_desc[:description].body : '' }
+                      end
+                    end
+                  elsif v.is_a? Array
+                    v.each do |sub_v| 
+                      xml.send k do
+                        render_xml_attributes xml, sub_v
+                      end
+                    end
+                  else
+                    xml.send k do
+                      render_xml_attributes xml, v
+                    end
+                  end
+                else
+                  xml.send k, v
+                end
+              end
+            end
+          }
+        end
+        render :text => builder.to_xml, :status => @status
+      end
       format.json  { render :json => {:book => book_attributes, :callback => params[:callback], :status => @status}.merge(@results), :status => @status }
     end
+  end
+  
+  def render_xml_attributes xml, attributes
+    attributes.each {|k, v| p xml.send(k, v)}
   end
 end
