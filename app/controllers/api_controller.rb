@@ -80,16 +80,20 @@ class ApiController < ApplicationController
                 k = k.to_s.dasherize
                 if v.is_a?(Array)
                   if k == 'images-and-descriptions'
-                    v.each do |image_desc|
-                      xml.send k do
-                        xml.image image_desc[:image]
-                        xml.description { xml.cdata image_desc[:description] ? image_desc[:description].body : '' }
+                    xml.send k do
+                      v.each do |image_desc|
+                        xml.send 'images-and-description' do
+                          xml.image image_desc[:image]
+                          xml.description { xml.cdata image_desc[:description] ? image_desc[:description].body : '' }
+                        end
                       end
                     end
                   elsif v.is_a? Array
-                    v.each do |sub_v| 
-                      xml.send k do
-                        render_xml_attributes xml, sub_v
+                    xml.send k do
+                      v.each do |sub_v| 
+                        xml.send k.to_s.singularize do
+                          render_xml_attributes xml, sub_v
+                        end
                       end
                     end
                   else
