@@ -77,8 +77,9 @@ class ApiController < ApplicationController
             xml.status @status
             if @results
               @results.each do |k, v|
+                k = k.to_s.dasherize
                 if v.is_a?(Array)
-                  if k == :images_and_descriptions
+                  if k == 'images-and-descriptions'
                     v.each do |image_desc|
                       xml.send k do
                         xml.image image_desc[:image]
@@ -110,6 +111,6 @@ class ApiController < ApplicationController
   end
   
   def render_xml_attributes xml, attributes
-    attributes.each {|k, v| p xml.send(k, v)}
+    attributes.each {|k, v| p xml.send(k.to_s.dasherize, v) if k}
   end
 end
