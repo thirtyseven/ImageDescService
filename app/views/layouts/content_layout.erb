@@ -60,7 +60,9 @@
         $dataNode = $($dataNode);
         $imageId = $dataNode.attr('image-id');
         $descriptionText = $dataNode.attr('description-text');
-        $descriptionText = $descriptionText.replace(/\\n/g, "\n");
+        if($descriptionText != null) {
+          $descriptionText = $descriptionText.replace(/\\n/g, "\n");
+        }
         
         // Update the image description box DIV class so that it reflects the image ID in question
         $('.imageDescBox', $newDiv).html($descriptionText);
