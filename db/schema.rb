@@ -56,6 +56,26 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
   add_index "books", ["title"], :name => "index_books_on_title"
   add_index "books", ["uid"], :name => "index_books_on_uid", :unique => true
 
+  create_table "content_models", :force => true do |t|
+    t.text     "summary"
+    t.text     "long_desc",                                                :null => false
+    t.text     "simplified_language_description"
+    t.integer  "target_age_start"
+    t.integer  "target_age_end"
+    t.string   "target_grade_start"
+    t.string   "target_grade_end"
+    t.integer  "description_quality"
+    t.string   "language",                        :default => "en-US",     :null => false
+    t.string   "repository",                      :default => "Bookshare", :null => false
+    t.string   "credentials"
+    t.boolean  "is_current",                      :default => false,       :null => false
+    t.string   "creator",                                                  :null => false
+    t.datetime "date_approved"
+    t.integer  "image_id",                                                 :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
     t.integer  "attempts",   :default => 0
