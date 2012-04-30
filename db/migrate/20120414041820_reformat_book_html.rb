@@ -7,7 +7,8 @@ class ReformatBookHtml < ActiveRecord::Migration
     
     
     Book.all.each do |book|
-      html = repository.get_cached_html(book.uid, book.xml_file)
+      file_name = book.uid + ".html"
+      html = repository.get_cached_html(book.uid, file_name)
       if (html)
         doc = Nokogiri::HTML(html)
         # Remove the javascript injected at the beginning of the file
