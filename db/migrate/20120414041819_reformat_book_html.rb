@@ -18,7 +18,8 @@ class ReformatBookHtml < ActiveRecord::Migration
         
         # save the HTML file back
         # TODO ESH: write the doc.to_html to a temp file, then pass the temp file path to the store_file method
-        file = TempFile(book.uid)
+        file = Tempfile.new(book.uid)
+        
         file.write doc.to_html
         file.close
         repository.store_file(file.path, book.uid, book.xml_file, nil)
