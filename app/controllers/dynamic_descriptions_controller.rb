@@ -43,12 +43,9 @@ class DynamicDescriptionsController < ApplicationController
   # POST /dynamic_descriptions.xml
   def create
     book = load_book
-    if book && params[:image_location]
-      @dynamic_image = DynamicImage.where("book_id = ? AND image_location = ?", book.id, params[:image_location]).first
-      if(@dynamic_image.nil?)
-        @dynamic_image = DynamicImage.new(:book_id => book.id, :image_location => params[:image_location])
-        @dynamic_image.save
-      end
+    if params[:dynamic_description] && params[:dynamic_description][:dynamic_image_id]
+      @dynamic_image = DynamicImage.where(:id => params[:dynamic_description][:dynamic_image_id]).first
+      book = @dynamic_image.book if @dynamic_image
       @dynamic_description = @dynamic_image.dynamic_descriptions.create(:body => params[:dynamic_description]["body"], :book_id => book.id, :submitter => current_user.username)
     else
       @dynamic_description = DynamicDescription.new
@@ -62,6 +59,7 @@ class DynamicDescriptionsController < ApplicationController
         format.xml  { render :xml => @dynamic_description, :status => :non_authoritative_information }
         format.json  { render :json => @dynamic_description, :callback => params[:callback], :status => :non_authoritative_information }
       elsif @dynamic_description.save
+        format.html { render :partial => 'dynamic_images/show_history_fragment', :locals => {:descriptions => [@dynamic_description] }}
         format.html { redirect_to(@dynamic_description, :notice => 'Dynamic description was successfully created.') }
         format.xml  { render :xml => @dynamic_description, :status => :created, :location => @dynamic_description }
         format.json  { render :json => @dynamic_description, :callback => params[:callback], :status => :created, :location => @dynamic_description }

@@ -1,0 +1,13 @@
+%div{:class => "outer-dynamic-description-div", :style => "display: block; "}
+  Previous Description(s)
+  %div{:class=>"imageDescBox imageDescriptions", :style=>"border:2px solid gray; border-style: groove; padding:0.25em; font-size: 100%; overflow: auto; height: 150px; margin-top: 4px; margin-bottom: 12px;"}
+  New Description
+  = form_for(DynamicDescription.new, :remote => true, :html => {:class => 'description-form'}) do |f|
+    = f.text_area :body, :rows => 10, :cols => 90, :style => 'font-size:120%', :class => 'description-text-area'
+    = f.hidden_field 'book_id'
+    = f.hidden_field 'dynamic_image_id'
+    
+    %br
+    %button.toggle-tiny-mce Show Editor
+    = f.submit
+  .description-result
