@@ -23,6 +23,7 @@ class ReformatBookHtml < ActiveRecord::Migration
         
         file.write doc.to_html
         file.flush
+        repository.remove_file(book.uid + "/" + book.uid + ".html")
         repository.store_file(file.path, book.uid, book.uid + "/" + book.uid + ".html", nil)
         
         file.close
