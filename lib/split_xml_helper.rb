@@ -33,7 +33,7 @@ module SplitXmlHelper
       @active_element = e
     end
 
-    def create_element_node name, attrs = []
+    def create_element_node name, attrs
       ElementNode.new(name, attrs)
     end
 
@@ -69,7 +69,7 @@ module SplitXmlHelper
     end
 
     def should_split
-      num_images > target_size
+      num_images > @target_size
     end
 
     def segments
@@ -114,7 +114,11 @@ module SplitXmlHelper
     end
 
     def escape_attr s
-      s.gsub!('"', "&quot;")
+      if s.include?('"')
+        s.gsub!('"', "&quot;")
+      else
+        s
+      end
     end
 
   end
@@ -185,7 +189,7 @@ module SplitXmlHelper
     end
 
     def render_content
-      if self.children?
+      if children?
         result = String.new
         remove_after_scoop = Array.new
         result << render_open_tag
@@ -206,7 +210,7 @@ module SplitXmlHelper
 
         result
       else
-        self.render_open_tag_and_terminate true
+        render_open_tag_and_terminate true
       end
 
     end
@@ -225,7 +229,7 @@ module SplitXmlHelper
     end
 
     def add_child child
-      @chidren << child
+      @children << child
       child.parent = self
       child
     end
@@ -278,10 +282,14 @@ module SplitXmlHelper
       number_of_attributes = @attribute_names.length
       (0..number_of_attributes).each { |i|
         result << " "
-        result << @attribute_names[i]
-        result << "=\""
-        result << @attribute_values[i]
-        result << "\""
+        unless @attribute_names[i].nil?
+          result << @attribute_names[i]
+          result << "=\""
+          unless @attribute_values[i].nil?
+            result << @attribute_values[i]
+          end
+          result << "\""
+        end
       }
       if self_terminate
         result << " /"
