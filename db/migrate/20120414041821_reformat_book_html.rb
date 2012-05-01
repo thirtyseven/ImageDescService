@@ -22,8 +22,10 @@ class ReformatBookHtml < ActiveRecord::Migration
         file = Tempfile.new(book.uid)
         
         file.write doc.to_html
+        file.flush
+        repository.store_file(file.path, book.uid, book.uid + "/" + book.uid + ".html", nil)
+        
         file.close
-        repository.store_file(file.path, book.uid, book.xml_file, nil)
       end
     end
   end
