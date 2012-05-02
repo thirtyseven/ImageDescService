@@ -78,23 +78,14 @@ class EditBookController < ApplicationController
     book_id = params[:book_id] || session[:book_id]
     session[:book_id] = book_id
     @book = Book.where(:id => book_id, :library_id => current_library.id).first
-    book_uid = @book.uid
-    file_name = book_uid + ".html"
-    html = @repository.get_cached_html(book_uid, file_name)
+    html = if @book
+      book_uid = @book.uid
+      file_name = book_uid + ".html"
+      @repository.get_cached_html(book_uid, file_name)
+    end
     if (html)
       render :layout => 'content_layout', :text => html, :content_type => 'text/html'
     else
-
-=begin
-      book = Book.find_by_id(book_id)
-      xml_filename = book.xml_file
-      xml = get_xml_from_s3(book.uid, xml_filename)
-      xsl_filename = 'app/views/xslt/daisyTransform.xsl'
-      xsl = File.read(xsl_filename)
-      contents = xslt(xml, xsl, request.host_with_port)
-      render :text => contents, :content_type => 'text/html'
-=end
-
       logger.warn "could not find cached html for book id, #{book_id}"
       render :status => 404
     end
