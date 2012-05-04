@@ -103,6 +103,7 @@ GEM
       i18n (~> 0.4)
     gherkin (2.3.6)
       json (>= 1.4.6)
+    haml (3.1.4)
     has_scope (0.5.1)
     hodel_3000_compliant_logger (0.1.0)
     httparty (0.7.8)
@@ -172,7 +173,7 @@ GEM
       activesupport (~> 3.0)
       railties (~> 3.0)
       rspec (~> 2.5.0)
-    ruby-xslt (0.9.8)
+    ruby-xslt (0.9.9)
     rubyzip (0.9.4)
     sass (3.1.11)
     selenium-webdriver (0.2.0)
@@ -213,6 +214,7 @@ DEPENDENCIES
   devise
   factory_girl_rails
   foreman
+  haml
   image_size
   jquery-rails (>= 1.0.12)
   kaminari

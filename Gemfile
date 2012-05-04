@@ -14,6 +14,7 @@ gem 'aws-sdk'
 gem 'activeadmin'
 gem 'cancan'
 gem 'jquery-rails', '>= 1.0.12'
+gem "haml"
 
 # Use unicorn as the web server
 # gem 'unicorn'
