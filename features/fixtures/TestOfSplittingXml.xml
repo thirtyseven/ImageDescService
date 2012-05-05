@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/css" href="daisy.css" media="screen" ?><?xml-stylesheet type="text/xsl" href="daisyTransform.xsl" media="screen" ?><!DOCTYPE dtbook SYSTEM "dtbook-2005-3.dtd">
+<dtbook xmlns="http://www.daisy.org/z3986/2005/dtbook/" version="2005-2" xml:lang="eng">
+  <head>
+    <meta name="dc:Title" content="A Different World" />
+    <meta name="dc:Creator.author" content="S.W. Gonzalez" />
+    <meta name="dc:Creator.illustrator" content="Simon Ng" />
+    <meta name="dc:Publisher" content="Macmillan/McGraw-Hill" />
+    <meta name="dc:Date.created" content="2007-08-31" />
+    <meta name="dc:Format" content="NIMAS 1.1" />
+    <meta name="dc:Identifier" content="0021927960NIMAS" />
+    <meta name="dc:Language" content="en" />
+    <meta name="dc:Rights" content="The only legal and authorized use of these files is for the production of alternate media materials for blind, visually impaired, or print disabled students as specified in the NIMAC limitation of use agreement. The copyright for these files is the sole property of the original owner." />
+    <meta name="dc:Source" content="0021927960" />
+    <meta name="dc:Subject" content="Reading" />
+    <meta name="dc:Subject" content="Language Arts" />
+    <meta name="DCTERMS.description.version" content="National ed." />
+    <meta name="DCTERMS.description.version" content="" />
+    <meta name="DCTERMS.date.issued" content="2006" />
+    <meta name="DCTERMS.publisher.place" content="New York, NY" />
+    <meta name="DCTERMS.format.extent" content="" />
+    <meta name="DCTERMS.date.dateCopyrighted" content="2007" />
+    <meta name="DCTERMS.audience.educationLevel" content="Grade 3" />
+    <meta name="DCTERMS.description.note" content="Supplementary Reading Material" />
+    <meta name="DCTERMS.relation.isPartOf" content="Macmillan/McGraw-Hill Treasures: A Reading/Language Arts Program" />
+    <meta name="DCTERMS.format.extent" content="ii, 17 p." />
+    <meta name="nimas-SourceEdition" content="" />
+    <meta name="nimas-SourceDate" content="2006" />
+    <meta name="dtb:uid" content="0021927960NIMAS" />
+    <meta name="dc:Creator" content="S. W. Gonzalez, Simon Ng" />
+    <meta name="dc:Publisher" content="Bookshare" />
+    <meta name="dc:Date" content="2007-08-31" />
+    <meta name="dc:Format" content="ANSI/NISO Z39.86-2005" />
+  </head>
+  <book id="book_22188100255" xml:space="preserve">
+    <frontmatter id="frontmatter_000001">
+      <doctitle id="doctitle_000001">A Different World</doctitle>
+      <docauthor id="docauthor_0000">S. W. Gonzalez</docauthor>
+      <docauthor id="docauthor_0001">Simon Ng</docauthor>
+      <level1 id="bookshare_note">
+  <h1 id="bks_notice_001">NOTICE</h1>
+  <p id="COPYRIGHT_LEGALESE_0">This accessible media has been made available to people with bona fide disabilities that affect reading.  This
+      notice tells you about restrictions on the use of this accessible media, which could be a book, a periodical, or other content.</p>
+  <level2 id="COPYRIGHT_LEGALESE_1">
+    <h2 id="COPYRIGHT_LEGALESE_2">Copyright Notice</h2>
+    <p id="COPYRIGHT_LEGALESE_3"><strong id="COPYRIGHT_LEGALESE_4">Title:</strong> <span class="text" id="COPYRIGHT_LEGALESE_5">A Different World</span></p>
+    <p id="COPYRIGHT_LEGALESE_6"><strong id="COPYRIGHT_LEGALESE_7">Author:</strong> <span class="text" id="COPYRIGHT_LEGALESE_8">S.W. Gonzalez, Simon Ng</span></p>
+    <p id="COPYRIGHT_LEGALESE_9"><strong id="COPYRIGHT_LEGALESE_10">Copyright</strong> <span class="text" id="COPYRIGHT_LEGALESE_11">2007 by Macmillan/McGraw-Hill</span></p>
+    <p id="COPYRIGHT_LEGALESE_12">This notice is not part of the copyrighted work, which begins below after the phrase "Begin Content".</p>
+    <p id="COPYRIGHT_LEGALESE_13">Bookshare distributes this accessible media under restrictions set forth either in copyright law or in an
+        agreement with the copyright owner.  If you are not a person with a print disability, or an agency serving
+        people with print disabilities, you should not use this accessible media and should destroy this content.  You
+        are not allowed to redistribute content derived from this accessible media to anybody else, with one exception:
+        we allow hardcopy Braille books prepared from Accessible Media to be provided to other blind people.</p>
+    <p id="COPYRIGHT_LEGALESE_14">Access to accessible media through Bookshare is a valuable right and privilege.  Protect this access for the
+        print disabled community by complying with these restrictions!</p>
+    <p id="COPYRIGHT_LEGALESE_15">You, your parents, or your school (or agency) signed a Bookshare agreement.  For the full text of the current
+        version of the Member Agreements, please visit www.bookshare.org/Agreements.  This information in this accessible
+        media file does not in any way change the terms of your Agreement with Bookshare.</p>
+  </level2>
+  <level2 id="COPYRIGHT_LEGALESE_16">
+    <h2 id="COPYRIGHT_LEGALESE_17">Limitation of Liability; Indemnity by User</h2>
+    <p id="COPYRIGHT_LEGALESE_18">Most authors and publishers do not have control over the content available through Bookshare.  By downloading and
+        using this material, you agree that neither Bookshare nor the authors or original publishers of the materials
+        shall be financially responsible for any loss or damage to you or any third parties caused by the failure or
+        malfunction of the Bookshare Web Site (www.bookshare.org) or because of any inaccuracy or lack of completeness
+        of any content that you download from the Web Site.</p>
+    <p id="COPYRIGHT_LEGALESE_19">BOOKSHARE, AND THE AUTHORS, PUBLISHERS AND COPYRIGHT OWNERS OF THE MATERIALS, SHALL NOT IN ANY CASE BE LIABLE FOR
+        DIRECT, INDIRECT, SPECIAL, INCIDENTAL OR CONSEQUENTIAL DAMAGES, WHETHER BASED ON CONTRACT, TORT OR ANY OTHER
+        LEGAL THEORY, IN CONNECTION WITH OR ARISING OUT OF THE FURNISHING OF CONTENT, THE FUNCTIONING OF THE WEB SITE,
+        OR ANY OTHER ASPECT OF YOUR USE OF THE WEB SITE AND THE CONTENTS PROVIDED HEREUNDER.</p>
+    <p id="COPYRIGHT_LEGALESE_20">You agree to indemnify and hold Bookshare and Benetech, the Web Site provider, harmless from any liability,
+        loss, cost, damage or expense, including reasonable attorney's fees, that result from any claim made by any
+        author, publisher or copyright owner that you, or any one acquiring copies of copyrighted materials downloaded
+        from the Web Site through you, is not print disabled or otherwise entitled to download and use the digital
+        materials from the Bookshare Web Site.  This indemnity includes any claims arising out of any breach of your
+        obligations under your Member Agreement, whether by reason of misuse, negligence or otherwise.</p>
+  </level2>
+  <level2 id="COPYRIGHT_LEGALESE_21">
+    <h2 id="COPYRIGHT_LEGALESE_22">Permitted Use; Limited Waiver of Privacy Principles and Laws</h2>
+    <p id="COPYRIGHT_LEGALESE_23">You are permitted under this restricted license to use this digital copy for your own personal use.  However,
+        any further reproduction, distribution, or any commercial usage requires the express, prior consent of the
+        copyright holder.</p>
+    <p id="COPYRIGHT_LEGALESE_24">This material contains digital watermarks and fingerprints designed to identify this material as a Bookshare
+        digital material that was specifically downloaded by you.  It is generally illegal to delete or modify these
+        watermarks and fingerprints, as well as being in violation of the terms of your Member Agreement.  Your
+        Member Agreement expressly authorizes us to include these security devices, solely for this use, as an express
+        exception to current and future privacy laws relating to protection of personal information data.  Should any
+        future privacy law or regulation preclude the use of this personal data for purposes of tracking the downloading
+        and use of these materials and enforcing the limitations of relevant copyright law or the Member Agreement,
+        your right to use these materials will terminate on the effective date of any such law or regulation.</p>
+    <p id="COPYRIGHT_LEGALESE_25">This material was downloaded by Rom Srinivasan and is digitally fingerprinted in the manner described above.</p>
+  </level2>
+  <level2 id="COPYRIGHT_LEGALESE_26">
+    <h2 id="COPYRIGHT_LEGALESE_27">Book Quality</h2>
+    <p id="COPYRIGHT_LEGALESE_28">Bookshare is interested in improving book quality over time, if you can help us by providing any book quality
+        feedback, we'll work hard to make those changes and republish the books.</p>
+    <list type="ul" id="COPYRIGHT_LEGALESE_29">
+      <li id="COPYRIGHT_LEGALESE_30"><a href="http://www.bookshare.org/bookQualityFeedback?titleInstanceId=254799" external="true" id="COPYRIGHT_LEGALESE_31">Report book quality issue</a></li>
+      <li id="COPYRIGHT_LEGALESE_32"><a href="http://www.bookshare.org/bookQualityFeedback" external="true" id="COPYRIGHT_LEGALESE_33">See all reported book quality issues</a></li>
+    </list>
+  </level2>
+  <p id="COPYRIGHT_LEGALESE_34">BEGIN CONTENT</p>
+</level1>
+      <level1 class="title_page" id="level1_000001">
+        <pagenum id="pi" page="front" smilref="A_Different_World00001.smil#pi">i</pagenum>
+        <p id="p_000001" smilref="A_Different_World00001.smil#p_000001">
+          <strong id="strong_000001">Realistic Fiction</strong>
+        </p>
+        <h1 id="h1_000001" smilref="A_Different_World00001.smil#h1_000001">A DiFFeReNT WoRLd</h1>
+        <p id="p_000002" smilref="A_Different_World00001.smil#p_000002">
+          <strong id="strong_000002">
+            <span class="text" id="span_000001" smilref="A_Different_World00001.smil#span_000001">by</span>
+            <abbr id="abbr_000001" smilref="A_Different_World00001.smil#abbr_000001">S.W.</abbr>
+            <span class="text" id="span_000002" smilref="A_Different_World00001.smil#span_000002">Gonzalez</span>
+          </strong>
+        </p>
+        <p id="p_000003" smilref="A_Different_World00001.smil#p_000003">
+          <strong id="strong_000003">illustrated by Simon Ng</strong>
+        </p>
+        <imggroup id="imggroup_000001">
+          <img id="p00i-001" src="images/p00i-001.jpg" alt="a girl holding a baby turtle (covertitle)" />
+          <prodnote render="optional" imgref="p00i-001" id="bookshare_p00i-001" showin="blp">&lt;![CDATA[book cover
+Dark skinned girl with her hair tied back smiling and holding a baby sea turtle]]&gt;</prodnote>
+        </imggroup>
+      </level1>
+      <level1 class="copyright_page" id="level1_000002">
+        <pagenum id="pii" page="front" smilref="A_Different_World00001.smil#pii">ii</pagenum>
+        <sidebar render="required" id="sidebar_000001">
+          <hd id="hd_000001" smilref="A_Different_World00001.smil#hd_000001">
+            <strong id="strong_000004">Read to Find Out</strong>
+          </hd>
+          <p id="p_000004" smilref="A_Different_World00001.smil#p_000004">How does Keisha feel about being away from home?</p>
+        </sidebar>
+        <p id="p_000005" smilref="A_Different_World00001.smil#p_000005">STRATEGIES &amp; SKILLS AT A GLANCE</p>
+        <list type="ul" id="list_000001">
+          <hd id="hd_000002" smilref="A_Different_World00001.smil#hd_000002">
+            <strong id="strong_000005">Comprehension</strong>
+          </hd>
+          <li id="li_000001" smilref="A_Different_World00001.smil#li_000001">Strategy: Visualize</li>
+          <li id="li_000002" smilref="A_Different_World00001.smil#li_000002">Skill: Make Inferences</li>
+        </list>
+        <list type="ul" id="list_000002">
+          <hd id="hd_000003" smilref="A_Different_World00001.smil#hd_000003">
+            <strong id="strong_000006">Vocabulary</strong>
+          </hd>
+          <li id="li_000003" smilref="A_Different_World00001.smil#li_000003">aisle, annual, expensive, innocent, package, politely, potential, wrapping</li>
+        </list>
+        <list type="ul" id="list_000003">
+          <hd id="hd_000004" smilref="A_Different_World00001.smil#hd_000004">
+            <strong id="strong_000007">Vocabulary Strategy</strong>
+          </hd>
+          <li id="li_000004" smilref="A_Different_World00001.smil#li_000004">Dictionary: Homophones</li>
+        </list>
+        <p id="p_000006" smilref="A_Different_World00001.smil#p_000006">Word count: 628</p>
+        <p id="p_000007" smilref="A_Different_World00001.smil#p_000007">A</p>
+        <imggroup id="imggroup_000002">
+          <img id="pii-mcgrawhill" src="images/mcgrawhill.svg" alt="Macmillan/McGraw-Hill logo" />
+        </imggroup>
+        <p id="p_000008" smilref="A_Different_World00001.smil#p_000008">
+          <span class="text" id="span_000003" smilref="A_Different_World00001.smil#span_000003">Published by Macmillan/McGraw-Hill, of McGraw-Hill Education, a division of The McGraw-Hill Companies,</span>
+          <abbr id="abbr_000002" smilref="A_Different_World00001.smil#abbr_000002">Inc.</abbr>
+          <span class="text" id="span_000004" smilref="A_Different_World00001.smil#span_000004">, Two Penn Plaza, New York, New York 10121.</span>
+        </p>
+        <p id="p_000009" smilref="A_Different_World00001.smil#p_000009">
+          <span class="text" id="span_000005" smilref="A_Different_World00001.smil#span_000005">Copyright © by Macmillan/McGraw-Hill. All rights reserved. No part of this publication may be reproduced or distributed in any form or by any means, or stored in a database or retrieval system, without the prior written consent of The McGraw-Hill Companies,</span>
+          <abbr id="abbr_000003" smilref="A_Different_World00001.smil#abbr_000003">Inc.</abbr>
+          <span class="text" id="span_000006" smilref="A_Different_World00001.smil#span_000006">, including, but not limited to, network storage or transmission, or broadcast for distance learning.</span>
+        </p>
+        <p id="p_000010" smilref="A_Different_World00001.smil#p_000010">Printed in the United States of America</p>
+        <p id="p_000011" smilref="A_Different_World00001.smil#p_000011">1 2 3 4 5 6 7 8 9 BSF 10 09 08 07 06 05</p>
+      </level1>
+      <level1 class="print_toc" id="level1_000003">
+        <pagenum id="p1" page="normal" smilref="A_Different_World00001.smil#p1">1</pagenum>
+        <p id="p_000012" smilref="A_Different_World00001.smil#p_000012">
+          <strong id="strong_000008" smilref="A_Different_World00001.smil#strong_000008">A DiFFeReNT WoRLd</strong>
+          <strong id="strong_000009">
+            <span class="text" id="span_000007" smilref="A_Different_World00001.smil#span_000007">by</span>
+            <abbr id="abbr_000004" smilref="A_Different_World00001.smil#abbr_000004">S.W.</abbr>
+            <span class="text" id="span_000008" smilref="A_Different_World00001.smil#span_000008">Gonzalez</span>
+          </strong>
+        </p>
+        <p id="p_000013" smilref="A_Different_World00001.smil#p_000013">
+          <strong id="strong_000010">illustrated by Simon Ng</strong>
+        </p>
+        <imggroup id="imggroup_000003">
+          <img id="p001-001" src="images/p001-001.jpg" alt="a turtle" />
+          <prodnote render="optional" imgref="p001-001" id="bookshare_p001-001" showin="blp">&lt;![CDATA[A drawing of a small sea turtle.]]&gt;</prodnote>
+        </imggroup>
+        <h1 id="h1_000002" smilref="A_Different_World00001.smil#h1_000002">Table of Contents</h1>
+        <list class="toc_chapter" type="pl" id="list_000004">
+          <li id="li_000005">
+            <lic class="entry" id="lic_000001" smilref="A_Different_World00001.smil#lic_000001">Chapter 1 Bad News</lic>
+            <lic class="pagenum" id="lic_000002" smilref="A_Different_World00001.smil#lic_000002">2</lic>
+          </li>
+          <li id="li_000006">
+            <lic class="entry" id="lic_000003" smilref="A_Different_World00001.smil#lic_000003">Chapter 2 The Trip to the Island</lic>
+            <lic class="pagenum" id="lic_000004" smilref="A_Different_World00001.smil#lic_000004">6</lic>
+          </li>
+          <li id="li_000007">
+            <lic class="entry" id="lic_000005" smilref="A_Different_World00001.smil#lic_000005">Chapter 3 The Turtle Farm</lic>
+            <lic class="pagenum" id="lic_000006" smilref="A_Different_World00001.smil#lic_000006">12</lic>
+          </li>
+          <li id="li_000008">
+            <lic class="entry" id="lic_000007" smilref="A_Different_World00001.smil#lic_000007">Comprehension Check</lic>
+            <lic class="pagenum" id="lic_000008" smilref="A_Different_World00001.smil#lic_000008">16</lic>
+          </li>
+        </list>
+      </level1>
+    </frontmatter>
+    <bodymatter id="bodymatter_000001">
+      <level1 class="chapter" id="level1_000004">
+        <pagenum id="p2" page="normal" smilref="A_Different_World00001.smil#p2">2</pagenum>
+        <h1 id="h1_000003" smilref="A_Different_World00001.smil#h1_000003">Chapter 1 Bad News</h1>
+        <p id="p_000014" smilref="A_Different_World00001.smil#p_000014">Keisha's mom sat up. She had been very sick. Now she was getting better. Keisha could see that her mother still seemed tired.</p>
+        <imggroup id="imggroup_000004">
+          <img id="p002-001" src="images/p002-001.jpg" alt="a sick mother lying in bed with a girl beside her" />
+          <prodnote render="optional" imgref="p002-001" id="bookshare_p002-001" showin="blp">&lt;![CDATA[Keisha's mother lays in bed, while Keisha kneels on the floor next to her, and holds her hand.    ]]&gt;</prodnote>
+        </imggroup>
+        <pagenum id="p3" page="normal" smilref="A_Different_World00001.smil#p3">3</pagenum>
+        <p id="p_000015" smilref="A_Different_World00001.smil#p_000015">"I must rest in bed a while longer," she said. "Dad has to go back to his job. Aunt Louise will care for you over the vacation."</p>
+        <p id="p_000016" smilref="A_Different_World00001.smil#p_000016">Aunt Louise had always visited them each year on her annual vacation.</p>
+        <p id="p_000017" smilref="A_Different_World00001.smil#p_000017">"Aunt Louise can't come here. You must go to visit her this time," said Mom.</p>
+        <pagenum id="p4" page="normal" smilref="A_Different_World00001.smil#p4">4</pagenum>
+        <p id="p_000018" smilref="A_Different_World00001.smil#p_000018">"Doesn't Aunt Louise live on a tropical island now?" Keisha asked.</p>
+        <p id="p_000019" smilref="A_Different_World00001.smil#p_000019">"Yes, she works for a bank on Grand Cayman Island in the Caribbean," her mom said.</p>
+        <p id="p_000020" smilref="A_Different_World00001.smil#p_000020">"Why did she move so far away?" Keisha asked.</p>
+        <p id="p_000021" smilref="A_Different_World00001.smil#p_000021">It's a very good job," her mom said. "She has good skills, and she will probably get a raise soon."</p>
+        <p id="p_000022" smilref="A_Different_World00001.smil#p_000022">"I won't like it there," Keisha said. "It's much too far away."</p>
+        <imggroup id="imggroup_000005">
+          <img id="p004-001" src="images/p004-001.jpg" alt=" a young girl dreaming of her aunt" />
+          <prodnote render="optional" imgref="p004-001" id="bookshare_p004-001" showin="blp">&lt;![CDATA[Keisha stands in her living room, thinking about a woman who is dressed in office clothes and sitting at a desk, but behind her are palm trees and the ocean.]]&gt;</prodnote>
+        </imggroup>
+        <pagenum id="p5" page="normal" smilref="A_Different_World00001.smil#p5">5</pagenum>
+      </level1>
+      <level1 class="chapter" id="level1_000005">
+        <pagenum id="p6" page="normal" smilref="A_Different_World00001.smil#p6">6</pagenum>
+        <h1 id="h1_000004" smilref="A_Different_World00001.smil#h1_000004">Chapter 2 The Trip to the Island</h1>
+        <p id="p_000023" smilref="A_Different_World00001.smil#p_000023">Keisha liked the plane ride. She sat by a window, so she could see the land below.</p>
+        <p id="p_000024" smilref="A_Different_World00001.smil#p_000024">Then she saw big white clouds. Before she knew it, the plane had landed.</p>
+        <p id="p_000025" smilref="A_Different_World00001.smil#p_000025">Keisha walked down the plane's center aisle. A flight attendant joined her. Together they walked into the airport.</p>
+        <p id="p_000026" smilref="A_Different_World00001.smil#p_000026">Aunt Louise was waiting by the gate. She showed the attendant her driver's license. It was proof that she was the person Keisha was supposed to meet.</p>
+        <imggroup id="imggroup_000006">
+          <img id="p006-001" src="images/p006-001.jpg" alt="an airplane, a lady and a girl at the airport" />
+          <prodnote render="optional" imgref="p006-001" id="bookshare_p006-001" showin="blp">&lt;![CDATA[Aunt Louise reaches out to hug Keisha at the airstrip, with the airplane sitting behind them.  ]]&gt;</prodnote>
+        </imggroup>
+        <pagenum id="p7" page="normal" smilref="A_Different_World00001.smil#p7">7</pagenum>
+        <pagenum id="p8" page="normal" smilref="A_Different_World00001.smil#p8">8</pagenum>
+        <p id="p_000027" smilref="A_Different_World00001.smil#p_000027">Aunt Louise's car seemed odd to Keisha. The steering wheel looked wrong.</p>
+        <p id="p_000028" smilref="A_Different_World00001.smil#p_000028">Aunt Louise saw Keisha's puzzled look. "Our cars here are like the cars in England," she said. "There is something else different too. We drive on the left side of the road."</p>
+        <imggroup id="imggroup_000007">
+          <img id="p008-001" src="images/p008-001.jpg" alt="a lady and a girl inside the car" />
+          <prodnote render="optional" imgref="p008-001" id="bookshare_p008-001" showin="blp">&lt;![CDATA[Aunt Louise drives her car while Keisha sits in the back seat looking out the window, and smiling.]]&gt;</prodnote>
+        </imggroup>
+        <pagenum id="p9" page="normal" smilref="A_Different_World00001.smil#p9">9</pagenum>
+        <p id="p_000029" smilref="A_Different_World00001.smil#p_000029">On the drive to Aunt Louise's home, Keisha looked out at the island. It had tall trees. The sea was a lovely blue. Still, Keisha wanted to go home.</p>
+        <pagenum id="p10" page="normal" smilref="A_Different_World00001.smil#p10">10</pagenum>
+        <p id="p_000030" smilref="A_Different_World00001.smil#p_000030">The next day Aunt Louise taught Keisha to swim under the water. Keisha saw some amazing fish. Some had yellow stripes. Some were bright blue. Keisha still longed for home though.</p>
+        <p id="p_000031" smilref="A_Different_World00001.smil#p_000031">After a few days, her aunt said, "I must go back to work soon. My friend Jill will come by when I go to the bank."</p>
+        <p id="p_000032" smilref="A_Different_World00001.smil#p_000032">Keisha nodded politely. She was not happy about being taken care of by a stranger.</p>
+        <imggroup id="imggroup_000008">
+          <img id="p010-001" src="images/p010-001.jpg" alt="a girl and an adult woman on the beach" />
+          <prodnote render="optional" imgref="p010-001" id="bookshare_p010-001" showin="blp">&lt;![CDATA[Aunt Louise and Keisha enjoy the beach.  Snorkeling goggles and fins lay nearby and Keisha walks on the beach in her fins.]]&gt;</prodnote>
+        </imggroup>
+        <pagenum id="p11" page="normal" smilref="A_Different_World00001.smil#p11">11</pagenum>
+      </level1>
+      <level1 class="chapter" id="level1_000006">
+        <pagenum id="p12" page="normal" smilref="A_Different_World00001.smil#p12">12</pagenum>
+        <h1 id="h1_000005" smilref="A_Different_World00001.smil#h1_000005">Chapter 3 The Turtle Farm</h1>
+        <p id="p_000033" smilref="A_Different_World00001.smil#p_000033">In a few days, Jill came by with her son Ted. Ted was the same age as Keisha.</p>
+        <p id="p_000034" smilref="A_Different_World00001.smil#p_000034">They took Keisha to the island's turtle farm. Ted showed her two giant sea turtles. "There are different kinds of sea turtles here," he said.</p>
+        <p id="p_000035" smilref="A_Different_World00001.smil#p_000035">Keisha held a baby sea turtle. "They're so sweet and innocent," she said.</p>
+        <imggroup id="imggroup_000009">
+          <img id="p012-001" src="images/p012-001.jpg" alt="a girl held a baby turtle with a boy in the turtle farm" />
+          <prodnote render="optional" imgref="p012-001" id="bookshare_p012-001" showin="blp">&lt;![CDATA[Keisha stands near a boy holding a little turtle.  Several other turtles are in the water behind them.]]&gt;</prodnote>
+        </imggroup>
+        <pagenum id="p13" page="normal" smilref="A_Different_World00001.smil#p13">13</pagenum>
+        <p id="p_000036" smilref="A_Different_World00001.smil#p_000036">Keisha learned that baby green sea turtles face many perils in the wild.</p>
+        <p id="p_000037" smilref="A_Different_World00001.smil#p_000037">When the green sea turtles hatch, they crawl to the sea. There is potential danger everywhere. Seabirds often eat them. Sharks and other large fish will eat them too.</p>
+        <p id="p_000038" smilref="A_Different_World00001.smil#p_000038">The islanders help the baby turtles. They take the nests to the farm.</p>
+        <pagenum id="p14" page="normal" smilref="A_Different_World00001.smil#p14">14</pagenum>
+        <p id="p_000039" smilref="A_Different_World00001.smil#p_000039">The baby green sea turtles stay at the turtle farm for a year. Small tags are put on them. After that, they are released into the sea.</p>
+        <p id="p_000040" smilref="A_Different_World00001.smil#p_000040">Keisha picked one of the babies out of its tank. She showed it to Ted.</p>
+        <p id="p_000041" smilref="A_Different_World00001.smil#p_000041">"I'm like one of these turtles," she said. "Kind people are taking good care of me. These turtles are lucky, and so am I."</p>
+        <imggroup id="imggroup_000010">
+          <img id="p014-001" src="images/p014-001.jpg" alt="a baby green sea turtle on the hands" />
+          <prodnote render="optional" imgref="p014-001" id="bookshare_p014-001" showin="blp">&lt;![CDATA[Keisha holds a little turtle in her hands.]]&gt;</prodnote>
+        </imggroup>
+        <pagenum id="p15" page="normal" smilref="A_Different_World00001.smil#p15">15</pagenum>
+        <imggroup id="imggroup_000011">
+          <img id="p015-001" src="images/p015-001.jpg" alt="a girl opened a box wrapped in paper inside a wooden sea turtle" />
+          <prodnote render="optional" imgref="p015-001" id="bookshare_p015-001" showin="blp">&lt;![CDATA[Ted and aunt Louise give Keisha a present.  Inside the box is a turtle.  Keisha has a huge smile on her face.]]&gt;</prodnote>
+        </imggroup>
+        <p id="p_000042" smilref="A_Different_World00001.smil#p_000042">Finally it was time for Keisha to leave for home. Ted gave her a package covered in wrapping paper. "It wasn't expensive," he said, "but I hope it reminds you of us." The present was a wooden sea turtle.</p>
+        <p id="p_000043" smilref="A_Different_World00001.smil#p_000043">Keisha hugged Ted. "I'm glad to go home," she said to him. "I'll also be glad to come back to visit. Now this island feels like it's my second home."</p>
+      </level1>
+      <level1 id="level1_000007">
+        <pagenum id="p16" page="normal" smilref="A_Different_World00001.smil#p16">16</pagenum>
+        <h1 id="h1_000006" smilref="A_Different_World00001.smil#h1_000006">Comprehension Check</h1>
+        <level2 id="level2_000001">
+          <h2 id="h2_000001" smilref="A_Different_World00001.smil#h2_000001">Summarize</h2>
+          <p id="p_000044" smilref="A_Different_World00001.smil#p_000044">Why do you think Keisha's attitude about her trip changed in the story? Use an Inference Chart to record clues and an inference. Then use the chart to summarize the story.</p>
+          <imggroup id="imggroup_000012">
+            <img id="p016-inference_chart" src="images/inference_chart.svg" alt="inference chart" />
+          </imggroup>
+        </level2>
+        <level2 id="level2_000002">
+          <h2 id="h2_000002" smilref="A_Different_World00001.smil#h2_000002">Think and Compare</h2>
+          <list type="pl" id="list_000005">
+            <li id="li_000009" smilref="A_Different_World00001.smil#li_000009">
+              <strong id="strong_000011">1.</strong>
+              <span class="text" id="span_000009">Look back at page 6. Why do you think a flight attendant stayed with Keisha when she got off the plane?</span>
+              <strong id="strong_000012">
+                <em id="em_000001">(Make Inferences)</em>
+              </strong>
+            </li>
+            <li id="li_000010" smilref="A_Different_World00001.smil#li_000010">
+              <strong id="strong_000013">2.</strong>
+              <span class="text" id="span_000010">If you visited Grand Cayman Island, what would you enjoy doing?</span>
+              <strong id="strong_000014">
+                <em id="em_000002">(Apply)</em>
+              </strong>
+            </li>
+            <li id="li_000011" smilref="A_Different_World00001.smil#li_000011">
+              <strong id="strong_000015">3.</strong>
+              <span class="text" id="span_000011">Why do you think it is important for people to help save animals that are in danger? Explain.</span>
+              <strong id="strong_000016">
+                <em id="em_000003">(Evaluate)</em>
+              </strong>
+            </li>
+          </list>
+        </level2>
+      </level1>
+      <level1 id="level1_000008">
+        <pagenum id="p17" page="normal" smilref="A_Different_World00001.smil#p17">17</pagenum>
+        <h1 id="h1_000007" smilref="A_Different_World00001.smil#h1_000007">Literacy Activities</h1>
+        <sidebar render="required" id="sidebar_000002">
+          <hd id="hd_000005">
+            <strong id="strong_000017" smilref="A_Different_World00001.smil#strong_000017">Write a Travel Brochure</strong>
+            <img id="p017-WriteAbout" src="images/writeabout.svg" alt="write about it pencil icon" />
+          </hd>
+          <p id="p_000045" smilref="A_Different_World00001.smil#p_000045">Pretend that you are a travel agent. You are trying to get people to come to a tropical island. Design a brochure telling people about the island. Name the island. Draw pictures, too.</p>
+        </sidebar>
+        <sidebar render="required" id="sidebar_000003">
+          <hd id="hd_000006">
+            <img id="p017-ScienceCon" src="images/sciencecon.svg" alt="science connection icon" />
+            <strong id="strong_000018" smilref="A_Different_World00001.smil#strong_000018">Use a Map</strong>
+          </hd>
+          <p id="p_000046" smilref="A_Different_World00001.smil#p_000046">Use the library to learn more about turtles. Find five turtle facts and share them with your classmates.</p>
+        </sidebar>
+      </level1>
+    </bodymatter>
+  </book>
+</dtbook>
