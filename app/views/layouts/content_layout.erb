@@ -14,7 +14,8 @@
 
 <%=yield%>
 <% DynamicImage.includes(:dynamic_descriptions).where(:book_id => @book.id).each do |dynamic_image| %>
-  <div class='image-editing-description-<%= dynamic_image.xml_id %>' image-id="<%= dynamic_image.id %>" description-text="<%= generate_html(:partial => 'dynamic_images/show_history_fragment', :locals => {:descriptions => dynamic_image.dynamic_descriptions}) %>"></div>
+  <% # TODO ESH: when we generate thumbnails, consider switching image-src below to use an alternate image size %>
+  <div class='image-editing-description-<%= dynamic_image.xml_id %>' image-src="<%= dynamic_image.image_source(@host) %>" image-id="<%= dynamic_image.id %>" description-text="<%= generate_html(:partial => 'dynamic_images/show_history_fragment', :locals => {:descriptions => dynamic_image.dynamic_descriptions}) %>"></div>
 <% end %>
 
 <script type="text/javascript">
@@ -25,6 +26,7 @@
     $bookId = $('.image-editing-controls', top.frames['content'].document).attr('book-id');
     $imageEditingControlHtml = $imageEditingControlHtml.replace(/\\n/g, "\n");
     $('img', top.frames['content'].document).each(function(index, item) {
+      currentImageNode = $(item);
       // Grab _edit_image_form.html.haml template HTML and inject in the appropriate place
       $newDiv = $($imageEditingControlHtml);
       
@@ -59,6 +61,8 @@
         // Manipulate the new node ($newDiv) before we insert it in the DOM to have data related to the current image plus the previous descriptions
         $dataNode = $($dataNode);
         $imageId = $dataNode.attr('image-id');
+        $imageSource = $dataNode.attr('image-src');
+        currentImageNode.attr('src', $imageSource);
         $descriptionText = $dataNode.attr('description-text');
         if($descriptionText != null) {
           $descriptionText = $descriptionText.replace(/\\n/g, "\n");
@@ -101,8 +105,6 @@
   $('.toggle-tiny-mce').click(function() {
     $bodyNode = $("textarea[name='dynamic_description[body]']", $(this).parent());
     if($bodyNode != null) {
-      console.log("ESH: have bodyNode:");
-      console.log($bodyNode);
       tinyMCE.execCommand('mceAddControl', false, $bodyNode.attr('id'));
     }
   });

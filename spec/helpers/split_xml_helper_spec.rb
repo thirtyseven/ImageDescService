@@ -18,7 +18,7 @@ describe SplitXmlHelper do
     segments.each do |seg|
       seg_doc = Nokogiri::XML seg
       seg_num_images = seg_doc.css('img').size
-      p "ESH: have a seg= with #{seg_num_images} images"
+      # p "ESH: have a seg= with #{seg_num_images} images"
     end
     
     segments.size.should eq 3
@@ -29,6 +29,22 @@ describe SplitXmlHelper do
     segments = parse_and_segment xml_splitting, image_limit
     
     segments.size.should eq 1
+  end
+  
+  it "should be able to apply the xslt file to transform the XML into HTML" do
+    xml_splitting, image_limit = load_test_xml 1
+    segments = parse_and_segment xml_splitting, image_limit
+
+    xsl = File.read(S3UnzippingJob.daisy_xsl)
+    engine = XML::XSLT.new
+    engine.xml = xml
+    engine.xsl = xsl
+
+    bucket_name = "/" + poet_host + "/file"
+    return engine.serve
+    
+    contents = repository.xslt(xml, xsl)
+    
   end
   
   def load_test_xml target_chunks

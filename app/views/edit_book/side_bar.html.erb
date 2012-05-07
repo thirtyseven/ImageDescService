@@ -84,7 +84,6 @@ function handleFilterChange()
   		xml_id = image.xml_id
   		raw_src = image.image_location
   		src = "book/#{raw_src}"
-          s3src = "#{@host}/#{book.uid}/#{image.image_location}"
 
           model =  image
 
@@ -107,7 +106,7 @@ function handleFilterChange()
 	<img style="border:1px solid black; padding:0.25em; font-size: 80%;" 
 		 width='<%= width %>px' height='<%= height %>px' 
 		onclick="handleClick('<%= book.id %>', '<%= xml_id %>', '<%= raw_src %>')"
-		src='<%= s3src %>'>
+		src='<%= model.image_source(@host) %>'>
 	</img>
 	</a>
 	<p>

@@ -78,6 +78,7 @@ class EditBookController < ApplicationController
     book_id = params[:book_id] || session[:book_id]
     session[:book_id] = book_id
     @book = Book.where(:id => book_id, :library_id => current_library.id).first
+    @host = @repository.get_host(request)
     html = if @book
       book_uid = @book.uid
       file_name = book_uid + ".html"

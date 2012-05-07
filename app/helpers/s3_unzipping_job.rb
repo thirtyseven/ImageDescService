@@ -5,6 +5,12 @@ class S3UnzippingJob < Struct.new(:book_uid, :poet_host, :form_authenticity_toke
   def enqueue(job)
 
   end
+  
+  DAISY_XSL = 'app/views/xslt/daisyTransform.xsl'
+  
+  def self.daisy_xsl
+    DAISY_XSL
+  end
 
   def perform
     begin
@@ -21,9 +27,9 @@ class S3UnzippingJob < Struct.new(:book_uid, :poet_host, :form_authenticity_toke
         book.update_attribute("status", 2)
         upload_files_to_s3(book_directory, doc)
 
-        xsl_filename = 'app/views/xslt/daisyTransform.xsl'
+        xsl_filename = S3UnzippingJob.daisy_xsl
         xsl = File.read(xsl_filename)
-        contents = repository.xslt(xml, xsl, poet_host, form_authenticity_token)
+        contents = repository.xslt(xml, xsl)
         content_html = File.join("","tmp", "#{book_uid}.html")
         File.open(content_html, 'wb'){|f|f.write(contents)}
         repository.store_file(content_html, book_uid, book_uid + "/" + book_uid + ".html", nil)

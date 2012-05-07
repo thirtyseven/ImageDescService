@@ -121,13 +121,10 @@ class S3Repository
 
 
 
-  def self.xslt(xml, xsl, poet_host, form_authenticity_token)
+  def self.xslt(xml, xsl)
     engine = XML::XSLT.new
     engine.xml = xml
     engine.xsl = xsl
-    bucket_name = "/s3.amazonaws.com/" + ENV['POET_ASSET_BUCKET'].dup
-
-    engine.parameters = {"form_authenticity_token" => form_authenticity_token, "bucket" => bucket_name, "poet_host" => poet_host}
     return engine.serve
   end
 

@@ -203,9 +203,6 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.string   "username",                                              :null => false
     t.string   "first_name"
     t.string   "last_name"
-    t.string   "geo_city"
-    t.string   "geo_state"
-    t.string   "zip_code"
     t.string   "other_subject_expertise"
   end
 
