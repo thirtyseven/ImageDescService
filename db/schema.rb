@@ -122,8 +122,13 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.integer  "height"
     t.string   "xml_id"
     t.integer  "book_id"
+    t.string   "physical_file_file_name"
+    t.string   "physical_file_content_type"
+    t.integer  "physical_file_file_size"
+    t.datetime "physical_file_updated_at"
   end
 
+  add_index "dynamic_images", ["book_id", "image_location"], :name => "index_dynamic_images_on_book_id_and_image_location"
   add_index "dynamic_images", ["should_be_described"], :name => "index_dynamic_images_on_book_uid_and_should_be_described"
 
   create_table "images", :force => true do |t|
@@ -144,6 +149,9 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "libraries", ["name"], :name => "idx_library_name_unique", :unique => true
+  add_index "libraries", ["name"], :name => "name", :unique => true
 
   create_table "roles", :force => true do |t|
     t.string   "name"

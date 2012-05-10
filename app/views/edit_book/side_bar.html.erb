@@ -87,26 +87,13 @@ function handleFilterChange()
 
           model =  image
 
-  		raw_width = model.width || 20
-  		raw_height = model.height || 20
-  		if(raw_height == 0)
-  			raw_height = 1
-  		end
-  		ratio = 1.0 * raw_width / raw_height
-  		if(raw_width > raw_height)
-  			width = 240
-  			height = width / ratio
-  		else
-  			height = 160
-  			width = height * ratio		
-  		end
+
 %>
 <div id="div_<%= src %>">
 	<a id="<%= xml_id %>" href="#<%= xml_id %>">
 	<img style="border:1px solid black; padding:0.25em; font-size: 80%;" 
-		 width='<%= width %>px' height='<%= height %>px' 
 		onclick="handleClick('<%= book.id %>', '<%= xml_id %>', '<%= raw_src %>')"
-		src='<%= model.image_source(@host) %>'>
+		src='<%= model.thumb_source(@host) %>'>
 	</img>
 	</a>
 	<p>

@@ -37,26 +37,23 @@ class S3Repository
   end
 
   def self.read_file(file_path, new_local_file)
-      bucket_name = ENV['POET_ASSET_BUCKET']
       begin
         # get handle to s3 service
         s3_service = AWS::S3.new
 
         # get s3 bucket to download zip file
-        bucket = s3_service.buckets[bucket_name]
+        bucket = s3_service.buckets[ENV['POET_ASSET_BUCKET']]
         s3_object = bucket.objects[file_path]
         File.open(new_local_file, 'wb') {|f| f.write(s3_object.read) }
         rescue AWS::Errors::Base => e
-          puts "S3 Problem uploading book to S3 for book #{book_uid}"
+          puts "S3 Problem uploading reading file #{file_path}"
           puts "#{e.class}: #{e.message}"
-          puts "Line #{e.line}, Column #{e.column}, Code #{e.code}"
         rescue Exception => e
-          puts "Unknown problem uploading book to S3 for book #{book_uid}"
+          puts "Unknown problem reading file from S3 for  #{file_path}"
           puts "#{e.class}: #{e.message}"
           puts e.backtrace.join("\n")
           $stderr.puts e
       end
-
       return new_local_file
   end
 

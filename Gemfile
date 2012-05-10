@@ -15,6 +15,8 @@ gem 'activeadmin'
 gem 'cancan'
 gem 'jquery-rails', '>= 1.0.12'
 gem "haml"
+gem "paperclip", "~> 3.0"
+gem "paperclip-aws"
 
 # Use unicorn as the web server
 # gem 'unicorn'
