@@ -15,12 +15,6 @@ describe SplitXmlHelper do
     xml_splitting, image_limit = load_test_xml 3
     segments = parse_and_segment xml_splitting, image_limit
     
-    segments.each do |seg|
-      seg_doc = Nokogiri::XML seg
-      seg_num_images = seg_doc.css('img').size
-      # p "ESH: have a seg= with #{seg_num_images} images"
-    end
-    
     segments.size.should eq 3
   end
 
@@ -37,13 +31,17 @@ describe SplitXmlHelper do
 
     xsl = File.read(S3UnzippingJob.daisy_xsl)
     engine = XML::XSLT.new
-    engine.xml = xml
     engine.xsl = xsl
 
-    bucket_name = "/" + poet_host + "/file"
-    return engine.serve
-    
-    contents = repository.xslt(xml, xsl)
+    segments.each do |seg|
+      xml_doc = Nokogiri::XML seg
+      num_xml_images = xml_doc.css('img').size
+      engine.xml = seg
+      contents = engine.serve
+      html_doc = Nokogiri::HTML(contents)
+      num_html_images = html_doc.css('img').size
+      num_html_images.size.should eq num_xml_images.size
+    end
     
   end
   

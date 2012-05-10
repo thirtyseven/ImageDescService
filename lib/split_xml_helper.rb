@@ -9,6 +9,9 @@ module SplitXmlHelper
     end
 
     def characters string
+      # the string passed to characters is unescaped.  If this is not CDATA, let's re-escape it
+      string = string.gsub("&", "&amp;").gsub("<", "&lt;").gsub(">", "&gt;") if string && !(string =~ /$\!\[CDATA\[/)
+        
       @active_element.add_child(TextNode.new(string))
     end
 
@@ -107,13 +110,11 @@ module SplitXmlHelper
       result
     end
 
-    def escape s
+    def escape_attr s
       s.gsub!("&", "&amp;")
       s.gsub!("<", "&lt;")
       s.gsub!(">", "&gt;")
-    end
-
-    def escape_attr s
+      
       if s.include?('"')
         s.gsub!('"', "&quot;")
       else
