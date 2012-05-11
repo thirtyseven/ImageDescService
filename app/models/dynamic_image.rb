@@ -2,7 +2,7 @@ class DynamicImage < ActiveRecord::Base
   validates_presence_of :book_id
   validates :image_location,  :presence => true, :length => { :maximum => 255 }
 
-  has_attached_file :physical_file, :styles => { :medium => "480x360>", :thumb => "160x120>" }, :storage => :aws, :s3_credentials => {:access_key_id => ENV['AWS_ACCESS_KEY_ID'], :secret_access_key => ENV['AWS_SECRET_ACCESS_KEY']}, :bucket => ENV['POET_ASSET_BUCKET'], :path => :path_by_book
+  has_attached_file :physical_file, :styles => { :medium => "400x300>", :thumb => "160x120>" }, :storage => :aws, :s3_credentials => {:access_key_id => ENV['AWS_ACCESS_KEY_ID'], :secret_access_key => ENV['AWS_SECRET_ACCESS_KEY']}, :bucket => ENV['POET_ASSET_BUCKET'], :path => :path_by_book
 
 
   belongs_to :book
