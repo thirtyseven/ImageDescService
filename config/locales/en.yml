@@ -10,6 +10,7 @@ en:
   filter_description_needed: "Description Needed"
   filter_unspecified: "Unspecified"
   filter_result: "Images"
+  version: "3.8.2"
 
   books:
     index:
