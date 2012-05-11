@@ -43,29 +43,12 @@ class UploadBookController < ApplicationController
 
 
     book = params[:book]
-    password = params[:password]
     if !book
       flash[:alert] = "Must specify a book file to process"
       redirect_to :action => 'upload'
       return
     end
 
-    unless password.blank?
-      begin
-        Zip::Archive.decrypt(book.path, password)
-      rescue Zip::Error => e
-        logger.info "#{e.class}: #{e.message}"
-        if e.message.include?("Wrong password")
-          logger.info "#{request.remote_addr} Invalid Password for encyrpted zip"
-          flash[:alert] = "Please check your password and re-enter"
-        else
-          logger.info "#{request.remote_addr} Other problem with encrypted zip"
-          flash[:alert] = "There is a problem with this zip file"
-        end
-        redirect_to :action => 'upload'
-        return
-      end
-    end
 
     if !valid_daisy_zip?(book.path)
       redirect_to :action => 'upload'
