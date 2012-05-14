@@ -18,11 +18,24 @@ class DynamicImage < ActiveRecord::Base
   end
 
   def thumb_source(host)
-    return "#{host}/#{book.uid}/thumb/#{image_location}"
+    if thumbnailable?
+      "#{host}/#{book.uid}/thumb/#{image_location}"
+    else
+      image_source(host)
+    end
   end
 
   def medium_source(host)
-    return "#{host}/#{book.uid}/medium/#{image_location}"
+    if thumbnailable?
+      "#{host}/#{book.uid}/medium/#{image_location}"
+    else
+      image_source(host)
+    end
+  end
+
+  def thumbnailable?
+    return false unless physical_file.content_type
+    ['image/jpeg', 'image/pjpeg', 'image/gif', 'image/png', 'image/x-png', 'image/jpg'].join('').include?(physical_file.content_type)
   end
 
   private
