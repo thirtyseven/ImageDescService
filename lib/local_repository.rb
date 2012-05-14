@@ -64,7 +64,6 @@ class LocalRepository
     engine.xml = xml
     engine.xsl = xsl
 
-    bucket_name = "/" + poet_host + "/file"
     return engine.serve
   end
 

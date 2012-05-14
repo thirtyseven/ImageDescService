@@ -36,4 +36,6 @@ DiagramRailsApp::Application.configure do
 
   require 'test/unit/testresult'
   # Test::Unit.run = true
+
+  PAPERCLIP_STORAGE_OPTIONS = {}
 end
