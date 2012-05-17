@@ -1,4 +1,4 @@
-class ResizeExistingImages3 < ActiveRecord::Migration
+class ResizeExistingImages < ActiveRecord::Migration
   include RepositoryChooser
 
   def self.up

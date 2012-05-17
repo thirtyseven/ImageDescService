@@ -1,4 +1,6 @@
 DiagramRailsApp::Application.routes.draw do
+  resources :book_fragments
+
   devise_for :users, ActiveAdmin::Devise.config
 
   ActiveAdmin.routes(self)

@@ -1,15 +1,8 @@
 require 'spec_helper'
 
 # Specs in this file have access to a helper object that includes
-# the SplitXmlHelper. For example:
-#
-# describe SplitXmlHelper do
-#   describe "string concat" do
-#     it "concats two strings with spaces" do
-#       helper.concat_strings("this","that").should == "this that"
-#     end
-#   end
-# end
+# the SplitXmlHelper. 
+
 describe SplitXmlHelper do
   it "should split at each level when we have a relatively low max limit of images" do
     xml_splitting, image_limit = load_test_xml 3

@@ -27,6 +27,16 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
   add_index "active_admin_comments", ["namespace"], :name => "index_active_admin_comments_on_namespace"
   add_index "active_admin_comments", ["resource_type", "resource_id"], :name => "index_admin_notes_on_resource_type_and_resource_id"
 
+  create_table "book_fragments", :force => true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "book_id"
+    t.string   "xml_file"
+    t.integer  "sequence_number"
+  end
+
+  add_index "book_fragments", ["book_id"], :name => "book_fragments_book_id"
+
   create_table "book_stats", :force => true do |t|
     t.integer "total_images"
     t.integer "total_essential_images",                                     :default => 0
@@ -108,13 +118,15 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "book_id"
+    t.integer  "book_fragment_id"
   end
 
+  add_index "dynamic_descriptions", ["book_fragment_id"], :name => "dynamic_descriptions_book_frag_id"
   add_index "dynamic_descriptions", ["dynamic_image_id", "is_current"], :name => "dynamic_descriptions_uid_image_id_current"
   add_index "dynamic_descriptions", ["dynamic_image_id"], :name => "index_dynamic_descriptions_on_dynamic_image_id"
 
   create_table "dynamic_images", :force => true do |t|
-    t.string   "image_location",      :null => false
+    t.string   "image_location",             :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "should_be_described"
@@ -151,7 +163,6 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
   end
 
   add_index "libraries", ["name"], :name => "idx_library_name_unique", :unique => true
-  add_index "libraries", ["name"], :name => "name", :unique => true
 
   create_table "roles", :force => true do |t|
     t.string   "name"

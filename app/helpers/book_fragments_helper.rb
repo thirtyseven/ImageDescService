@@ -1,0 +1,2 @@
+module BookFragmentsHelper
+end

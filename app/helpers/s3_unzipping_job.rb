@@ -1,6 +1,6 @@
 require 'xml/xslt'
 
-class S3UnzippingJob < Struct.new(:book_uid, :poet_host, :form_authenticity_token, :repository, :library)
+class S3UnzippingJob < Struct.new(:book_uid, :repository, :library)
 
   def enqueue(job)
 
@@ -11,6 +11,8 @@ class S3UnzippingJob < Struct.new(:book_uid, :poet_host, :form_authenticity_toke
   def self.daisy_xsl
     DAISY_XSL
   end
+  
+  IMAGE_LIMIT = 200
 
   def perform
     begin
@@ -21,17 +23,31 @@ class S3UnzippingJob < Struct.new(:book_uid, :poet_host, :form_authenticity_toke
         doc = Nokogiri::XML xml
         opf = get_opf_from_dir(book_directory)
         contents_filename = get_daisy_contents_xml_name(book_directory)
+
         book = create_book_in_db(doc, File.basename(contents_filename), opf)
 
-        create_images_in_database(book_directory, doc)
-        book.update_attribute("status", 2)
+        splitter = SplitXmlHelper::DTBookSplitter.new(IMAGE_LIMIT)
+        parser = Nokogiri::XML::SAX::Parser.new(splitter)
 
+        # Send some XML to the parser
+        parser.parse(xml)
+        
         xsl_filename = S3UnzippingJob.daisy_xsl
         xsl = File.read(xsl_filename)
-        contents = repository.xslt(xml, xsl)
-        content_html = File.join("","tmp", "#{book_uid}.html")
-        File.open(content_html, 'wb'){|f|f.write(contents)}
-        repository.store_file(content_html, book_uid, book_uid + "/" + book_uid + ".html", nil)
+        
+        splitter.segments.each_with_index do |segment_xml, i|
+          sequence_number = i+1
+          book_fragment = BookFragment.where(:book_id => book.id, :sequence_number => sequence_number).first || BookFragment.create(:book_id => book.id, :sequence_number => sequence_number)
+          doc = Nokogiri::XML segment_xml
+
+          create_images_in_database(book, book_fragment, book_directory, doc)
+          book.update_attribute("status", 2) if i == 0
+        
+          contents = repository.xslt(segment_xml, xsl)
+          content_html = File.join("","tmp", "#{book_uid}_#{sequence_number}.html")
+          File.open(content_html, 'wb'){|f|f.write(contents)}
+          repository.store_file(content_html, book_uid, "#{book_uid}/#{book_uid}_#{sequence_number}.html", nil)
+        end
 
         book.update_attribute("status", 3)
 
@@ -104,8 +120,7 @@ class S3UnzippingJob < Struct.new(:book_uid, :poet_host, :form_authenticity_toke
     return book
   end
 
-  def create_images_in_database(book_directory, doc)
-    book = Book.where(:uid => book_uid).first
+  def create_images_in_database(book, fragment, book_directory, doc)
     each_image(doc) do | image_node |
       image_location = image_node['src']
       xml_id = image_node['id']
@@ -114,12 +129,13 @@ class S3UnzippingJob < Struct.new(:book_uid, :poet_host, :form_authenticity_toke
       if (image_location)
 
         # add image to db if it does not already exist in db
-        image = DynamicImage.where(:book_id => book.id, :image_location => image_location).first
+        image = DynamicImage.where(:book_id => book.id, :book_fragment_id => fragment.id, :image_location => image_location).first
         image_path = File.join(book_directory, image_location)
         if(!image && File.exists?(image_path))
           width, height = get_image_size(book_directory, image_location)
           DynamicImage.create(
                 :book_id => book.id,
+                :book_fragment_id => fragment.id, 
                 :width => width,
                 :height => height,
                 :xml_id => xml_id,

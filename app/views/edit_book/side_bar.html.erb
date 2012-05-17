@@ -5,7 +5,14 @@
 <script type="text/javascript">
 <!--
 function handleClick(book_id, image_id, src){
-	parent.content.location = "/edit_book/content#" + image_id;
+	frameUrl = top.frames['content'].location.href;
+	console.log(frameUrl);
+	hashOffset = frameUrl.indexOf("#");
+	if(hashOffset) {
+	  frameUrl = frameUrl.substring(0, hashOffset)
+	}
+	console.log("location = " + frameUrl + "#" + image_id);
+	parent.content.location = frameUrl + "#" + image_id;
 }
 
 function showGuide() {
@@ -60,15 +67,26 @@ function shouldShow(filterValue, essentialFlagValue, descriptionCount)
 	return true
 }
 
+function handleFragmentChange(element)
+{
+    book_fragment_id = $(element).val();
+    
+    top.frames['content'].location = "/edit_book/content?book_fragment_id=" + book_fragment_id + "#top";
+    top.frames['side_bar'].location = "/edit_book/side_bar?book_id=<%=@book.id%>&book_fragment_id=" + book_fragment_id;
+}
 function handleFilterChange()
 {
     var desired = document.getElementById("filter").value ;
     window.location.href = "/edit_book/side_bar?book_id=<%=session[:book_id]%>" + "&filter=" + desired
 }
-
+<%
+  book = Book.find session[:book_id] rescue nil
+%>
 //-->
 </script>
 <div class="toolbar" style="width:259px;">
+<%= select_tag(:fragment, options_for_select(book.book_fragments.map{|book| ["Fragment #{book.sequence_number}", book.id]}, (params[:book_fragment_id] || 0).to_i),{ :onchange => "handleFragmentChange(this)"}) if book%>
+<br>
 <%= select_tag(:filter, options_for_select([[t(:filter_all), EditBookController::FILTER_ALL], [t(:filter_essential), EditBookController::FILTER_ESSENTIAL], [t(:filter_non_essential), EditBookController::FILTER_NON_ESSENTIAL], [t(:filter_description_needed), EditBookController::FILTER_DESCRIPTION_NEEDED], [t(:filter_unspecified), EditBookController::FILTER_UNSPECIFIED]], @filter),{ :onchange => "handleFilterChange()"})%>
 <b><%= @images.size %> <%= t(:filter_result)%> <a href='#' onClick="showGuide()">
   <div class='right'><img src='/images/info.png' width='20' height='20'/></div>
@@ -78,7 +96,6 @@ function handleFilterChange()
 </br></br></br>
 
 <%
-  book = Book.find session[:book_id] rescue nil
   if book
   	@images.each do | image |
   		xml_id = image.xml_id

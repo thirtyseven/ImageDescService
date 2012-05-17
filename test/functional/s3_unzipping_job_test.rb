@@ -5,7 +5,7 @@ class S3UnzippingJobTest < Test::Unit::TestCase
   # Called before every test method runs. Can be used
   # to set up fixture information.
   def setup
-    @job = S3UnzippingJob.new("25", "localhost", "token")
+    @job = S3UnzippingJob.new("25")
   end
 
   # Called after every test method runs. Can be used to tear
