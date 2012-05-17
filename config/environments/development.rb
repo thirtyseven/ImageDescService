@@ -33,5 +33,12 @@ DiagramRailsApp::Application.configure do
 
   # Only use best-standards-support built into browsers
   config.action_dispatch.best_standards_support = :builtin
+
+  #Additional Paperclip config for this environment
+  PAPERCLIP_S3_STORAGE_OPTIONS = {:storage => :aws,
+                               :s3_credentials => {:access_key_id => ENV['AWS_ACCESS_KEY_ID'], :secret_access_key => ENV['AWS_SECRET_ACCESS_KEY']},
+                               :bucket => ENV['POET_ASSET_BUCKET']}
+
+  #PAPERCLIP_S3_STORAGE_OPTIONS = {}
 end
 

@@ -3,7 +3,7 @@
 <%= stylesheet_link_tag 'poet' %>
 
 <style type="text/css">
-  .toolbar  { position:fixed; top:1px; left:1px; padding:10px; font-family:Arial;  background:#fffea1; border:2px solid #fc0; font-size: 80%;}
+  .toolbar  { position:fixed; top:1px; left:1px; padding:2px; font-family:Arial;  background:#fffea1; border:2px solid #fc0; font-size: 80%;}
   </style>
   
   <div class="toolbar" style="width:870px;">
@@ -15,7 +15,7 @@
 <%=yield%>
 <% DynamicImage.includes(:dynamic_descriptions).where(:book_id => @book.id).each do |dynamic_image| %>
   <% # TODO ESH: when we generate thumbnails, consider switching image-src below to use an alternate image size %>
-  <div class='image-editing-description-<%= dynamic_image.xml_id %>' image-src="<%= dynamic_image.medium_source(@host) %>" image-id="<%= dynamic_image.id %>" description-text="<%= generate_html(:partial => 'dynamic_images/show_history_fragment', :locals => {:descriptions => dynamic_image.dynamic_descriptions}) %>"></div>
+  <div class='image-editing-description-<%= dynamic_image.xml_id %>' image-original-src ="<%= dynamic_image.image_source(@host)%>" image-src="<%= dynamic_image.medium_source(@host) %>" image-id="<%= dynamic_image.id %>" description-text="<%= generate_html(:partial => 'dynamic_images/show_history_fragment', :locals => {:descriptions => dynamic_image.dynamic_descriptions}) %>"></div>
 <% end %>
 
 <script type="text/javascript">
@@ -62,7 +62,9 @@
         $dataNode = $($dataNode);
         $imageId = $dataNode.attr('image-id');
         $imageSource = $dataNode.attr('image-src');
+        $imageOriginalSource = $dataNode.attr('image-original-src');
         currentImageNode.attr('src', $imageSource);
+
         $descriptionText = $dataNode.attr('description-text');
         if($descriptionText != null) {
           $descriptionText = $descriptionText.replace(/\\n/g, "\n");
@@ -71,6 +73,8 @@
         // Update the image description box DIV class so that it reflects the image ID in question
         $('.imageDescBox', $newDiv).html($descriptionText);
         $('.imageDescBox', $newDiv).addClass('imageDescBox-' + $imageId);
+          //console.log()
+        $('.original_size_link', $newDiv).attr('href', $imageOriginalSource);
         // Update the hidden variable with the book ID so it has the correct book ID
         $("input[name='dynamic_description[book_id]']", $newDiv).attr('value', $bookId);
         // Update the hidden variable with the dynamic_image_id so it has the correct dynamic_image_id
@@ -99,7 +103,7 @@
      theme_advanced_buttons3 : "undo,redo",
      theme_advanced_toolbar_location : "top",
      theme_advanced_toolbar_align : "left",
-     theme_advanced_statusbar_location : "bottom",
+     theme_advanced_statusbar_location : "bottom"
   });
   
   $('.toggle-tiny-mce').click(function() {

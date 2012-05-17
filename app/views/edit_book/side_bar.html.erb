@@ -1,6 +1,6 @@
 
 <style type="text/css">
-	.toolbar	{ position:fixed; top:1px; left:1px; padding:10px; font-family:Arial; background:#fffea1; border:2px solid #fc0;}
+	.toolbar	{ position:fixed; top:1px; left:1px; padding:2px; font-family:Arial; background:#fffea1; border:2px solid #fc0;}
 	</style>
 <script type="text/javascript">
 <!--
@@ -113,7 +113,7 @@ function handleFilterChange()
 		src='<%= model.thumb_source(@host) %>'>
 	</img>
 	</a>
-	<p>
+	<p>Image Number: <%= model.id %>
 <%=
 		form_for model do | form |
 %>
