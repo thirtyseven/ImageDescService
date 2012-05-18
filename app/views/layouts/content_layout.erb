@@ -54,6 +54,15 @@
         
       })
       
+      
+      $('.toggle-tiny-mce', $newDiv).click(function() {
+        $bodyNode = $("textarea[name='dynamic_description[body]']", $(this).parent());
+        if($bodyNode != null) {
+          tinyMCE.execCommand('mceAddControl', false, $bodyNode.attr('id'));
+        }
+        return false;
+      });
+      
       $xmlId = $(item).attr('id');
       // Grab meta-information about this dynamic image and adjust the appropriate DIV to reflect that
       $dataNode = $(".image-editing-description-" + $xmlId, top.frames['content'].document);
@@ -106,11 +115,5 @@
      theme_advanced_statusbar_location : "bottom"
   });
   
-  $('.toggle-tiny-mce').click(function() {
-    $bodyNode = $("textarea[name='dynamic_description[body]']", $(this).parent());
-    if($bodyNode != null) {
-      tinyMCE.execCommand('mceAddControl', false, $bodyNode.attr('id'));
-    }
-  });
   
 </script>
