@@ -87,9 +87,10 @@ function handleFilterChange()
 <div class="toolbar" style="width:259px;">
 <%= select_tag(:fragment, options_for_select(book.book_fragments.map{|book| ["Fragment #{book.sequence_number}", book.id]}, (params[:book_fragment_id] || 0).to_i),{ :onchange => "handleFragmentChange(this)"}) if book%>
 <br>
+<label for="filter">Show image filter</label><br/>
 <%= select_tag(:filter, options_for_select([[t(:filter_all), EditBookController::FILTER_ALL], [t(:filter_essential), EditBookController::FILTER_ESSENTIAL], [t(:filter_non_essential), EditBookController::FILTER_NON_ESSENTIAL], [t(:filter_description_needed), EditBookController::FILTER_DESCRIPTION_NEEDED], [t(:filter_unspecified), EditBookController::FILTER_UNSPECIFIED]], @filter),{ :onchange => "handleFilterChange()"})%>
-<b><%= @images.size %> <%= t(:filter_result)%> <a href='#' onClick="showGuide()">
-  <div class='right'><img src='/images/info.png' width='20' height='20'/></div>
+<b><%= @images.size %> <%= t(:filter_result)%> <a href='#' title="Guidelines for describing images. Will open in popup window." onClick="showGuide()">
+  <div class='right'><img src='/images/info.png' alt="Letter I. Clicking will popup image description guidelines." width='20' height='20'/></div>
 </a></b></br>
 </div>
 
@@ -110,7 +111,7 @@ function handleFilterChange()
 	<a id="<%= xml_id %>" href="#<%= xml_id %>">
 	<img style="border:1px solid black; padding:0.25em; font-size: 80%;" 
 		onclick="handleClick('<%= book.id %>', '<%= xml_id %>', '<%= raw_src %>')"
-		src='<%= model.thumb_source(@host) %>'>
+		alt="Image <%= model.id %>. Clicking will cause the frame to the right to scroll to this image within the book." src='<%= model.thumb_source(@host) %>'>
 	</img>
 	</a>
 	<p>Image Number: <%= model.id %>
