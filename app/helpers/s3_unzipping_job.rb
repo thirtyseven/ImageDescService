@@ -12,7 +12,7 @@ class S3UnzippingJob < Struct.new(:book_uid, :repository, :library)
     DAISY_XSL
   end
   
-  IMAGE_LIMIT = 251
+  IMAGE_LIMIT = 241
 
   def perform
     begin
@@ -129,7 +129,7 @@ class S3UnzippingJob < Struct.new(:book_uid, :repository, :library)
       if (image_location)
 
         # add image to db if it does not already exist in db
-        image = DynamicImage.where(:book_id => book.id, :book_fragment_id => fragment.id, :image_location => image_location).first
+        image = DynamicImage.where(:book_id => book.id, :image_location => image_location).first
         image_path = File.join(book_directory, image_location)
         if(!image && File.exists?(image_path))
           begin
