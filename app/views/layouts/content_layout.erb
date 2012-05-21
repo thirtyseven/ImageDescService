@@ -47,8 +47,8 @@
       $('form.description-form', $newDiv).bind('ajax:error',    function(data, html, status) {
         notification = $('.description-result', $(this).parent());
         notification = $(notification);
-        if($.parseJSON(html.responseText) != null && $.parseJSON(html.responseText).body != null) {
-          notification.html("The description may not be blank, please provide a description.");
+        if($.parseJSON(html.responseText) != null) {
+          notification.html($.parseJSON(html.responseText).join(", "));
         }
         else {
           notification.html("An error has occurred.");

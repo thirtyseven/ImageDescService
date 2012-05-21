@@ -52,7 +52,7 @@ class DynamicDescriptionsController < ApplicationController
       @dynamic_description.body = "missing parameters"
       @missing_parameters = true
     end
-
+    
     respond_to do |format|
       if @missing_parameters
         format.html { render :action => "new" }
@@ -68,7 +68,7 @@ class DynamicDescriptionsController < ApplicationController
         @image_location = params[:image_location]
         format.html { render :action => "new" }
         format.xml  { render :xml => @dynamic_description.errors, :status => :non_authoritative_information }
-        format.json  { render :json => @dynamic_description.errors, :callback => params[:callback], :status => 400 }
+        format.json  { render :json => @dynamic_description.errors.full_messages, :callback => params[:callback], :status => 400 }
       end
     end
   end
