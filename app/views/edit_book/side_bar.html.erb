@@ -85,12 +85,12 @@ function handleFilterChange()
 //-->
 </script>
 <div class="toolbar" style="width:259px;">
-<%= select_tag(:fragment, options_for_select(book.book_fragments.map{|book| ["Fragment #{book.sequence_number}", book.id]}, (params[:book_fragment_id] || 0).to_i),{ :onchange => "handleFragmentChange(this)"}) if book%>
+<label for="filter">Show book part</label>
+<%= select_tag(:fragment, options_for_select(book.book_fragments.map{|book| [" #{book.sequence_number}", book.id]}, (params[:book_fragment_id] || 0).to_i),{ :onchange => "handleFragmentChange(this)"}) if book%>
 <br>
-<label for="filter">Show image filter</label><br/>
+<label for="filter">Show</label>
 <%= select_tag(:filter, options_for_select([[t(:filter_all), EditBookController::FILTER_ALL], [t(:filter_essential), EditBookController::FILTER_ESSENTIAL], [t(:filter_non_essential), EditBookController::FILTER_NON_ESSENTIAL], [t(:filter_description_needed), EditBookController::FILTER_DESCRIPTION_NEEDED], [t(:filter_unspecified), EditBookController::FILTER_UNSPECIFIED]], @filter),{ :onchange => "handleFilterChange()"})%>
 <b><%= @images.size %> <%= t(:filter_result)%> <a href='#' title="Guidelines for describing images. Will open in popup window." onClick="showGuide()">
-  <div class='right'><img src='/images/info.png' alt="Letter I. Clicking will popup image description guidelines." width='20' height='20'/></div>
 </a></b></br>
 </div>
 

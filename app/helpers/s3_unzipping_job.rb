@@ -12,7 +12,7 @@ class S3UnzippingJob < Struct.new(:book_uid, :repository, :library)
     DAISY_XSL
   end
   
-  IMAGE_LIMIT = 200
+  IMAGE_LIMIT = 241
 
   def perform
     begin
@@ -129,18 +129,25 @@ class S3UnzippingJob < Struct.new(:book_uid, :repository, :library)
       if (image_location)
 
         # add image to db if it does not already exist in db
-        image = DynamicImage.where(:book_id => book.id, :book_fragment_id => fragment.id, :image_location => image_location).first
+        image = DynamicImage.where(:book_id => book.id, :image_location => image_location).first
         image_path = File.join(book_directory, image_location)
         if(!image && File.exists?(image_path))
-          width, height = get_image_size(book_directory, image_location)
-          DynamicImage.create(
-                :book_id => book.id,
-                :book_fragment_id => fragment.id, 
-                :width => width,
-                :height => height,
-                :xml_id => xml_id,
-                :physical_file => File.new(image_path, "rb"),
-                :image_location => image_location)
+          begin
+            width, height = get_image_size(book_directory, image_location)
+            DynamicImage.create(
+                  :book_id => book.id,
+                  :book_fragment_id => fragment.id,
+                  :width => width,
+                  :height => height,
+                  :xml_id => xml_id,
+                  :physical_file => File.new(image_path, "rb"),
+                  :image_location => image_location)
+          rescue Exception => e
+            puts "Unknown problem creating dynamic image, #{image_location}, for book #{book.id}"
+            puts "#{e.class}: #{e.message}"
+            puts e.backtrace.join("\n")
+            $stderr.puts e
+          end
         elsif (image)
           # may need to backfill existing rows without xml id
           if (! image.xml_id)
