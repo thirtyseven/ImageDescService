@@ -42,13 +42,17 @@
         descriptionInput = $('.description-text-area', $(this).parent());
         descriptionInput = $(descriptionInput);
         descriptionInput.val('');
-        $('.imageDescriptions', $(this).parent()).append($(html));
-        
+        $('.imageDescriptions', $(this).parent()).append($(html.body));
       })
       $('form.description-form', $newDiv).bind('ajax:error',    function(data, html, status) {
         notification = $('.description-result', $(this).parent());
         notification = $(notification);
-        notification.html("An error has occurred.");
+        if($.parseJSON(html.responseText) != null && $.parseJSON(html.responseText).body != null) {
+          notification.html("The description may not be blank, please provide a description.");
+        }
+        else {
+          notification.html("An error has occurred.");
+        }
         notification.css('fontWeight', 'bold');
         notification.css('color', 'red');
         
