@@ -3,12 +3,12 @@
 <%= stylesheet_link_tag 'poet' %>
 
 <style type="text/css">
-  .toolbar  { position:fixed; top:1px; left:1px; padding:2px; font-family:Arial;  background:#fffea1; border:2px solid #fc0; font-size: 80%;}
+  .toolbar  { position:fixed; top:0px; left:1px; padding:1px; font-family:Arial;  background:#fffea1; border:1px solid #fc0; font-size: 80%;}
   .original_image {font-family:Arial; font-size: 80%; font-weight: bold;}
   </style>
   
-  <div class="toolbar" style="width:870px;">
-    <b> Title: <%= @book.title %></b><div style="float:right;"><%= link_to root_path, :target => '_top', :title => 'close' do %>   <b>Close</b> <% end %></div>
+  <div class="toolbar" style="width:350px;">
+    <b><%= @book.title %></b>
  </div>
   </div>
 <div class='image-editing-controls' template="<%= h generate_html(:partial => 'edit_book/edit_image_form')%>" book-id="<%= @book.id %>"></div>
