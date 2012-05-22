@@ -4,6 +4,7 @@
 
 <style type="text/css">
   .toolbar  { position:fixed; top:1px; left:1px; padding:2px; font-family:Arial;  background:#fffea1; border:2px solid #fc0; font-size: 80%;}
+  .original_image {font-family:Arial; font-size: 80%; font-weight: bold;}
   </style>
   
   <div class="toolbar" style="width:870px;">
@@ -87,7 +88,8 @@
         $('.imageDescBox', $newDiv).html($descriptionText);
         $('.imageDescBox', $newDiv).addClass('imageDescBox-' + $imageId);
           //console.log()
-        $('.original_size_link', $newDiv).attr('href', $imageOriginalSource);
+        $('.original_size_link', $newDiv).attr('href', $imageOriginalSource).attr('class', 'original_image');
+        $('.image_number_text', $newDiv).html('Image Number: ' + $imageId);
         // Update the hidden variable with the book ID so it has the correct book ID
         $("input[name='dynamic_description[book_id]']", $newDiv).attr('value', $bookId);
         // Update the hidden variable with the dynamic_image_id so it has the correct dynamic_image_id
