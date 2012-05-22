@@ -3,7 +3,6 @@ class ApplicationController < ActionController::Base
   #protect_from_forgery
   require 'active_admin_views_pages_base.rb'
   helper_method :current_library
-  cache_sweeper :user_sweeper, :only => [:create, :update, :destroy]
   
   def load_book
     if !params[:book_id].blank?

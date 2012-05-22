@@ -11,6 +11,7 @@ class UsersController < ApplicationController
   end
 
   def update
+    Exception.new "Unathorized access - Assigning roles outside of the admin tool" if params[:user] && params[:user][:role_ids]
     @user = User.find(params[:id])
 
     respond_to do |format|

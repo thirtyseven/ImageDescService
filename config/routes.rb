@@ -1,7 +1,10 @@
 DiagramRailsApp::Application.routes.draw do
   resources :book_fragments
 
-  devise_for :users, ActiveAdmin::Devise.config
+  
+  modified_config = ActiveAdmin::Devise.config.clone
+  modified_config[:controllers][:registrations] = 'registrations'
+  devise_for :users, modified_config
 
   ActiveAdmin.routes(self)
 
