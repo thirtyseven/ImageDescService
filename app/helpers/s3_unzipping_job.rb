@@ -1,6 +1,6 @@
 require 'xml/xslt'
 
-class S3UnzippingJob < Struct.new(:book_uid, :repository, :library)
+class S3UnzippingJob < Struct.new(:book_uid, :repository, :library, :uploader_id)
 
   def enqueue(job)
 
@@ -24,7 +24,7 @@ class S3UnzippingJob < Struct.new(:book_uid, :repository, :library)
         opf = get_opf_from_dir(book_directory)
         contents_filename = get_daisy_contents_xml_name(book_directory)
 
-        book = create_book_in_db(doc, File.basename(contents_filename), opf)
+        book = create_book_in_db(doc, File.basename(contents_filename), opf, uploader_id)
 
         splitter = SplitXmlHelper::DTBookSplitter.new(IMAGE_LIMIT)
         parser = Nokogiri::XML::SAX::Parser.new(splitter)
@@ -97,7 +97,7 @@ class S3UnzippingJob < Struct.new(:book_uid, :repository, :library)
     return dir
   end
 
-  def create_book_in_db(doc, xml_file, opf)
+  def create_book_in_db(doc, xml_file, opf, uploader)
     isbn = nil
     if (opf)
       opf_doc = Nokogiri::XML opf
@@ -112,7 +112,8 @@ class S3UnzippingJob < Struct.new(:book_uid, :repository, :library)
           :status => 1,
           :isbn => isbn,
           :xml_file => xml_file,
-          :library => library
+          :library => library,
+          :user_id => uploader
       )
     elsif (!xml_file.eql?(book.xml_file))
       book.update_attributes(:xml_file => xml_file, :status => 1)

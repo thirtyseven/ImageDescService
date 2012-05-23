@@ -41,8 +41,8 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.integer "total_images"
     t.integer "total_essential_images",                                     :default => 0
     t.integer "total_images_described",                                     :default => 0
-    t.integer "book_id"
     t.integer "essential_images_described",                                 :default => 0
+    t.integer "book_id"
     t.integer "approved_descriptions",                                      :default => 0
     t.decimal "percent_essential_described", :precision => 10, :scale => 0, :default => 0
   end
@@ -59,6 +59,7 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.string   "xml_file",                    :default => "none", :null => false
     t.datetime "last_approved"
     t.integer  "library_id",                                      :null => false
+    t.integer  "user_id"
   end
 
   add_index "books", ["isbn"], :name => "index_books_on_isbn"
@@ -138,9 +139,12 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.string   "physical_file_content_type"
     t.integer  "physical_file_file_size"
     t.datetime "physical_file_updated_at"
+    t.integer  "book_fragment_id"
   end
 
+  add_index "dynamic_images", ["book_fragment_id"], :name => "dynamic_images_book_frag_id"
   add_index "dynamic_images", ["book_id", "image_location"], :name => "index_dynamic_images_on_book_id_and_image_location"
+  add_index "dynamic_images", ["image_location"], :name => "index_dynamic_images_on_book_uid_and_image_location"
   add_index "dynamic_images", ["should_be_described"], :name => "index_dynamic_images_on_book_uid_and_should_be_described"
 
   create_table "images", :force => true do |t|
@@ -219,7 +223,7 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.string   "last_sign_in_ip"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "username",                                              :null => false
+    t.string   "username",                                               :null => false
     t.string   "first_name"
     t.string   "last_name"
     t.string   "other_subject_expertise"
