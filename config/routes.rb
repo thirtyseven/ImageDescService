@@ -19,6 +19,7 @@ DiagramRailsApp::Application.routes.draw do
 
   post "upload_book/submit"
   get "upload_book/upload"
+  get "upload_book/split"
 
   get "edit_book/content"
   get "edit_book/describe"
