@@ -1,6 +1,6 @@
 require 'xml/xslt'
 
-class S3UnzippingJob < Struct.new(:book_uid, :repository, :library, :uploader_id)
+class S3UnzippingJob < Struct.new(:book_uid, :repository, :library, :uploader_id, :split_xml)
 
   def enqueue(job)
 
@@ -15,6 +15,9 @@ class S3UnzippingJob < Struct.new(:book_uid, :repository, :library, :uploader_id
   IMAGE_LIMIT = 241
 
   def perform
+    puts "in job, split_xml is #{split_xml}"
+    split = split_xml.eql?('true')
+    puts "in job, split is #{split}"
     begin
         daisy_file = repository.read_file(book_uid + ".zip", File.join( "", "tmp", "#{book_uid}.zip"))
         book_directory = accept_book(daisy_file)
@@ -24,7 +27,17 @@ class S3UnzippingJob < Struct.new(:book_uid, :repository, :library, :uploader_id
         opf = get_opf_from_dir(book_directory)
         contents_filename = get_daisy_contents_xml_name(book_directory)
 
-        book = create_book_in_db(doc, File.basename(contents_filename), opf, uploader_id)
+        book = nil
+        if split
+          puts ("about to look up book")
+          book = Book.where(:uid => book_uid).first
+          puts ("just found book id is #{book.id}")
+        else
+          puts ("about to create book")
+          book = create_book_in_db(doc, File.basename(contents_filename), opf, uploader_id)
+          puts ("just create book id is #{book.id}")
+        end
+        puts ("book id is #{book.id}")
 
         splitter = SplitXmlHelper::DTBookSplitter.new(IMAGE_LIMIT)
         parser = Nokogiri::XML::SAX::Parser.new(splitter)
@@ -40,7 +53,12 @@ class S3UnzippingJob < Struct.new(:book_uid, :repository, :library, :uploader_id
           book_fragment = BookFragment.where(:book_id => book.id, :sequence_number => sequence_number).first || BookFragment.create(:book_id => book.id, :sequence_number => sequence_number)
           doc = Nokogiri::XML segment_xml
 
-          create_images_in_database(book, book_fragment, book_directory, doc)
+          if split
+            update_images_in_database(book, book_fragment, doc)
+          else
+            create_images_in_database(book, book_fragment, book_directory, doc)
+          end
+
           book.update_attribute("status", 2) if i == 0
         
           contents = repository.xslt(segment_xml, xsl)
@@ -119,6 +137,22 @@ class S3UnzippingJob < Struct.new(:book_uid, :repository, :library, :uploader_id
       book.update_attributes(:xml_file => xml_file, :status => 1)
     end
     return book
+  end
+
+  # temp method to split xml file of existing books
+  def update_images_in_database(book, fragment, doc)
+    each_image(doc) do | image_node |
+      image_location = image_node['src']
+      xml_id = image_node['id']
+
+      # if src exists
+      if image_location
+        image = DynamicImage.where(:book_id => book.id, :image_location => image_location).first
+        if image
+          image.update_attribute("book_fragment_id", fragment.id)
+        end
+      end
+    end
   end
 
   def create_images_in_database(book, fragment, book_directory, doc)
