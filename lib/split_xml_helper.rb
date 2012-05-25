@@ -45,7 +45,7 @@ module SplitXmlHelper
 
   class DTBookSplitter < AbstractNodeTreeBuilder
 
-    LEVEL_BOUNDARY_TAGS = %w(level level1 level2 level3 level4 level5 level6)
+    LEVEL_BOUNDARY_TAGS = %w(level level1 level2 level3 level4 level5 level6 pagenum)
 
     @segments #List<String>
     @target_size #int
