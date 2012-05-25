@@ -18,7 +18,6 @@ After the upload process completes, you will need to remember the code displayed
 <%= form_tag("/upload_book/submit", {:multipart => true}) do %>
 <p><label for="upload_file">Select DAISY book file</label> :
 <%= file_field_tag 'book' %> </p>
-<%= hidden_field_tag 'split_only', 'false' %>
 <p></p>
 <%= submit_tag "Upload" %>
 <% end %>
