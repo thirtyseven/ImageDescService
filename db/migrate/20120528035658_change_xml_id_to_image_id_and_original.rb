@@ -14,7 +14,7 @@ class ChangeXmlIdToImageIdAndOriginal < ActiveRecord::Migration
           doc = Nokogiri::HTML(html)
       
           doc.css('img').each do |img_node| 
-            unless (img_node['src']).blank?
+            unless (img_node['id']).blank?
               db_image = DynamicImage.where(:book_id => book.id, :xml_id => img_node['id']).first
               if db_image
                 img_node['img-id'] = db_image.id.to_s
