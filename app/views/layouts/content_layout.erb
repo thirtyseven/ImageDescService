@@ -3,11 +3,12 @@
 <%= stylesheet_link_tag 'poet' %>
 
 <style type="text/css">
-  .toolbar  { position:fixed; top:1px; left:1px; padding:2px; font-family:Arial;  background:#fffea1; border:2px solid #fc0; font-size: 80%;}
+  .toolbar  { position:fixed; top:0px; left:1px; padding:1px; font-family:Arial;  background:#fffea1; border:1px solid #fc0; font-size: 80%;}
+  .original_image {font-family:Arial; font-size: 80%; font-weight: bold;}
   </style>
   
-  <div class="toolbar" style="width:870px;">
-    <b> Title: <%= @book.title %></b><div style="float:right;"><%= link_to root_path, :target => '_top', :title => 'close' do %>   <b>Close</b> <% end %></div>
+  <div class="toolbar" style="width:350px;">
+    <b><%= @book.title %></b>
  </div>
   </div>
 <div class='image-editing-controls' template="<%= h generate_html(:partial => 'edit_book/edit_image_form')%>" book-id="<%= @book.id %>"></div>
@@ -88,20 +89,21 @@
         $('.imageDescBox', $newDiv).html($descriptionText);
         $('.imageDescBox', $newDiv).addClass('imageDescBox-' + $imageId);
           //console.log()
-        $('.original_size_link', $newDiv).attr('href', $imageOriginalSource);
+        $('.original_size_link', $newDiv).attr('href', $imageOriginalSource).attr('class', 'original_image');
+        $('.image_number_text', $newDiv).html('Image Number: ' + $imageId);
         // If this is the first instance of the img, let them create new descriptions
         if($original == '1') {
-          // Update the hidden variable with the book ID so it has the correct book ID
-          $("input[name='dynamic_description[book_id]']", $newDiv).attr('value', $bookId);
-          // Update the hidden variable with the dynamic_image_id so it has the correct dynamic_image_id
-          $("input[name='dynamic_description[dynamic_image_id]']", $newDiv).attr('value', $imageId);
-          $bodyTextArea = $("textarea[name='dynamic_description[body]']", $newDiv);
-          $bodyTextArea.attr('id', "dynamic_description_body_" + $imageId);
-          $bodyTextArea.click(function() {
-            // Remove any success/failure alert messaging; note that this will remove *all* alerts because of the parents() method call
-            $('.description-result', $('.outer-dynamic-description-div', $bodyTextArea.parents())).html('');
-          });
-        }
+        // Update the hidden variable with the book ID so it has the correct book ID
+        $("input[name='dynamic_description[book_id]']", $newDiv).attr('value', $bookId);
+        // Update the hidden variable with the dynamic_image_id so it has the correct dynamic_image_id
+        $("input[name='dynamic_description[dynamic_image_id]']", $newDiv).attr('value', $imageId);
+        $bodyTextArea = $("textarea[name='dynamic_description[body]']", $newDiv);
+        $bodyTextArea.attr('id', "dynamic_description_body_" + $imageId);
+        $bodyTextArea.click(function() {
+          // Remove any success/failure alert messaging; note that this will remove *all* alerts because of the parents() method call
+          $('.description-result', $('.outer-dynamic-description-div', $bodyTextArea.parents())).html('');
+        });
+      }
         else {
           // Hide the area where you can enter new descriptions
           $('.new-description', $newDiv).hide();

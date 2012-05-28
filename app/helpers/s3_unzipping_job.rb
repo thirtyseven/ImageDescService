@@ -1,6 +1,6 @@
 require 'xml/xslt'
 
-class S3UnzippingJob < Struct.new(:book_uid, :repository, :library)
+class S3UnzippingJob < Struct.new(:book_uid, :repository, :library, :uploader_id)
 
   def enqueue(job)
 
@@ -25,7 +25,11 @@ class S3UnzippingJob < Struct.new(:book_uid, :repository, :library)
         opf = get_opf_from_dir(book_directory)
         contents_filename = get_daisy_contents_xml_name(book_directory)
 
-        book = create_book_in_db(doc, File.basename(contents_filename), opf)
+        book = Book.where(:uid => book_uid).first
+
+        unless book
+          book = create_book_in_db(doc, File.basename(contents_filename), opf, uploader_id)
+        end
 
         splitter = SplitXmlHelper::DTBookSplitter.new(IMAGE_LIMIT)
         parser = Nokogiri::XML::SAX::Parser.new(splitter)
@@ -44,8 +48,7 @@ class S3UnzippingJob < Struct.new(:book_uid, :repository, :library)
           sequence_number = i+1
           book_fragment = BookFragment.where(:book_id => book.id, :sequence_number => sequence_number).first || BookFragment.create(:book_id => book.id, :sequence_number => sequence_number)
           doc = Nokogiri::XML segment_xml
-          
-          
+
           create_images_in_database(book, book_fragment, book_directory, doc)
           
           doc.css('img').each do |img_node| 
@@ -90,7 +93,7 @@ class S3UnzippingJob < Struct.new(:book_uid, :repository, :library)
     top_level_entries = Dir.entries(zip_directory)
     top_level_entries.delete('.')
     top_level_entries.delete('..')
-    if(top_level_entries.size == 1)
+    if top_level_entries.size == 1
       book_directory = File.join(zip_directory, top_level_entries.first)
     else
       book_directory = zip_directory
@@ -113,30 +116,31 @@ class S3UnzippingJob < Struct.new(:book_uid, :repository, :library)
         end
       end
     end
-    return dir
+    dir
   end
 
-  def create_book_in_db(doc, xml_file, opf)
+  def create_book_in_db(doc, xml_file, opf, uploader)
     isbn = nil
-    if (opf)
+    if opf
       opf_doc = Nokogiri::XML opf
       isbn = extract_optional_isbn(opf_doc)
     end
     @book_title = extract_optional_book_title(doc)
     book = Book.where(:uid => book_uid).first
-    if (!book)
+    if !book
       book = Book.create(
           :uid => book_uid,
           :title => @book_title,
           :status => 1,
           :isbn => isbn,
           :xml_file => xml_file,
-          :library => library
+          :library => library,
+          :user_id => uploader
       )
-    elsif (!xml_file.eql?(book.xml_file))
+    elsif !xml_file.eql?(book.xml_file)
       book.update_attributes(:xml_file => xml_file, :status => 1)
     end
-    return book
+    book
   end
 
   def create_images_in_database(book, fragment, book_directory, doc)
@@ -145,12 +149,12 @@ class S3UnzippingJob < Struct.new(:book_uid, :repository, :library)
       xml_id = image_node['id']
 
       # if src exists
-      if (image_location)
+      if image_location
 
         # add image to db if it does not already exist in db
         image = DynamicImage.where(:book_id => book.id, :image_location => image_location).first
         image_path = File.join(book_directory, image_location)
-        if(!image && File.exists?(image_path))
+        if !image && File.exists?(image_path)
           begin
             width, height = get_image_size(book_directory, image_location)
             DynamicImage.create(
@@ -167,11 +171,12 @@ class S3UnzippingJob < Struct.new(:book_uid, :repository, :library)
             puts e.backtrace.join("\n")
             $stderr.puts e
           end
-        elsif (image)
+        elsif image
           # may need to backfill existing rows without xml id
-          if (! image.xml_id)
+          if ! image.xml_id
             image.update_attribute("xml_id", xml_id)
           end
+          image.update_attribute("book_fragment_id", fragment.id)
         end
       end
     end
@@ -180,7 +185,7 @@ class S3UnzippingJob < Struct.new(:book_uid, :repository, :library)
   def upload_files_to_s3(book_directory, doc)
 
     s3_service = nil
-    if (!ENV['POET_LOCAL_STORAGE_DIR'])
+    if !ENV['POET_LOCAL_STORAGE_DIR']
       # get handle to s3 service
       s3_service = AWS::S3.new
     end
@@ -189,7 +194,7 @@ class S3UnzippingJob < Struct.new(:book_uid, :repository, :library)
     each_image(doc) do |image_node|
       image_location = image_node['src']
       # only want to upload images that have a src attribute
-      if (image_location)
+      if image_location
         file_key = book_uid + "/" + image_location
         file_location = File.join(book_directory, image_location)
 
@@ -231,7 +236,7 @@ class S3UnzippingJob < Struct.new(:book_uid, :repository, :library)
       raise MissingBookUIDException.new
     end
     node = matches.first
-    return node.attributes['content'].content
+    node.attributes['content'].content
   end
 
   def extract_optional_book_title(doc)
@@ -241,7 +246,7 @@ class S3UnzippingJob < Struct.new(:book_uid, :repository, :library)
       return nil
     end
     node = matches.first
-    return node.attributes['content'].content
+    node.attributes['content'].content
   end
 
   def extract_optional_isbn(doc)
@@ -250,7 +255,7 @@ class S3UnzippingJob < Struct.new(:book_uid, :repository, :library)
       return nil
     end
     node = matches.first
-    return node.text
+    node.text
   end
 
   def get_image_size(book_directory, image_location)

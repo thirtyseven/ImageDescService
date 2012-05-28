@@ -1,6 +1,7 @@
 
 <style type="text/css">
-	.toolbar	{ position:fixed; top:1px; left:1px; padding:2px; font-family:Arial; background:#fffea1; border:2px solid #fc0;}
+	.toolbar	{ position:fixed; top:0px; left:1px; padding:1px; font-family:Arial; background:#fffea1; border:1px solid #fc0;}
+    a, a:link, a:visited {color: #ffffff;}
 	</style>
 <script type="text/javascript">
 <!--
@@ -77,7 +78,7 @@ function handleFragmentChange(element)
 function handleFilterChange()
 {
     var desired = document.getElementById("filter").value ;
-    window.location.href = "/edit_book/side_bar?book_id=<%=session[:book_id]%>" + "&filter=" + desired
+    window.location.href = "/edit_book/side_bar?book_id=<%=session[:book_id]%>" + "&filter=" + desired + "&book_fragment_id=<%= @fragment_id%>"
 }
 <%
   book = Book.find session[:book_id] rescue nil
@@ -107,14 +108,14 @@ function handleFilterChange()
 
 
 %>
-<div id="div_<%= src %>">
+<div id="div_<%= src %>" style="padding-left: 5px;">
 	<a id="<%= xml_id %>" href="#<%= xml_id %>">
-	<img style="border:1px solid black; padding:0.25em; font-size: 80%;" 
+	<img style="padding-top: 55px;"
 		onclick="handleClick('<%= book.id %>', '<%= xml_id %>', '<%= raw_src %>')"
-		alt="Image <%= model.id %>. Clicking will cause the frame to the right to scroll to this image within the book." src='<%= model.thumb_source(@host) %>'>
+		alt="Image <%= model.id %>. Clicking will cause the frame to the right to scroll to this image within the book." src="<%= model.thumb_source(@host)%>">
 	</img>
 	</a>
-	<p>Image Number: <%= model.id %>
+	</br>Image Number: <%= model.id %>
 <%=
 		form_for model do | form |
 %>
@@ -130,7 +131,7 @@ function handleFilterChange()
 <%
 		end
 %>
-</p>
+
 <hr/>
 </div>
 <% 

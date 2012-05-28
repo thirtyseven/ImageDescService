@@ -14,15 +14,11 @@ class S3Repository
 
         s3_object = bucket.objects[new_file_name]
         begin
-          if (! s3_object.exists?)
-            if(File.exists?(file_path))
-              s3_object.write(:file => file_path)
-            else
-              puts("file does not exist in local dir #{file_path}")
-              s3_object = nil
-            end
+          if(File.exists?(file_path))
+            s3_object.write(:file => file_path)
           else
-            #puts ("zip file already exists")
+            puts("file does not exist in local dir #{file_path}")
+            s3_object = nil
           end
         rescue AWS::Errors::Base => e
           puts "S3 Problem uploading book to S3 for book #{book_uid}"

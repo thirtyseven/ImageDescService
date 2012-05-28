@@ -33,6 +33,7 @@ class UploadBookController < ApplicationController
     @repository = RepositoryChooser.choose
   end
 
+
   def submit
 
     #init session vars
@@ -44,7 +45,7 @@ class UploadBookController < ApplicationController
 
     book = params[:book]
     if !book
-      flash[:alert] = "Must specify a book file to process"
+      flash[:alert] = "Must specify a book file to upload"
       redirect_to :action => 'upload'
       return
     end
@@ -66,7 +67,7 @@ class UploadBookController < ApplicationController
       pid = fork do
         begin
           @repository.store_file(book.path, @book_uid, @book_uid + ".zip", nil)
-          job = S3UnzippingJob.new(@book_uid, @repository, current_library)
+          job = S3UnzippingJob.new(@book_uid, @repository, current_library, current_user.id)
           Delayed::Job.enqueue(job)
 
           # hack for testing
