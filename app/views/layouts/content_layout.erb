@@ -89,7 +89,11 @@
         $('.imageDescBox', $newDiv).html($descriptionText);
         $('.imageDescBox', $newDiv).addClass('imageDescBox-' + $imageId);
           //console.log()
-        $('.original_size_link', $newDiv).attr('href', $imageOriginalSource).attr('class', 'original_image');
+        orginalSizeLink = $('.original_size_link', $newDiv);
+        if(orginalSizeLink != null) {
+          orginalSizeLink.attr('href', $imageOriginalSource);
+          orginalSizeLink.attr('class', 'original_image');
+        }
         $('.image_number_text', $newDiv).html('Image Number: ' + $imageId);
         // If this is the first instance of the img, let them create new descriptions
         if($original == '1') {
