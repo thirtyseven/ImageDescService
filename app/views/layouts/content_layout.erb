@@ -14,8 +14,7 @@
 
 <%=yield%>
 <% DynamicImage.includes(:dynamic_descriptions).where(:book_id => @book.id).each do |dynamic_image| %>
-  <% # TODO ESH: when we generate thumbnails, consider switching image-src below to use an alternate image size %>
-  <div class='image-editing-description-<%= dynamic_image.xml_id %>' image-original-src ="<%= dynamic_image.image_source(@host)%>" image-src="<%= dynamic_image.medium_source(@host) %>" image-id="<%= dynamic_image.id %>" description-text="<%= generate_html(:partial => 'dynamic_images/show_history_fragment', :locals => {:descriptions => dynamic_image.dynamic_descriptions}) %>"></div>
+  <div class='image-editing-description-<%= dynamic_image.id %>' image-original-src ="<%= dynamic_image.image_source(@host)%>" image-src="<%= dynamic_image.medium_source(@host) %>" image-id="<%= dynamic_image.id %>" description-text="<%= generate_html(:partial => 'dynamic_images/show_history_fragment', :locals => {:descriptions => dynamic_image.dynamic_descriptions}) %>"></div>
 <% end %>
 
 <script type="text/javascript">
@@ -39,10 +38,10 @@
         notification.css('color', 'green');
 
         // add in the actual description
-        descriptionInput = $('.description-text-area', $(this).parent());
+        descriptionInput = $('.description-text-area', $(this).parent().parent());
         descriptionInput = $(descriptionInput);
         descriptionInput.val('');
-        $('.imageDescriptions', $(this).parent()).append($(html.body));
+        $('.imageDescriptions', $(this).parent().parent()).append($(html.body));
       })
       $('form.description-form', $newDiv).bind('ajax:error',    function(data, html, status) {
         notification = $('.description-result', $(this).parent());
@@ -67,9 +66,11 @@
         return false;
       });
       
-      $xmlId = $(item).attr('id');
+      $imgId = $(item).attr('img-id');
+      $original = $(item).attr('original');
+      
       // Grab meta-information about this dynamic image and adjust the appropriate DIV to reflect that
-      $dataNode = $(".image-editing-description-" + $xmlId, top.frames['content'].document);
+      $dataNode = $(".image-editing-description-" + $imgId, top.frames['content'].document);
       if($dataNode != null) {
         // Manipulate the new node ($newDiv) before we insert it in the DOM to have data related to the current image plus the previous descriptions
         $dataNode = $($dataNode);
@@ -88,16 +89,24 @@
         $('.imageDescBox', $newDiv).addClass('imageDescBox-' + $imageId);
           //console.log()
         $('.original_size_link', $newDiv).attr('href', $imageOriginalSource);
-        // Update the hidden variable with the book ID so it has the correct book ID
-        $("input[name='dynamic_description[book_id]']", $newDiv).attr('value', $bookId);
-        // Update the hidden variable with the dynamic_image_id so it has the correct dynamic_image_id
-        $("input[name='dynamic_description[dynamic_image_id]']", $newDiv).attr('value', $imageId);
-        $bodyTextArea = $("textarea[name='dynamic_description[body]']", $newDiv);
-        $bodyTextArea.attr('id', "dynamic_description_body_" + $imageId);
-        $bodyTextArea.click(function() {
-          // Remove any success/failure alert messaging; note that this will remove *all* alerts because of the parents() method call
-          $('.description-result', $('.outer-dynamic-description-div', $bodyTextArea.parents())).html('');
-        });
+        // If this is the first instance of the img, let them create new descriptions
+        if($original == '1') {
+          // Update the hidden variable with the book ID so it has the correct book ID
+          $("input[name='dynamic_description[book_id]']", $newDiv).attr('value', $bookId);
+          // Update the hidden variable with the dynamic_image_id so it has the correct dynamic_image_id
+          $("input[name='dynamic_description[dynamic_image_id]']", $newDiv).attr('value', $imageId);
+          $bodyTextArea = $("textarea[name='dynamic_description[body]']", $newDiv);
+          $bodyTextArea.attr('id', "dynamic_description_body_" + $imageId);
+          $bodyTextArea.click(function() {
+            // Remove any success/failure alert messaging; note that this will remove *all* alerts because of the parents() method call
+            $('.description-result', $('.outer-dynamic-description-div', $bodyTextArea.parents())).html('');
+          });
+        }
+        else {
+          // Hide the area where you can enter new descriptions
+          $('.new-description', $newDiv).hide();
+          $('.duplicate-image', $newDiv).show();
+        }
       }
       $newDiv.insertAfter(item);
     })

@@ -31,7 +31,6 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "book_id"
-    t.string   "xml_file"
     t.integer  "sequence_number"
   end
 
@@ -138,6 +137,7 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.string   "physical_file_content_type"
     t.integer  "physical_file_file_size"
     t.datetime "physical_file_updated_at"
+    t.integer  "book_fragment_id"
   end
 
   add_index "dynamic_images", ["book_id", "image_location"], :name => "index_dynamic_images_on_book_id_and_image_location"

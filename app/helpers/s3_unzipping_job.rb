@@ -21,6 +21,7 @@ class S3UnzippingJob < Struct.new(:book_uid, :repository, :library)
 
         xml = get_xml_from_dir(book_directory)
         doc = Nokogiri::XML xml
+        
         opf = get_opf_from_dir(book_directory)
         contents_filename = get_daisy_contents_xml_name(book_directory)
 
@@ -35,12 +36,30 @@ class S3UnzippingJob < Struct.new(:book_uid, :repository, :library)
         xsl_filename = S3UnzippingJob.daisy_xsl
         xsl = File.read(xsl_filename)
         
+        # Keep track of the original img src attribute and whether it has been used already
+        image_srces = []
+        
+        
         splitter.segments.each_with_index do |segment_xml, i|
           sequence_number = i+1
           book_fragment = BookFragment.where(:book_id => book.id, :sequence_number => sequence_number).first || BookFragment.create(:book_id => book.id, :sequence_number => sequence_number)
           doc = Nokogiri::XML segment_xml
-
+          
+          
           create_images_in_database(book, book_fragment, book_directory, doc)
+          
+          doc.css('img').each do |img_node| 
+            unless (img_node['src']).blank?
+              db_image = DynamicImage.where(:book_id => book.id, :image_location => img_node['src']).first
+              if db_image
+                img_node['img-id'] = db_image.id.to_s
+                img_node['original'] = image_srces.include?(img_node['src']) ? '0' : '1' 
+              end
+              image_srces << img_node['src']
+            end
+          end
+          segment_xml = doc.to_xml
+          
           book.update_attribute("status", 2) if i == 0
         
           contents = repository.xslt(segment_xml, xsl)

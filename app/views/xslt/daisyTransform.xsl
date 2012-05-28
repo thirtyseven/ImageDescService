@@ -567,6 +567,12 @@ xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/">
       <xsl:if test="@width">
         <xsl:attribute name="width"><xsl:value-of select="@width"/></xsl:attribute>
       </xsl:if>
+      <xsl:if test="@img-id">
+        <xsl:attribute name="img-id"><xsl:value-of select="@img-id"/></xsl:attribute>
+      </xsl:if>
+      <xsl:if test="@original">
+        <xsl:attribute name="original"><xsl:value-of select="@original"/></xsl:attribute>
+      </xsl:if>
     </xsl:element>
     <xsl:element name="br"/>
     <xsl:variable name="divId">desc_<xsl:value-of select="@id"/></xsl:variable>
