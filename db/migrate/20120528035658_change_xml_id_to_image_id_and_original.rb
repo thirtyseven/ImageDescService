@@ -18,9 +18,9 @@ class ChangeXmlIdToImageIdAndOriginal < ActiveRecord::Migration
               db_image = DynamicImage.where(:book_id => book.id, :xml_id => img_node['id']).first
               if db_image
                 img_node['img-id'] = db_image.id.to_s
-                img_node['original'] = image_srces.include?(img_node['src']) ? '0' : '1' 
+                img_node['original'] = image_srces.include?(img_node['id']) ? '0' : '1' 
               end
-              image_srces << img_node['src']
+              image_srces << img_node['id']
             end
           end
           segment_html = doc.to_html
