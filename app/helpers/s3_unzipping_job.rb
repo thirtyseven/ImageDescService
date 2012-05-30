@@ -176,7 +176,18 @@ class S3UnzippingJob < Struct.new(:book_uid, :repository, :library, :uploader_id
           if ! image.xml_id
             image.update_attribute("xml_id", xml_id)
           end
-          image.update_attribute("book_fragment_id", fragment.id)
+          # This should only happen on re-uploading of books in order to split existing books
+          # or for images used multiple times in a book
+
+          # Ensure fragment sequence_number already assigned to image is less than current fragment sequence_number
+          # so images used throughout the book are only associated with the first fragment they appear in.
+          existing_fragment = BookFragment.where(:id => image.book_fragment_id).first
+          puts "existing fragment is #{existing_fragment}"
+          puts "current fragment seq num is #{fragment.sequence_number}"
+          puts "existing fragment seq num is #{existing_fragment.sequence_number}"
+          if existing_fragment.sequence_number > fragment.sequence_number
+            image.update_attribute("book_fragment_id", fragment.id)
+          end
         end
       end
     end
