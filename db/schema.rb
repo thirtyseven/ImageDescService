@@ -101,24 +101,33 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
 
   create_table "descriptions", :force => true do |t|
     t.string   "description",   :limit => 16384,                          :null => false
-    t.boolean  "is_current",                     :default => false,       :null => false
+    t.boolean  "is_current",                     :default => false
     t.string   "submitter",                      :default => "anonymous", :null => false
     t.datetime "date_approved"
-    t.integer  "image_id",                                                :null => false
+    t.integer  "image_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "dynamic_descriptions", :force => true do |t|
-    t.string   "body",             :limit => 16384,                          :null => false
-    t.boolean  "is_current",                        :default => false,       :null => false
-    t.string   "submitter",                         :default => "anonymous", :null => false
+    t.string   "body",                            :limit => 16384,                          :null => false
+    t.boolean  "is_current",                                       :default => false,       :null => false
+    t.string   "submitter",                                        :default => "anonymous", :null => false
     t.datetime "date_approved"
-    t.integer  "dynamic_image_id",                                           :null => false
+    t.integer  "dynamic_image_id",                                                          :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "book_id"
-    t.integer  "book_fragment_id"
+    t.text     "summary"
+    t.text     "simplified_language_description"
+    t.integer  "target_age_start"
+    t.integer  "target_age_end"
+    t.integer  "target_grade_start"
+    t.integer  "target_grade_end"
+    t.integer  "description_quality"
+    t.string   "language",                                         :default => "en-US",     :null => false
+    t.string   "repository",                                       :default => "Bookshare", :null => false
+    t.string   "credentials"
   end
 
   add_index "dynamic_descriptions", ["book_fragment_id"], :name => "dynamic_descriptions_book_frag_id"
@@ -159,6 +168,9 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.datetime "updated_at"
   end
 
+  add_index "images", ["library_id", "book_id", "image_id"], :name => "images_book_image_unq", :unique => true
+  add_index "images", ["library_id"], :name => "fk_images_library"
+
   create_table "libraries", :force => true do |t|
     t.string   "name",       :limit => 128, :null => false
     t.datetime "created_at"
@@ -166,6 +178,7 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
   end
 
   add_index "libraries", ["name"], :name => "idx_library_name_unique", :unique => true
+  add_index "libraries", ["name"], :name => "name", :unique => true
 
   create_table "roles", :force => true do |t|
     t.string   "name"
