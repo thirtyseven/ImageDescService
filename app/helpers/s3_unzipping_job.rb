@@ -27,7 +27,11 @@ class S3UnzippingJob < Struct.new(:book_uid, :repository, :library, :uploader_id
 
         book = Book.where(:uid => book_uid).first
 
-        unless book
+        if book
+          # assuming this only happens when book is re-uploaded for fragmentation
+          puts "assigning all images for book #{book.title} null fragment id"
+          DynamicImage.where(:book_id => book.id).update_all(:book_fragment_id => nil)
+        else
           book = create_book_in_db(doc, File.basename(contents_filename), opf, uploader_id)
         end
 
@@ -172,20 +176,11 @@ class S3UnzippingJob < Struct.new(:book_uid, :repository, :library, :uploader_id
             $stderr.puts e
           end
         elsif image
-          # may need to backfill existing rows without xml id
-          if ! image.xml_id
-            image.update_attribute("xml_id", xml_id)
-          end
           # This should only happen on re-uploading of books in order to split existing books
           # or for images used multiple times in a book
 
-          # Ensure fragment sequence_number already assigned to image is less than current fragment sequence_number
-          # so images used throughout the book are only associated with the first fragment they appear in.
-          existing_fragment = BookFragment.where(:id => image.book_fragment_id).first
-          puts "existing fragment is #{existing_fragment}"
-          puts "current fragment seq num is #{fragment.sequence_number}"
-          puts "existing fragment seq num is #{existing_fragment.sequence_number}"
-          if existing_fragment.sequence_number > fragment.sequence_number
+          unless image.book_fragment_id
+            puts "updating fragment since its null"
             image.update_attribute("book_fragment_id", fragment.id)
           end
         end
