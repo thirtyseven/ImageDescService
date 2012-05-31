@@ -29,7 +29,6 @@ class S3UnzippingJob < Struct.new(:book_uid, :repository, :library, :uploader_id
 
         if book
           # assuming this only happens when book is re-uploaded for fragmentation
-          puts "assigning all images for book #{book.title} null fragment id"
           DynamicImage.where(:book_id => book.id).update_all(:book_fragment_id => nil)
         else
           book = create_book_in_db(doc, File.basename(contents_filename), opf, uploader_id)
@@ -180,7 +179,6 @@ class S3UnzippingJob < Struct.new(:book_uid, :repository, :library, :uploader_id
           # or for images used multiple times in a book
 
           unless image.book_fragment_id
-            puts "updating fragment since its null"
             image.update_attribute("book_fragment_id", fragment.id)
           end
         end
