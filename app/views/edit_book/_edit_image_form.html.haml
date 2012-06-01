@@ -5,7 +5,7 @@
   .new-description
     New Description
     = form_for(DynamicDescription.new, :remote => true, :format => :json, :html => {:class => 'description-form'}) do |f|
-      = f.text_area :body, :rows => 8, :cols => 45, :style => 'font-size:120%', :class => 'description-text-area'
+      = f.text_area :body, :rows => 6, :cols => 44, :style => 'font-size:120%', :class => 'description-text-area'
       = f.hidden_field 'book_id'
       = f.hidden_field 'dynamic_image_id'
     
