@@ -11,7 +11,16 @@ class DynamicImage < ActiveRecord::Base
 
   belongs_to :book
   has_many :dynamic_descriptions
-  
+
+  def utf8_encoded_descriptions
+    dynamic_descriptions.each do |desc|
+      if desc.body
+        desc.body = desc.body.encode!("UTF-8")
+      end
+    end
+    dynamic_descriptions
+  end
+
   def best_description
     return dynamic_descriptions.last
   end
