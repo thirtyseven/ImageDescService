@@ -16,7 +16,7 @@
 <%=yield%>
 <% DynamicImage.includes(:dynamic_descriptions).where(:book_id => @book.id).each do |dynamic_image| %>
   <% history_fragment = raw(generate_html(:partial => 'dynamic_images/show_history_fragment', :locals => {:descriptions => dynamic_image.dynamic_descriptions}).force_encoding("UTF-8")) %>
-  <div class='image-editing-description-<%= dynamic_image.id %>' image-original-src ="<%= dynamic_image.image_source(@host)%>" image-src="<%= dynamic_image.medium_source(@host) %>" image-id="<%= dynamic_image.id %>" image-xml-id="<%= dynamic_image.xml_id %>" description-text="<%= history_fragment.force_encoding("UTF-8")  %>"></div>
+  <div class='image-editing-description-<%= dynamic_image.id %>' image-original-src ="<%= dynamic_image.image_source(@host)%>" image-src="<%= dynamic_image.medium_source(@host) %>" image-id="<%= dynamic_image.id %>" image-xml-id="<%= dynamic_image.xml_id %>" description-text="<%= history_fragment.encode("UTF-8")  %>"></div>
 <% end %>
 
 <script type="text/javascript">
