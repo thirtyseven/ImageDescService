@@ -40,8 +40,8 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.integer "total_images"
     t.integer "total_essential_images",                                     :default => 0
     t.integer "total_images_described",                                     :default => 0
-    t.integer "essential_images_described",                                 :default => 0
     t.integer "book_id"
+    t.integer "essential_images_described",                                 :default => 0
     t.integer "approved_descriptions",                                      :default => 0
     t.decimal "percent_essential_described", :precision => 10, :scale => 0, :default => 0
   end
@@ -101,10 +101,10 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
 
   create_table "descriptions", :force => true do |t|
     t.string   "description",   :limit => 16384,                          :null => false
-    t.boolean  "is_current",                     :default => false
+    t.boolean  "is_current",                     :default => false,       :null => false
     t.string   "submitter",                      :default => "anonymous", :null => false
     t.datetime "date_approved"
-    t.integer  "image_id"
+    t.integer  "image_id",                                                :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -118,6 +118,7 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "book_id"
+    t.integer  "book_fragment_id"
     t.text     "summary"
     t.text     "simplified_language_description"
     t.integer  "target_age_start"
@@ -150,9 +151,7 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.integer  "book_fragment_id"
   end
 
-  add_index "dynamic_images", ["book_fragment_id"], :name => "dynamic_images_book_frag_id"
   add_index "dynamic_images", ["book_id", "image_location"], :name => "index_dynamic_images_on_book_id_and_image_location"
-  add_index "dynamic_images", ["image_location"], :name => "index_dynamic_images_on_book_uid_and_image_location"
   add_index "dynamic_images", ["should_be_described"], :name => "index_dynamic_images_on_book_uid_and_should_be_described"
 
   create_table "images", :force => true do |t|
@@ -168,9 +167,6 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.datetime "updated_at"
   end
 
-  add_index "images", ["library_id", "book_id", "image_id"], :name => "images_book_image_unq", :unique => true
-  add_index "images", ["library_id"], :name => "fk_images_library"
-
   create_table "libraries", :force => true do |t|
     t.string   "name",       :limit => 128, :null => false
     t.datetime "created_at"
@@ -178,7 +174,6 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
   end
 
   add_index "libraries", ["name"], :name => "idx_library_name_unique", :unique => true
-  add_index "libraries", ["name"], :name => "name", :unique => true
 
   create_table "roles", :force => true do |t|
     t.string   "name"
@@ -235,7 +230,7 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.string   "last_sign_in_ip"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "username",                                               :null => false
+    t.string   "username",                                              :null => false
     t.string   "first_name"
     t.string   "last_name"
     t.string   "other_subject_expertise"

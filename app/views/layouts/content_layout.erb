@@ -15,7 +15,7 @@
 
 <%=yield%>
 <% DynamicImage.includes(:dynamic_descriptions).where(:book_id => @book.id).each do |dynamic_image| %>
-  <div class='image-editing-description-<%= dynamic_image.id %>' image-original-src ="<%= dynamic_image.image_source(@host)%>" image-src="<%= dynamic_image.medium_source(@host) %>" image-id="<%= dynamic_image.id %>" image-xml-id="<%= dynamic_image.xml_id %>" description-text="<%= generate_html(:partial => 'dynamic_images/show_history_fragment', :locals => {:descriptions => dynamic_image.dynamic_descriptions}) %>"></div>
+  <div class='image-editing-description-<%= dynamic_image.id %>' image-original-src ="<%= dynamic_image.image_source(@host)%>" image-src="<%= dynamic_image.medium_source(@host) %>" image-id="<%= dynamic_image.id %>" image-xml-id="<%= dynamic_image.xml_id %>" description-text="<%= raw generate_html(:partial => 'dynamic_images/show_history_fragment', :locals => {:descriptions => dynamic_image.dynamic_descriptions}) %>"></div>
 <% end %>
 
 <script type="text/javascript">
