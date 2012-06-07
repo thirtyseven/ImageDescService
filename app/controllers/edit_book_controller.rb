@@ -98,7 +98,7 @@ class EditBookController < ApplicationController
       end
     end
     if (@book_fragment && html)
-      render :layout => 'content_layout', :text => html, :content_type => 'text/html'
+      render :layout => 'content_layout', :text => html.encode!('UTF-8'), :content_type => 'text/html'
     else
       logger.warn "could not find cached html for book id, #{book_id}"
       render :status => 404
