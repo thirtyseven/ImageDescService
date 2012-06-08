@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
+    <title>MathJax Input Demo</title>
+    <script type="text/javascript">
+      function display() {
+        var str = document.getElementById("equation_editor").value;
+        var svg_node = document.getElementById("svg_node");
+        svg_node.innerHTML = '`' + str + '`';
+        MathJax.Hub.Typeset(svg_node);
+      }
+      <!-- https://groups.google.com/d/topic/mathjax-users/unL8IjcrTto/discussion -->
+      function toMathML(jax, callback) {
+        var mml;
+        try {
+          mml = jax.root.toMathML("");
+        } catch(err) {
+          if (!err.restart) { throw err; }
+          return MathJax.Callback.After([toMathML, jax, callback], err, restart);
+        }
+        MathJax.Callback(callback)(mml);
+      }
+      function appendToDescription() {
+        var svg_node = document.getElementById("svg_node");
+        MathJax.Hub.Queue(function() {
+          var jaxen = MathJax.Hub.getAllJax(svg_node);
+          toMathML(jaxen[0], function(mml) {
+            var description_node = document.getElementById("description");
+            description_node.value += mml;
+          })});
+      }
+      </script>
+  </head>
+  <body>
+    Description:
+    <textarea id="description" rows="10" cols="80"></textarea>
+    <p>Equation Editor:
+      <textarea id="equation_editor" rows="5" cols="30" onkeyup="display()"></textarea>
+      <div id="svg_node"></div>
+    </p>
+    <button onclick=appendToDescription();>Append MathML to Description</button>
+  </body>
+</html>
