@@ -28,6 +28,10 @@
         }
         MathJax.Callback(callback)(mml);
       }
+      function clearDescription() {
+        var description_node = document.getElementById("description");
+        description_node.value = '';
+      }
       function appendToDescription() {
         var svg_node = document.getElementById("svg_node");
         MathJax.Hub.Queue(function() {
@@ -58,5 +62,6 @@
       <div id="svg_node"></div>
     </p>
     <button onclick=appendToDescription();>Update Description</button>
+    <button onclick=clearDescription();>Clear Description</button>
   </body>
 </html>
