@@ -1,8 +1,14 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=AM_HTMLorMML-full"></script>
     <title>MathJax Input Demo</title>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        jax: ["input/AsciiMath","output/SVG","output/NativeMML"],
+        extensions: ["asciimath2jax.js","MathMenu.js","MathZoom.js","toMathML.js"]
+      });
+    </script>
+    <script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=default"></script>
     <script type="text/javascript">
       function display() {
         var str = document.getElementById("equation_editor").value;
