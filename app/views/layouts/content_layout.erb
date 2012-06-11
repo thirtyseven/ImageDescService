@@ -25,7 +25,7 @@
 <script type="text/javascript">
   // TODO: move this into the application.js file when we move away from frames
   // First load up the HTML file and inject it into the DOM
-  $bookUrl = '<%= @book_url %>';
+  $bookUrl = '<%= raw @book_url %>';
   console.log("ESH: Have a url to load up of " + $bookUrl);
   $.get($bookUrl, function(data) {
     $('#result').html(data);
