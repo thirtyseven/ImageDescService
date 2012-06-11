@@ -71,7 +71,7 @@
       
       $imgId = $(item).attr('img-id');
       $imgXmlId = $(item).attr('image-xml-id');
-      
+      $altText = $(item).attr('alt');
       $original = $(item).attr('original');
       
       // Grab meta-information about this dynamic image and adjust the appropriate DIV to reflect that
@@ -87,6 +87,13 @@
         $descriptionText = $dataNode.attr('description-text');
         if($descriptionText != null) {
           $descriptionText = $descriptionText.replace(/\\n/g, "\n");
+        }
+
+        // show alt text
+        if($altText) {
+            $('.alt_text', $newDiv).html('Alt Text: ' + $altText);
+        } else {
+            $('.alt_text', $newDiv).hide();
         }
         
         // Update the image description box DIV class so that it reflects the image ID in question
