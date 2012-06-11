@@ -78,7 +78,7 @@ class EditBookController < ApplicationController
     @book, @book_fragment = load_fragment
     if @book
       file_name = "#{@book.uid}_#{@book_fragment.sequence_number}.html"
-      @book_url = if @repository.is_a?(S3Repository)
+      @book_url = if @repository <= S3Repository
         @repository.generate_file_path(@book.uid, file_name)
       else
         edit_book_local_file_path(:book_id => @book.id, :book_fragment_id => @book_fragment.id)
