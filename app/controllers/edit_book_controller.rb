@@ -75,36 +75,36 @@ class EditBookController < ApplicationController
   end
 
   def content
-    book_fragment_id = params[:book_fragment_id] || session[:book_fragment_id]
-    unless book_fragment_id
-      book_id = params[:book_id] || session[:book_id]
-      @book = Book.where(:id => book_id, :library_id => current_library.id).first
-      if @book
-        book_fragment = @book.book_fragments.first
-        book_fragment_id = book_fragment.id if book_fragment
+    @book, @book_fragment = load_fragment
+    if @book
+      file_name = "#{@book.uid}_#{@book_fragment.sequence_number}.html"
+      @book_url = if @repository.is_a?(S3Repository)
+        @repository.generate_file_path(@book.uid, file_name)
+      else
+        edit_book_local_file_path(:book_id => @book.id, :book_fragment_id => @book_fragment.id)
       end
     end
-    
-    @book_fragment = BookFragment.joins(:book).where(:id => book_fragment_id, :books => {:library_id => current_library.id}).first
-    if @book_fragment
-      @book = @book_fragment.book
-    
-      session[:book_id] = book_id
-      @host = @repository.get_host(request)
-      html = if @book
-        book_uid = @book.uid
-        file_name = "#{book_uid}_#{@book_fragment.sequence_number}.html"
-        @repository.get_cached_html(book_uid, file_name)
-      end
-    end
-    if (@book_fragment && html)
-      render :layout => 'content_layout', :text => html.force_encoding('UTF-8'), :content_type => 'text/html'
+    p "111 @book_url = #{@book_url}"
+
+    if (@book_fragment && @book_url)
+      render :layout => 'content_layout', :text => ' ', :content_type => 'text/html'
     else
       logger.warn "could not find cached html for book id, #{book_id}"
       render :status => 404
     end
   end
-
+  
+  def local_file
+    local_dir = ENV['POET_LOCAL_STORAGE_DIR']
+    @book, @book_fragment = load_fragment
+    if @book && @book_fragment
+      file_name = "#{@book.uid}_#{@book_fragment.sequence_number}.html"
+      render :text => File.read(File.join(local_dir, @book.uid, file_name)), :content_type => 'text/html'
+    else
+      render :text => 'Error'
+    end
+  end
+  
   def side_bar
     book_id = params[:book_id] || session[:book_id]
     session[:book_id] = book_id
@@ -149,4 +149,28 @@ class EditBookController < ApplicationController
    render :layout =>'guidelines_layout'
  end
 
+ protected
+ def load_fragment
+   book = book_fragment = nil
+   
+   book_fragment_id = params[:book_fragment_id] || session[:book_fragment_id]
+   unless book_fragment_id
+     book_id = params[:book_id] || session[:book_id]
+     book = Book.where(:id => book_id, :library_id => current_library.id).first
+     if book
+       book_fragment = book.book_fragments.first
+       book_fragment_id = book_fragment.id if book_fragment
+     end
+   end
+   
+   book_fragment = BookFragment.joins(:book).where(:id => book_fragment_id, :books => {:library_id => current_library.id}).first
+   if book_fragment
+     book = book_fragment.book
+   
+     session[:book_id] = book_id
+     @host = @repository.get_host(request)
+   end
+   
+   [book, book_fragment]
+ end
 end

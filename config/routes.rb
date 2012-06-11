@@ -21,6 +21,7 @@ DiagramRailsApp::Application.routes.draw do
   get "upload_book/upload"
 
   get "edit_book/content"
+  get "edit_book/local_file"
   get "edit_book/describe"
   get "edit_book/edit"
 

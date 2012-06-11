@@ -31,6 +31,26 @@ class S3Repository
           $stderr.puts e
         end
   end
+  
+  def self.generate_file_path(file_path, new_local_file, expires = 60)
+    begin
+      # get handle to s3 service
+      s3_service = AWS::S3.new
+
+      # get s3 bucket to download zip file
+      bucket = s3_service.buckets[ENV['POET_ASSET_BUCKET']]
+      s3_object = bucket.objects[file_path]
+      s3_object.url_for(:read, {:expires => expires, :secure => true}).to_s if s3_object
+      rescue AWS::Errors::Base => e
+        puts "S3 Problem getting secure file #{file_path}"
+        puts "#{e.class}: #{e.message}"
+      rescue Exception => e
+        puts "Unknown problem generating secure file from S3 for  #{file_path}"
+        puts "#{e.class}: #{e.message}"
+        puts e.backtrace.join("\n")
+        $stderr.puts e
+    end
+  end
 
   def self.read_file(file_path, new_local_file)
       begin

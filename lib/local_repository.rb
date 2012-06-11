@@ -67,6 +67,11 @@ class LocalRepository
     return engine.serve
   end
 
+  def self.generate_file_path(book_uid, file_name, expires = 60)
+    local_dir = ENV['POET_LOCAL_STORAGE_DIR']
+    return File.join(local_dir, book_uid, file_name)
+  end
+  
   def self.get_cached_html(book_uid, file_name)
     local_dir = ENV['POET_LOCAL_STORAGE_DIR']
     return File.read(File.join(local_dir, book_uid, file_name))
