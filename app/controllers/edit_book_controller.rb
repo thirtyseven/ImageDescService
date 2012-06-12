@@ -75,6 +75,8 @@ class EditBookController < ApplicationController
   end
 
   def content
+    # XMLHttpRequest cannot load https://org-benetech-poet-staging.s3.amazonaws.com
+    response.headers['Access-Control-Allow-Origin'] = 'amazonaws.com'
     @book, @book_fragment = load_fragment
     if @book
       file_name = "#{@book.uid}_#{@book_fragment.sequence_number}.html"
