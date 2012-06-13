@@ -1,0 +1,43 @@
+
+ <div style="margin-left: 50px; width:900px; padding-top: 40px;" >
+ <p><p><p>
+ <table border="0" cellspacing="0" cellpadding="4" id="books" class="index_table">
+  
+  <thead>
+    <tr>
+    <th class="inputs" colspan="8">
+     &nbsp; &nbsp; <%=current_user.username%>
+     <br>
+     &nbsp; &nbsp; Books that I have uploaded
+    </th>
+    </tr>
+    <tr>
+    <th>Id</th>
+    <th>Uid</th>
+    <th>Title</th>
+    <th>Library</a></th>
+    <th>Isbn</a></th>
+    <th>Status</a></th>
+    <th>Added</a></th>
+    <th>Updated</a></th>
+    
+    </tr>
+  </thead>
+  <tbody>
+  <% @books.each do |book| %>                  
+    <tr class="odd" id="book_<%= book.id %>">
+      <td><%= book.id %></td>
+      <td><a href="/reports/view_book?book_id=<%= book.id %>"><%= book.uid %></a></td>
+      <td><a href="/edit_book/edit?book_id=<%= book.id %>"><%=book.title%></a></td>
+      <td><%= book.library.name%></td>
+      <td><%= book.isbn %></td>
+      <td><%= book.status_to_english %></td>
+      <td><%= book.created_at.to_s(:poet_default) %></td>
+      <td><%= book.updated_at.to_s(:poet_default) %></td>
+    </tr>
+   <% end%>
+  </tbody>
+ <table>
+
+</div>
+</div>

@@ -24,4 +24,8 @@ class BooksController < ApplicationController
   def book_list
     @books = Book.where(:library_id => current_library.id).page(params[:page]).order('title ASC')
   end
+  
+  def book_list_by_user 
+    @books =  Book.where(:user_id => current_user.id)  
+  end
 end

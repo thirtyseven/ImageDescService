@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 201109211852030) do
+ActiveRecord::Schema.define(:version => 20120531035658) do
 
   create_table "active_admin_comments", :force => true do |t|
     t.integer  "resource_id",   :null => false
@@ -40,8 +40,8 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.integer "total_images"
     t.integer "total_essential_images",                                     :default => 0
     t.integer "total_images_described",                                     :default => 0
-    t.integer "book_id"
     t.integer "essential_images_described",                                 :default => 0
+    t.integer "book_id"
     t.integer "approved_descriptions",                                      :default => 0
     t.decimal "percent_essential_described", :precision => 10, :scale => 0, :default => 0
   end
@@ -86,19 +86,6 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.datetime "updated_at"
   end
 
-  create_table "delayed_jobs", :force => true do |t|
-    t.integer  "priority",   :default => 0
-    t.integer  "attempts",   :default => 0
-    t.text     "handler"
-    t.text     "last_error"
-    t.datetime "run_at"
-    t.datetime "locked_at"
-    t.datetime "failed_at"
-    t.text     "locked_by"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "descriptions", :force => true do |t|
     t.string   "description",   :limit => 16384,                          :null => false
     t.boolean  "is_current",                     :default => false,       :null => false
@@ -118,7 +105,6 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "book_id"
-    t.integer  "book_fragment_id"
     t.text     "summary"
     t.text     "simplified_language_description"
     t.integer  "target_age_start"
@@ -132,12 +118,11 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.text     "annotation"
   end
 
-  add_index "dynamic_descriptions", ["book_fragment_id"], :name => "dynamic_descriptions_book_frag_id"
   add_index "dynamic_descriptions", ["dynamic_image_id", "is_current"], :name => "dynamic_descriptions_uid_image_id_current"
   add_index "dynamic_descriptions", ["dynamic_image_id"], :name => "index_dynamic_descriptions_on_dynamic_image_id"
 
   create_table "dynamic_images", :force => true do |t|
-    t.string   "image_location",             :null => false
+    t.string   "image_location"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "should_be_described"
@@ -152,6 +137,7 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.integer  "book_fragment_id"
   end
 
+  add_index "dynamic_images", ["book_fragment_id"], :name => "dynamic_images_book_frag_id"
   add_index "dynamic_images", ["book_id", "image_location"], :name => "index_dynamic_images_on_book_id_and_image_location"
   add_index "dynamic_images", ["image_location"], :name => "index_dynamic_images_on_book_uid_and_image_location"
   add_index "dynamic_images", ["should_be_described"], :name => "index_dynamic_images_on_book_uid_and_should_be_described"

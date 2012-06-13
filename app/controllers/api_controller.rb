@@ -4,6 +4,13 @@ class ApiController < ApplicationController
   STATUS_NOT_FOUND = 203
   STATUS_APPROVED = 200
 
+  def get_image_descriptions
+    book_stats_from_uid(params[:book_uid]) do |book|
+      dynamic_descriptions = extract_dynamic_description_images book
+      {:dynamic_descriptions => dynamic_descriptions}
+    end
+  end
+  
   def get_approved_descriptions_and_book_stats
     book_stats_from_uid(params[:book_uid]) do |book|
       images_and_descriptions = extract_image_and_description book
@@ -37,6 +44,18 @@ class ApiController < ApplicationController
   end
   
   protected
+  
+  def extract_dynamic_description_images book
+    book.current_images_and_descriptions.all.map do |image|
+      {:image => (image ? image.image_location : nil), :longdesc => image.dynamic_descriptions.first.body, :iscurrent => image.dynamic_descriptions.first.is_current,
+        :submitter => image.dynamic_descriptions.first.submitter, :date_approved => image.dynamic_descriptions.first.date_approved, :dynamic_image_id => image.dynamic_descriptions.first.dynamic_image_id,
+        :book_id => image.dynamic_descriptions.first.book_id, :book_fragment_id => image.dynamic_descriptions.first.book_fragment_id, :summary => image.dynamic_descriptions.first.summary, 
+        :simplified_language_description => image.dynamic_descriptions.first.simplified_language_description, :target_age_start => image.dynamic_descriptions.first.target_age_start, :target_age_end => image.dynamic_descriptions.first.target_age_end, 
+        :target_grade_start => image.dynamic_descriptions.first.target_grade_start, :target_grade_end => image.dynamic_descriptions.first.target_grade_end, :description_quality => image.dynamic_descriptions.first.description_quality, 
+        :language => image.dynamic_descriptions.first.language, :repository => image.dynamic_descriptions.first.repository, :credentials => image.dynamic_descriptions.first.credentials}
+    end  
+  end
+  
   def extract_image_and_description book
     book.current_images_and_descriptions.all.map do |image| 
       {:image => (image ? image.image_location : nil), :description => image.dynamic_descriptions.first}
@@ -85,6 +104,31 @@ class ApiController < ApplicationController
                         xml.send 'images-and-description' do
                           xml.image image_desc[:image]
                           xml.description { xml.cdata image_desc[:description] ? image_desc[:description].body : '' }
+                        end
+                      end
+                    end
+                  elsif k == "dynamic-descriptions"
+                   xml.send k do
+                      v.each do |image_desc|
+                        xml.send 'dynamic-descriptions' do
+                          xml.image image_desc[:image]
+                          xml.longdesc { xml.cdata image_desc[:longdesc] ? image_desc[:longdesc] : '' }
+                          xml.iscurrent image_desc[:iscurrent]
+                          xml.submitter image_desc[:submitter]
+                          xml.date_approved image_desc[:date_approved]
+                          xml.dynamic_image_id image_desc[:dynamic_image_id]
+                          xml.book_id image_desc[:book_id]
+                          xml.book_fragment_id image_desc[:book_fragment_id]  
+                          xml.summary image_desc[:summary]
+                          xml.simplified_language_description image_desc[:simplified_language_description]
+                          xml.target_age_start image_desc[:target_age_start]
+                          xml.target_age_end image_desc[:target_age_end]
+                          xml.target_grade_start image_desc[:target_grade_start]
+                          xml.target_grade_end image_desc[:target_grade_end]
+                          xml.description_quality image_desc[:description_quality]
+                          xml.language image_desc[:language]
+                          xml.repository image_desc[:repository]
+                          xml.credentials image_desc[:credentials]    
                         end
                       end
                     end

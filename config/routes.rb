@@ -42,6 +42,7 @@ DiagramRailsApp::Application.routes.draw do
   get "api/get_approved_book_stats"
   get "api/get_approved_descriptions"
   get "api/get_approved_stats"
+  get "api/get_image_descriptions"
 
   get "reports/index"
   get "reports/update_book_stats"
@@ -66,6 +67,7 @@ DiagramRailsApp::Application.routes.draw do
   resources :libraries
 
   match "book_list", :controller => 'books', :action => 'book_list'
+  match "book_list_by_user", :controller => 'books', :action => 'book_list_by_user'
   match "daisy_book/describe", :controller => 'edit_book', :action => 'describe'
   match "edit_book/help", :controller => 'edit_book', :action => 'help'
   match "edit_book/description_guidance", :controller => 'edit_book', :action => 'description_guidance'
