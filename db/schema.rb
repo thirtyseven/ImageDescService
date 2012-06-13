@@ -115,6 +115,7 @@ ActiveRecord::Schema.define(:version => 20120531035658) do
     t.string   "language",                                         :default => "en-US",     :null => false
     t.string   "repository",                                       :default => "Bookshare", :null => false
     t.string   "credentials"
+    t.text     "annotation"
   end
 
   add_index "dynamic_descriptions", ["dynamic_image_id", "is_current"], :name => "dynamic_descriptions_uid_image_id_current"
@@ -154,6 +155,9 @@ ActiveRecord::Schema.define(:version => 20120531035658) do
     t.datetime "updated_at"
   end
 
+  add_index "images", ["library_id", "book_id", "image_id"], :name => "images_book_image_unq", :unique => true
+  add_index "images", ["library_id"], :name => "fk_images_library"
+
   create_table "libraries", :force => true do |t|
     t.string   "name",       :limit => 128, :null => false
     t.datetime "created_at"
@@ -161,6 +165,7 @@ ActiveRecord::Schema.define(:version => 20120531035658) do
   end
 
   add_index "libraries", ["name"], :name => "idx_library_name_unique", :unique => true
+  add_index "libraries", ["name"], :name => "name", :unique => true
 
   create_table "roles", :force => true do |t|
     t.string   "name"

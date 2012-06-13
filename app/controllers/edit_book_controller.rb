@@ -24,6 +24,7 @@ class EditBookController < ApplicationController
   end
 
   def edit
+    response.headers['Access-Control-Allow-Origin'] = '*'
     error_redirect = 'edit_book/describe'
     book_id = params[:book_id]
     book_uid = params[:book_uid]
@@ -75,11 +76,14 @@ class EditBookController < ApplicationController
   end
 
   def content
+    # XMLHttpRequest cannot load https://org-benetech-poet-staging.s3.amazonaws.com
+    response.headers['Access-Control-Allow-Origin'] = '*'
     @book, @book_fragment = load_fragment
     if @book
       file_name = "#{@book.uid}_#{@book_fragment.sequence_number}.html"
       @book_url = if @repository <= S3Repository
         @repository.generate_file_path(@book.uid, file_name)
+        edit_book_s3_file_path(:book_id => @book.id, :book_fragment_id => @book_fragment.id)
       else
         edit_book_local_file_path(:book_id => @book.id, :book_fragment_id => @book_fragment.id)
       end
@@ -93,6 +97,22 @@ class EditBookController < ApplicationController
       render :status => 404
     end
   end
+  
+  def s3_file
+    local_dir = ENV['POET_LOCAL_STORAGE_DIR']
+    @book, @book_fragment = load_fragment
+    if @book && @book_fragment
+      file_name = "#{@book.uid}_#{@book_fragment.sequence_number}.html"
+      html = if @book
+        file_name = "#{@book.uid}_#{@book_fragment.sequence_number}.html"
+        @repository.get_cached_html(@book.uid, file_name)
+      end
+      render :text => html, :content_type => 'text/html'
+    else
+      render :text => 'Error'
+    end
+  end
+  
   
   def local_file
     local_dir = ENV['POET_LOCAL_STORAGE_DIR']

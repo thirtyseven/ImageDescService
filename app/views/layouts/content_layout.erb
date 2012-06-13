@@ -31,107 +31,114 @@
     $('#result').html(data);
     console.log("ESH: after loading in the HTML data");
 
-    // Inject DHTML into each image with previous description and current description
+  // Inject DHTML into each image with previous description and current description
   
-    $imageEditingControlHtml = $('.image-editing-controls', top.frames['content'].document).attr('template');
-    if($imageEditingControlHtml != null) {
-      $bookId = $('.image-editing-controls', top.frames['content'].document).attr('book-id');
-      $imageEditingControlHtml = $imageEditingControlHtml.replace(/\\n/g, "\n");
-      $('img', top.frames['content'].document).each(function(index, item) {
-        currentImageNode = $(item);
-        // Grab _edit_image_form.html.haml template HTML and inject in the appropriate place
-        $newDiv = $($imageEditingControlHtml);
+  $imageEditingControlHtml = $('.image-editing-controls', top.frames['content'].document).attr('template');
+  if($imageEditingControlHtml != null) {
+    $bookId = $('.image-editing-controls', top.frames['content'].document).attr('book-id');
+    $imageEditingControlHtml = $imageEditingControlHtml.replace(/\\n/g, "\n");
+    $('img', top.frames['content'].document).each(function(index, item) {
+      currentImageNode = $(item);
+      // Grab _edit_image_form.html.haml template HTML and inject in the appropriate place
+      $newDiv = $($imageEditingControlHtml);
       
-        $('form.description-form', $newDiv).bind('ajax:success',    function(data, html, status) {
-          notification = $('.description-result', $(this).parent());
+      $('form.description-form', $newDiv).bind('ajax:success',    function(data, html, status) {
+        notification = $('.description-result', $(this).parent());
         
-          notification = $(notification);
-          notification.html("The description has been saved.");
-          notification.css('fontWeight', 'bold');
-          notification.css('color', 'green');
+        notification = $(notification);
+        notification.html("The description has been saved.");
+        notification.css('fontWeight', 'bold');
+        notification.css('color', 'green');
 
-          // add in the actual description
-          descriptionInput = $('.description-text-area', $(this).parent().parent());
-          descriptionInput = $(descriptionInput);
-          descriptionInput.val('');
-          $('.imageDescriptions', $(this).parent().parent()).append($(html.body));
-        })
-        $('form.description-form', $newDiv).bind('ajax:error',    function(data, html, status) {
-          notification = $('.description-result', $(this).parent());
-          notification = $(notification);
-          if($.parseJSON(html.responseText) != null) {
-            notification.html($.parseJSON(html.responseText).join(", "));
-          }
-          else {
-            notification.html("An error has occurred.");
-          }
-          notification.css('fontWeight', 'bold');
-          notification.css('color', 'red');
-        
-        })
-      
-      
-        $('.toggle-tiny-mce', $newDiv).click(function() {
-          $bodyNode = $("textarea[name='dynamic_description[body]']", $(this).parent());
-          if($bodyNode != null) {
-            tinyMCE.execCommand('mceAddControl', false, $bodyNode.attr('id'));
-          }
-          return false;
-        });
-      
-        $imgId = $(item).attr('img-id');
-        $imgXmlId = $(item).attr('image-xml-id');
-      
-        $original = $(item).attr('original');
-      
-        // Grab meta-information about this dynamic image and adjust the appropriate DIV to reflect that
-        $dataNode = $(".image-editing-description-" + $imgId, top.frames['content'].document);
-        if($dataNode != null) {
-          // Manipulate the new node ($newDiv) before we insert it in the DOM to have data related to the current image plus the previous descriptions
-          $dataNode = $($dataNode);
-          $imageId = $dataNode.attr('image-id');
-          $imageSource = $dataNode.attr('image-src');
-          $imageOriginalSource = $dataNode.attr('image-original-src');
-          currentImageNode.attr('src', $imageSource);
-
-          $descriptionText = $dataNode.attr('description-text');
-          if($descriptionText != null) {
-            $descriptionText = $descriptionText.replace(/\\n/g, "\n");
-          }
-        
-          // Update the image description box DIV class so that it reflects the image ID in question
-          $('.imageDescBox', $newDiv).html($descriptionText);
-          $('.imageDescBox', $newDiv).addClass('imageDescBox-' + $imageId);
-            //console.log()
-          orginalSizeLink = $('.original_size_link', $newDiv);
-          if(orginalSizeLink != null) {
-            orginalSizeLink.attr('href', $imageOriginalSource);
-            orginalSizeLink.attr('class', 'original_image');
-          }
-          $('.image_number_text', $newDiv).html('Image Number: ' + $imageId);
-          // If this is the first instance of the img, let them create new descriptions
-          if($original == '1') {
-          // Update the hidden variable with the book ID so it has the correct book ID
-          $("input[name='dynamic_description[book_id]']", $newDiv).attr('value', $bookId);
-          // Update the hidden variable with the dynamic_image_id so it has the correct dynamic_image_id
-          $("input[name='dynamic_description[dynamic_image_id]']", $newDiv).attr('value', $imageId);
-          $bodyTextArea = $("textarea[name='dynamic_description[body]']", $newDiv);
-          $bodyTextArea.attr('id', "dynamic_description_body_" + $imageId);
-          $bodyTextArea.click(function() {
-            // Remove any success/failure alert messaging; note that this will remove *all* alerts because of the parents() method call
-            $('.description-result', $('.outer-dynamic-description-div', $bodyTextArea.parents())).html('');
-          });
-        }
-          else {
-            // Hide the area where you can enter new descriptions
-            $('.new-description', $newDiv).hide();
-            $('.duplicate-image', $newDiv).show();
-            $('.duplicate-image-id', $newDiv).replaceWith($imgId);
-          }
-        }
-        $newDiv.insertAfter(item);
+        // add in the actual description
+        descriptionInput = $('.description-text-area', $(this).parent().parent());
+        descriptionInput = $(descriptionInput);
+        descriptionInput.val('');
+        $('.imageDescriptions', $(this).parent().parent()).append($(html.body));
       })
-    }
+      $('form.description-form', $newDiv).bind('ajax:error',    function(data, html, status) {
+        notification = $('.description-result', $(this).parent());
+        notification = $(notification);
+        if($.parseJSON(html.responseText) != null) {
+          notification.html($.parseJSON(html.responseText).join(", "));
+        }
+        else {
+          notification.html("An error has occurred.");
+        }
+        notification.css('fontWeight', 'bold');
+        notification.css('color', 'red');
+        
+      })
+      
+      
+      $('.toggle-tiny-mce', $newDiv).click(function() {
+        $bodyNode = $("textarea[name='dynamic_description[body]']", $(this).parent());
+        if($bodyNode != null) {
+          tinyMCE.execCommand('mceAddControl', false, $bodyNode.attr('id'));
+        }
+        return false;
+      });
+      
+      $imgId = $(item).attr('img-id');
+      $imgXmlId = $(item).attr('image-xml-id');
+      $altText = $(item).attr('alt');
+      $original = $(item).attr('original');
+      
+      // Grab meta-information about this dynamic image and adjust the appropriate DIV to reflect that
+      $dataNode = $(".image-editing-description-" + $imgId, top.frames['content'].document);
+      if($dataNode != null) {
+        // Manipulate the new node ($newDiv) before we insert it in the DOM to have data related to the current image plus the previous descriptions
+        $dataNode = $($dataNode);
+        $imageId = $dataNode.attr('image-id');
+        $imageSource = $dataNode.attr('image-src');
+        $imageOriginalSource = $dataNode.attr('image-original-src');
+        currentImageNode.attr('src', $imageSource);
+
+        $descriptionText = $dataNode.attr('description-text');
+        if($descriptionText != null) {
+          $descriptionText = $descriptionText.replace(/\\n/g, "\n");
+        }
+        
+        // show alt text
+        if($altText) {
+            $('.alt_text', $newDiv).html('Alt Text: ' + $altText);
+        } else {
+            $('.alt_text', $newDiv).hide();
+        }
+        
+        // Update the image description box DIV class so that it reflects the image ID in question
+        $('.imageDescBox', $newDiv).html($descriptionText);
+        $('.imageDescBox', $newDiv).addClass('imageDescBox-' + $imageId);
+          //console.log()
+        orginalSizeLink = $('.original_size_link', $newDiv);
+        if(orginalSizeLink != null) {
+          orginalSizeLink.attr('href', $imageOriginalSource);
+          orginalSizeLink.attr('class', 'original_image');
+        }
+        $('.image_number_text', $newDiv).html('Image Number: ' + $imageId);
+        // If this is the first instance of the img, let them create new descriptions
+        if($original == '1') {
+        // Update the hidden variable with the book ID so it has the correct book ID
+        $("input[name='dynamic_description[book_id]']", $newDiv).attr('value', $bookId);
+        // Update the hidden variable with the dynamic_image_id so it has the correct dynamic_image_id
+        $("input[name='dynamic_description[dynamic_image_id]']", $newDiv).attr('value', $imageId);
+        $bodyTextArea = $("textarea[name='dynamic_description[body]']", $newDiv);
+        $bodyTextArea.attr('id', "dynamic_description_body_" + $imageId);
+        $bodyTextArea.click(function() {
+          // Remove any success/failure alert messaging; note that this will remove *all* alerts because of the parents() method call
+          $('.description-result', $('.outer-dynamic-description-div', $bodyTextArea.parents())).html('');
+        });
+      }
+        else {
+          // Hide the area where you can enter new descriptions
+          $('.new-description', $newDiv).hide();
+          $('.duplicate-image', $newDiv).show();
+          $('.duplicate-image-id', $newDiv).replaceWith($imgId);
+        }
+      }
+      $newDiv.insertAfter(item);
+    })
+  }
   });
   
   
