@@ -37,4 +37,15 @@ class Book < ActiveRecord::Base
   def book_stats_plus_unessential_images_described
     book_stats.select("book_stats.*, total_images_described - essential_images_described as unessential_images_described") 
   end
+  
+  def status_to_english
+    case status
+    when 2
+      'Processing'
+    when 3
+      'Complete'
+    else
+      'Processing'
+    end
+  end
 end
