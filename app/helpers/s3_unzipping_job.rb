@@ -78,13 +78,14 @@ class S3UnzippingJob < Struct.new(:book_uid, :repository, :library, :uploader_id
 
         doc = nil
         xml = nil
-
+        
+        UserMailer.book_uploaded_email(current_user, book) #email 'current user'
+        
         # remove zip file from holding bucket
         repository.remove_file(book_uid + ".zip")
 
         daisy_file = nil
-        
-        #TODO: here we are done with all the upload proccess so we can send an email? 
+         
       rescue Exception => e
           puts "Unknown problem in unzipping job for book #{book_uid}"
           puts "#{e.class}: #{e.message}"
