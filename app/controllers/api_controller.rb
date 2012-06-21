@@ -10,7 +10,7 @@ class ApiController < ApplicationController
     image_desc = DynamicDescription.where(:dynamic_image_id => image.id).where('date_approved is not null').order(:date_approved).first if image
     
         builder = Nokogiri::XML::Builder.new do |xml|
-          xml.send 'd:description', {'xml:id'=>"watercycle-desc", 'xml:lang'=>"en",
+          xml.send 'd:description', {'xml:id'=>image_desc.id, 'xml:lang'=>"en",
               'xmlns'=>"http://www.daisy.org/ns/z3998/authoring/",
               'xmlns:d'=>"http://www.daisy.org/ns/z3998/authoring/features/description/",
               'xmlns:xlink'=>"http://www.w3.org/1999/xlink"} do
@@ -47,6 +47,8 @@ class ApiController < ApplicationController
             end
           end
         end
+        builder.doc.root.add_previous_sibling Nokogiri::XML::ProcessingInstruction.new(builder.doc, "xml-stylesheet", 'type="text/xsl" href="desc2html.xsl"')
+        
         render :text => builder.to_xml
         
   end
