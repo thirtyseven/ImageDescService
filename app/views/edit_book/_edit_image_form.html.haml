@@ -11,6 +11,15 @@
     
       %br
       %button.toggle-tiny-mce{:onclick=>"return false;"} Show Editor
+      %button.toggle-math-desc{:onclick=>"return false;"} Show/Hide Math Helper
+      %div.math_desc_div{:style => "display:none;"}
+        Equation Editor:
+        %a{:href => "http://www1.chapman.edu/~jipsen/mathml/asciimath.html", :target => "ascii math examples"} (examples)
+        %br
+        %textarea.equation-editor{:rows => 5, :cols => 30}
+        .svg_node
+        %button.add-to-desc{:onclick => "return false;"}Add to Description
+        %p
       = f.submit "Submit new image description"
     .description-result
       %br
