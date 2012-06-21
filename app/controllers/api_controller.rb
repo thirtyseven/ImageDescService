@@ -157,7 +157,7 @@ class ApiController < ApplicationController
                   elsif k == "dynamic-descriptions"
                    xml.send k do
                       v.each do |image_desc| 
-                        xml.send 'dynamic-descriptions' do
+                        xml.send 'dynamic-description' do
                           xml.image image_desc[:image]
                           xml.longdesc { xml.cdata image_desc[:longdesc] ? image_desc[:longdesc] : '' }
                           xml.iscurrent image_desc[:iscurrent]
