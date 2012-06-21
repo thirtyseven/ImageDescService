@@ -85,6 +85,7 @@ DiagramRailsApp::Application.routes.draw do
   match "imageDesc", :to => "dynamic_descriptions#create", :via => "post"
   match "imageDesc/mark_all_essential", :to => "dynamic_images#mark_all_essential", :via => "post"
 
+  match "cm/:dynamic_image_id/current.xml", :to => "api#get_image_approved", :via => "get"
 
   #match "books/mark_approved", :to => "books#mark_approved", :via => "post"
 

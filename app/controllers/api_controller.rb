@@ -5,56 +5,50 @@ class ApiController < ApplicationController
   STATUS_APPROVED = 200
 
   def get_image_approved
-    book_uid = params[:book_uid]
-    @book = Book.where(:uid => book_uid).first
-    descriptions = extract_approved_image_descriptions @book
+    image_id = params[:dynamic_image_id]
+    image = DynamicImage.where(:id => image_id).first
+    image_desc = DynamicDescription.where(:dynamic_image_id => image.id).where('date_approved is not null').order(:date_approved).first if image
     
-    respond_to do |format|
-      format.xml  do
         builder = Nokogiri::XML::Builder.new do |xml|
-          xml.descriptions do
-            descriptions.each do |image_desc|
-              target_age = "#{image_desc[:target_age_start]}-#{image_desc[:target_age_end]}" if image_desc[:target_age_start].present? || image_desc[:target_age_end].present?      
-              target_grade = "#{image_desc[:target_grade_start]}-#{image_desc[:target_grade_end]}" if image_desc[:target_grade_start].present? || image_desc[:target_grade_end].present?      
-              xml.send 'd:description', {'xml:id'=>"watercycle-desc", 'xml:lang'=>"en",
-                  'xmlns'=>"http://www.daisy.org/ns/z3998/authoring/",
-                  'xmlns:d'=>"http://www.daisy.org/ns/z3998/authoring/features/description/",
-                  'xmlns:xlink'=>"http://www.w3.org/1999/xlink"} do
-                  # missing fields currentVersion,  tactile,  tour (tactile), tour (SimplifiedImage)
-                xml.send 'd:head' do
-                  xml.meta(:property => "dc:identifier", :content => image_desc[:id]) 
-                  xml.meta(:property => "dc:language", :content => image_desc[:language])
-                  xml.meta(:property => "diagram:targetAge", :content => target_age)
-                  xml.meta(:property => "diagram:targetGrade", :content => target_grade)
-                  xml.meta(:property => "diagram:descriptionQuality", :content => image_desc[:description_quality])                                                        
-                  xml.meta(:rel=>"diagram:currentVersion", :resource=>"TODO")
-                  xml.meta(image_desc[:creator], :property => "dc:creator", :id => 'author01')   
-                  xml.meta(image_desc[:repository], :rel => "diagram:repository")
+          xml.send 'd:description', {'xml:id'=>"watercycle-desc", 'xml:lang'=>"en",
+              'xmlns'=>"http://www.daisy.org/ns/z3998/authoring/",
+              'xmlns:d'=>"http://www.daisy.org/ns/z3998/authoring/features/description/",
+              'xmlns:xlink'=>"http://www.w3.org/1999/xlink"} do
+            if image_desc
+              target_age = "#{image_desc.target_age_start}-#{image_desc.target_age_end}" if image_desc.target_age_start.present? || image_desc.target_age_end.present?      
+              target_grade = "#{image_desc.target_grade_start}-#{image_desc.target_grade_end}" if image_desc.target_grade_start.present? || image_desc.target_grade_end.present?      
+            
+              # missing fields currentVersion,  tactile,  tour (tactile), tour (SimplifiedImage)
+              xml.send 'd:head' do
+                xml.meta(:property => "dc:identifier", :content => image_desc.id) 
+                xml.meta(:property => "dc:language", :content => image_desc.language)
+                xml.meta(:property => "diagram:targetAge", :content => target_age)
+                xml.meta(:property => "diagram:targetGrade", :content => target_grade)
+                xml.meta(:property => "diagram:descriptionQuality", :content => image_desc.description_quality)                                                        
+                xml.meta(:rel=>"diagram:currentVersion", :resource=>"TODO")
+                xml.meta(image_desc.submitter, :property => "dc:creator", :id => 'author01')   
+                xml.meta(image_desc.repository, :rel => "diagram:repository")
+              end
+              xml.send 'd:body' do
+                xml.send 'd:summary', :id => 'summary' do
+                  xml.cdata image_desc.summary ? image_desc.summary : ''
                 end
-                xml.send 'd:body' do
-                  xml.send 'd:summary', :id => 'summary' do
-                    xml.cdata image_desc[:summary] ? image_desc[:summary] : ''
-                  end
-                  xml.send 'd:longdesc', :id => 'longdesc01' do
-                    xml.cdata image_desc[:longdesc] ? image_desc[:longdesc] : ''
-                  end
-                  xml.annotation(image_desc[:annotation], :ref => 'longdesc01', :role => 'diagram:comment', :by => 'teacher') 
-                  xml.send 'd:simplifiedLanguageDescription', :id => 'simpledesc01' do
-                    xml.cdata image_desc[:simplified_language_description] ? image_desc[:simplified_language_description] : ''
-                  end
-                  xml.send "d:tactile", {'xml:id'=>"tactile01"} do
-                    xml.cdata 'TODO'
-                  end
-                  
+                xml.send 'd:longdesc', :id => 'longdesc01' do
+                  xml.cdata image_desc.body ? image_desc.body : ''
+                end
+                xml.annotation(image_desc.annotation, :ref => 'longdesc01', :role => 'diagram:comment', :by => 'teacher') 
+                xml.send 'd:simplifiedLanguageDescription', :id => 'simpledesc01' do
+                  xml.cdata image_desc.simplified_language_description ? image_desc.simplified_language_description : ''
+                end
+                xml.send "d:tactile", {'xml:id'=>"tactile01"} do
+                  xml.cdata 'TODO'
                 end
               end
-            end                    
+            end
           end
         end
         render :text => builder.to_xml
         
-      end
-    end
   end
 
   def get_image_descriptions
@@ -98,16 +92,6 @@ class ApiController < ApplicationController
   
   protected
 
-  def extract_approved_image_descriptions book
-     book.current_images_and_descriptions.all.map do |image|
-        { :id => image.dynamic_descriptions.first.id, :language => image.dynamic_descriptions.first.language, :target_age_start => image.dynamic_descriptions.first.target_age_start,
-          :target_grade_end => image.dynamic_descriptions.first.target_grade_end, :target_grade_start => image.dynamic_descriptions.first.target_grade_start, :target_grade_end => image.dynamic_descriptions.first.target_grade_end, 
-           :description_quality => image.dynamic_descriptions.first.description_quality, :creator => image.dynamic_descriptions.first.submitter, :iscurrent => image.dynamic_descriptions.first.is_current,
-           :repository => image.dynamic_descriptions.first.repository, :summary => image.dynamic_descriptions.first.summary,  :longdesc => image.dynamic_descriptions.first.body, :annotation => image.dynamic_descriptions.first.annotation,
-           :simplified_language_description => image.dynamic_descriptions.first.simplified_language_description}
-      end
-  end
-  
   def extract_dynamic_description_images book
     book.current_images_and_descriptions.all.map do |image|
       {:image => (image ? image.image_location : nil), :longdesc => image.dynamic_descriptions.first.body, :iscurrent => image.dynamic_descriptions.first.is_current,
