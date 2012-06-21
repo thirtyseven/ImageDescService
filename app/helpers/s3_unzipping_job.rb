@@ -78,7 +78,7 @@ class S3UnzippingJob < Struct.new(:book_uid, :repository, :library, :uploader_id
 
         doc = nil
         xml = nil
-        
+        current_user = User.where(:id => uploader_id).first
         UserMailer.book_uploaded_email(current_user, book) #email 'current user'
         
         # remove zip file from holding bucket
