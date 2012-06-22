@@ -31,7 +31,11 @@ class User < ActiveRecord::Base
   validates_confirmation_of :password
   
   before_validation_on_create :populate_new_library
-
+  
+  
+  def full_name
+    [first_name, last_name].compact.join ' '
+  end
  
   def has_role?(role_sym)
     roles.any? { |r| r.name.underscore.to_sym == role_sym }

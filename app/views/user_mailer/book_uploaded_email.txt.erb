@@ -1,6 +1,6 @@
-Hello <%= @user.name %>
+Hello <%= @user.try(:full_name) %>
 ===============================================
  
-You have successfully uploaded the book <%= @book.title %>.
+You have successfully uploaded the book <%= @book.try(:title) %>.
 
 Thanks!
