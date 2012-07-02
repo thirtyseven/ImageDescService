@@ -42,7 +42,7 @@ DiagramRailsApp::Application.routes.draw do
   get "api/get_approved_book_stats"
   get "api/get_approved_descriptions"
   get "api/get_approved_stats"
-  get "api/get_image_descriptions"
+  get "api/get_approved_content_models"
   get "api/get_image_approved"
 
   get "reports/index"

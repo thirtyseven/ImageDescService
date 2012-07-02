@@ -53,7 +53,7 @@ class ApiController < ApplicationController
         
   end
 
-  def get_image_descriptions
+  def get_approved_content_models
     book_stats_from_uid(params[:book_uid]) do |book|
       dynamic_descriptions = extract_dynamic_description_images book
       {:dynamic_descriptions => dynamic_descriptions}
