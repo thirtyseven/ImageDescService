@@ -15,7 +15,9 @@ ActiveAdmin.register Book do
       Book.connection.select_value "select libraries.name from libraries where libraries.id = #{book.library_id}"  
     end
     column :isbn
-    column :status
+    column "Status" do |book|
+      book.status_to_english
+    end
     column "Added", :created_at
     if can? :tag_all_images, @all
     column  do |book| 
