@@ -47,7 +47,7 @@ class Book < ActiveRecord::Base
       when 2
         'Processing Book'
       when 3
-        'Complete'
+        'Ready'
       else
         'Processing'
     end
