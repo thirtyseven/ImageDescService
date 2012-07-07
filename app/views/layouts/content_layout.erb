@@ -64,7 +64,7 @@
         descriptionInput = $(descriptionInput);
         descriptionInput.val('');
         $('.imageDescriptions', $(this).parent().parent()).append($(html.body));
-        MathJax.Hub.Queue(["Typeset",MathJax.Hub], $('.imageDescriptions', $(this).parent().parent()));
+        MathJax.Hub.Typeset($('.imageDescriptions', $(this).parent().parent())[0]);
       })
       $('form.description-form', $newDiv).bind('ajax:error',    function(data, html, status) {
         notification = $('.description-result', $(this).parent());
@@ -124,7 +124,11 @@
         MathJax.Hub.Queue(function() {
           var jaxen = MathJax.Hub.getAllJax(svg_node);
           toMathML(jaxen[0], function(mml) {
-            my_editor.insertHtml(mml);
+            if (my_editor) {
+                my_editor.insertHtml(mml);
+            } else {
+                description_node.value += mml;
+            }
           })} );
           return false;
       });
