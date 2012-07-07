@@ -63,7 +63,7 @@
         descriptionInput = $('.description-text-area', $(this).parent().parent());
         descriptionInput = $(descriptionInput);
         descriptionInput.val('');
-        $('.imageDescriptions', $(this).parent().parent()).append($(html.body));
+        $('.imageDescriptions', $(this).parent().parent()).prepend($(html.body));
         MathJax.Hub.Typeset($('.imageDescriptions', $(this).parent().parent())[0]);
       })
       $('form.description-form', $newDiv).bind('ajax:error',    function(data, html, status) {
