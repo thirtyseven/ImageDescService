@@ -38,4 +38,5 @@ jQuery(function($) {
     $($frame).insertAfter(item).contents().find('body').append(htmlDecode($(item).html()));
     $(item).remove();
   });
+  
 });

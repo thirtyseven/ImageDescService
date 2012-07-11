@@ -1,33 +1,65 @@
-%div{:class => "outer-dynamic-description-div", :style => "display: block; "}
-  %strong.image_number_text{:style => "font-size: 80%;"}
-  %a.original_size_link{:href => "#", :target => "original size image"}  (view original size)
-  %br
-  .new-description
-    New Description
-    = form_for(DynamicDescription.new, :remote => true, :format => :json, :html => {:class => 'description-form'}) do |f|
-      = f.text_area :body, :rows => 6, :cols => 44, :style => 'font-size:120%', :class => 'description-text-area'
-      = f.hidden_field 'book_id'
-      = f.hidden_field 'dynamic_image_id'
-    
-      %br
-      %button.toggle-tiny-mce{:onclick=>"return false;"} Show Editor
-      %button.toggle-math-desc{:onclick=>"return false;"} Show/Hide Math Helper
-      %div.math_desc_div{:style => "display:none;"}
-        Equation Editor:
-        %a{:href => "http://www1.chapman.edu/~jipsen/mathml/asciimath.html", :target => "ascii math examples"} (examples)
+%table
+  %tr
+    %td.image_slot
+    %td
+      %div{:class => "outer-dynamic-description-div", :style => "display: block; "}
+        %strong.image_number_text{:style => "font-size: 80%;"}
+        %a.original_size_link{:href => "#", :target => "original size image"}  (view original size)
         %br
-        %textarea.equation-editor{:rows => 5, :cols => 30}
-        .svg_node
-        %button.add-to-desc{:onclick => "return false;"}Add to Description
-        %p
-      = f.submit "Submit new image description"
-    .description-result
-      %br
-  %div{:class => 'duplicate-image', :style => 'display: none;'}
-    This is a duplicate instance of image
-    %div{:class => 'duplicate-image-id'}
-  Previous Descriptions
-  %div{:class=>"imageDescBox imageDescriptions", :style=>"border:2px solid gray; border-style: groove; padding:0.25em; font-size: 100%; overflow: auto; height: 150px; margin-top: 4px; margin-bottom: 12px;"}
-  %strong.alt_text{:class => 'alt-text', :stye => 'display: block;'}
+        .new-description
+          = form_for(DynamicDescription.new, :remote => true, :format => :json, :html => {:class => 'description-form'}) do |f|
+            = f.hidden_field 'book_id'
+            = f.hidden_field 'dynamic_image_id'
+    
+            Long Description
+            %br
+            = f.text_area :body, :rows => 6, :cols => 44, :style => 'font-size:120%', :class => 'description-text-area enable-tiny-mce'
+            %br
+            %button.toggle-math-desc{:onclick=>"return false;"} Show/Hide Math Helper
+            %div.math_desc_div{:style => "display:none;"}
+              Equation Editor:
+              %a{:href => "http://www1.chapman.edu/~jipsen/mathml/asciimath.html", :target => "ascii math examples"} (examples)
+              %br
+              %textarea.equation-editor{:rows => 5, :cols => 30}
+              .svg_node
+              %button.add-to-desc{:onclick => "return false;"}Add to Description
+              %p
+            %br
+            %div{:class => 'collapsible', 'trigger' => 'Additional Description Elements', :style => "display:none;"}
+              %div{:class => 'collapsible', 'trigger' => '+'}
+                Summary
+                %br
+                = f.text_area :summary, :rows => 3, :cols => 44, :style => 'font-size:120%', :class => 'description-text-area enable-tiny-mce'
+              %br
+              %div{:class => 'collapsible', 'trigger' => '+'}
+                Simplified Description
+                %br
+                = f.text_area :simplified_language_description, :rows => 3, :cols => 44, :style => 'font-size:120%', :class => 'description-text-area enable-tiny-mce'
+              %br
+              %div{:class => 'collapsible', 'trigger' => '+'}
+                Annotation
+                %br
+                = f.text_area :annotation, :rows => 3, :cols => 44, :style => 'font-size:120%', :class => 'description-text-area enable-tiny-mce'
+              %br
+              %div{:class => 'collapsible', 'trigger' => '+'}
+                Target Age & Grade
+                %br
+                Target Age:
+                = select_tag('dynamic_description[target_age_start]', options_for_select((1..100).to_a))
+                = select_tag('dynamic_description[target_age_end]', options_for_select((1..100).to_a))
+                %br
+                Target Grade:
+                = select_tag('dynamic_description[target_grade_start]', options_for_select((1..12).to_a))
+                = select_tag('dynamic_description[target_grade_end]', options_for_select((1..12).to_a))
+      
+            %br
+      
+            = f.submit "Submit new image description"
+          .description-result
+            %br
+        %div{:class => 'duplicate-image', :style => 'display: none;'}
+          This is a duplicate instance of image
+          %div{:class => 'duplicate-image-id'}
+        %strong.alt_text{:class => 'alt-text', :stye => 'display: block;'}
 
 

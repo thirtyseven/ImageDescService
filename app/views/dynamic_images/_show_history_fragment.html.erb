@@ -1,4 +1,0 @@
-<% descriptions.reverse.each_with_index do |description, i| %>
-    <div style="padding: 6px; "><%= raw(description.body.force_utf8) if description.body  %></div>
-    <div style="background-color:#eeeeee; font-style:italic; font-size: 80%;">by <%=description.submitter %> at <%=description.created_at.to_s(:poet_default_dt) %></div>
-<% end %>
