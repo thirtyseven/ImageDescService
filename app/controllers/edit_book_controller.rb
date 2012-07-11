@@ -88,7 +88,6 @@ class EditBookController < ApplicationController
         edit_book_local_file_path(:book_id => @book.id, :book_fragment_id => @book_fragment.id)
       end
     end
-    p "111 @book_url = #{@book_url}"
 
     if (@book_fragment && @book_url)
       render :layout => 'content_layout', :text => ' ', :content_type => 'text/html'

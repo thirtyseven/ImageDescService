@@ -40,12 +40,16 @@ class Book < ActiveRecord::Base
   
   def status_to_english
     case status
-    when 2
-      'Processing'
-    when 3
-      'Complete'
-    else
-      'Processing'
+      when 0
+        'Expired'
+      when 1
+        'Processing Images'
+      when 2
+        'Processing Book'
+      when 3
+        'Ready'
+      else
+        'Processing'
     end
   end
 end
