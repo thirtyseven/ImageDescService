@@ -1,6 +1,7 @@
 # encoding: utf-8
-<%= javascript_include_tag 'ckeditor/ckeditor' %>
 <%= javascript_include_tag :defaults %>
+<%= javascript_include_tag 'ckeditor/ckeditor' %>
+<%= javascript_include_tag 'ckeditor/adapters/jquery' %>
 <%= stylesheet_link_tag 'poet' %>
 <script type="text/x-mathjax-config">
       MathJax.Hub.Config({
@@ -43,6 +44,17 @@
 
   // Inject DHTML into each image with previous description and current description
   
+  var ckeditorConfig =
+      {
+        toolbar :
+        [
+            { name: 'basicstyles', items : [ 'Bold','Italic','Underline' ] },
+            { name: 'paragraph', items : [ 'NumberedList','BulletedList' ] },
+            { name: 'styles', items : [ 'Format' ] },
+            { name: 'insert', items : [ 'Table','Link','Unlink' ] },
+            { name: 'tools', items : [ 'Undo', 'Redo', 'Maximize','Preview' ] }
+        ]
+      };
   $imageEditingControlHtml = $('.image-editing-controls', top.frames['content'].document).attr('template');
   my_instances = [];
   if($imageEditingControlHtml != null) {
@@ -77,26 +89,13 @@
       })
         
       // Make it so that when you click a text area the first time, we enable tinyMCE.  At the same time disable the enable tiny MCE so it doesn't try to enable it multiple times
-      function enableTinyMCE(response) {
-        item = $(response.target);
+      function enableCKEditor(response) {
         
-        
-                  var editor = CKEDITOR.replace( item.attr('id'),
-              {
-                    toolbar :
-                    [
-                        { name: 'basicstyles', items : [ 'Bold','Italic','Underline' ] },
-                        { name: 'paragraph', items : [ 'NumberedList','BulletedList' ] },
-                        { name: 'styles', items : [ 'Format' ] },
-                        { name: 'insert', items : [ 'Table','Link','Unlink' ] },
-                        { name: 'tools', items : [ 'Undo', 'Redo', 'Maximize','Preview' ] }
-                    ]
-                });
-          my_instances[item.attr('id')] = editor;
+        $(response.target).ckeditor(ckeditorConfig);
           
-        item.off("click", enableTinyMCE);
+        item.off("click", enableCKEditor);
       }
-      $('.enable-tiny-mce', $newDiv).on("click", enableTinyMCE);
+      $('.enable-tiny-mce', $newDiv).on("click", enableCKEditor);
       
       $('.collapsible', $newDiv).each(function(index, item) {
         triggerElement = $("<a href='#'>" + $(item).attr('trigger') + "</a>");
@@ -112,6 +111,22 @@
         $bodyNode = $(".math_desc_div", $(this).parent());
         if($bodyNode != null) {
           $bodyNode.toggle();
+        }
+        return false;
+      });
+      
+      $('.toggle-preview', $newDiv).click(function() {
+
+        var descriptionNode = $("textarea[name='dynamic_description[body]']", $(this).parent().parent());
+        var previewNode = $(".preview", $(this).parent().parent());
+        console.log("Have a descriptionNode="+$(descriptionNode).val());
+        previewNode.html($(descriptionNode).val());
+        
+
+        $(previewNode).toggle();
+        $(descriptionNode).toggle();
+        if(descriptionNode.next().hasClass('cke_skin_kama')) {
+          $(descriptionNode.next()).toggle();
         }
         return false;
       });
@@ -132,11 +147,7 @@
         MathJax.Hub.Queue(function() {
           var jaxen = MathJax.Hub.getAllJax(svg_node);
           toMathML(jaxen[0], function(mml) {
-            if (my_editor) {
-                my_editor.insertHtml(mml);
-            } else {
-                description_node.value += mml;
-              }
+            $(description_node).val($(description_node).val() + mml);
           })} );
           return false;
       });
@@ -162,6 +173,7 @@
         }
         // console.log("Have $descriptionBody="+$descriptionBody);
         $('textarea[name="dynamic_description[body]"]', $newDiv).val($descriptionBody);
+        $(".preview", $newDiv).html($descriptionBody);
         $descriptionSummary = $dataNode.attr('description-summary');
         if($descriptionSummary != null) {
           $descriptionSummary = $descriptionSummary.replace(/\\n/g, "\n");
