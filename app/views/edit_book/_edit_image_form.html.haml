@@ -13,10 +13,10 @@
     
             Long Description
             %br
-            = f.text_area :body, :rows => 6, :cols => 44, :style => 'font-size:120%;display:none;', :class => 'description-text-area enable-tiny-mce'
+            = f.text_area :body, :rows => 6, :cols => 44, :style => 'font-size:120%;display:none;', :class => 'description-text-area'
             .preview
             %br
-            %button.toggle-preview{:onclick=>"return false;"} Show/Hide Editor
+            %button.toggle-preview{:onclick=>"return false;"} Edit/Preview
             %button.toggle-math-desc{:onclick=>"return false;"} Show/Hide Math Helper
             %div.math_desc_div{:style => "display:none;"}
               Equation Editor:
@@ -53,6 +53,7 @@
                 Target Grade:
                 = select_tag('dynamic_description[target_grade_start]', options_for_select((1..12).to_a))
                 = select_tag('dynamic_description[target_grade_end]', options_for_select((1..12).to_a))
+              %br
               %div
                 Tactile
                 %br
