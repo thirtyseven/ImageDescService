@@ -28,22 +28,22 @@
               %p
             %br
             %div{:class => 'collapsible', 'trigger' => 'Additional Description Elements', :style => "display:none;"}
-              %div{:class => 'collapsible', 'trigger' => '+'}
+              %div
                 Summary
                 %br
                 = f.text_area :summary, :rows => 3, :cols => 44, :style => 'font-size:120%', :class => 'description-text-area enable-tiny-mce'
               %br
-              %div{:class => 'collapsible', 'trigger' => '+'}
+              %div
                 Simplified Description
                 %br
                 = f.text_area :simplified_language_description, :rows => 3, :cols => 44, :style => 'font-size:120%', :class => 'description-text-area enable-tiny-mce'
               %br
-              %div{:class => 'collapsible', 'trigger' => '+'}
+              %div
                 Annotation
                 %br
                 = f.text_area :annotation, :rows => 3, :cols => 44, :style => 'font-size:120%', :class => 'description-text-area enable-tiny-mce'
               %br
-              %div{:class => 'collapsible', 'trigger' => '+'}
+              %div
                 Target Age & Grade
                 %br
                 Target Age:
@@ -53,7 +53,16 @@
                 Target Grade:
                 = select_tag('dynamic_description[target_grade_start]', options_for_select((1..12).to_a))
                 = select_tag('dynamic_description[target_grade_end]', options_for_select((1..12).to_a))
-      
+              %div
+                Tactile
+                %br
+                Source:
+                %br
+                = f.text_area :tactile_src, :rows => 1, :cols => 44, :style => 'font-size:120%'
+                %br
+                Tour:
+                %br
+                = f.text_area :tactile_tour, :rows => 3, :cols => 44, :style => 'font-size:120%'
             %br
       
             = f.submit "Submit new image description"
