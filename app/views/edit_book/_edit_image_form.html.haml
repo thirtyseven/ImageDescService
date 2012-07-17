@@ -17,7 +17,7 @@
             .preview
             %br
             %button.toggle-preview{:onclick=>"return false;"} Edit
-            %button.toggle-math-desc{:onclick=>"return false;"} Show/Hide Math Helper
+            %button.toggle-math-desc{:style => "display: none;", :onclick=>"return false;"} Show/Hide Math Helper
             %div.math_desc_div{:style => "display:none;"}
               Equation Editor:
               %a{:href => "http://www1.chapman.edu/~jipsen/mathml/asciimath.html", :target => "ascii math examples"} (examples)
