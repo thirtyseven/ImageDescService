@@ -8,7 +8,7 @@
         %br
         %strong.alt_text{:class => 'alt-text', :style => 'display: block; font-size: 80%;'}
         %div{:class => 'add-description-div', :style => 'display: none; margin-top: 8px;'}
-          %button.add-description{:onclick => "return false;"} Create New Description
+          %button.add-description{:onclick => "return false;"} Add Description
         .new-description
           = form_for(DynamicDescription.new, :remote => true, :format => :json, :html => {:class => 'description-form'}) do |f|
             = f.hidden_field 'book_id'
