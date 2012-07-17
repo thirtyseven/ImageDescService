@@ -6,16 +6,17 @@
         %strong.image_number_text{:style => "font-size: 80%;"}
         %a.original_size_link{:href => "#", :target => "original size image"}  (view original size)
         %br
+        %div{:class => 'add-description-div', :style => 'display: none; margin-top: 8px;'}
+          %button.add-description{:onclick => "return false;"} Create New Description
         .new-description
           = form_for(DynamicDescription.new, :remote => true, :format => :json, :html => {:class => 'description-form'}) do |f|
             = f.hidden_field 'book_id'
             = f.hidden_field 'dynamic_image_id'
-    
+            %br
             Long Description
             %br
             = f.text_area :body, :rows => 6, :cols => 44, :style => 'font-size:120%;display:none;', :class => 'description-text-area'
-            .preview
-            %br
+            .preview{:style => 'border: 1px gray solid; margin: 2px 0px 2px 0px; padding-left: 2px;'}
             %button.toggle-preview{:onclick=>"return false;"} Edit
             %button.toggle-math-desc{:style => "display: none;", :onclick=>"return false;"} Show/Hide Math Helper
             %div.math_desc_div{:style => "display:none;"}

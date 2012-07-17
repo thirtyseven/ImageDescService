@@ -135,7 +135,6 @@
 
         var mathButton = $(".toggle-math-desc", $(this).parent().parent());
         $(mathButton).toggle();
-        console.log(mathButton);
         if($(previewNode).is(":visible")) {
             this.innerText = "Edit";
         } else {
@@ -161,7 +160,6 @@
         MathJax.Hub.Queue(function() {
           var jaxen = MathJax.Hub.getAllJax(svg_node);
           toMathML(jaxen[0], function(mml) {
-              //console.log("mml is " + mml);
               if (my_editor.mode == 'wysiwyg') {
                   my_editor.insertHtml(mml);
               }
@@ -169,6 +167,12 @@
                 alert('You must exit View Source mode');
           })} );
           return false;
+      });
+
+      $('.add-description', $newDiv).click(function() {
+          $('.new-description', $(this).parent().parent()).show();
+          $(this).hide();
+          $('.toggle-preview', $(this).parent().parent()).click();
       });
       
       $imgId = $(item).attr('img-id');
@@ -187,8 +191,11 @@
         currentImageNode.attr('src', $imageSource);
 
         $descriptionBody = $dataNode.attr('description-body');
-        if($descriptionBody != null) {
+        if($descriptionBody != "") {
           $descriptionBody = $descriptionBody.replace(/\\n/g, "\n");
+        } else {
+            $('.add-description-div', $newDiv).show();
+            $('.new-description', $newDiv).hide();
         }
         //console.log("Have $descriptionBody="+$descriptionBody);
         $('textarea[name="dynamic_description[body]"]', $newDiv).val($descriptionBody);
