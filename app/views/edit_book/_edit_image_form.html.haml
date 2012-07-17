@@ -24,24 +24,25 @@
               %br
               %textarea.equation-editor{:rows => 5, :cols => 30}
               .svg_node
-              %button.add-to-desc{:onclick => "return false;"}Add to Description
+              %button.add-to-desc{:onclick => "return false;"}Add to Long Description
               %p
             %br
-            %div{:class => 'collapsible', 'trigger' => 'Additional Description Elements', :style => "display:none;"}
+            %br
+            %div{:class => 'collapsible', 'trigger' => 'Show/Hide Additional Fields', :style => "display:none; margin-top: 8px; margin-bottom: 8px;"}
               %div
                 Summary
                 %br
                 = f.text_area :summary, :rows => 3, :cols => 44, :style => 'font-size:120%', :class => 'description-text-area enable-tiny-mce'
               %br
               %div
-                Simplified Description
+                Simplified Language Description
                 %br
                 = f.text_area :simplified_language_description, :rows => 3, :cols => 44, :style => 'font-size:120%', :class => 'description-text-area enable-tiny-mce'
               %br
               %div
                 Annotation
                 %br
-                = f.text_area :annotation, :rows => 3, :cols => 44, :style => 'font-size:120%', :class => 'description-text-area enable-tiny-mce'
+                = f.text_area :annotation, :rows => 3, :cols => 44, :style => 'font-size:120%', :class => 'description-text-area'
               %br
               %div
                 Target Age & Grade
@@ -65,8 +66,8 @@
                 %br
                 = f.text_area :tactile_tour, :rows => 3, :cols => 44, :style => 'font-size:120%'
             %br
-      
-            = f.submit "Submit new image description"
+            %br
+            = f.submit "Save"
           .description-result
             %br
         %div{:class => 'duplicate-image', :style => 'display: none;'}

@@ -52,7 +52,7 @@
             { name: 'paragraph', items : [ 'NumberedList','BulletedList' ] },
             { name: 'styles', items : [ 'Format' ] },
             { name: 'insert', items : [ 'Table','Link','Unlink' ] },
-            { name: 'tools', items : [ 'Undo', 'Redo', 'Maximize','Preview' ] }
+            { name: 'tools', items : [ 'Undo', 'Redo', '-', 'Source','Maximize','Preview' ] }
         ]
       };
   $imageEditingControlHtml = $('.image-editing-controls', top.frames['content'].document).attr('template');
@@ -85,7 +85,16 @@
         notification.css('fontWeight', 'bold');
         notification.css('color', 'red');
       })
-      
+
+      // Make it so that when you click a text area the first time, we enable tinyMCE.  At the same time disable the enable tiny MCE so it doesn't try to enable it multiple times
+      function enableCKEditor(response) {
+
+        $(response.target).ckeditor(ckeditorConfig);
+
+        item.off("click", enableCKEditor);
+      }
+      $('.enable-tiny-mce', $newDiv).on("click", enableCKEditor);
+
       $('.collapsible', $newDiv).each(function(index, item) {
         triggerElement = $("<a href='#'>" + $(item).attr('trigger') + "</a>");
         triggerElement.insertBefore(item);
@@ -153,7 +162,11 @@
           var jaxen = MathJax.Hub.getAllJax(svg_node);
           toMathML(jaxen[0], function(mml) {
               //console.log("mml is " + mml);
-              my_editor.insertHtml(mml);
+              if (my_editor.mode == 'wysiwyg') {
+                  my_editor.insertHtml(mml);
+              }
+              else
+                alert('You must exit View Source mode');
           })} );
           return false;
       });
