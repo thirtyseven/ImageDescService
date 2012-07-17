@@ -109,20 +109,21 @@
         var descriptionNode = $("textarea[name='dynamic_description[body]']", $(this).parent().parent());
         var previewNode = $(".preview", $(this).parent().parent());
         previewNode.html($(descriptionNode).val());
-
-
         $(previewNode).toggle();
-        $(descriptionNode).toggle();
+
+        if(my_instances[$bodyNode.attr('id')] != null) {
+            $(descriptionNode.next()).toggle();
+            this.innerText = "Edit";
+        }
 
         if(!descriptionNode.next().hasClass('cke_skin_kama')) {
             var editor = CKEDITOR.replace( $bodyNode.attr('id'),ckeditorConfig);
             my_instances[$bodyNode.attr('id')] = editor;
-            //console.log("configuring ckeditor");
         }
         if(descriptionNode.next().hasClass('cke_skin_kama')) {
-          $(descriptionNode.next()).toggle();
           previewNode.html(my_instances[$bodyNode.attr('id')].getData());
           MathJax.Hub.Typeset($('.preview',$(this).parent())[0]);
+          this.innerText = "Preview";
         }
         return false;
       });
