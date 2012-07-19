@@ -192,7 +192,7 @@
         currentImageNode.attr('src', $imageSource);
 
         $descriptionBody = $dataNode.attr('description-body');
-        if($descriptionBody != "") {
+        if($descriptionBody != "" && $descriptionBody != null) {
           $descriptionBody = $descriptionBody.replace(/\\n/g, "\n");
         } else {
             $('.add-description-div', $newDiv).show();
@@ -248,6 +248,35 @@
         $("input[name='dynamic_description[dynamic_image_id]']", $newDiv).attr('value', $imageId);
         $bodyTextArea = $("textarea[name='dynamic_description[body]']", $newDiv);
         $bodyTextArea.attr('id', "dynamic_description_body_" + $imageId);
+
+        // Add 'for' attribute for labels to match 'id' attribute of fields for form accessibility
+        var longDescLabel = $('.long-description-label', $newDiv);
+        longDescLabel.attr('for', "dynamic_description_body_" + $imageId);
+
+        var summaryTextArea = $("textarea[name='dynamic_description[summary]']", $newDiv);
+        summaryTextArea.attr('id', "dynamic_description_summary_" + $imageId);
+        var summaryLabel = $('.summary-label', $newDiv);
+        summaryLabel.attr('for', "dynamic_description_summary_" + $imageId);
+
+        var simplifiedTextArea = $("textarea[name='dynamic_description[simplified_language_description]']", $newDiv);
+        simplifiedTextArea.attr('id', "dynamic_description_simplified_" + $imageId);
+        var simplifiedLabel = $('.simplified-description-label', $newDiv);
+        simplifiedLabel.attr('for', "dynamic_description_simplified_" + $imageId);
+
+        var annotationTextArea = $("textarea[name='dynamic_description[annotation]']", $newDiv);
+        annotationTextArea.attr('id', "dynamic_description_annotation_" + $imageId);
+        var annotationLabel = $('.annotation-label', $newDiv);
+        annotationLabel.attr('for', "dynamic_description_annotation_" + $imageId);
+
+        var tactileSrcTextArea = $("textarea[name='dynamic_description[tactile_src]']", $newDiv);
+        tactileSrcTextArea.attr('id', "dynamic_description_tactile_src_" + $imageId);
+        var tactileSrcLabel = $('.tactile-source-label', $newDiv);
+        tactileSrcLabel.attr('for', "dynamic_description_tactile_src_" + $imageId);
+
+        var tactileTourTextArea = $("textarea[name='dynamic_description[tactile_tour]']", $newDiv);
+        tactileTourTextArea.attr('id', "dynamic_description_tactile_tour_" + $imageId);
+        var tactileTourLabel = $('.tactile-tour-label', $newDiv);
+        tactileTourLabel.attr('for', "dynamic_description_tactile_tour_" + $imageId);
         $bodyTextArea.click(function() {
           // Remove any success/failure alert messaging; note that this will remove *all* alerts because of the parents() method call
           $('.description-result', $('.outer-dynamic-description-div', $bodyTextArea.parents())).html('');

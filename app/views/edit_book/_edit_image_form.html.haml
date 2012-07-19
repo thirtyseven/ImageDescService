@@ -14,7 +14,7 @@
             = f.hidden_field 'book_id'
             = f.hidden_field 'dynamic_image_id'
             %br
-            Long Description
+            %label.long-description-label Long Description
             %br
             = f.text_area :body, :rows => 6, :cols => 44, :style => 'font-size:120%;display:none;', :class => 'description-text-area'
             .preview
@@ -32,39 +32,39 @@
             %br
             %div{:class => 'collapsible', 'trigger' => 'Show/Hide Additional Fields', :style => "display:none; margin-top: 8px; margin-bottom: 8px;"}
               %div
-                Summary
+                %label.summary-label Summary
                 %br
                 = f.text_area :summary, :rows => 3, :cols => 44, :style => 'font-size:120%', :class => 'description-text-area enable-tiny-mce'
               %br
               %div
-                Simplified Language Description
+                %label.simplified-description-label Simplified Language Description
                 %br
                 = f.text_area :simplified_language_description, :rows => 3, :cols => 44, :style => 'font-size:120%', :class => 'description-text-area enable-tiny-mce'
               %br
               %div
-                Annotation
+                %label.annotation-label Annotation
                 %br
                 = f.text_area :annotation, :rows => 3, :cols => 44, :style => 'font-size:120%', :class => 'description-text-area'
               %br
               %div
                 Target Age & Grade
                 %br
-                Target Age:
+                %label.target-age-label Target Age:
                 = select_tag('dynamic_description[target_age_start]', options_for_select((1..100).to_a))
                 = select_tag('dynamic_description[target_age_end]', options_for_select((1..100).to_a))
                 %br
-                Target Grade:
+                %label.target-grade-label Target Grade:
                 = select_tag('dynamic_description[target_grade_start]', options_for_select((1..12).to_a))
                 = select_tag('dynamic_description[target_grade_end]', options_for_select((1..12).to_a))
               %br
               %div
                 Tactile
                 %br
-                Source:
+                %label.tactile-source-label Source:
                 %br
                 = f.text_area :tactile_src, :rows => 1, :cols => 44, :style => 'font-size:120%'
                 %br
-                Tour:
+                %label.tactile-tour-label Tour:
                 %br
                 = f.text_area :tactile_tour, :rows => 3, :cols => 44, :style => 'font-size:120%'
             %br
