@@ -1,6 +1,6 @@
 %table
   %tr
-    %td.image_slot
+    %td.image_slot{:style => "vertical-align:top;"}
     %td
       %div{:class => "outer-dynamic-description-div", :style => "display: block; "}
         %strong.image_number_text{:style => "font-size: 80%;"}
@@ -31,10 +31,19 @@
             %br
             %br
             %div{:class => 'collapsible', 'trigger' => 'Show/Hide Additional Fields', :style => "display:none; margin-top: 8px; margin-bottom: 8px;"}
-              %div
-                %label.summary-label Summary
-                %br
-                = f.text_area :summary, :rows => 3, :cols => 44, :style => 'font-size:120%', :class => 'description-text-area enable-tiny-mce'
+              %label.summary-label Summary
+              %br
+              %div.tabs_container
+                %ul.tabs
+                  %li
+                    %a.alternate-tab{:href => "#summary-edit-tab"} Edit
+                  %li.active
+                    %a.default-tab{:href => "#summary-preview-tab"} Preview
+              %div.tabs_content_container
+                %div{:class => "tab_content summary-edit-content edit-content", :id => "summary-edit-tab"}
+                  = f.text_area :summary, :rows => 3, :cols => 44, :style => 'font-size:120%', :class => 'description-text-area enable-tiny-mce'
+                %div{:class => "tab_content summary-preview-content preview-content", :id => "summary-preview-tab", :style => "display: block;"}
+                  .preview-summary
               %br
               %div
                 %label.simplified-description-label Simplified Language Description

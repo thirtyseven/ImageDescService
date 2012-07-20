@@ -15,6 +15,56 @@
   .original_image {font-family:Arial; font-size: 80%; font-weight: bold;}
   .preview {border: 1px gray solid; margin: 2px 0px 2px 0px; padding-left: 2px;}
   .svg_node {padding: 10px;}
+
+  .tabs_container {
+      border-bottom: 1px solid #ccc;
+  }
+  .tabs {
+      list-style: none;
+      padding: 5px 0 4px 0;
+      margin: 0 0 0 10px;
+      font: 0.75em arial;
+  }
+  .tabs li {
+      display: inline;
+  }
+  .tabs li a {
+      border: 1px solid #ccc;
+      padding: 4px 6px;
+      text-decoration: none;
+      background-color: #eeeeee;
+      border-bottom: none;
+      outline: none;
+      border-radius: 5px 5px 0 0;
+      -moz-border-radius: 5px 5px 0 0;
+      -webkit-border-top-left-radius: 5px;
+      -webkit-border-top-right-radius: 5px;
+  }
+  .tabs li a:hover {
+      background-color: #dddddd;
+      padding: 4px 6px;
+  }
+  .tabs li.active a {
+      border-bottom: 1px solid #fff;
+      background-color: #fff;
+      padding: 4px 6px 5px 6px;
+      border-bottom: none;
+  }
+  .tabs li.active a:hover {
+      background-color: #eeeeee;
+      padding: 4px 6px 5px 6px;
+      border-bottom: none;
+  }
+
+  .tabs_content_container {
+      border: 1px solid #ccc;
+      border-top: none;
+      padding: 10px;
+  }
+  .tab_content {
+      display: none;
+  }
+
   </style>
   
   <div class="toolbar" style="width:350px;">
@@ -206,6 +256,7 @@
           $descriptionSummary = $descriptionSummary.replace(/\\n/g, "\n");
         }
         $('textarea[name="dynamic_description[summary]"]', $newDiv).val($descriptionSummary);
+        $(".preview-summary", $newDiv).html($descriptionSummary);
         $descriptionSld = $dataNode.attr('description-sld');
         if($descriptionSld != null) {
           $descriptionSld = $descriptionSld.replace(/\\n/g, "\n");
@@ -248,6 +299,20 @@
         $("input[name='dynamic_description[dynamic_image_id]']", $newDiv).attr('value', $imageId);
         $bodyTextArea = $("textarea[name='dynamic_description[body]']", $newDiv);
         $bodyTextArea.attr('id', "dynamic_description_body_" + $imageId);
+
+
+        // setup ids for summary tabbed interface
+        var alternateTab = $('.alternate-tab', $newDiv);
+        var summaryEditTabId = "summary-edit-tab_" + $imageId;
+        alternateTab.attr('href', "#" + summaryEditTabId);
+        var defaultTab = $('.default-tab', $newDiv);
+        var summaryPreviewTabId = "summary-preview-tab_" + $imageId;
+        defaultTab.attr('href', "#" + summaryPreviewTabId);
+        var summaryEditContent = $('.summary-edit-content', $newDiv);
+        summaryEditContent.attr('id', summaryEditTabId);
+        var summaryPreviewContent = $('.summary-preview-content', $newDiv);
+        summaryPreviewContent.attr('id', summaryPreviewTabId);
+
 
         // Add 'for' attribute for labels to match 'id' attribute of fields for form accessibility
         var longDescLabel = $('.long-description-label', $newDiv);
@@ -297,9 +362,38 @@
 
   }
   $.getScript("https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML");
+
+    //  When user clicks on tab, this code will be executed
+    $(".tabs li").each(function() { $(this).click(function() {
+        var myAncestorElement =  $(this).parent().parent().parent();
+
+        //  First remove class "active" from currently active tab
+        $(".tabs li", myAncestorElement).removeClass('active');
+
+        //  Now add class "active" to the selected/clicked tab
+        $(this).addClass("active");
+
+        //  Hide all tab content
+        $(".tab_content", myAncestorElement).hide();
+
+        //  Here we get the href value of the selected tab
+        var selected_tab = $(this).find("a").attr("href");
+
+        if ($(selected_tab).attr('class').indexOf("preview-content") > 0) {
+            var descriptionSummary = $('textarea[name="dynamic_description[summary]"]', myAncestorElement);
+            $(".preview-summary", myAncestorElement).html($(descriptionSummary).val());
+
+        } else {
+
+        }
+        //  Show the selected tab content
+        $(selected_tab).fadeIn();
+
+        //  At the end, we add return false so that the click on the link is not executed
+        return false;
+    });});
   });
-  
-  
+
   <!-- groups.google.com/d/topic/mathjax-users/unL8IjcrTto/discussion -->
     function toMathML(jax, callback) {
       var mml;
