@@ -275,7 +275,7 @@
           $descriptionSld = $descriptionSld.replace(/\\n/g, "\n");
         }
         $('textarea[name="dynamic_description[simplified_language_description]"]', $newDiv).val($descriptionSld);
-        $(".preview-simplified", $newDiv).html($descriptionSld);
+        $(".preview-simplified_language_description", $newDiv).html($descriptionSld);
         $descriptionAnnotation = $dataNode.attr('description-annotation');
         if($descriptionAnnotation != null) {
           $descriptionAnnotation = $descriptionAnnotation.replace(/\\n/g, "\n");
@@ -317,7 +317,7 @@
 
         // setup ids for summary tabbed interface
         setupTabbedInterfaceIds("summary");
-        setupTabbedInterfaceIds("simplified");
+        setupTabbedInterfaceIds("simplified_language_description");
 
 
         // Add 'for' attribute for labels to match 'id' attribute of fields for form accessibility
@@ -373,8 +373,12 @@
     $(".tabs li").each(function() { $(this).click(function() {
         var myAncestorElement =  $(this).parent().parent().parent();
 
+        var tabs =  $(".tabs li", myAncestorElement);
+        var className = $(tabs).children()[0].className;
+        var fieldName = className.split("-")[0];
+
         //  First remove class "active" from currently active tab
-        $(".tabs li", myAncestorElement).removeClass('active');
+        $(tabs).removeClass('active');
 
         //  Now add class "active" to the selected/clicked tab
         $(this).addClass("active");
@@ -387,12 +391,12 @@
 
         if ($(selected_tab).attr('class').indexOf("preview-content") > 0) {
             //get most current html from editor and assign to preview div
-            var descriptionNode = $('textarea[name="dynamic_description[summary]"]', myAncestorElement);
-            $(".preview-summary", myAncestorElement).html(my_instances[descriptionNode.attr('id')].getData());
+            var descriptionNode = $('textarea[name="dynamic_description[' + fieldName + ']"]', myAncestorElement);
+            $(".preview-" + fieldName, myAncestorElement).html(my_instances[descriptionNode.attr('id')].getData());
 
         } else {
             //enable CKEditor for this textarea
-            var descriptionNode = $("textarea[name='dynamic_description[summary]']", myAncestorElement);
+            var descriptionNode = $("textarea[name='dynamic_description[" + fieldName + "]']", myAncestorElement);
             if(!descriptionNode.next().hasClass('cke_skin_kama')) {
                 var editor = CKEDITOR.replace( descriptionNode.attr('id'),ckeditorConfig);
                 my_instances[descriptionNode.attr('id')] = editor;

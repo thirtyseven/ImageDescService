@@ -52,14 +52,14 @@
                 %div.tabs_container
                   %ul.tabs
                     %li
-                      %a.simplified-alternate-tab{:href => "#simplified-edit-tab"} Edit
+                      %a.simplified_language_description-alternate-tab{:href => "#simplified_language_description-edit-tab"} Edit
                     %li.active
-                      %a.simplified-default-tab{:href => "#simplified-preview-tab"} Preview
+                      %a.simplified_language_description-default-tab{:href => "#simplified_language_description-preview-tab"} Preview
                 %div.tabs_content_container
-                  %div{:class => "tab_content simplified-edit-content edit-content", :id => "simplified-edit-tab"}
-                    = f.text_area :simplified_language_description, :rows => 3, :cols => 44, :style => 'font-size:120%', :class => 'description-text-area enable-tiny-mce'
-                  %div{:class => "tab_content simplified-preview-content preview-content", :id => "simplified-preview-tab", :style => "display: block;"}
-                    .preview-simplified
+                  %div{:class => "tab_content simplified_language_description-edit-content edit-content", :id => "simplified_language_description-edit-tab"}
+                    = f.text_area :simplified_language_description, :rows => 3, :cols => 44, :style => 'font-size:120%', :class => 'description-text-area'
+                  %div{:class => "tab_content simplified_language_description-preview-content preview-content", :id => "simplified_language_description-preview-tab", :style => "display: block;"}
+                    .preview-simplified_language_description
               %br
               %div
                 %label.annotation-label Annotation
