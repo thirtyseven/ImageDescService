@@ -380,11 +380,17 @@
         var selected_tab = $(this).find("a").attr("href");
 
         if ($(selected_tab).attr('class').indexOf("preview-content") > 0) {
-            var descriptionSummary = $('textarea[name="dynamic_description[summary]"]', myAncestorElement);
-            $(".preview-summary", myAncestorElement).html($(descriptionSummary).val());
+            //get most current html from editor and assign to preview div
+            var descriptionNode = $('textarea[name="dynamic_description[summary]"]', myAncestorElement);
+            $(".preview-summary", myAncestorElement).html(my_instances[descriptionNode.attr('id')].getData());
 
         } else {
-
+            //enable CKEditor for this textarea
+            var descriptionNode = $("textarea[name='dynamic_description[summary]']", myAncestorElement);
+            if(!descriptionNode.next().hasClass('cke_skin_kama')) {
+                var editor = CKEDITOR.replace( descriptionNode.attr('id'),ckeditorConfig);
+                my_instances[descriptionNode.attr('id')] = editor;
+            }
         }
         //  Show the selected tab content
         $(selected_tab).fadeIn();
