@@ -137,15 +137,6 @@
         notification.css('color', 'red');
       })
 
-      // Make it so that when you click a text area the first time, we enable tinyMCE.  At the same time disable the enable tiny MCE so it doesn't try to enable it multiple times
-      function enableCKEditor(response) {
-
-        $(response.target).ckeditor(ckeditorConfig);
-
-        item.off("click", enableCKEditor);
-      }
-      $('.enable-tiny-mce', $newDiv).on("click", enableCKEditor);
-
       $('.collapsible', $newDiv).each(function(index, item) {
         triggerElement = $("<a href='#'>" + $(item).attr('trigger') + "</a>");
         triggerElement.insertBefore(item);
@@ -389,14 +380,13 @@
         //  Here we get the href value of the selected tab
         var selected_tab = $(this).find("a").attr("href");
 
+        var descriptionNode = $('textarea[name="dynamic_description[' + fieldName + ']"]', myAncestorElement);
         if ($(selected_tab).attr('class').indexOf("preview-content") > 0) {
             //get most current html from editor and assign to preview div
-            var descriptionNode = $('textarea[name="dynamic_description[' + fieldName + ']"]', myAncestorElement);
             $(".preview-" + fieldName, myAncestorElement).html(my_instances[descriptionNode.attr('id')].getData());
 
         } else {
             //enable CKEditor for this textarea
-            var descriptionNode = $("textarea[name='dynamic_description[" + fieldName + "]']", myAncestorElement);
             if(!descriptionNode.next().hasClass('cke_skin_kama')) {
                 var editor = CKEDITOR.replace( descriptionNode.attr('id'),ckeditorConfig);
                 my_instances[descriptionNode.attr('id')] = editor;
