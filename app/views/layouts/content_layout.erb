@@ -233,7 +233,20 @@
       
       // Grab meta-information about this dynamic image and adjust the appropriate DIV to reflect that
       $dataNode = $(".image-editing-description-" + $imgId, top.frames['content'].document);
-      if($dataNode != null) {
+        function setupTabbedInterfaceIds(fieldName) {
+            var alternateTab = $('.' + fieldName + '-alternate-tab', $newDiv);
+            var editTabId = fieldName + "-edit-tab_" + $imageId;
+            alternateTab.attr('href', "#" + editTabId);
+            var defaultTab = $('.' + fieldName + '-default-tab', $newDiv);
+            var previewTabId = fieldName + "-preview-tab_" + $imageId;
+            defaultTab.attr('href', "#" + previewTabId);
+            var editContent = $('.' + fieldName + '-edit-content', $newDiv);
+            editContent.attr('id', editTabId);
+            var previewContent = $('.' + fieldName + '-preview-content', $newDiv);
+            previewContent.attr('id', previewTabId);
+        }
+
+        if($dataNode != null) {
         // Manipulate the new node ($newDiv) before we insert it in the DOM to have data related to the current image plus the previous descriptions
         $dataNode = $($dataNode);
         $imageId = $dataNode.attr('image-id');
@@ -262,6 +275,7 @@
           $descriptionSld = $descriptionSld.replace(/\\n/g, "\n");
         }
         $('textarea[name="dynamic_description[simplified_language_description]"]', $newDiv).val($descriptionSld);
+        $(".preview-simplified", $newDiv).html($descriptionSld);
         $descriptionAnnotation = $dataNode.attr('description-annotation');
         if($descriptionAnnotation != null) {
           $descriptionAnnotation = $descriptionAnnotation.replace(/\\n/g, "\n");
@@ -302,16 +316,8 @@
 
 
         // setup ids for summary tabbed interface
-        var alternateTab = $('.alternate-tab', $newDiv);
-        var summaryEditTabId = "summary-edit-tab_" + $imageId;
-        alternateTab.attr('href', "#" + summaryEditTabId);
-        var defaultTab = $('.default-tab', $newDiv);
-        var summaryPreviewTabId = "summary-preview-tab_" + $imageId;
-        defaultTab.attr('href', "#" + summaryPreviewTabId);
-        var summaryEditContent = $('.summary-edit-content', $newDiv);
-        summaryEditContent.attr('id', summaryEditTabId);
-        var summaryPreviewContent = $('.summary-preview-content', $newDiv);
-        summaryPreviewContent.attr('id', summaryPreviewTabId);
+        setupTabbedInterfaceIds("summary");
+        setupTabbedInterfaceIds("simplified");
 
 
         // Add 'for' attribute for labels to match 'id' attribute of fields for form accessibility

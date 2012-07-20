@@ -31,24 +31,35 @@
             %br
             %br
             %div{:class => 'collapsible', 'trigger' => 'Show/Hide Additional Fields', :style => "display:none; margin-top: 8px; margin-bottom: 8px;"}
-              %label.summary-label Summary
-              %br
-              %div.tabs_container
-                %ul.tabs
-                  %li
-                    %a.alternate-tab{:href => "#summary-edit-tab"} Edit
-                  %li.active
-                    %a.default-tab{:href => "#summary-preview-tab"} Preview
-              %div.tabs_content_container
-                %div{:class => "tab_content summary-edit-content edit-content", :id => "summary-edit-tab"}
-                  = f.text_area :summary, :rows => 3, :cols => 44, :style => 'font-size:120%', :class => 'description-text-area'
-                %div{:class => "tab_content summary-preview-content preview-content", :id => "summary-preview-tab", :style => "display: block;"}
-                  .preview-summary
-              %br
-              %div
+              %div.summary-container
+                %label.summary-label Summary
+                %br
+                %div.tabs_container
+                  %ul.tabs
+                    %li
+                      %a.summary-alternate-tab{:href => "#summary-edit-tab"} Edit
+                    %li.active
+                      %a.summary-default-tab{:href => "#summary-preview-tab"} Preview
+                %div.tabs_content_container
+                  %div{:class => "tab_content summary-edit-content edit-content", :id => "summary-edit-tab"}
+                    = f.text_area :summary, :rows => 3, :cols => 44, :style => 'font-size:120%', :class => 'description-text-area'
+                  %div{:class => "tab_content summary-preview-content preview-content", :id => "summary-preview-tab", :style => "display: block;"}
+                    .preview-summary
+                %br
+              %div.simplified-container
                 %label.simplified-description-label Simplified Language Description
                 %br
-                = f.text_area :simplified_language_description, :rows => 3, :cols => 44, :style => 'font-size:120%', :class => 'description-text-area enable-tiny-mce'
+                %div.tabs_container
+                  %ul.tabs
+                    %li
+                      %a.simplified-alternate-tab{:href => "#simplified-edit-tab"} Edit
+                    %li.active
+                      %a.simplified-default-tab{:href => "#simplified-preview-tab"} Preview
+                %div.tabs_content_container
+                  %div{:class => "tab_content simplified-edit-content edit-content", :id => "simplified-edit-tab"}
+                    = f.text_area :simplified_language_description, :rows => 3, :cols => 44, :style => 'font-size:120%', :class => 'description-text-area enable-tiny-mce'
+                  %div{:class => "tab_content simplified-preview-content preview-content", :id => "simplified-preview-tab", :style => "display: block;"}
+                    .preview-simplified
               %br
               %div
                 %label.annotation-label Annotation
