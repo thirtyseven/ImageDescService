@@ -78,12 +78,14 @@
               %div
                 Target Age & Grade
                 %br
-                %label.target-age-label Target Age:
+                %label.from-age-label From Age:
                 = select_tag('dynamic_description[target_age_start]', options_for_select((1..100).to_a))
+                %label.to-age-label To Age:
                 = select_tag('dynamic_description[target_age_end]', options_for_select((1..100).to_a))
                 %br
-                %label.target-grade-label Target Grade:
+                %label.from-grade-label From Grade:
                 = select_tag('dynamic_description[target_grade_start]', options_for_select((1..12).to_a))
+                %label.to-grade-label To Grade:
                 = select_tag('dynamic_description[target_grade_end]', options_for_select((1..12).to_a))
               %br
               %div

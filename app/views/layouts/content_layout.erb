@@ -16,6 +16,7 @@
   .preview {border: 1px gray solid; margin: 2px 0px 2px 0px; padding-left: 2px;}
   .svg_node {padding: 10px;}
   .alt_text {display: block; font-size: 80%; font-weight:bold; border:1px solid #ccc; margin: 2px; text-align: left;}
+  label {font-weight: bold;}
 
   .tabs_container {
       border-bottom: 1px solid #ccc;
@@ -295,6 +296,30 @@
         annotationTextArea.attr('id', "dynamic_description_annotation_" + $imageId);
         var annotationLabel = $('.annotation-label', $newDiv);
         annotationLabel.attr('for', "dynamic_description_annotation_" + $imageId);
+
+        var fromAgeSelect = $("#dynamic_description_target_age_start", $newDiv);
+        var newId = "dynamic_description_target_age_start_" + $imageId;
+        fromAgeSelect.attr('id', newId);
+        var fromAgeLabel = $('.from-age-label', $newDiv);
+        fromAgeLabel.attr('for', newId);
+
+        var toAgeSelect = $("#dynamic_description_target_age_end", $newDiv);
+        newId = "dynamic_description_target_age_end_" + $imageId;
+        toAgeSelect.attr('id', newId);
+        var toAgeLabel = $('.to-age-label', $newDiv);
+        toAgeLabel.attr('for', newId);
+
+        var fromGradeSelect = $("#dynamic_description_target_grade_start", $newDiv);
+        var newId = "dynamic_description_target_grade_start_" + $imageId;
+        fromGradeSelect.attr('id', newId);
+        var fromGradeLabel = $('.from-grade-label', $newDiv);
+        fromGradeLabel.attr('for', newId);
+
+        var toGradeSelect = $("#dynamic_description_target_grade_end", $newDiv);
+        newId = "dynamic_description_target_grade_end_" + $imageId;
+        toGradeSelect.attr('id', newId);
+        var toGradeLabel = $('.to-grade-label', $newDiv);
+        toGradeLabel.attr('for', newId);
 
         var tactileSrcTextArea = $("textarea[name='dynamic_description[tactile_src]']", $newDiv);
         tactileSrcTextArea.attr('id', "dynamic_description_tactile_src_" + $imageId);
