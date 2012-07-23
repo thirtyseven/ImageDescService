@@ -103,7 +103,7 @@
             { name: 'paragraph', items : [ 'NumberedList','BulletedList' ] },
             { name: 'styles', items : [ 'Format' ] },
             { name: 'insert', items : [ 'Table','Link','Unlink' ] },
-            { name: 'tools', items : [ 'Undo', 'Redo', '-', 'Source','Maximize','Preview' ] }
+            { name: 'tools', items : [ 'Undo', 'Redo', '-', 'Source','Maximize' ] }
         ]
       };
   $imageEditingControlHtml = $('.image-editing-controls', top.frames['content'].document).attr('template');
@@ -152,37 +152,6 @@
         if($bodyNode != null) {
           $bodyNode.toggle();
         }
-        return false;
-      });
-      
-      $('.toggle-preview', $newDiv).click(function() {
-        $bodyNode = $("textarea[name='dynamic_description[body]']", $(this).parent());
-        var descriptionNode = $("textarea[name='dynamic_description[body]']", $(this).parent().parent());
-        var previewNode = $(".preview", $(this).parent().parent());
-        previewNode.html($(descriptionNode).val());
-        $(previewNode).toggle();
-
-        if(my_instances[$bodyNode.attr('id')] != null) {
-            $(descriptionNode.next()).toggle();
-        }
-
-        if(!descriptionNode.next().hasClass('cke_skin_kama')) {
-            var editor = CKEDITOR.replace( $bodyNode.attr('id'),ckeditorConfig);
-            my_instances[$bodyNode.attr('id')] = editor;
-        }
-        if(descriptionNode.next().hasClass('cke_skin_kama')) {
-          previewNode.html(my_instances[$bodyNode.attr('id')].getData());
-          MathJax.Hub.Typeset($('.preview',$(this).parent())[0]);
-        }
-
-        var mathButton = $(".toggle-math-desc", $(this).parent().parent());
-        $(mathButton).toggle();
-        if($(previewNode).is(":visible")) {
-            this.innerText = "Edit";
-        } else {
-            this.innerText = "Preview";
-        }
-
         return false;
       });
 
@@ -254,7 +223,7 @@
         }
         //console.log("Have $descriptionBody="+$descriptionBody);
         $('textarea[name="dynamic_description[body]"]', $newDiv).val($descriptionBody);
-        $(".preview", $newDiv).html($descriptionBody);
+        $(".preview-body", $newDiv).html($descriptionBody);
         $descriptionSummary = $dataNode.attr('description-summary');
         if($descriptionSummary != null) {
           $descriptionSummary = $descriptionSummary.replace(/\\n/g, "\n");
@@ -307,6 +276,7 @@
 
 
         // setup ids for summary tabbed interface
+        setupTabbedInterfaceIds("body");
         setupTabbedInterfaceIds("summary");
         setupTabbedInterfaceIds("simplified_language_description");
 
@@ -384,6 +354,7 @@
         if ($(selected_tab).attr('class').indexOf("preview-content") > 0) {
             //get most current html from editor and assign to preview div
             $(".preview-" + fieldName, myAncestorElement).html(my_instances[descriptionNode.attr('id')].getData());
+            MathJax.Hub.Typeset($('.preview-' + fieldName,myAncestorElement)[0]);
 
         } else {
             //enable CKEditor for this textarea
