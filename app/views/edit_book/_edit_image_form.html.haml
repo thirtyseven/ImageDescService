@@ -14,22 +14,31 @@
             = f.hidden_field 'book_id'
             = f.hidden_field 'dynamic_image_id'
             %br
-            %label.long-description-label Long Description
-            %br
-            = f.text_area :body, :rows => 6, :cols => 44, :style => 'font-size:120%;display:none;', :class => 'description-text-area'
-            .preview
-            %button.toggle-preview{:onclick=>"return false;"} Edit
-            %button.toggle-math-desc{:style => "display: none;", :onclick=>"return false;"} Show/Hide Math Helper
-            %div.math_desc_div{:style => "display:none;"}
-              Equation Editor:
-              %a{:href => "http://www1.chapman.edu/~jipsen/mathml/asciimath.html", :target => "ascii math examples"} (examples)
+            %div.long-description-container
+              %label.long-description-label Long Description
               %br
-              %textarea.equation-editor{:rows => 5, :cols => 30}
-              .svg_node
-              %button.add-to-desc{:onclick => "return false;"}Add to Long Description
-              %p
-            %br
-            %br
+                %div.tabs_container
+                  %ul.tabs
+                    %li
+                      %a.body-alternate-tab{:href => "#body-edit-tab"} Edit
+                    %li.active
+                      %a.body-default-tab{:href => "#body-preview-tab"} Preview
+                %div.tabs_content_container
+                  %div{:class => "tab_content body-edit-content edit-content", :id => "body-edit-tab"}
+                    = f.text_area :body, :rows => 6, :cols => 44, :style => 'font-size:120%;display:none;', :class => 'description-text-area'
+                    %button.toggle-math-desc{:onclick=>"return false;"} Show/Hide Math Helper
+                    %div.math_desc_div{:style => "display:none;"}
+                      Equation Editor:
+                      %a{:href => "http://www1.chapman.edu/~jipsen/mathml/asciimath.html", :target => "ascii math examples"} (examples)
+                      %br
+                      %textarea.equation-editor{:rows => 5, :cols => 30}
+                      .svg_node
+                      %button.add-to-desc{:onclick => "return false;"}Add to Long Description
+                      %p
+                    %br
+                  %div{:class => "tab_content body-preview-content preview-content", :id => "summary-preview-tab", :style => "display: block;"}
+                    .preview-body
+              %br
             %div{:class => 'collapsible', 'trigger' => 'Show/Hide Additional Fields', :style => "display:none; margin-top: 8px; margin-bottom: 8px;"}
               %div.summary-container
                 %label.summary-label Summary
