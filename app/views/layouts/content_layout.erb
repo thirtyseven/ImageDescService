@@ -15,6 +15,7 @@
   .original_image {font-family:Arial; font-size: 80%; font-weight: bold;}
   .preview {border: 1px gray solid; margin: 2px 0px 2px 0px; padding-left: 2px;}
   .svg_node {padding: 10px;}
+  .alt_text {display: block; font-size: 80%; font-weight:bold; border:1px solid #ccc; margin: 2px; text-align: left;}
 
   .tabs_container {
       border-bottom: 1px solid #ccc;
@@ -252,12 +253,7 @@
         $descriptionTactileTour = $dataNode.attr('description-tactile-tour');
         $('textarea[name="dynamic_description[tactile_tour]"]', $newDiv).val($descriptionTactileTour);
 
-        // show alt text
-        if($altText) {
-            $('.alt_text', $newDiv).html('Alt Text: ' + $altText);
-        } else {
-            $('.alt_text', $newDiv).hide();
-        }
+
         
         orginalSizeLink = $('.original_size_link', $newDiv);
         if(orginalSizeLink != null) {
@@ -324,6 +320,12 @@
       }
       $newDiv.insertAfter(item);
       $(item).appendTo($('.image_slot', $newDiv));
+
+      // show alt text
+      if($altText) {
+          $('.alt_text', $newDiv).html('Alt Text: ' + $altText);
+          $('.alt_text', $newDiv).insertAfter(item);
+      }
       
     })
 
