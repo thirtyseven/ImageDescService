@@ -24,7 +24,7 @@
           <% if current_user %>
            <%= link_to 'User Profile', edit_user_path(current_user) %> &nbsp;
           <% end %>
-          <% if current_user %>
+          <% if current_user && ENV['SHOW_MY_BOOKS'] === "true"%>
             <%= link_to 'My Books', book_list_by_user_path %> &nbsp;
           <% end %>
           <% if can? :view_admin, @all %> 
@@ -39,19 +39,13 @@
           </p>
        </div>
      </div>
-     </div>
-   <%= render "shared/error_display" %>
-     <%= yield %>
-   <div style="margin: auto; width:700px; padding-top: 40px;" >
 
- 
+       <%= render "shared/error_display" %>
+       <%= yield %>
 
-
-   </div>
-   
    <div id="poet_footer"> <!-- TODO -- footer font smaller !-->
     <p>Copyright &copy; 2012 <a href="http://www.benetech.org">Benetech</a>.</p> 
-   <div> 
+   </div>
      
    </body>    
   
