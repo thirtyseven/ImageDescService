@@ -96,12 +96,13 @@ class ApiController < ApplicationController
 
   def extract_dynamic_description_images book
     book.current_images_and_descriptions.all.map do |image|
-      {:image => (image ? image.image_location : nil), :longdesc => image.dynamic_descriptions.first.body, :iscurrent => image.dynamic_descriptions.first.is_current,
-        :submitter => image.dynamic_descriptions.first.submitter, :date_approved => image.dynamic_descriptions.first.date_approved, :dynamic_image_id => image.dynamic_descriptions.first.dynamic_image_id,
-        :book_id => image.dynamic_descriptions.first.book_id, :book_fragment_id => image.dynamic_descriptions.first.book_fragment_id, :summary => image.dynamic_descriptions.first.summary, 
-        :simplified_language_description => image.dynamic_descriptions.first.simplified_language_description, :target_age_start => image.dynamic_descriptions.first.target_age_start, :target_age_end => image.dynamic_descriptions.first.target_age_end, 
-        :target_grade_start => image.dynamic_descriptions.first.target_grade_start, :target_grade_end => image.dynamic_descriptions.first.target_grade_end, :description_quality => image.dynamic_descriptions.first.description_quality, 
-        :language => image.dynamic_descriptions.first.language, :repository => image.dynamic_descriptions.first.repository, :credentials => image.dynamic_descriptions.first.credentials, :annotation => image.dynamic_descriptions.first.annotation}
+      last_description = image.dynamic_descriptions.last || DynamicDescription.new
+      {:image => (image ? image.image_location : nil), :longdesc => last_description.body, :iscurrent => last_description.is_current,
+        :submitter => last_description.submitter, :date_approved => last_description.date_approved, :dynamic_image_id => last_description.dynamic_image_id,
+        :book_id => last_description.book_id, :book_fragment_id => image ? image.book_fragment_id : nil, :summary => last_description.summary, 
+        :simplified_language_description => last_description.simplified_language_description, :target_age_start => last_description.target_age_start, :target_age_end => last_description.target_age_end, 
+        :target_grade_start => last_description.target_grade_start, :target_grade_end => last_description.target_grade_end, :description_quality => last_description.description_quality, 
+        :language => last_description.language, :repository => last_description.repository, :credentials => last_description.credentials, :annotation => last_description.annotation}
     end  
   end
   
