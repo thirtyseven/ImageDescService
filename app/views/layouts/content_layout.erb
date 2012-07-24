@@ -115,6 +115,8 @@
     $imageEditingControlHtml = $imageEditingControlHtml.replace(/\\n/g, "\n");
     $('img', top.frames['content'].document).each(function(index, item) {
       currentImageNode = $(item);
+      var imageParent = currentImageNode.parent();
+
       // Grab _edit_image_form.html.haml template HTML and inject in the appropriate place
       $newDiv = $($imageEditingControlHtml);
       
@@ -185,7 +187,20 @@
       $('.add-description', $newDiv).click(function() {
           $('.new-description', $(this).parent().parent()).show();
           $(this).hide();
-          $('.toggle-preview', $(this).parent().parent()).click();
+
+          //auto fill text area with first prodnote, if any exist
+          if ($(imageParent).attr('class') === "imggroup") {
+              var prodNotes = $('.prodnote', imageParent);
+              console.log(prodNotes.length);
+              if (prodNotes.length > 0) {
+                  console.log(prodNotes[0].innerHTML);
+                  $('textarea[name="dynamic_description[body]"]', imageParent).val(prodNotes[0].innerHTML);
+              }
+          }
+
+          //auto click edit tab since there will be nothing to preview for a new description
+          var editTab = $('.body-alternate-tab', $(this).parent().next());
+          $(editTab).click();
       });
       
       $imgId = $(item).attr('img-id');
