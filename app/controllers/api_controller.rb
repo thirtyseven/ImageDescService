@@ -102,7 +102,9 @@ class ApiController < ApplicationController
         :book_id => last_description.book_id, :book_fragment_id => image ? image.book_fragment_id : nil, :summary => last_description.summary, 
         :simplified_language_description => last_description.simplified_language_description, :target_age_start => last_description.target_age_start, :target_age_end => last_description.target_age_end, 
         :target_grade_start => last_description.target_grade_start, :target_grade_end => last_description.target_grade_end, :description_quality => last_description.description_quality, 
-        :language => last_description.language, :repository => last_description.repository, :credentials => last_description.credentials, :annotation => last_description.annotation}
+        :language => last_description.language, :repository => last_description.repository, :credentials => last_description.credentials,
+        :annotation => last_description.annotation, :tactile_src => last_description.tactile_src, :tactile_tour => last_description.tactile_tour,
+        :simplified_image_src => last_description.simplified_image_src, :simplified_image_tour => last_description.simplified_image_tour}
     end  
   end
   
@@ -169,8 +171,8 @@ class ApiController < ApplicationController
                           xml.dynamic_image_id image_desc[:dynamic_image_id]
                           xml.book_id image_desc[:book_id]
                           xml.book_fragment_id image_desc[:book_fragment_id]  
-                          xml.summary { xml.cdata image_desc[:summary] ? image_desc[:summary] : '' }
-                          xml.simplified_language_description { xml.cdata image_desc[:simplified_language_description].present? ? image_desc[:simplified_language_description] : '' }
+                          xml.summary { if image_desc[:summary] then xml.cdata image_desc[:summary] else nil end }
+                          xml.simplified_language_description { if image_desc[:simplified_language_description].present? then xml.cdata image_desc[:simplified_language_description] else nil end }
                           xml.target_age_start image_desc[:target_age_start]
                           xml.target_age_end image_desc[:target_age_end]
                           xml.target_grade_start image_desc[:target_grade_start]
@@ -180,6 +182,10 @@ class ApiController < ApplicationController
                           xml.repository image_desc[:repository]
                           xml.credentials image_desc[:credentials]   
                           xml.annotation image_desc[:annotation]  
+                          xml.tactile_src image_desc[:tactile_src]
+                          xml.tactile_tour image_desc[:tactile_tour]
+                          xml.simplified_image_src image_desc[:simplified_image_src]
+                          xml.simplified_image_tour image_desc[:simplified_image_tour]
                         end
                       end
                     end

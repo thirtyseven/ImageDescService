@@ -1,12 +1,12 @@
 %table
   %tr
-    %td.image_slot{:style => "vertical-align:top;"}
+    %td.image_slot{:style => "vertical-align:top; margin-left:auto; text-align: center; margin-right: auto; width: 404px;"}
+      %div.alt_text
     %td
       %div{:class => "outer-dynamic-description-div", :style => "display: block; "}
         %strong.image_number_text{:style => "font-size: 80%;"}
         %a.original_size_link{:href => "#", :target => "original size image"}  (view original size)
         %br
-        %strong.alt_text{:class => 'alt-text', :style => 'display: block; font-size: 80%;'}
         %div{:class => 'add-description-div', :style => 'display: none; margin-top: 8px;'}
           %button.add-description{:onclick => "return false;"} Add Description
         .new-description
@@ -78,12 +78,14 @@
               %div
                 Target Age & Grade
                 %br
-                %label.target-age-label Target Age:
+                %label.from-age-label From Age:
                 = select_tag('dynamic_description[target_age_start]', options_for_select((1..100).to_a))
+                %label.to-age-label To Age:
                 = select_tag('dynamic_description[target_age_end]', options_for_select((1..100).to_a))
                 %br
-                %label.target-grade-label Target Grade:
+                %label.from-grade-label From Grade:
                 = select_tag('dynamic_description[target_grade_start]', options_for_select((1..12).to_a))
+                %label.to-grade-label To Grade:
                 = select_tag('dynamic_description[target_grade_end]', options_for_select((1..12).to_a))
               %br
               %div
