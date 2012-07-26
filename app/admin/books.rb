@@ -31,6 +31,11 @@ ActiveAdmin.register Book do
         link_to "Approve Image Description", books_mark_approved_path(:book_id => book.id), :remote => true, :method => "post", :format => :js, :class => "book-link-ajax"
       end
     end
+    column  do |book| 
+      div :class => :action do
+        link_to "Delete", admin_book_delete_path(:book_id => book.id), :confirm=>'Are you sure?'
+      end
+    end
   end
   
   filter :uid 

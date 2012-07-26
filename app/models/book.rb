@@ -4,8 +4,8 @@ class Book < ActiveRecord::Base
   validates :uid,  :presence => true, :length => { :maximum => 255 }
   validates :isbn, :length => { :maximum => 13 }
   
-  has_many :dynamic_descriptions
-  has_many :dynamic_images
+  has_many :dynamic_descriptions, :dependent => :destroy
+  has_many :dynamic_images, :dependent => :destroy
   has_many :book_stats, :class_name => 'BookStats', :foreign_key => :book_id, :dependent => :destroy
   has_many :book_fragments, :dependent => :destroy
   belongs_to :library
