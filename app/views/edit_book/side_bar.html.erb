@@ -5,15 +5,23 @@
 	</style>
 <script type="text/javascript">
 <!--
-function handleClick(book_id, image_id, src){
+function handleClick(book_id, image_id, src, image_number){
 	frameUrl = top.frames['content'].location.href;
-	console.log(frameUrl);
+	//console.log(frameUrl);
 	hashOffset = frameUrl.indexOf("#");
 	if(hashOffset) {
 	  frameUrl = frameUrl.substring(0, hashOffset)
 	}
-	console.log("location = " + frameUrl + "#" + image_id);
+	//console.log("location = " + frameUrl + "#" + image_id);
 	parent.content.location = frameUrl + "#" + image_id;
+
+    //get the frame element
+    var frameRef = document.getElementById("content");
+    //focus the frame element
+    var contentFrame = $("frame[name='content']", top.document);
+    $(contentFrame).focus();
+    var image_number_label = $("#image_number_"+image_number, window.parent.frames["content"].document);
+    $(image_number_label).focus();
 }
 
 function showGuide() {
@@ -111,7 +119,7 @@ function handleFilterChange()
 <div id="div_<%= src %>" style="padding-left: 5px;">
 	<a id="<%= xml_id %>" href="#<%= xml_id %>">
 	<img style="padding-top: 55px;"
-		onclick="handleClick('<%= book.id %>', '<%= xml_id %>', '<%= raw_src %>')"
+		onclick="handleClick('<%= book.id %>', '<%= xml_id %>', '<%= raw_src %>', '<%= model.id %>')"
 		alt="Image <%= model.id %>. Clicking will cause the frame to the right to scroll to this image within the book." src="<%= model.thumb_source(@host)%>">
 	</img>
 	</a>
@@ -119,10 +127,10 @@ function handleFilterChange()
 <%=
 		form_for model do | form |
 %>
-			<%= form.label(:should_be_described) %>
+			<%= form.label("should_be_described_#{model.id}", "Should be described:") %>
 			<%= form.select :should_be_described, [['Yes', true], ['No', false]],
 				{:include_blank => 'Unspecified', :custom_label => 'Essential?'},
-				{:onChange => "handleImageEssentialChange(this.form);" }  %>
+				{:id => "dynamic_image_should_be_described_#{model.id}", :onChange => "handleImageEssentialChange(this.form);" }  %>
 			<%= form.hidden_field(:id) %>
 			<%= form.hidden_field(:book_id) %>
 			<%= form.hidden_field(:image_location) %>

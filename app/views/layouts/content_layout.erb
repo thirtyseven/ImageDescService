@@ -276,7 +276,9 @@
           orginalSizeLink.attr('href', $imageOriginalSource);
           orginalSizeLink.attr('class', 'original_image');
         }
-        $('.image_number_text', $newDiv).html('Image Number: ' + $imageId);
+        var $imageNumberText = $('.image_number_text', $newDiv);
+        $imageNumberText.html('Image Number: ' + $imageId);
+        $imageNumberText.attr('id', "image_number_" + $imageId);
         // If this is the first instance of the img, let them create new descriptions
         if($original == '1') {
         // Update the hidden variable with the book ID so it has the correct book ID
