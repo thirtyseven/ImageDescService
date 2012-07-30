@@ -18,7 +18,7 @@ class ApiController < ApplicationController
               target_age = "#{image_desc.target_age_start}-#{image_desc.target_age_end}" if image_desc.target_age_start.present? || image_desc.target_age_end.present?      
               target_grade = "#{image_desc.target_grade_start}-#{image_desc.target_grade_end}" if image_desc.target_grade_start.present? || image_desc.target_grade_end.present?      
             
-              # missing fields currentVersion,  tactile,  tour (tactile), tour (SimplifiedImage)
+              # missing fields currentVersion)
               xml.send 'd:head' do
                 xml.meta(:property => "dc:identifier", :content => image_desc.id) 
                 xml.meta(:property => "dc:language", :content => image_desc.language)
@@ -40,9 +40,21 @@ class ApiController < ApplicationController
                 xml.send 'd:simplifiedLanguageDescription', :id => 'simpledesc01' do
                   xml.cdata image_desc.simplified_language_description ? image_desc.simplified_language_description : ''
                 end
+                
                 xml.send "d:tactile", {'xml:id'=>"tactile01"} do
-                  xml.cdata 'TODO'
+                  xml.send "object", {'src'=>image_desc.tactile_src, 'srctype' => "image/svg+xml"}
+                  xml.send "d:tour" do
+                    xml.cdata image_desc.tactile_tour
+                  end
                 end
+                
+                xml.send "d:simplifiedImage", {'xml:id'=>"alt-image"} do
+                  xml.send "object", {'src'=>image_desc.simplified_image_src, 'srctype' => "image/svg+xml"}
+                  xml.send "d:tour" do
+                    xml.cdata image_desc.simplified_image_tour
+                  end
+                end
+
               end
             end
           end

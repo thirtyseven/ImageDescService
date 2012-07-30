@@ -118,7 +118,6 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "book_id"
-    t.integer  "book_fragment_id"
     t.text     "summary"
     t.text     "simplified_language_description"
     t.integer  "target_age_start"
@@ -136,7 +135,6 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.text     "simplified_image_tour"
   end
 
-  add_index "dynamic_descriptions", ["book_fragment_id"], :name => "dynamic_descriptions_book_frag_id"
   add_index "dynamic_descriptions", ["dynamic_image_id", "is_current"], :name => "dynamic_descriptions_uid_image_id_current"
   add_index "dynamic_descriptions", ["dynamic_image_id"], :name => "index_dynamic_descriptions_on_dynamic_image_id"
 
