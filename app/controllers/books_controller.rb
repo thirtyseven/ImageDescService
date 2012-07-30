@@ -28,4 +28,14 @@ class BooksController < ApplicationController
   def book_list_by_user 
     @books =  Book.where(:user_id => current_user.id)  
   end
+  
+  def delete
+    @book = Book.find(params[:book_id])
+    @book.destroy
+    if params[:nav] == 'myBooks'
+      redirect_to book_list_by_user_path
+    else
+      redirect_to admin_books_path
+    end
+  end
 end

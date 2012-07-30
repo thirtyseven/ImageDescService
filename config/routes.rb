@@ -91,6 +91,7 @@ DiagramRailsApp::Application.routes.draw do
 
   match "file/*directory/*file", :controller => 'file', :action => 'file'
   match "file/*file", :controller => 'file', :action => 'file'
+  match "admin_book_delete", :controller => 'books', :action => 'delete'
 
 
   # match 'imageDesc/uid/:uid => 'dynamic_image#show'

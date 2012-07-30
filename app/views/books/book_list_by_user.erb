@@ -5,7 +5,7 @@
   
   <thead>
     <tr>
-    <th class="inputs" colspan="8">
+    <th class="inputs" colspan="11">
      &nbsp; &nbsp; <%=current_user.username%>
      <br>
      &nbsp; &nbsp; Books that I have uploaded
@@ -20,7 +20,9 @@
     <th>Status</a></th>
     <th>Added</a></th>
     <th>Updated</a></th>
-    
+    <th></th>
+    <th></th>
+    <th></th>    
     </tr>
   </thead>
   <tbody>
@@ -34,6 +36,9 @@
       <td><%= book.status_to_english %></td>
       <td><%= book.created_at.to_s(:poet_default) %></td>
       <td><%= book.updated_at.to_s(:poet_default) %></td>
+      <td><div class='action'/><%= link_to "Mark All Essential", imageDesc_mark_all_essential_path(:book_id => book.id), :remote => true, :method => "post", :format => :js, :class => "book-link-ajax"  %></div></td>
+      <td><div class='action'/><%= link_to "Approve Image Description", books_mark_approved_path(:book_id => book.id), :remote => true, :method => "post", :format => :js, :class => "book-link-ajax"  %></div></td>
+      <td><%= link_to "Delete", admin_book_delete_path(:book_id => book.id, :nav => 'myBooks'), :confirm=>'Are you sure?' %></td>
     </tr>
    <% end%>
   </tbody>
