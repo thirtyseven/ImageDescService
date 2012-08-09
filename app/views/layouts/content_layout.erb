@@ -127,6 +127,8 @@
         notification.html("The description has been saved.");
         notification.css('fontWeight', 'bold');
         notification.css('color', 'green');
+        var mySubmit = $('#dynamic_description_submit', $(this));
+        $(mySubmit).focus();
       })
       $('form.description-form', $newDiv).bind('ajax:error',    function(data, html, status) {
         notification = $('.description-result', $(this).parent());
@@ -139,6 +141,8 @@
         }
         notification.css('fontWeight', 'bold');
         notification.css('color', 'red');
+        var mySubmit = $('#dynamic_description_submit', $(this));
+        $(mySubmit).focus();
       })
 
       $('.collapsible', $newDiv).each(function(index, item) {
@@ -191,9 +195,9 @@
           //auto fill text area with first prodnote, if any exist
           if ($(imageParent).attr('class') === "imggroup") {
               var prodNotes = $('.prodnote', imageParent);
-              console.log(prodNotes.length);
+              //console.log(prodNotes.length);
               if (prodNotes.length > 0) {
-                  console.log(prodNotes[0].innerHTML);
+                  //console.log(prodNotes[0].innerHTML);
                   $('textarea[name="dynamic_description[body]"]', imageParent).val(prodNotes[0].innerHTML);
               }
           }
@@ -327,7 +331,7 @@
         toAgeLabel.attr('for', newId);
 
         var fromGradeSelect = $("#dynamic_description_target_grade_start", $newDiv);
-        var newId = "dynamic_description_target_grade_start_" + $imageId;
+        newId = "dynamic_description_target_grade_start_" + $imageId;
         fromGradeSelect.attr('id', newId);
         var fromGradeLabel = $('.from-grade-label', $newDiv);
         fromGradeLabel.attr('for', newId);
