@@ -125,31 +125,35 @@ class EditBookController < ApplicationController
   end
   
   def side_bar
-    book_id = params[:book_id] || session[:book_id]
+    @book, @book_fragment = load_fragment
     session[:book_id] = book_id
-    @fragment_id = params[:book_fragment_id]
+    @fragment_id = @book_fragment.id
     @book = Book.where(:id => book_id, :library_id => current_library.id).first
     
     if @book
       filter = params[:filter]
       @filter = filter
       @host = @repository.get_host(request)
-      case filter.to_i
-        when FILTER_ALL
-          @images = DynamicImage.where(:book_id => @book.id, :book_fragment_id => params[:book_fragment_id]).order("id ASC")
-        when FILTER_ESSENTIAL
-          @images = DynamicImage.where(:book_id => @book.id, :book_fragment_id => params[:book_fragment_id], :should_be_described => true).order("id ASC")
-        when FILTER_NON_ESSENTIAL
-          @images = DynamicImage.where(:book_id => @book.id, :book_fragment_id => params[:book_fragment_id], :should_be_described => false).order("id ASC")
-        when FILTER_DESCRIPTION_NEEDED
-          # ESH: used to be:::
-          # @images = DynamicImage.find_by_sql("SELECT * FROM dynamic_images WHERE book_uid = '#{book_uid}' and should_be_described = true and id not in (select dynamic_image_id from dynamic_descriptions where dynamic_descriptions.book_uid = '#{book_uid}') ORDER BY id ASC;")
-          @images = DynamicImage.includes(:dynamic_descriptions).where(:book_id => @book.id, :book_fragment_id => params[:book_fragment_id], :should_be_described => true, :dynamic_descriptions => {:id => nil}).order('dynamic_images.id asc')
-        when FILTER_UNSPECIFIED
-          @images = DynamicImage.where(:book_id => @book.id, :book_fragment_id => params[:book_fragment_id], :should_be_described => nil).order("id ASC")
-        else
-          @filter = "0"
-          @images = DynamicImage.where(:book_id => @book.id, :book_fragment_id => params[:book_fragment_id]).order("id ASC")
+      if params['book_image_id']
+        @images = DynamicImage.where(:id => params['book_image_id']).all
+      else
+        case filter.to_i
+          when FILTER_ALL
+            @images = DynamicImage.where(:book_id => @book.id, :book_fragment_id => @book_fragment.id).order("id ASC")
+          when FILTER_ESSENTIAL
+            @images = DynamicImage.where(:book_id => @book.id, :book_fragment_id => @book_fragment.id, :should_be_described => true).order("id ASC")
+          when FILTER_NON_ESSENTIAL
+            @images = DynamicImage.where(:book_id => @book.id, :book_fragment_id => @book_fragment.id, :should_be_described => false).order("id ASC")
+          when FILTER_DESCRIPTION_NEEDED
+            # ESH: used to be:::
+            # @images = DynamicImage.find_by_sql("SELECT * FROM dynamic_images WHERE book_uid = '#{book_uid}' and should_be_described = true and id not in (select dynamic_image_id from dynamic_descriptions where dynamic_descriptions.book_uid = '#{book_uid}') ORDER BY id ASC;")
+            @images = DynamicImage.includes(:dynamic_descriptions).where(:book_id => @book.id, :book_fragment_id => @book_fragment.id, :should_be_described => true, :dynamic_descriptions => {:id => nil}).order('dynamic_images.id asc')
+          when FILTER_UNSPECIFIED
+            @images = DynamicImage.where(:book_id => @book.id, :book_fragment_id => @book_fragment.id, :should_be_described => nil).order("id ASC")
+          else
+            @filter = "0"
+            @images = DynamicImage.where(:book_id => @book.id, :book_fragment_id => @book_fragment.id).order("id ASC")
+        end
       end
     end
     render :layout => 'nav_bar'
@@ -173,6 +177,13 @@ class EditBookController < ApplicationController
    book = book_fragment = nil
    
    book_fragment_id = params[:book_fragment_id] || session[:book_fragment_id]
+   book_image_id = params[:book_image_id]
+
+   if book_image_id
+     dynamic_image = DynamicImage.where(:id => book_image_id).first
+     book_fragment_id = dynamic_image.book_fragment_id if dynamic_image
+   end
+
    unless book_fragment_id
      book_id = params[:book_id] || session[:book_id]
      book = Book.where(:id => book_id, :library_id => current_library.id).first
