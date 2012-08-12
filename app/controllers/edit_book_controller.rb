@@ -126,6 +126,7 @@ class EditBookController < ApplicationController
   
   def side_bar
     @book, @book_fragment = load_fragment
+    book_id = @book.id
     session[:book_id] = book_id
     @fragment_id = @book_fragment.id
     @book = Book.where(:id => book_id, :library_id => current_library.id).first
