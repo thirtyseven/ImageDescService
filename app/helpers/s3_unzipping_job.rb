@@ -28,11 +28,6 @@ class S3UnzippingJob < Struct.new(:book_id, :repository, :library, :uploader_id)
 
         book = Book.where(:id => book_id).first
         book = update_book_in_db(book, doc, File.basename(contents_filename), opf, uploader_id)
-        # what do we do if there is no book
-        #if book
-          # assuming this only happens when book is re-uploaded for fragmentation
-         # DynamicImage.where(:book_id => book.id).update_all(:book_fragment_id => nil)        
-        #end
 
         splitter = SplitXmlHelper::DTBookSplitter.new(IMAGE_LIMIT)
         parser = Nokogiri::XML::SAX::Parser.new(splitter)
