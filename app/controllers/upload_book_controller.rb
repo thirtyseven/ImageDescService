@@ -63,11 +63,22 @@ class UploadBookController < ApplicationController
       @book_uid = extract_book_uid(doc)
       doc = nil
       xml = nil
+      preprocessing_book = Book.where(:uid => @book_uid).first
+     
+      if preprocessing_book && preprocessing_book.status == 4
+        flash[:alert] = "The book (#{@book_uid}) is still being processed. Please try again later."
+        redirect_to :action => 'upload'
+        return
+      end
+
+      if !preprocessing_book
+         preprocessing_book = Book.create(:uid => @book_uid, :status => 4, :library =>  current_library, :user_id => current_user.id)
+      end
 
       pid = fork do
         begin
           @repository.store_file(book.path, @book_uid, @book_uid + ".zip", nil)
-          job = S3UnzippingJob.new(@book_uid, @repository, current_library, current_user.id)
+          job = S3UnzippingJob.new(preprocessing_book.id, @repository, current_library, current_user.id)
           Delayed::Job.enqueue(job)
 
           # hack for testing

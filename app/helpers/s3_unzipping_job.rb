@@ -1,6 +1,6 @@
 require 'xml/xslt'
 
-class S3UnzippingJob < Struct.new(:book_uid, :repository, :library, :uploader_id)
+class S3UnzippingJob < Struct.new(:book_id, :repository, :library, :uploader_id)
 
   def enqueue(job)
 
@@ -16,7 +16,8 @@ class S3UnzippingJob < Struct.new(:book_uid, :repository, :library, :uploader_id
 
   def perform
     begin
-        daisy_file = repository.read_file(book_uid + ".zip", File.join( "", "tmp", "#{book_uid}.zip"))
+        book = Book.where(:id => book_id).first
+        daisy_file = repository.read_file(book.uid + ".zip", File.join( "", "tmp", "#{book.uid}.zip"))
         book_directory = accept_book(daisy_file)
 
         xml = get_xml_from_dir(book_directory)
@@ -25,14 +26,13 @@ class S3UnzippingJob < Struct.new(:book_uid, :repository, :library, :uploader_id
         opf = get_opf_from_dir(book_directory)
         contents_filename = get_daisy_contents_xml_name(book_directory)
 
-        book = Book.where(:uid => book_uid).first
-
-        if book
+        book = Book.where(:id => book_id).first
+        book = update_book_in_db(book, doc, File.basename(contents_filename), opf, uploader_id)
+        # what do we do if there is no book
+        #if book
           # assuming this only happens when book is re-uploaded for fragmentation
-          DynamicImage.where(:book_id => book.id).update_all(:book_fragment_id => nil)
-        else
-          book = create_book_in_db(doc, File.basename(contents_filename), opf, uploader_id)
-        end
+         # DynamicImage.where(:book_id => book.id).update_all(:book_fragment_id => nil)        
+        #end
 
         splitter = SplitXmlHelper::DTBookSplitter.new(IMAGE_LIMIT)
         parser = Nokogiri::XML::SAX::Parser.new(splitter)
@@ -69,25 +69,24 @@ class S3UnzippingJob < Struct.new(:book_uid, :repository, :library, :uploader_id
           book.update_attribute("status", 2) if i == 0
         
           contents = repository.xslt(segment_xml, xsl)
-          content_html = File.join("","tmp", "#{book_uid}_#{sequence_number}.html")
+          content_html = File.join("","tmp", "#{book.uid}_#{sequence_number}.html")
           File.open(content_html, 'wb'){|f|f.write(contents)}
-          repository.store_file(content_html, book_uid, "#{book_uid}/#{book_uid}_#{sequence_number}.html", nil)
+          repository.store_file(content_html, book.uid, "#{book.uid}/#{book.uid}_#{sequence_number}.html", nil)
         end
-
+ 
         book.update_attribute("status", 3) 
-
         doc = nil
         xml = nil
         current_user = User.where(:id => uploader_id).first
         UserMailer.book_uploaded_email(current_user, book).deliver #email 'current user'
         
         # remove zip file from holding bucket
-        repository.remove_file(book_uid + ".zip")
+        repository.remove_file(book.uid + ".zip")
 
         daisy_file = nil
          
       rescue Exception => e
-          puts "Unknown problem in unzipping job for book #{book_uid}"
+          puts "Unknown problem in unzipping job for book #{book.uid}"
           puts "#{e.class}: #{e.message}"
           puts e.backtrace.join("\n")
           $stderr.puts e
@@ -125,30 +124,17 @@ class S3UnzippingJob < Struct.new(:book_uid, :repository, :library, :uploader_id
     dir
   end
 
-  def create_book_in_db(doc, xml_file, opf, uploader)
+  def update_book_in_db(book, doc, xml_file, opf, uploader)
     isbn = nil
     if opf
       opf_doc = Nokogiri::XML opf
       isbn = extract_optional_isbn(opf_doc)
     end
     @book_title = extract_optional_book_title(doc)
-    book = Book.where(:uid => book_uid).first
-    if !book
-      book = Book.create(
-          :uid => book_uid,
-          :title => @book_title,
-          :status => 1,
-          :isbn => isbn,
-          :xml_file => xml_file,
-          :library => library,
-          :user_id => uploader
-      )
-    elsif !xml_file.eql?(book.xml_file)
-      book.update_attributes(:xml_file => xml_file, :status => 1)
-    end
+    book.update_attributes(:title => @book_title, :isbn => isbn, :xml_file => xml_file, :status => 1)    
     book
   end
-
+  
   def create_images_in_database(book, fragment, book_directory, doc)
     each_image(doc) do | image_node |
       image_location = image_node['src']

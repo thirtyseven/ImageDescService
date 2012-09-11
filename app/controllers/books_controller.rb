@@ -5,8 +5,7 @@ class BooksController < ApplicationController
   # GET /books.xml
   def index
     #@books = Book.all
-    @books = Book.where(:library_id => current_library.id).page(params[:page]).order('title ASC')
-
+    @books = Book.where(:library_id => current_library.id).where("status <> 4").page(params[:page]).order('title ASC')
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render :xml => @books }
@@ -22,11 +21,11 @@ class BooksController < ApplicationController
   
 
   def book_list
-    @books = Book.where(:library_id => current_library.id).page(params[:page]).order('title ASC')
+    @books = Book.where(:library_id => current_library.id).where(" status <> 4 ").page(params[:page]).order('title ASC')
   end
   
   def book_list_by_user 
-    @books =  Book.where(:user_id => current_user.id)  
+    @books =  Book.where(:user_id => current_user.id).where(" status <> 4 ")  
   end
   
   def delete

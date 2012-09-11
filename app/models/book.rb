@@ -48,6 +48,8 @@ class Book < ActiveRecord::Base
         'Processing Book'
       when 3
         'Ready'
+      when 4
+        'Preprocessing Book'  
       else
         'Processing'
     end
