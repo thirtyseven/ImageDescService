@@ -34,6 +34,7 @@ table tr.evenrow {background-color: white; }
 table tr.oddrow {background-color: gainsboro; }
 .poet_footer {margin: 40px 10px 0px 10px; }
 
+h3.help {font-size: 1.5em; margin-top: 32px; font-weight: bold; color: #5E6469;}
 .image-wrap {display: inline-block;overflow-y: hidden;overflow-x: auto;max-width: 100%;}
 table.confluenceTable{margin:5px;border-collapse:collapse;}
 td.confluenceTd,table.confluenceTable td.confluenceTd{border-width:1px;border-style:solid;border-color:#ddd;padding:5px;vertical-align:top;min-width:.6em;}
