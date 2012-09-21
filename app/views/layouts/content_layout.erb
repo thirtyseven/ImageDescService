@@ -240,13 +240,14 @@
           $imageSource = $dataNode.attr('image-src');
           $imageOriginalSource = $dataNode.attr('image-original-src');
 
-          currentImageNode.attr('src', $imageSource).load(function() {  
-            if(singleImage) {
-              scrollToElement = $('img[img-id="<%= params['book_image_id'] %>"]');
-              scrollToElement.ScrollTo();
-            }
-          });
-        
+          if (currentImageNode.attr('src', $imageSource)) {
+              currentImageNode.attr('src', $imageSource).load(function() {
+                if(singleImage) {
+                  scrollToElement = $('img[img-id="<%= params['book_image_id'] %>"]');
+                  scrollToElement.ScrollTo();
+                }
+              });
+          }
         
 
           $descriptionBody = $dataNode.attr('description-body');
