@@ -89,7 +89,7 @@ class DynamicDescriptionsController < ApplicationController
   def search 
     search_term = params['search']['term']
     
-    @results = DynamicDescription.tire.search(:per_page => 3, :page => (params[:page] || 1)) do
+    @results = DynamicDescription.tire.search(:per_page => 20, :page => (params[:page] || 1)) do
       
       query do
         boolean do
