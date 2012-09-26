@@ -8,15 +8,43 @@ class DynamicDescription < ActiveRecord::Base
   include Tire::Model::Search
   include Tire::Model::Callbacks
   
-  #bundle exec rake environment tire:import CLASS='DynamicDescription' FORCE=1
-  def to_indexed_json
-    {
-      :body => self.body,
-      :is_last_approved        => DynamicDescription.connection.select_value("select (select id from dynamic_descriptions inner_dd where inner_dd.dynamic_image_id = dynamic_descriptions.dynamic_image_id order by date_approved desc limit 1) = dynamic_descriptions.id from dynamic_descriptions where id = #{self.id}")
-    }.to_json
+  # tire do
+  #   mapping do
+  #     indexes :body, :type => 'string'
+  #   end
+  # end
+  
+  settings :number_of_shards => 1,
+           :number_of_replicas => 1,
+           :analysis => {
+                      :analyzer => {
+                                 :str_search_analyzer => {
+                                               :type => :custom,
+                                               :tokenizer => :keyword,
+                                               :filter => [:lowercase]
+                                 },
+                                 :str_index_analyzer => {
+                                               :type => :custom,
+                                               :tokenizer => :keyword,
+                                               :filter => [:lowercase, :substring]
+                                 }
+                                 
+                      },
+                      :filter => {
+                               :substring => {
+                                          :type => "nGram",
+                                          :min_gram => 3,
+                                          :max_gram => 7
+                               }
+                      }
+            }  do
+    mapping do
+      indexes :body, :type => 'string', :index_analyzer => "str_index_analyzer", :search_analyzer => "str_search_analyzer"
+      indexes :is_last_approved, :as => 'DynamicDescription.connection.select_value("select (select id from dynamic_descriptions inner_dd where inner_dd.dynamic_image_id = dynamic_descriptions.dynamic_image_id order by date_approved desc limit 1) = dynamic_descriptions.id from dynamic_descriptions where id = #{self.id}")'
+    end
   end
   
-
+  
   def as_json(options={})
     { :body => body # just use the attribute when no helper is needed
     }
