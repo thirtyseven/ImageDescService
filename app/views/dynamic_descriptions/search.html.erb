@@ -1,0 +1,30 @@
+ <h1> Matching Descriptions</h1>
+ <div style="margin-left: 50px; width:900px; padding-top: 40px;" >
+ <p><p><p>
+
+ 
+ <% @results.each do |result| %> 
+ <% dynamic_description = @dynamic_description_hash[result.id.to_i]%>
+ <table border="0" cellspacing="0" cellpadding="4" id="dynamic_descriptions" class="index_table"> 
+  <thead>
+    <tr class="odd">
+      <th class = "inputs"> 
+        Title <%= dynamic_description.book.title %> by  Author | ISBN-<%=dynamic_description.book.isbn%> | Publisher - Pub Year
+      </th>
+    </tr>
+  </thead>  
+  <tbody>
+    <td>
+       <div style="height:84px; overflow:auto;">
+       <table cellspacing="0" cellpadding="1" border="1" width="300" >
+       <%= dynamic_description.body %>
+       </table>
+       </div>
+    </td>
+  </tbody>
+ <table>
+ <% end%> 
+ <%= paginate @results %>
+</div> 
+</div>
+

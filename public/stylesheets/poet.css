@@ -30,6 +30,7 @@
   .flickr_pagination .next_page {
     margin-left: 1em; }
 
+
 table tr.evenrow {background-color: white; }
 table tr.oddrow {background-color: gainsboro; }
 .poet_footer {margin: 40px 10px 0px 10px; }
@@ -40,3 +41,14 @@ table.confluenceTable{margin:5px;border-collapse:collapse;}
 td.confluenceTd,table.confluenceTable td.confluenceTd{border-width:1px;border-style:solid;border-color:#ddd;padding:5px;vertical-align:top;min-width:.6em;}
 th.confluenceTh,table.confluenceTable th.confluenceTh{border-width:1px;border-style:solid;border-color:#ddd;padding:5px;background-color:#f0f0f0;text-align:left;vertical-align:top;min-width:.6em;}
 td.confluenceTd, table.confluenceTable td.confluenceTd {border-collapse: collapse;}
+
+form input[type=text]
+  width: 26%;
+  border: 1px solid #c9d0d6;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  font-size: 0.95em;
+  font-family: Helvetica, Arial, sans-serif;
+  outline: none;
+  padding: 8px 10px 7px; }

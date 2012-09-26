@@ -9,7 +9,7 @@ class Book < ActiveRecord::Base
   has_many :book_stats, :class_name => 'BookStats', :foreign_key => :book_id, :dependent => :destroy
   has_many :book_fragments, :dependent => :destroy
   belongs_to :library
- 
+  
   def mark_approved
 
     # set the latest descriptions as current (approved)

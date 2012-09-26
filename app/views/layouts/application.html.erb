@@ -14,6 +14,10 @@
          <h1 id="site_title"><a title="Poet, version <%= t(:version)%>, home page" href="/">Poet Image Description</a></h1>
          <ul class="tabbed_navigation" id="tabs"></ul>       
          <p id="utility_nav">
+            <%= form_for :search, :url => dynamic_descriptions_search_path, :html => { :style => 'background:none;border:0;width:100px;', :method => :get } do |f|%> 
+               <%= f.text_field :term %>
+               <%= f.submit "Search Dynamic Descriptions" %>
+            <% end %>
            <% if can? :view_admin, @all %> 
              <%= link_to "Books", admin_books_path %> &nbsp;
            <% else %>

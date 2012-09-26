@@ -17,6 +17,7 @@ gem 'jquery-rails', '>= 1.0.12'
 gem "haml"
 gem "paperclip", "~> 3.0"
 gem "paperclip-aws"
+gem "tire"
 
 # Use unicorn as the web server
 # gem 'unicorn'
