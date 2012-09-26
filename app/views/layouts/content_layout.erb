@@ -100,10 +100,12 @@
   
   var ckeditorConfig =
       {
+        scayt_autoStartup:true,
         toolbar :
         [
             { name: 'basicstyles', items : [ 'Bold','Italic','Underline' ] },
             { name: 'paragraph', items : [ 'NumberedList','BulletedList' ] },
+            { name: 'editing', items : ['Scayt' ] },
             { name: 'styles', items : [ 'Format' ] },
             { name: 'insert', items : [ 'Table','Link','Unlink' ] },
             { name: 'tools', items : [ 'Undo', 'Redo', '-', 'Source','Maximize' ] }
@@ -238,13 +240,14 @@
           $imageSource = $dataNode.attr('image-src');
           $imageOriginalSource = $dataNode.attr('image-original-src');
 
-          currentImageNode.attr('src', $imageSource).load(function() {  
-            if(singleImage) {
-              scrollToElement = $('img[img-id="<%= params['book_image_id'] %>"]');
-              scrollToElement.ScrollTo();
-            }
-          });
-        
+          if (currentImageNode.attr('src', $imageSource)) {
+              currentImageNode.attr('src', $imageSource).load(function() {
+                if(singleImage) {
+                  scrollToElement = $('img[img-id="<%= params['book_image_id'] %>"]');
+                  scrollToElement.ScrollTo();
+                }
+              });
+          }
         
 
           $descriptionBody = $dataNode.attr('description-body');
