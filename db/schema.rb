@@ -49,16 +49,18 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
   add_index "book_stats", ["book_id"], :name => "book_stats_book_id"
 
   create_table "books", :force => true do |t|
-    t.string   "uid",                                             :null => false
+    t.string   "uid",                                              :null => false
     t.string   "title"
-    t.string   "isbn",          :limit => 13
+    t.string   "isbn",           :limit => 13
     t.integer  "status"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "xml_file",                    :default => "none", :null => false
+    t.string   "xml_file",                     :default => "none", :null => false
     t.datetime "last_approved"
-    t.integer  "library_id",                                      :null => false
+    t.integer  "library_id",                                       :null => false
     t.integer  "user_id"
+    t.string   "publisher"
+    t.date     "publisher_date"
   end
 
   add_index "books", ["isbn"], :name => "index_books_on_isbn"

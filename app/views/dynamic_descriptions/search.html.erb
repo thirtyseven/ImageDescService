@@ -2,6 +2,11 @@
  <div style="margin-left: 50px; width:900px; padding-top: 40px;" >
  <p><p><p>
 
+<% if @results.blank? || @results.size < 1 %>
+  
+  <div style="margin: auto; text-align: center; font-weight: bold; color:red; padding: 5px; border-width: 4px; border-style: ridge; border-color: yellow;" >No results found</div>
+     
+<% else%>
  
  <% @results.each do |result| %> 
  <% dynamic_description = @dynamic_description_hash[result.id.to_i]%>
@@ -29,6 +34,7 @@
  <table>
  <% end%> 
  <%= paginate @results %>
+<% end %>
 </div> 
 </div>
 

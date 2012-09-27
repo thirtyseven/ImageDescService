@@ -85,20 +85,20 @@ class DynamicDescriptionsController < ApplicationController
       format.xml  { head :ok }
     end
   end
-  
+
+  # bundle exec rake environment tire:import CLASS='DynamicDescription' FORCE=1 --trace
   def search 
     search_term = params['search']['term']
-    
-    @results = DynamicDescription.tire.search(:per_page => 20, :page => (params[:page] || 1)) do
-      
-      query do
-        boolean do
-          must   { string search_term }
-          must   { term :is_last_approved, '1' }
-        end
+    if !search_term.blank?
+      @results = DynamicDescription.tire.search(:per_page => 20, :page => (params[:page] || 1)) do  
+       query do
+         boolean do
+           must   { string search_term }
+           must   { term :is_last_approved, '1' }
+         end
+       end
       end
+      @dynamic_description_hash = DynamicDescription.where(:id => @results.map(&:id)).all.inject({}){|acc, desc| acc[desc.id] = desc; acc}
     end
-
-    @dynamic_description_hash = DynamicDescription.where(:id => @results.map(&:id)).all.inject({}){|acc, desc| acc[desc.id] = desc; acc}
   end
 end
