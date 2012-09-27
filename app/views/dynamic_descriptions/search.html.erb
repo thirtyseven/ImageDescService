@@ -13,7 +13,7 @@
          <% if dynamic_description.try(:book).try(:isbn) %>
            | ISBN-<%=dynamic_description.try(:book).try(:isbn)%>
          <% end %> 
-         | <%= dynamic_description.try(:book).try(:publisher) %> -  <%= dynamic_description.try(:book).try(:publisher_date).year %> 
+         | <%= dynamic_description.try(:book).try(:publisher) %> -  <%= dynamic_description.try(:book).try(:publisher_date).try(:year) %> 
       </th>
     </tr>
   </thead>  
