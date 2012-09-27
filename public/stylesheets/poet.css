@@ -42,13 +42,10 @@ td.confluenceTd,table.confluenceTable td.confluenceTd{border-width:1px;border-st
 th.confluenceTh,table.confluenceTable th.confluenceTh{border-width:1px;border-style:solid;border-color:#ddd;padding:5px;background-color:#f0f0f0;text-align:left;vertical-align:top;min-width:.6em;}
 td.confluenceTd, table.confluenceTable td.confluenceTd {border-collapse: collapse;}
 
-form input[type=text]
-  width: 26%;
-  border: 1px solid #c9d0d6;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  border-radius: 3px;
-  font-size: 0.95em;
-  font-family: Helvetica, Arial, sans-serif;
-  outline: none;
-  padding: 8px 10px 7px; }
+.inline form {display: inline; }
+
+header-wrap {
+position: relative;  /* constrains the absolutely positioned search-bar div */
+overflow: auto; /* clears the floated search-bar div */
+}
+
