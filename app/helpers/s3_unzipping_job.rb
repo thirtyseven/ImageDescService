@@ -126,7 +126,9 @@ class S3UnzippingJob < Struct.new(:book_id, :repository, :library, :uploader_id)
       isbn = extract_optional_isbn(opf_doc)
     end
     @book_title = extract_optional_book_title(doc)
-    book.update_attributes(:title => @book_title, :isbn => isbn, :xml_file => xml_file, :status => 1)    
+    @book_publisher = extract_optional_book_publisher(doc)
+    @book_publisher_date = extract_optional_book_publisher_date(doc)
+    book.update_attributes(:title => @book_title, :isbn => isbn, :xml_file => xml_file, :status => 1, :publisher => @book_publisher, :publisher_date => @book_publisher_date)    
     book
   end
   
@@ -236,6 +238,26 @@ class S3UnzippingJob < Struct.new(:book_id, :repository, :library, :uploader_id)
     node = matches.first
     node.attributes['content'].content
   end
+  
+  def extract_optional_book_publisher(doc)
+    xpath_publisher = "//xmlns:meta[@name='dc:Publisher']"
+    matches = doc.xpath(doc, xpath_publisher)
+    if matches.size == 0
+      return nil
+    end
+    node = matches.first
+    node.attributes['content'].content
+  end
+  
+  def extract_optional_book_publisher_date(doc)
+     xpath_date = "//xmlns:meta[@name='dc:Date']"
+     matches = doc.xpath(doc, xpath_date)
+     if matches.size != 1
+       return nil
+     end
+     node = matches.first
+     node.attributes['content'].content
+   end
 
   def extract_optional_isbn(doc)
     matches = doc.xpath("//dc:Identifier[@scheme='ISBN']", 'dc' => 'http://purl.org/dc/elements/1.1/')

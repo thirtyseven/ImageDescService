@@ -9,7 +9,11 @@
   <thead>
     <tr class="odd">
       <th class = "inputs"> 
-        Title <%= dynamic_description.try(:book).try(:title) %> by  Author | ISBN-<%=dynamic_description.try(:book).try(:isbn)%> | Publisher - Pub Year
+        Title <%= dynamic_description.try(:book).try(:title) %> by  Author
+         <% if dynamic_description.try(:book).try(:isbn) %>
+           | ISBN-<%=dynamic_description.try(:book).try(:isbn)%>
+         <% end %> 
+         | <%= dynamic_description.try(:book).try(:publisher) %> -  <%= dynamic_description.try(:book).try(:publisher_date).year %> 
       </th>
     </tr>
   </thead>  
