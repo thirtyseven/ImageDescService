@@ -42,7 +42,7 @@ class DynamicDescription < ActiveRecord::Base
             }  do
     mapping do
       indexes :body, :type => 'string', :index_analyzer => "str_index_analyzer", :search_analyzer => "str_search_analyzer"
-      indexes :is_last_approved, :as => 'DynamicDescription.connection.select_value("select (select id from dynamic_descriptions inner_dd where inner_dd.dynamic_image_id = dynamic_descriptions.dynamic_image_id order by date_approved desc limit 1) = dynamic_descriptions.id from dynamic_descriptions where id = #{self.id}")'
+      indexes :is_last_approved, :as => 'DynamicDescription.connection.select_value("select (select id from dynamic_descriptions inner_dd where inner_dd.dynamic_image_id = dynamic_descriptions.dynamic_image_id and date_approved is not null order by date_approved desc limit 1) = dynamic_descriptions.id from dynamic_descriptions where id = #{self.id}")'
     end
   end
   

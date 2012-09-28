@@ -10,13 +10,26 @@ class Book < ActiveRecord::Base
   has_many :book_fragments, :dependent => :destroy
   belongs_to :library
   
+  
   def mark_approved
 
     # set the latest descriptions as current (approved)
     begin
-      DynamicDescription.update_all({:is_current => false}, {:book_id => self.id})
+      dynamic_descriptions.each do |dd|
+        dd.is_current = 0
+        dd.date_approved = nil
+        dd.save # important:: force re-indexing in elastic search on each description
+      end
+      
+      DynamicDescription.where(:id => Book.connection.select_values("select id from
+         (select max(id) as id from dynamic_descriptions where book_id = '#{self.id}' group by dynamic_image_id) temptable")).each do |d_description|
+         d_description.is_current = 1
+         d_description.book_id = self.id
+         d_description.date_approved = Time.now
+         d_description.save  # important:: force re-indexing in elastic search on each description
+      end
       # TODO ESH: may be able to AREL-ize this:
-      Book.connection.execute("update dynamic_descriptions set is_current = 1, date_approved = now() where id in (select id from
+       Book.connection.execute("update dynamic_descriptions set is_current = 1, date_approved = now() where id in (select id from
          (select max(id) as id from dynamic_descriptions where book_id = '#{self.id}' group by dynamic_image_id) temptable)")
     rescue Exception => e
       puts e.message
