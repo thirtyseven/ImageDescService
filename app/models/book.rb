@@ -17,7 +17,6 @@ class Book < ActiveRecord::Base
     begin
       dynamic_descriptions.each do |dd|
         dd.is_current = 0
-        dd.date_approved = nil
         dd.save # important:: force re-indexing in elastic search on each description
       end
       
