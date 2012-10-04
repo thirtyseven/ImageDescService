@@ -5,6 +5,8 @@ class DynamicDescription < ActiveRecord::Base
 
   belongs_to :dynamic_image
   belongs_to :book
+  before_save :remove_body_tag
+  
   include Tire::Model::Search
   include Tire::Model::Callbacks
   
@@ -51,4 +53,10 @@ class DynamicDescription < ActiveRecord::Base
     { :body => body # just use the attribute when no helper is needed
     }
   end
+  
+  def remove_body_tag
+     self.body.gsub!(/&lt;body&gt;/i, '')
+     self.body.gsub!(/&lt;\/body&gt;/i, '')
+  end
+
 end
