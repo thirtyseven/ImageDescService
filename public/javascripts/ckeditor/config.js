@@ -8,4 +8,7 @@ CKEDITOR.editorConfig = function( config )
 	// Define changes to default configuration here. For example:
 	config.language = 'en';
 	config.uiColor = '#9AB8F3';
+    config.enterMode = 2;
+    config.forceEnterMode = true;
+    config.shiftEnterMode = 1;
 };
