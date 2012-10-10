@@ -30,6 +30,9 @@ class User < ActiveRecord::Base
   validates_length_of :password, :within => 6..40, :if => lambda {|user| !user.password.blank? }
   validates_confirmation_of :password
   
+  validates_presence_of  :first_name
+  validates_presence_of  :last_name
+  
   before_validation_on_create :populate_new_library
   
   

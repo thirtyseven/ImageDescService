@@ -57,6 +57,7 @@ class DynamicDescription < ActiveRecord::Base
   def remove_body_tag
      self.body.gsub!(/&lt;body&gt;/i, '')
      self.body.gsub!(/&lt;\/body&gt;/i, '')
+     self.body.gsub!(/&nbsp;/i , '&#160') 
   end
 
 end
