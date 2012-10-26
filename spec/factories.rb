@@ -4,17 +4,21 @@ require 'factory_girl/syntax/sham'
 Sham.name        { "Name" }
 Sham.email {|n| "somebody#{n}@example.com" }
 Sham.username("FOO") { |c| "User-#{c}" }
+Sham.first_name { "John" }
+Sham.last_name { "Smith" }
 
 FactoryGirl.define do
 
   factory :user do 
     email {Sham.email}
     username {Sham.username}
+    first_name {Sham.first_name}
+    last_name {Sham.last_name}
     password '123456'
     libraries { |lib|
       [ 
-        Factory(:library),
-        Factory(:library, {:name => 'Eureka Library'})  
+        Factory(:library)
+      #  FactoryGirl.create(:library, name: 'Eureka Library')  
       ]  
     }
   end

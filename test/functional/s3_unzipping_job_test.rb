@@ -10,7 +10,6 @@ class S3UnzippingJobTest < Test::Unit::TestCase
 
   # Called after every test method runs. Can be used to tear
   # down fixture information.
-
   def teardown
     # Do nothing
   end
@@ -32,6 +31,6 @@ class S3UnzippingJobTest < Test::Unit::TestCase
     xml = File.read('features/fixtures/Sample.opf')
     doc = Nokogiri::XML xml
     isbn = @job.extract_optional_isbn(doc)
-    assert_equal '9781583719015', isbn
+    assert_equal '9780078913280', isbn
   end
 end

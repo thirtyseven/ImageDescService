@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE package PUBLIC "+//ISBN 0-9673008-1-9//DTD OEB 1.2 Package//EN" "http://openebook.org/dtds/oeb-1.2/oebpkg12.dtd">
+
+<package xmlns="http://openebook.org/namespaces/oeb-package/1.0/" xmlns:opf="http://www.idpf.org/2007/opf/" unique-identifier="GLENCOE_NIMAS">
+  <metadata>
+    <dc-metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:oebpackage="http://openebook.org/namespaces/oeb-package/1.0/">
+      <dc:Title>Glencoe Health</dc:Title>
+      <dc:Publisher>Bookshare</dc:Publisher>
+      <dc:Date>2010-05-11</dc:Date>
+      <dc:Format>ANSI/NISO Z39.86-2005</dc:Format>
+      <dc:Identifier id="GLENCOE_NIMAS" scheme="NIMAS">9780078913280NIMAS</dc:Identifier>
+      <dc:Rights>The only legal and authorized use of these files is for the production of alternate media materials for blind, visually impaired, or print disabled students as specified in the NIMAC limitation of use agreement. The copyright for these files is the sole property of the original owner.</dc:Rights>
+      <dc:Source>0078913284</dc:Source>
+      <dc:Source>9780078913280</dc:Source>
+      <dc:Subject>Health</dc:Subject>
+      <dc:Identifier scheme="ISBN" id="ID-9780078913280">9780078913280</dc:Identifier>
+      <dc:Creator file-as="Bronson, Mary H.">Mary H. Bronson</dc:Creator>
+      <dc:Language>en_US</dc:Language>
+      <dc:Identifier scheme="BKSH" id="bksh-id">Bookshare-348596_4620336</dc:Identifier>
+    </dc-metadata>
+    <x-metadata>
+      <meta name="DCTERMS.description.version" content="National ed." />
+      <meta name="DCTERMS.date.issued" content="2010" />
+      <meta name="DCTERMS.publisher.place" content="Columbus, OH" />
+      <meta name="DCTERMS.date.dateCopyrighted" content="2011" />
+      <meta name="DCTERMS.format.extent" content="xxvi, 869 p." />
+      <meta name="DCTERMS.description.note" content="textbook" />
+      <meta name="DCTERMS.audience.educationLevel" content="Grade 9" />
+      <meta name="DCTERMS.audience.educationLevel" content="Grade 10" />
+      <meta name="DCTERMS.audience.educationLevel" content="Grade 11" />
+      <meta name="DCTERMS.audience.educationLevel" content="Grade 12" />
+      <meta name="DCTERMS.relation.isPartOf" content="" />
+      <meta name="nimas-SourceEdition" content="" />
+      <meta name="nimas-SourceDate" content="2010" />
+      <meta name="dtb:multimediaType" content="textNCX" />
+      <meta name="dtb:multimediaContent" content="text" />
+      <meta name="dtb:sourcePublisher" content="Glencoe/McGraw-Hill" />
+      <meta name="Copyright" content="Glencoe/McGraw-Hill" />
+      <meta name="Synopsis" content="GlencoeHealthis a comprehensive health program, provided in a flexible format, designed to improve health and wellness among high school students." />
+      <meta name="dtb:sourceRights" content="Glencoe/McGraw-Hill" />
+      <meta name="dtb:sourceDate" content="2010-05-11" />
+    </x-metadata>
+  </metadata>
+  <manifest>
+    <item id="xml" href="Glencoe_Health.xml" media-type="application/x-dtbook+xml" />
+    <item id="ncx" href="Glencoe_Health.ncx" media-type="application/x-dtbncx+xml" />
+    <item id="opf" href="Glencoe_Health.opf" media-type="text/xml" />
+    <item id="SMIL1" href="Glencoe_Health00001.smil" media-type="application/smil" />
+    <item id="SMIL2" href="Glencoe_Health00002.smil" media-type="application/smil" />
+    <item id="SMIL3" href="Glencoe_Health00003.smil" media-type="application/smil" />
+    <item id="SMIL4" href="Glencoe_Health00004.smil" media-type="application/smil" />
+    <item id="SMIL5" href="Glencoe_Health00005.smil" media-type="application/smil" />
+    <item id="SMIL6" href="Glencoe_Health00006.smil" media-type="application/smil" />
+    <item id="SMIL7" href="Glencoe_Health00007.smil" media-type="application/smil" />
+    <item id="daisyTransform" href="daisyTransform.xsl" media-type="text/xsl" />
+    <item id="daisyCss" href="daisy.css" media-type="text/css" />
+    <item id="htmlCss" href="html.css" media-type="text/css" />
+  </manifest>
+  <spine>
+    <itemref idref="SMIL1" />
+    <itemref idref="SMIL2" />
+    <itemref idref="SMIL3" />
+    <itemref idref="SMIL4" />
+    <itemref idref="SMIL5" />
+    <itemref idref="SMIL6" />
+    <itemref idref="SMIL7" />
+  </spine>
+</package>
+

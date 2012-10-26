@@ -11,6 +11,7 @@ class DynamicImage < ActiveRecord::Base
 
   belongs_to :book
   has_many :dynamic_descriptions
+  has_one :image_category
 
   def best_description
     return dynamic_descriptions.last

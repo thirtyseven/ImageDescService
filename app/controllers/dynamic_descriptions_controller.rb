@@ -42,9 +42,6 @@ class DynamicDescriptionsController < ApplicationController
   # POST /dynamic_descriptions
   # POST /dynamic_descriptions.xml
   def create
-    p "******************"
-    p "create"
-    p "********************"
     book = load_book
     if params[:dynamic_description] && params[:dynamic_description][:dynamic_image_id]
       @dynamic_image = DynamicImage.where(:id => params[:dynamic_description][:dynamic_image_id]).first
