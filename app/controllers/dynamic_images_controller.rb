@@ -94,7 +94,7 @@ class DynamicImagesController < ApplicationController
   def category_sample_html_page
     image_category = ImageCategory.find(params[:id])
     if image_category 
-        send_file  "#{Rails.root}/#{image_category.sample_file_name}"
+        send_file  "#{Rails.root}/public/#{image_category.sample_file_name}"
     end
   end
 end

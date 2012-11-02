@@ -94,6 +94,13 @@
 <% end %>
 
 <script type="text/javascript">
+  imageCategoryContent = [];
+  // NOTE ESH: Preload all the category content in case it's used multiple times
+  <% ImageCategory.all.each do |img_cat| %>
+    $.get('/dynamic_images_sample_html/<%= img_cat.id %>', function(data) {
+      imageCategoryContent[<%= img_cat.id %>] = data;
+    });
+  <% end %>
 
   // TODO: move this into the application.js file when we move away from frames
   // First load up the HTML file and inject it into the DOM
@@ -294,6 +301,14 @@
           $('input[name="dynamic_description[dynamic_image_attributes][id]"]', $newDiv).val($imageId);
           $descriptionImageCategoryId = $dataNode.attr('description-image-category-id');
           $('select[name="dynamic_description[dynamic_image_attributes][image_category_id]"]', $newDiv).val($descriptionImageCategoryId);
+          $('select[name="dynamic_description[dynamic_image_attributes][image_category_id]"]', $newDiv).change(function() {
+            $('.category_description', $(this).parents('.outer-table-wrapper')).html(imageCategoryContent[$(this).val()]);
+          });
+          
+          if($descriptionImageCategoryId != null && $descriptionImageCategoryId > 0 && imageCategoryContent[$descriptionImageCategoryId]) {
+            $('.category_description', $newDiv).html(imageCategoryContent[$descriptionImageCategoryId]);
+          }
+          
 
           $('select[name="dynamic_description[target_age_start]"]', $newDiv).val($dataNode.attr('description-tas'));
           $('select[name="dynamic_description[target_age_end]"]', $newDiv).val($dataNode.attr('description-tae'));
@@ -398,7 +413,7 @@
           }
         }
         $newDiv.insertAfter(item);
-        $(item).appendTo($('.image_slot', $newDiv));
+        $('.actual_image', $newDiv).html($(item));
 
         // show alt text
         if($altText) {
