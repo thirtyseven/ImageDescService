@@ -180,6 +180,16 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.datetime "updated_at"
   end
 
+  create_table "jobs", :force => true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "state"
+    t.string   "job_type"
+    t.text     "enter_params"
+    t.text     "exit_params"
+    t.string   "error_explanation"
+  end
+
   create_table "libraries", :force => true do |t|
     t.string   "name",       :limit => 128, :null => false
     t.datetime "created_at"

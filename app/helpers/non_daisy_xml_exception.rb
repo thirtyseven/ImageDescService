@@ -1,0 +1,2 @@
+class NonDaisyXMLException < Exception
+end

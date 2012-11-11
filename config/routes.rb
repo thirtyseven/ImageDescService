@@ -1,4 +1,6 @@
 DiagramRailsApp::Application.routes.draw do
+  resources :jobs
+
   resources :book_fragments
 
   
@@ -14,6 +16,9 @@ DiagramRailsApp::Application.routes.draw do
   get "daisy_book/get_daisy_with_descriptions"
   get "daisy_book/process"
   get "daisy_book/image_check"
+  get "daisy_book/download_daisy_with_descriptions", :as => :download_daisy_with_descriptions
+  get "daisy_book/poll_daisy_with_descriptions", :as => :poll_daisy_with_descriptions
+  
   post "daisy_book/submit_to_get_descriptions"
   post "daisy_book/check_image_coverage"
 

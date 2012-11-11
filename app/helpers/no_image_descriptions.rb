@@ -1,0 +1,2 @@
+class NoImageDescriptions < Exception
+end

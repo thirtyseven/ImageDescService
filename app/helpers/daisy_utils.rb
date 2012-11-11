@@ -1,6 +1,9 @@
 module DaisyUtils
-
   def valid_daisy_zip?(file)
+    DaisyUtils.valid_daisy_zip?(file)
+  end
+  
+  def self.valid_daisy_zip?(file)
     begin
       Zip::Archive.open(file) do |zipfile|
         zipfile.each do |entry|
@@ -25,8 +28,11 @@ module DaisyUtils
     flash[:alert] = "Uploaded file must be a valid Daisy (zip) file"
     return false
   end
-
+  
   def extract_book_uid(doc)
+    DaisyUtils.extract_book_uid(doc)
+  end
+  def self.extract_book_uid(doc)
     xpath_uid = "//xmlns:meta[@name='dtb:uid']"
     matches = doc.xpath(doc, xpath_uid)
     if matches.size != 1

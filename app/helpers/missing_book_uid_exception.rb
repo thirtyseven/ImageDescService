@@ -1,0 +1,2 @@
+class MissingBookUIDException < Exception
+end
