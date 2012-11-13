@@ -178,7 +178,7 @@ class ApiController < ApplicationController
                           xml.image image_desc[:image]
                           xml.longdesc { xml.cdata image_desc[:longdesc] ? image_desc[:longdesc] : '' }
                           xml.iscurrent image_desc[:iscurrent]
-                          xml.submitter  image_desc[:submitter_id]
+                          xml.submitter  image_desc[:submitter]
                           xml.date_approved image_desc[:date_approved]
                           xml.dynamic_image_id image_desc[:dynamic_image_id]
                           xml.book_id image_desc[:book_id]
