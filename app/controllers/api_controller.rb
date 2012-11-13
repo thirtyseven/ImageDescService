@@ -26,7 +26,7 @@ class ApiController < ApplicationController
                 xml.meta(:property => "diagram:targetGrade", :content => target_grade)
                 xml.meta(:property => "diagram:descriptionQuality", :content => image_desc.description_quality)                                                        
                 xml.meta(:rel=>"diagram:currentVersion", :resource=>"TODO")
-                xml.meta(image_desc.submitter, :property => "dc:creator", :id => 'author01')   
+                xml.meta(image_desc.submitter_name, :property => "dc:creator", :id => 'author01')
                 xml.meta(image_desc.repository, :rel => "diagram:repository")
               end
               xml.send 'd:body' do
@@ -110,7 +110,7 @@ class ApiController < ApplicationController
     book.current_images_and_descriptions.all.map do |image|
       last_description = image.dynamic_descriptions.last || DynamicDescription.new
       {:image => (image ? image.image_location : nil), :longdesc => last_description.body, :iscurrent => last_description.is_current,
-        :submitter => last_description.submitter, :date_approved => last_description.date_approved, :dynamic_image_id => last_description.dynamic_image_id,
+        :submitter => last_description.submitter_name, :date_approved => last_description.date_approved, :dynamic_image_id => last_description.dynamic_image_id,
         :book_id => last_description.book_id, :book_fragment_id => image ? image.book_fragment_id : nil, :summary => last_description.summary, 
         :simplified_language_description => last_description.simplified_language_description, :target_age_start => last_description.target_age_start, :target_age_end => last_description.target_age_end, 
         :target_grade_start => last_description.target_grade_start, :target_grade_end => last_description.target_grade_end, :description_quality => last_description.description_quality, 
@@ -178,7 +178,7 @@ class ApiController < ApplicationController
                           xml.image image_desc[:image]
                           xml.longdesc { xml.cdata image_desc[:longdesc] ? image_desc[:longdesc] : '' }
                           xml.iscurrent image_desc[:iscurrent]
-                          xml.submitter image_desc[:submitter]
+                          xml.submitter  image_desc[:submitter_id]
                           xml.date_approved image_desc[:date_approved]
                           xml.dynamic_image_id image_desc[:dynamic_image_id]
                           xml.book_id image_desc[:book_id]

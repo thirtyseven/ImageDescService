@@ -1,10 +1,11 @@
 class DynamicDescription < ActiveRecord::Base
   validates :body, :length => { :minimum => 2, :maximum => 16384 } , :presence => true
-  validates :submitter, :length => { :maximum => 255 }
+  #validates :submitter, :length => { :maximum => 255 }
   validates :dynamic_image_id, :presence => true
 
   belongs_to :dynamic_image
   belongs_to :book
+  belongs_to :submitter, :class_name => 'User', :foreign_key => :submitter_id
   before_save :remove_body_tag
   
   include Tire::Model::Search
@@ -59,6 +60,10 @@ class DynamicDescription < ActiveRecord::Base
      self.body.gsub!(/&lt;body&gt;/i, '')
      self.body.gsub!(/&lt;\/body&gt;/i, '')
      self.body.gsub!(/&nbsp;/i , '&#160') 
+  end
+  
+  def submitter_name
+    submitter.full_name if submitter
   end
 
 end

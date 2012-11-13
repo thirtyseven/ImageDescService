@@ -114,7 +114,6 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
   create_table "dynamic_descriptions", :force => true do |t|
     t.string   "body",                            :limit => 16384,                          :null => false
     t.boolean  "is_current",                                       :default => false,       :null => false
-    t.string   "submitter",                                        :default => "anonymous", :null => false
     t.datetime "date_approved"
     t.integer  "dynamic_image_id",                                                          :null => false
     t.datetime "created_at"
@@ -135,10 +134,12 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.text     "tactile_tour"
     t.string   "simplified_image_src"
     t.text     "simplified_image_tour"
+    t.integer  "submitter_id"
   end
 
   add_index "dynamic_descriptions", ["dynamic_image_id", "is_current"], :name => "dynamic_descriptions_uid_image_id_current"
   add_index "dynamic_descriptions", ["dynamic_image_id"], :name => "index_dynamic_descriptions_on_dynamic_image_id"
+  add_index "dynamic_descriptions", ["submitter_id"], :name => "dynamic_descriptions_submitter_id"
 
   create_table "dynamic_images", :force => true do |t|
     t.string   "image_location",             :null => false
@@ -183,12 +184,15 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
   create_table "jobs", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "state"
+    t.string   "state",             :default => "new", :null => false
     t.string   "job_type"
+    t.integer  "user_id"
     t.text     "enter_params"
     t.text     "exit_params"
     t.string   "error_explanation"
   end
+
+  add_index "jobs", ["user_id"], :name => "jobs_user_id"
 
   create_table "libraries", :force => true do |t|
     t.string   "name",       :limit => 128, :null => false
