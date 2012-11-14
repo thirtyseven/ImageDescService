@@ -150,6 +150,11 @@
           notification.css('color', 'green');
           var mySubmit = $('#dynamic_description_submit', $(this));
           $(mySubmit).focus();
+          
+          previewAuthor = $('.preview-author', $(this).parent());
+          if(html != null && html.submitter != null) {
+            previewAuthor.html('Author: ' + html.submitter)
+          }
         })
         $('form.description-form', $newDiv).bind('ajax:error',    function(data, html, status) {
           notification = $('.description-result', $(this).parent());
