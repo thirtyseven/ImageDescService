@@ -177,6 +177,7 @@ module DaisyBookHelper
         imggroup = get_imggroup_parent_of(image)
         if(!imggroup)
           imggroup = Nokogiri::XML::Node.new "imggroup", doc
+          imggroup['id'] =  "imggroup_#{image_id}"
           imggroup.parent = parent
 
           parent.children.delete(image)
