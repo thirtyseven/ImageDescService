@@ -94,6 +94,26 @@
 <% end %>
 
 <script type="text/javascript">
+
+function handleImageCategory(element){
+  form = element.form;
+  parentElement = $(element).parent().parent().parent();
+  jQuery.ajaxSetup({ 
+    timeout: 5 * 1000,
+    error: function(XMLHttpRequest, textStatus, errorThrown) {
+                alert("ERROR: Unable to save change\n" + errorThrown) }
+    });
+  authenticity_token = form.authenticity_token.value
+  id = $('.hidden-id', parentElement).val();
+  image_category_id = $('.dynamic-image-category-selector', parentElement).val();
+  data = {
+    "authenticity_token" : authenticity_token,
+    "id" : id,
+    "dynamic_image[image_category_id]" : image_category_id
+  }
+  jQuery.post("/imageDesc/dynamic_images/" + id, data, function(data, status) {})
+}
+ 
   imageCategoryContent = [];
   // NOTE ESH: Preload all the category content in case it's used multiple times
   <% ImageCategory.all.each do |img_cat| %>
@@ -150,6 +170,11 @@
           notification.css('color', 'green');
           var mySubmit = $('#dynamic_description_submit', $(this));
           $(mySubmit).focus();
+          
+          previewAuthor = $('.preview-author', $(this).parent());
+          if(html != null && html.submitter != null) {
+            previewAuthor.html('Author: ' + html.submitter)
+          }
         })
         $('form.description-form', $newDiv).bind('ajax:error',    function(data, html, status) {
           notification = $('.description-result', $(this).parent());

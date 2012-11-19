@@ -59,10 +59,11 @@ class DynamicDescriptionsController < ApplicationController
         format.xml  { render :xml => @dynamic_description, :status => :non_authoritative_information }
         format.json  { render :json => @dynamic_description, :callback => params[:callback], :status => :non_authoritative_information }
       elsif @dynamic_description.save
+        @dynamic_description.reload
         format.html { render :partial => 'dynamic_images/show_history_fragment', :locals => {:descriptions => [@dynamic_description] }}
         format.html { redirect_to(@dynamic_description, :notice => 'Dynamic description was successfully created.') }
         format.xml  { render :xml => @dynamic_description, :status => :created, :location => @dynamic_description }
-        format.json  { render :json => {:body => render_to_string(:partial => 'dynamic_images/show_history_fragment.html.erb', :locals => {:descriptions => [@dynamic_description] })}, :callback => params[:callback]}
+        format.json  { render :json => {:submitter => @dynamic_description.submitter_name}, :callback => params[:callback]}
       else
         @book_id = book.id
         @image_location = params[:image_location]

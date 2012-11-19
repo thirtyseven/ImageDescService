@@ -63,7 +63,15 @@ class DynamicDescription < ActiveRecord::Base
   end
   
   def submitter_name
-    submitter.full_name if submitter
+    if submitter 
+      if !submitter.full_name.blank?
+        submitter.full_name
+      elsif !submitter.username.blank?
+        submitter.username
+      else 
+        submitter.email
+      end
+    end
   end
 
 end
