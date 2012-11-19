@@ -173,6 +173,8 @@ module DaisyBookHelper
           next
         end
 
+        image_id = image['id']
+
         parent = image.at_xpath("..")
         imggroup = get_imggroup_parent_of(image)
         if(!imggroup)
@@ -184,8 +186,6 @@ module DaisyBookHelper
           image.parent = imggroup
           parent = imggroup
         end
-
-        image_id = image['id']
 
         prodnotes = imggroup.xpath(".//xmlns:prodnote")
         our_prodnote = nil
