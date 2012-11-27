@@ -157,6 +157,7 @@ function handleImageCategory(element){
       if(!singleImage || singleImageId == $imgId) {
         currentImageNode = $(item);
         var imageParent = currentImageNode.parent();
+        var altText = currentImageNode[0].alt;
 
         // Grab _edit_image_form.html.haml template HTML and inject in the appropriate place
         $newDiv = $($imageEditingControlHtml);
@@ -226,7 +227,19 @@ function handleImageCategory(element){
             var jaxen = MathJax.Hub.getAllJax(svg_node);
             toMathML(jaxen[0], function(mml) {
                 if (my_editor.mode == 'wysiwyg') {
-                    my_editor.insertHtml(mml);
+
+                    //insert altimg and alttext attributes
+                    xmlDoc=loadXMLString(mml);
+                    newatt=xmlDoc.createAttribute("altimg");
+                    newatt.nodeValue="";
+                    x=xmlDoc.getElementsByTagName("math");
+                    x[0].setAttributeNode(newatt);
+                    newatt=xmlDoc.createAttribute("alttext");
+                    newatt.nodeValue= altText;
+                    x[0].setAttributeNode(newatt);
+                    var output = xmlToString(xmlDoc);
+
+                    my_editor.insertHtml(output);
                 }
                 else
                   alert('You must exit View Source mode');
@@ -501,6 +514,35 @@ function handleImageCategory(element){
         return MathJax.Callback.After([toMathML, jax, callback], err, restart);
       }
       MathJax.Callback(callback)(mml);
+    }
+
+    function loadXMLString(txt)
+    {
+        if (window.DOMParser)
+          {
+          parser=new DOMParser();
+          xmlDoc=parser.parseFromString(txt,"text/xml");
+          }
+        else // Internet Explorer
+          {
+          xmlDoc=new ActiveXObject("Microsoft.XMLDOM");
+          xmlDoc.async=false;
+          xmlDoc.loadXML(txt);
+          }
+        return xmlDoc;
+    }
+
+    function xmlToString(doc)
+    {
+        if (window.DOMParser)
+        {
+            xmlString = (new XMLSerializer()).serializeToString(xmlDoc);
+        }
+        else
+        {
+            xmlString = xmlDoc.xml;
+        }
+        return xmlString;
     }
   
   
