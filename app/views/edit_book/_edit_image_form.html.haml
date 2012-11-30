@@ -26,10 +26,13 @@
             %div.long-description-container
               %label.long-description-label Long Description
               %br
+              .math_warning_message{ :style => "display:none; font-size:80%; color:red; fontWeight:bold;" }
+                Please do not add MathML to an image description that includes other text. Instead, provide a prose description of the math.
+              %br
                 %div.tabs_container
                   %ul.tabs
                     %li
-                      %a.body-alternate-tab{:href => "#body-edit-tab"} Edit
+                      %a.body-alternate-tab{:href => "#body-edit-tab"} Edit 
                     %li.active
                       %a.body-default-tab{:href => "#body-preview-tab"} Preview
                 %div.tabs_content_container

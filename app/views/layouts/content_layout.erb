@@ -134,6 +134,8 @@ function handleImageCategory(element){
   
   var ckeditorConfig =
       {
+        extraPlugins: 'onchange',
+        minimumChangeMilliseconds: 100,
         scayt_autoStartup:true,
         toolbar :
         [
@@ -494,6 +496,16 @@ function handleImageCategory(element){
             if(!descriptionNode.next().hasClass('cke_skin_kama')) {
                 var editor = CKEDITOR.replace( descriptionNode.attr('id'),ckeditorConfig);
                 my_instances[descriptionNode.attr('id')] = editor;
+                editor.on('change', function(ev) { 
+                warningElement = $('.math_warning_message', myAncestorElement);  
+                if (new String(ev.editor.getData()).indexOf('xmlns="http://www.w3.org/1998/Math/MathML"') > -1){
+                  warningElement.show();
+                }
+                else {
+                  warningElement.hide();
+                }                 
+              });
+                
             }
         }
         //  Show the selected tab content

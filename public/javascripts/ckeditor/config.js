@@ -16,4 +16,6 @@ CKEDITOR.editorConfig = function( config )
     config.entities_additional = 'lt,gt,amp,apos,quot'
     config.entities_latin = false;
     config.entities_greek = false;
+    config.extraPlugins = 'onchange';
+    config.minimumChangeMilliseconds = 100;
 };
