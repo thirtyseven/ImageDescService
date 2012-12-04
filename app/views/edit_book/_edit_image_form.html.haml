@@ -20,9 +20,6 @@
             %div.long-description-container
               %label.long-description-label Long Description
               %br
-              .math_warning_message{ :style => "display:none; font-size:80%; color:red; fontWeight:bold;" }
-                Please do not add MathML to an image description that includes other text. Instead, provide a prose description of the math.
-              %br
                 %div.tabs_container
                   %ul.tabs
                     %li
@@ -31,6 +28,10 @@
                       %a.body-default-tab{:href => "#body-preview-tab"} Preview
                 %div.tabs_content_container
                   %div{:class => "tab_content body-edit-content edit-content", :id => "body-edit-tab"}
+                    .math_warning_message{ :style => "display:none; font-size:80%; color:red; fontWeight:bold;" }
+                      Please do not add MathML to an image description that includes other text. Instead, provide a prose description of the math.
+                    .text_warning_message{ :style => "display:none; font-size:80%; color:red; fontWeight:bold;" }
+                      Please do not add text to an image description that includes MathML. Instead, provide a prose description of the math. 
                     = f.text_area :body, :rows => 6, :cols => 44, :style => 'font-size:120%;display:none;', :class => 'description-text-area'
                     %button.toggle-math-desc{:onclick=>"return false;"} Show/Hide Math Helper
                     %div.math_desc_div{:style => "display:none;"}

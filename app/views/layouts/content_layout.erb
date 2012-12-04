@@ -163,6 +163,7 @@ function handleImageCategory(element){
 
         // Grab _edit_image_form.html.haml template HTML and inject in the appropriate place
         $newDiv = $($imageEditingControlHtml);
+        
       
         $('form.description-form', $newDiv).bind('ajax:success',    function(data, html, status) {
           notification = $('.description-result', $(this).parent());
@@ -203,11 +204,28 @@ function handleImageCategory(element){
           return false;
         });
         });
+        
 
         $('.toggle-math-desc', $newDiv).click(function() {
           $bodyNode = $(".math_desc_div", $(this).parent());
           if($bodyNode != null) {
             $bodyNode.toggle();
+            var warningMessage = $('.math_warning_message', $(this).parent().parent());
+
+            if ( $bodyNode.is(':visible')) {
+              var descriptionNode = $("textarea[name='dynamic_description[body]']", $(this).parent().parent())[0];              
+              if (descriptionNode.value && descriptionNode.value.length > 0 & descriptionNode.value.indexOf('xmlns="http://www.w3.org/1998/Math/MathML"') == -1){
+                 warningMessage.show();
+                 var textWarningMessage = $('.text_warning_message', $(this).parent().parent());
+                 textWarningMessage.hide();
+              }
+              else {
+                warningMessage.hide();
+              }
+            }
+            else{
+               warningMessage.hide();
+            }
           }
           return false;
         });
@@ -248,6 +266,7 @@ function handleImageCategory(element){
             })} );
             return false;
         });
+        
 
         $('.add-description', $newDiv).click(function() {
             $('.new-description', $(this).parent().parent()).show();
@@ -484,8 +503,19 @@ function handleImageCategory(element){
 
         //  Here we get the href value of the selected tab
         var selected_tab = $(this).find("a").attr("href");
+        var descriptionNode = $('textarea[name="dynamic_description[' + fieldName + ']"]', myAncestorElement);        
+        var warningMessage = $('.text_warning_message', myAncestorElement);  
 
-        var descriptionNode = $('textarea[name="dynamic_description[' + fieldName + ']"]', myAncestorElement);
+        if (descriptionNode.val().indexOf('xmlns="http://www.w3.org/1998/Math/MathML"') > -1){
+          warningMessage.show();
+          var mathWarningMessage = $('.math_warning_message', myAncestorElement);
+          mathWarningMessage.hide();
+        }
+        else {
+          warningMessage.hide();  
+        }
+        
+        
         if ($(selected_tab).attr('class').indexOf("preview-content") > 0) {
             //get most current html from editor and assign to preview div
             $(".preview-" + fieldName, myAncestorElement).html(my_instances[descriptionNode.attr('id')].getData());
@@ -499,10 +529,10 @@ function handleImageCategory(element){
                 editor.on('change', function(ev) { 
                 warningElement = $('.math_warning_message', myAncestorElement);  
                 if (new String(ev.editor.getData()).indexOf('xmlns="http://www.w3.org/1998/Math/MathML"') > -1){
-                  warningElement.show();
+               //   warningElement.hide();
                 }
                 else {
-                  warningElement.hide();
+                 // warningElement.hide();
                 }                 
               });
                 
