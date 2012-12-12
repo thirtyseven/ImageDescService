@@ -211,13 +211,19 @@ function handleImageCategory(element){
           if($bodyNode != null) {
             $bodyNode.toggle();
             var warningMessage = $('.math_warning_message', $(this).parent().parent());
-
+            // show/hide the math helper 
             if ( $bodyNode.is(':visible')) {
-              var descriptionNode = $("textarea[name='dynamic_description[body]']", $(this).parent().parent())[0];              
-              if (descriptionNode.value && descriptionNode.value.length > 0 & descriptionNode.value.indexOf('xmlns="http://www.w3.org/1998/Math/MathML"') == -1){
-                 warningMessage.show();
-                 var textWarningMessage = $('.text_warning_message', $(this).parent().parent());
-                 textWarningMessage.hide();
+              var descriptionNode = $("textarea[name='dynamic_description[body]']", $(this).parent().parent())[0];
+              var my_editor = my_instances[descriptionNode.id];
+              my_editor_data = '';
+              if(my_editor != null) {
+                my_editor_data = my_editor.getData();
+              }
+              if ((descriptionNode.value && descriptionNode.value.length > 0 && descriptionNode.value.indexOf('xmlns="http://www.w3.org/1998/Math/MathML"') == -1)
+                   || (my_editor_data && my_editor_data.length > 0 && my_editor_data.indexOf('xmlns="http://www.w3.org/1998/Math/MathML"') == -1)){ 
+                  warningMessage.show();
+                  var textWarningMessage = $('.text_warning_message', $(this).parent().parent());
+                  textWarningMessage.hide();
               }
               else {
                 warningMessage.hide();
@@ -247,7 +253,6 @@ function handleImageCategory(element){
             var jaxen = MathJax.Hub.getAllJax(svg_node);
             toMathML(jaxen[0], function(mml) {
                 if (my_editor.mode == 'wysiwyg') {
-
                     //insert altimg and alttext attributes
                     xmlDoc=loadXMLString(mml);
                     newatt=xmlDoc.createAttribute("altimg");
@@ -258,8 +263,8 @@ function handleImageCategory(element){
                     newatt.nodeValue= altText;
                     x[0].setAttributeNode(newatt);
                     var output = xmlToString(xmlDoc);
-
-                    my_editor.insertHtml(output);
+                    contents = my_editor.getData();
+                    my_editor.setData(contents + output)
                 }
                 else
                   alert('You must exit View Source mode');
@@ -505,8 +510,14 @@ function handleImageCategory(element){
         var selected_tab = $(this).find("a").attr("href");
         var descriptionNode = $('textarea[name="dynamic_description[' + fieldName + ']"]', myAncestorElement);        
         var warningMessage = $('.text_warning_message', myAncestorElement);  
-
-        if (descriptionNode.val().indexOf('xmlns="http://www.w3.org/1998/Math/MathML"') > -1){
+        var my_editor = my_instances[descriptionNode.attr('id')];
+        var unsaved_text = '';
+        if(my_editor != null) {
+          unsaved_text = my_editor.getData();
+        }
+        
+        if ((descriptionNode.val().indexOf('xmlns="http://www.w3.org/1998/Math/MathML"') > -1) ||
+            (unsaved_text && unsaved_text.length > 0 && unsaved_text.indexOf('xmlns="http://www.w3.org/1998/Math/MathML"') > -1)){
           warningMessage.show();
           var mathWarningMessage = $('.math_warning_message', myAncestorElement);
           mathWarningMessage.hide();
@@ -527,20 +538,27 @@ function handleImageCategory(element){
                 var editor = CKEDITOR.replace( descriptionNode.attr('id'),ckeditorConfig);
                 my_instances[descriptionNode.attr('id')] = editor;
                 editor.on('change', function(ev) { 
-                warningElement = $('.math_warning_message', myAncestorElement);  
-                if (new String(ev.editor.getData()).indexOf('xmlns="http://www.w3.org/1998/Math/MathML"') > -1){
-               //   warningElement.hide();
-                }
-                else {
-                 // warningElement.hide();
-                }                 
+                 if (ev.editor.getData()){
+                  var textWarningMessage = $('.text_warning_message', myAncestorElement);
+                  var mathWarningMessage = $('.math_warning_message', myAncestorElement);
+                  if (new String(ev.editor.getData()).indexOf('xmlns="http://www.w3.org/1998/Math/MathML"') > -1){
+                     textWarningMessage.show(); 
+                     mathWarningMessage.hide(); 
+                  }
+                  else { //text entered
+                    $bodyNode = $(".math_desc_div", myAncestorElement);
+                    if ( $bodyNode!=null  && $bodyNode.is(':visible')) {
+                      mathWarningMessage.show();
+                      textWarningMessage.hide();  
+                    }
+                  } 
+                }                
               });
                 
             }
         }
         //  Show the selected tab content
         $(selected_tab).fadeIn();
-
         //  At the end, we add return false so that the click on the link is not executed
         return false;
     });});
