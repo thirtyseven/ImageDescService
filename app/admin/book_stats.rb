@@ -25,9 +25,7 @@ ActiveAdmin.register BookStats, :as => "Reports" do
         number_to_percentage(book_stats.percent_essential_described, :precision => 1)
      end
     end
-    column :approved_descriptions do |book_stats|
-      link_to book.uid, reports_view_book_path(:book_id => book_stats.book_id)
-    end
+    column :approved_descriptions
   end
   
   index do
