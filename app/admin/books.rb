@@ -4,9 +4,9 @@ ActiveAdmin.register Book do
   actions :index
 
   index do
-    column :id  
+    column :id
     column  :uid do |book|
-      link_to book.uid, reports_view_book_path(:book_id => book.id)
+      link_to book.uid, admin_reports_path('q[book_uid_contains]' => book.uid)
       end
     column  :title do |book|
       link_to book.title, edit_book_edit_path(:book_id => book.id)
