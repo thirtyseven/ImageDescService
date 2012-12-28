@@ -29,11 +29,13 @@ class BooksController < ApplicationController
   end
   
   def delete
-    #@book = Book.find(params[:book_id])
+    @book = Book.find(params[:book_id])
     #@book.destroy
 
     job = DeleteBookJob.new(params[:book_id])
     Delayed::Job.enqueue(job)
+
+    flash[:alert] = "#{@book.title} will be deleted in a few moments"
     if params[:nav] == 'myBooks'
       redirect_to book_list_by_user_path
     else
