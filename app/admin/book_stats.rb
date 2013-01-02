@@ -30,10 +30,10 @@ ActiveAdmin.register BookStats, :as => "Reports" do
   
   index do
     column "Uid" do |book_stats|
-       book_stats.book.uid
-    end  
+       link_to book_stats.book.uid, admin_books_path('q[uid_contains]' => book_stats.book.uid)
+    end
     column "Title" do |book_stats| 
-       book_stats.book.title
+       link_to book_stats.book.title, edit_book_edit_path(:book_id => book_stats.book_id)
     end
     column :total_images
     column :total_essential_images
