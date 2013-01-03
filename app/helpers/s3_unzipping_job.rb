@@ -133,6 +133,9 @@ class S3UnzippingJob < Struct.new(:book_id, :repository, :library, :uploader_id)
   end
   
   def create_images_in_database(book, fragment, book_directory, doc)
+    # in case this is a re-upload, we should reset the book_fragment_id of the images
+    DynamicImage.update_all({:book_fragment_id => nil}, {:book_id => book.id})
+
     each_image(doc) do | image_node |
       image_location = image_node['src']
       xml_id = image_node['id']
