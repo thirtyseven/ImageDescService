@@ -141,6 +141,7 @@ class S3UnzippingJob < Struct.new(:book_id, :repository, :library, :uploader_id)
 
       # if src exists
       if image_location
+
         # add image to db if it does not already exist in db
         image = DynamicImage.where(:book_id => book.id, :image_location => image_location).first
         image_path = File.join(book_directory, image_location)
@@ -162,14 +163,11 @@ class S3UnzippingJob < Struct.new(:book_id, :repository, :library, :uploader_id)
             $stderr.puts e
           end
         elsif image
-          puts "elseif image for #{image_location} and fragment is #{fragment.id} and image.book_fragment_id is #{image.book_fragment_id}"
           # This should only happen on re-uploading of books in order to split existing books
           # or for images used multiple times in a book
 
           unless image.book_fragment_id
-            puts "inside unless for #{image_location} and fragment.id is #{fragment.id}"
             image.update_attribute("book_fragment_id", fragment.id)
-            puts "just updated image #{image.image_location} with fragment of #{fragment.id}"
           end
         end
       end
