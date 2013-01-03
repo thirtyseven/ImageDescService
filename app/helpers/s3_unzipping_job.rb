@@ -135,6 +135,7 @@ class S3UnzippingJob < Struct.new(:book_id, :repository, :library, :uploader_id)
   def create_images_in_database(book, fragment, book_directory, doc)
     # in case this is a re-upload, we should reset the book_fragment_id of the images
     DynamicImage.update_all({:book_fragment_id => nil}, {:book_id => book.id})
+    puts "book fragment is #{fragment.id}"
 
     each_image(doc) do | image_node |
       image_location = image_node['src']
@@ -142,7 +143,6 @@ class S3UnzippingJob < Struct.new(:book_id, :repository, :library, :uploader_id)
 
       # if src exists
       if image_location
-        puts "image_location of #{image_location} exists for fragment #{fragment.id}"
         # add image to db if it does not already exist in db
         image = DynamicImage.where(:book_id => book.id, :image_location => image_location).first
         image_path = File.join(book_directory, image_location)
@@ -172,6 +172,7 @@ class S3UnzippingJob < Struct.new(:book_id, :repository, :library, :uploader_id)
           unless image.book_fragment_id
             puts "inside unless for #{image_location} and fragment.id is #{fragment.id}"
             image.update_attribute("book_fragment_id", fragment.id)
+            puts "just updated image #{image.image_location} with fragment of #{fragment.id}"
           end
         end
       end
