@@ -41,7 +41,9 @@ class S3UnzippingJob < Struct.new(:book_id, :repository, :library, :uploader_id)
         # Keep track of the original img src attribute and whether it has been used already
         image_srces = []
         
-        
+
+        # in case this is a re-upload, we should reset the book_fragment_id of the images
+        DynamicImage.update_all({:book_fragment_id => nil}, {:book_id => book.id})
         splitter.segments.each_with_index do |segment_xml, i|
           sequence_number = i+1
           book_fragment = BookFragment.where(:book_id => book.id, :sequence_number => sequence_number).first || BookFragment.create(:book_id => book.id, :sequence_number => sequence_number)
@@ -133,10 +135,6 @@ class S3UnzippingJob < Struct.new(:book_id, :repository, :library, :uploader_id)
   end
   
   def create_images_in_database(book, fragment, book_directory, doc)
-    # in case this is a re-upload, we should reset the book_fragment_id of the images
-    DynamicImage.update_all({:book_fragment_id => nil}, {:book_id => book.id})
-    puts "book fragment is #{fragment.id}"
-
     each_image(doc) do | image_node |
       image_location = image_node['src']
       xml_id = image_node['id']
@@ -147,7 +145,6 @@ class S3UnzippingJob < Struct.new(:book_id, :repository, :library, :uploader_id)
         image = DynamicImage.where(:book_id => book.id, :image_location => image_location).first
         image_path = File.join(book_directory, image_location)
         if !image && File.exists?(image_path)
-          puts "if image for #{image_location} and fragment is #{fragment.id}"
           begin
             width, height = get_image_size(book_directory, image_location)
             DynamicImage.create(
