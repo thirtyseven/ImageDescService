@@ -165,11 +165,12 @@ class S3UnzippingJob < Struct.new(:book_id, :repository, :library, :uploader_id)
             $stderr.puts e
           end
         elsif image
-          puts "elseif image for #{image_location} and fragment is #{fragment.id}"
+          puts "elseif image for #{image_location} and fragment is #{fragment.id} and image.book_fragment_id is #{image.book_fragment_id}"
           # This should only happen on re-uploading of books in order to split existing books
           # or for images used multiple times in a book
 
           unless image.book_fragment_id
+            puts "inside unless for #{image_location} and fragment.id is #{fragment.id}"
             image.update_attribute("book_fragment_id", fragment.id)
           end
         end
