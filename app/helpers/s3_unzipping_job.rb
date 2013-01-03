@@ -142,11 +142,12 @@ class S3UnzippingJob < Struct.new(:book_id, :repository, :library, :uploader_id)
 
       # if src exists
       if image_location
-
+        puts "image_location of #{image_location} exists for fragment #{fragment.id}"
         # add image to db if it does not already exist in db
         image = DynamicImage.where(:book_id => book.id, :image_location => image_location).first
         image_path = File.join(book_directory, image_location)
         if !image && File.exists?(image_path)
+          puts "if image for #{image_location} and fragment is #{fragment.id}"
           begin
             width, height = get_image_size(book_directory, image_location)
             DynamicImage.create(
@@ -164,6 +165,7 @@ class S3UnzippingJob < Struct.new(:book_id, :repository, :library, :uploader_id)
             $stderr.puts e
           end
         elsif image
+          puts "elseif image for #{image_location} and fragment is #{fragment.id}"
           # This should only happen on re-uploading of books in order to split existing books
           # or for images used multiple times in a book
 
