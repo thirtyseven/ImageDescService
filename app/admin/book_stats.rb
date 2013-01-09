@@ -62,6 +62,9 @@ ActiveAdmin.register BookStats, :as => "Reports" do
     div :class => :action do
       link_to "Update Book Stats", reports_update_book_stats_path( ), :remote => true, :method => "get", :format => :js, :class => "book-link-ajax"
     end
+    div :class => :action do
+      link_to "Get Submitters", reports_submitter_list_path( ), :target => '_blank'
+    end
   end
 
   filter :percent_essential_described

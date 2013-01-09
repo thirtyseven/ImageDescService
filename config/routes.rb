@@ -52,6 +52,7 @@ DiagramRailsApp::Application.routes.draw do
 
   get "reports/index"
   get "reports/update_book_stats"
+  get "reports/submitter_list"
   get "reports/view_book"
   match "reports", :controller => 'reports', :action => 'index'
 

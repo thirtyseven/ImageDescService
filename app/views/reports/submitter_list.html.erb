@@ -1,0 +1,22 @@
+<div style="margin-left: 50px; width:900px; padding-top: 40px;" >
+ <br/>
+
+ <h3> Submitter List</h3>
+ </br>
+ </br>
+
+ <table cellpadding="4" cellspacing="0" border="1" width="60%">
+   <tr>
+     <th>Submitter </th>
+     <th>Number of Dynamic Descriptions</th>
+   </tr>
+
+ <% @submitter_list.each do |full_name, count| %>
+   <tr class="<%= cycle('oddrow', 'evenrow') %>">
+     <td><%= full_name if full_name %></td>
+     <td><%= count if count %></td>
+   </tr>
+ <% end %>
+
+ </table>
+</div>

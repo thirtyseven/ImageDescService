@@ -49,6 +49,16 @@ class ReportsController < ApplicationController
     render :text => 'updating reports data'
   end
 
+  def submitter_list
+     submitters = DynamicDescription.connection.select_rows("select submitter_id, count(*) as total from dynamic_descriptions group by submitter_id order by total desc;")
+     @submitter_list =[]
+     submitters.each do |submitter_id, count|
+         submitter = User.where(:id => submitter_id).first
+         submitter_count = [submitter.full_name, count] if submitter
+         @submitter_list << submitter_count if submitter_count
+      end
+  end
+  
   def report_all
     ## total images by book
     ## select book_id, count(book_id) from dynamic_images group by book_id;
