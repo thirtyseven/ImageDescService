@@ -49,12 +49,17 @@ class ReportsController < ApplicationController
     render :text => 'updating reports data'
   end
 
-  def submitter_list
+  def describer_list
      submitters = DynamicDescription.connection.select_rows("select submitter_id, count(*) as total from dynamic_descriptions group by submitter_id order by total desc;")
      @submitter_list =[]
      submitters.each do |submitter_id, count|
          submitter = User.where(:id => submitter_id).first
-         submitter_count = [submitter.full_name, count] if submitter
+         if submitter.full_name && !submitter.full_name.blank?
+           name = submitter.full_name
+         else
+           name = submitter.username
+         end 
+         submitter_count = [name, count] if submitter
          @submitter_list << submitter_count if submitter_count
       end
   end
