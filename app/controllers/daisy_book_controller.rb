@@ -6,6 +6,7 @@ include ActionView::Helpers::NumberHelper
 include DaisyUtils, UnzipUtils
 
 class DaisyBookController < ApplicationController
+  ROOT_XPATH = "/xmlns:dtbook"
 
   def initialize
     super()
