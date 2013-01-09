@@ -41,7 +41,9 @@ class S3UnzippingJob < Struct.new(:book_id, :repository, :library, :uploader_id)
         # Keep track of the original img src attribute and whether it has been used already
         image_srces = []
         
-        
+
+        # in case this is a re-upload, we should reset the book_fragment_id of the images
+        DynamicImage.update_all({:book_fragment_id => nil}, {:book_id => book.id})
         splitter.segments.each_with_index do |segment_xml, i|
           sequence_number = i+1
           book_fragment = BookFragment.where(:book_id => book.id, :sequence_number => sequence_number).first || BookFragment.create(:book_id => book.id, :sequence_number => sequence_number)
