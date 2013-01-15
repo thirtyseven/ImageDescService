@@ -18,6 +18,7 @@ gem "haml"
 gem "paperclip", "~> 3.0"
 gem "paperclip-aws"
 gem "tire"
+gem 'ffi', '1.0.9'
 
 # Use unicorn as the web server
 # gem 'unicorn'
