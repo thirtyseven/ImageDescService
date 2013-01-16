@@ -54,13 +54,15 @@ class ReportsController < ApplicationController
      @submitter_list =[]
      submitters.each do |submitter_id, count|
          submitter = User.where(:id => submitter_id).first
-         if submitter.full_name && !submitter.full_name.blank?
-           name = submitter.full_name
-         else
-           name = submitter.username
-         end 
-         submitter_count = [name, count] if submitter
-         @submitter_list << submitter_count if submitter_count
+         if submitter 
+           if submitter.full_name && !submitter.full_name.blank?
+             name = submitter.full_name
+           else
+             name = submitter.username
+           end 
+           submitter_count = [name, count] 
+           @submitter_list << submitter_count if submitter_count
+         end
       end
   end
   
