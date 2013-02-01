@@ -13,12 +13,12 @@ module DaisyUtils
         end
       end
     rescue Zip::Error => e
-        logger.info "#{e.class}: #{e.message}"
+        ActiveRecord::Base.logger.info "#{e.class}: #{e.message}"
         if e.message.include?("Not a zip archive")
-            logger.info "#{caller_info} Not a ZIP File"
+            ActiveRecord::Base.logger.info "#{caller_info} Not a ZIP File"
             flash[:alert] = "Uploaded file must be a valid Daisy (zip) file"
         else
-            logger.info "#{caller_info} Other problem with zip"
+            ActiveRecord::Base.logger.info "#{caller_info} Other problem with zip"
             flash[:alert] = "There is a problem with this zip file"
         end
         puts e
