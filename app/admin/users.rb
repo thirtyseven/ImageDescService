@@ -12,7 +12,7 @@ ActiveAdmin.register User do
       f.input :other_subject_expertise, :label => 'Other Expertise'
       f.input :password
       f.input :password_confirmation      
-      f.input :libraries, :as => :select, :collection => Library.all.map {|library| [library.name, library.id]}, :include_blank => nil, :multiple => false
+      f.input :libraries, :as => :select, :collection => Library.all.map {|library| [library.name, library.id]}, :include_blank => nil, :multiple => true
       # dropdown of roles
       f.input :roles, :as => :select, :collection => Role.all.map {|role| [role.name, role.id]}, :include_blank => nil
     end
