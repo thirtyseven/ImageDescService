@@ -1,6 +1,6 @@
 ActiveAdmin.register User do  
   menu :if => proc{ can? :admin_user, @all }
-  scope_to :current_library, :association_method => :related_users
+ # scope_to :current_library, :association_method => :related_users
   
   form do |f|
       f.inputs "User Details" do
@@ -11,8 +11,10 @@ ActiveAdmin.register User do
       f.input :subject_expertises, :label => 'Subject Matter Expertises', :as => :select, :collection =>  SubjectExpertise.all.map {|subject| [subject.name, subject.id]}, :include_blank => nil
       f.input :other_subject_expertise, :label => 'Other Expertise'
       f.input :password
-      f.input :password_confirmation      
+      f.input :password_confirmation    
+      f.input :use_new_library, :label => 'Click to Create a new library', :as => :boolean, :input_html => {:class => 'book-toggle', 'data-related-off' => '.library-select', 'data-related-on' => '.new-library'}  
       f.input :libraries, :as => :select, :collection => Library.all.map {|library| [library.name, library.id]}, :include_blank => nil, :multiple => true
+      f.input :new_library, :label => 'New Library', :wrapper_html => {:class => 'new-library'}
       # dropdown of roles
       f.input :roles, :as => :select, :collection => Role.all.map {|role| [role.name, role.id]}, :include_blank => nil
     end
