@@ -125,7 +125,7 @@ class User < ActiveRecord::Base
    
   def set_demo_library
      if libraries.blank?
-       library = Library.where(:name => 'demo').first
+       library = Library.where(:name => 'Demo').first
        self.libraries = [library]
      end
    end
