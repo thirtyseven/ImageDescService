@@ -5,9 +5,9 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessor :login, :new_library, :use_new_library, :current_user
+  attr_accessor :login, :new_library, :use_new_library, :current_user, :from_signup
   attr_accessible :first_name, :last_name, :email, :password, :password_confirmation, 
-                   :remember_me, :username, :role_ids, :subject_expertise_ids,  :other_subject_expertise, :library_ids, :new_library, :use_new_library
+                   :remember_me, :username, :role_ids, :subject_expertise_ids,  :other_subject_expertise, :library_ids, :new_library, :use_new_library, :from_signup, :agreed_tos
   has_many :user_roles, :dependent => :destroy
   has_many :roles, :through => :user_roles
   
@@ -35,7 +35,8 @@ class User < ActiveRecord::Base
   
   before_save :populate_new_library
   before_validation_on_create :set_demo_library
-  
+  validates_acceptance_of :agreed_tos, :accept => true, :message => "To Sign up you must accept our Terms of Service", :if => lambda {|user| user.from_signup }
+   
   
   def full_name
     [first_name, last_name].compact.join ' '
@@ -112,7 +113,7 @@ class User < ActiveRecord::Base
      where(["username = :value OR email = :value", { :value => login }]).first
    end
    
-   
+
    def populate_new_library
      if use_new_library.eql? "1"
         library = Library.where(:name => new_library).first

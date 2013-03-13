@@ -80,7 +80,7 @@ DiagramRailsApp::Application.routes.draw do
   match "edit_book/description_guidance", :controller => 'edit_book', :action => 'description_guidance'
   match "update_descriptions_in_book/upload" => "update_descriptions_in_book#upload", :via => "post"
   match "update_descriptions_in_book" => "update_descriptions_in_book#index", :via => "get"
-
+  match "user/terms_of_service", :controller => 'users', :action => 'terms_of_service'
   get "home/index"
 
   # match 'imageDesc' => "dynamic_images#show"
