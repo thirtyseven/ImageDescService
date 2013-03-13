@@ -1,6 +1,5 @@
 class UsersController < ApplicationController
-  before_filter :authenticate_user!
-  
+  before_filter :authenticate_user!, :except => :terms_of_service
   def index
     @users = User.find(:all, :order => "created_at")
   end
@@ -25,5 +24,7 @@ class UsersController < ApplicationController
     end
   end
 
+  def terms_of_service
+  end
 
 end
