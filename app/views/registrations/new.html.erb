@@ -11,7 +11,7 @@
 <% f.inputs "New User Sign Up" do %>
 <%= f.input :from_signup, :as => :hidden, :value => true %>
 <%= render :partial => "users/form", :locals => {:f => f} %>
-<%= f.input :agreed_tos,  :label => "This is a legally binding agreement. By checking the box, you acknowledge <br> that you have read, understand, and agree to be bound by the ".html_safe + link_to('Terms of Use', user_terms_of_service_path, :target => '_blank' )+ "."%>
+<%= f.input :agreed_tos,  :label => "This is a legally binding agreement. By checking the box, I acknowledge <br> that I have read, understand, and agree to be bound by the ".html_safe + link_to('Terms of Use', user_terms_of_service_path, :target => '_blank' )+ "."%>
 <%= f.submit "Sign up" %>
 <% end %>
 <% end %>
