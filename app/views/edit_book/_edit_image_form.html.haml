@@ -17,6 +17,12 @@
             = f.hidden_field 'dynamic_image_id', :class => 'dynamic_image_id'
             
             %br
+            %strong.image_category_text{:style => "font-size: 80%;", :tabindex => "-1"}
+            - f.object.dynamic_image = DynamicImage.new
+            = f.fields_for :dynamic_image do |img_form|
+              = img_form.hidden_field :id, :class => 'hidden-id'
+              = img_form.select :image_category_id, ImageCategory.all.map {|category| [category.name, category.id]}, {:include_blank => 'Unspecified', :custom_label => 'Category?'},{:id => "dynamic_image_image_category_id_#{img_form.object.id}", :class => 'dynamic-image-category-selector', :onChange => "handleImageCategory(this);" }
+            %br
             %div.long-description-container
               %label.long-description-label Long Description
               %br
