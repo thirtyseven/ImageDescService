@@ -162,10 +162,10 @@ function handleFilterChange()
        <%= form.hidden_field(:id) %>
       <%= form.hidden_field(:book_id) %>
       <%= form.hidden_field(:image_location) %>
-      <%#= form.label("image category", "Type:") %>
-      <%# form.select :image_category_id, ImageCategory.all.map {|category| [category.name, category.id]},
-        #{:include_blank => 'Unspecified', :custom_label => 'Category?'},
-        #{:id => "dynamic_image_image_category_id_#{model.id}", :onChange => "handleImageCategory(this.form);" }  %>      
+      <%= form.label("image category", "Type:") %>
+      <%= form.select :image_category_id, ImageCategory.all.map {|category| [category.name, category.id]},
+        {:include_blank => 'Unspecified', :custom_label => 'Category?'},
+        {:id => "dynamic_image_image_category_id_#{model.id}", :onChange => "handleImageCategory(this.form);" }  %>      
       
 <!--    <%= form.submit %> -->
 <%
