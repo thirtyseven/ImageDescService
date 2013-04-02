@@ -38,7 +38,7 @@
           <% if current_user %>
              <li><%= link_to 'User Profile', edit_user_path(current_user) %> </li>
           <% end %>
-          <% if current_user && ENV['SHOW_MY_BOOKS'] === "true"%>
+          <% if current_user %>
              <li><%= link_to 'My Books', book_list_by_user_path %> </li>
           <% end %>
           <% if can? :view_admin, @all %> 

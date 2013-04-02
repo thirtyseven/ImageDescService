@@ -33,7 +33,8 @@ class User < ActiveRecord::Base
   validates_presence_of  :first_name
   validates_presence_of  :last_name
   
-  before_validation_on_create :populate_new_library
+  before_save :populate_new_library
+  before_validation_on_create :set_demo_library
   
   
   def full_name
@@ -119,6 +120,13 @@ class User < ActiveRecord::Base
           library = Library.create :name => new_library
         end   
         self.libraries = [library]   
+     end
+   end
+   
+  def set_demo_library
+     if libraries.blank?
+       library = Library.where(:name => 'Demo').first
+       self.libraries = [library]
      end
    end
    

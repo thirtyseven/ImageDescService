@@ -6,11 +6,6 @@
   <%= f.input :email %>
   <%= f.input :subject_expertises, :as => :select, :collection =>  SubjectExpertise.all.map {|subject| [subject.name, subject.id]}, :include_blank => nil,  :label => 'Subject Matter Expertise'%>
   <%= f.input :other_subject_expertise, :label => 'Other Expertise' %>
-  <% if @user.new_record? %>
-    <%= f.input :use_new_library, :label => 'Click to Create a new library', :as => :boolean, :input_html => {:class => 'book-toggle', 'data-related-off' => '.library-select', 'data-related-on' => '.new-library'} %>
-    <%= f.input :libraries, :as => :select, :collection =>  Library.all.map {|library| [library.name, library.id]}, :include_blank => nil,  :label => 'Library', :wrapper_html => {:class => 'library-select'}%> 
-    <%= f.input :new_library, :label => 'New Library', :wrapper_html => {:class => 'new-library'} %>
-  <% end %>
   <%= f.input :password %>
   <%= f.input :password_confirmation %>  
 
