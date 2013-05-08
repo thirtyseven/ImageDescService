@@ -185,13 +185,15 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
   create_table "jobs", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "state"
+    t.string   "state",             :default => "new", :null => false
     t.string   "job_type"
+    t.integer  "user_id"
     t.text     "enter_params"
     t.text     "exit_params"
     t.string   "error_explanation"
-    t.integer  "user_id"
   end
+
+  add_index "jobs", ["user_id"], :name => "jobs_user_id"
 
   create_table "libraries", :force => true do |t|
     t.string   "name",       :limit => 128, :null => false

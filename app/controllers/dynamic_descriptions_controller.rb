@@ -87,55 +87,22 @@ class DynamicDescriptionsController < ApplicationController
     end
   end
 
-  # # bundle exec rake environment tire:import CLASS='DynamicDescription' FORCE=1 --trace
-  # def search 
-  #   search_term = params['search']['term']
-  #   if !search_term.blank?
-  #     @results = DynamicDescription.tire.search(:per_page => 20, :page => (params[:page] || 1)) do  
-  #      query do
-  #        boolean do
-  #          must   { string search_term }
-  #          must   { term :is_last_approved, '1' }
-  #        end
-  #      end
-  #     end
-  #     @dynamic_description_hash = DynamicDescription.where(:id => @results.map(&:id)).all.inject({}){|acc, desc| acc[desc.id] = desc; acc}
-  #   end
-  # end
-
-  # 
   def search 
     search_term = params['search']['term']
+    user_library_id =  current_user.user_libraries.first.library_id
     if !search_term.blank?
       @results = DynamicDescription.tire.search(:per_page => 20, :page => (params[:page] || 1)) do  
        query do
          boolean do
            must   { string search_term }
            must   { term :is_last_approved, '1' }
+           must   { term :dynamic_description_library_id, user_library_id}
          end
        end
       end
       @dynamic_description_hash = DynamicDescription.where(:id => @results.map(&:id)).all.inject({}){|acc, desc| acc[desc.id] = desc; acc}
     end
   end
-
-
-  # 
-  # def search
-  #   @results = DynamicDescription.tire.search(:per_page => 20, :page => (params[:page] || 1)) do 
-  #   query  do
-  #         more_like_this do
-  #         like_text =>  search_term, 
-  #         min_term_freq => '1',
-  #         min_doc_freq  =>'1'
-  #       end
-  #   end
-  #   p "results ******************"
-  #   p @results
-  # end
-  # end
-
-
 
 
 
