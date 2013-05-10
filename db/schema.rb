@@ -167,6 +167,7 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.string   "sample_file_name"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "order_to_display"
   end
 
   create_table "images", :force => true do |t|
