@@ -3,6 +3,7 @@
     %td.image_slot{:style => "vertical-align:top; margin-left:auto; text-align: center; margin-right: auto; width: 404px;"}
       %div.alt_text 
       %div.actual_image
+      %hr
       %div.category_description{:style => "width:500px; height:300px;overflow:auto;"}
     %td
       %div{:class => "outer-dynamic-description-div", :style => "display: block; "}
@@ -24,6 +25,7 @@
               %strong.image_category_text{:style => "font-size: 80%;", :tabindex => "-1"}
                 Image Category:
               = img_form.select :image_category_id, ImageCategory.order(:order_to_display).all.map {|category| [category.name, category.id]}, {:include_blank => 'None', :custom_label => 'Category?'},{:id => "dynamic_image_image_category_id_#{img_form.object.id}", :class => 'dynamic-image-category-selector', :onChange => "handleImageCategory(this);" }
+            %br
             %br
             %div.long-description-container
               %label.long-description-label Long Description
@@ -116,7 +118,9 @@
                 = f.text_area :tactile_tour, :rows => 3, :cols => 44, :style => 'font-size:120%'
             %br
             %br
-            = f.submit "Save"
+            
+            %div{:align => "right"}
+              = f.submit "Save"
           .description-result
             %br
         %div{:class => 'duplicate-image', :style => 'display: none;'}

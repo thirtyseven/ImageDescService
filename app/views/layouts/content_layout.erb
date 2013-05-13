@@ -481,9 +481,14 @@ function handleImageCategory(element){
 
         // show alt text
         if($altText) {
-            $('.alt_text', $newDiv).html('Alt Text: ' + $altText);
-            $('.alt_text', $newDiv).insertAfter(item);
+          $('.alt_text', $newDiv).html('Alt Text: ' + $altText);
         }
+        else{
+          $('.alt_text', $newDiv).html('Alt Text: (No description provided by publisher)');
+        }
+        
+        $('.alt_text', $newDiv).insertAfter(item);
+        $('<hr/>').insertAfter(item);
       }
     })
   }
