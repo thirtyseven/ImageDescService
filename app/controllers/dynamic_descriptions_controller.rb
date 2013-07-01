@@ -2,6 +2,11 @@ class DynamicDescriptionsController < ApplicationController
   before_filter :authenticate_user!
   # GET /dynamic_descriptions
   # GET /dynamic_descriptions.xml
+  def initialize
+    super()
+    @repository = RepositoryChooser.choose
+  end
+
   def index
     @dynamic_descriptions = DynamicDescription.all
 
@@ -87,55 +92,32 @@ class DynamicDescriptionsController < ApplicationController
     end
   end
 
-  # # bundle exec rake environment tire:import CLASS='DynamicDescription' FORCE=1 --trace
-  # def search 
-  #   search_term = params['search']['term']
-  #   if !search_term.blank?
-  #     @results = DynamicDescription.tire.search(:per_page => 20, :page => (params[:page] || 1)) do  
-  #      query do
-  #        boolean do
-  #          must   { string search_term }
-  #          must   { term :is_last_approved, '1' }
-  #        end
-  #      end
-  #     end
-  #     @dynamic_description_hash = DynamicDescription.where(:id => @results.map(&:id)).all.inject({}){|acc, desc| acc[desc.id] = desc; acc}
-  #   end
-  # end
-
-  # 
   def search 
     search_term = params['search']['term']
-    if !search_term.blank?
+    search_title = params['search']['title']
+    search_isbn = params['search']['isbn']
+    search_image = params['search']['image']
+    search_image_type = params['search']['image_type']
+    user_library_id =  current_user.user_libraries.first.library_id
+    
+    if !search_term.blank? || !search_title.blank? || !search_isbn.blank? || !search_image.blank? || !search_image_type.blank? 
+      @host =  @repository.get_host(request)
       @results = DynamicDescription.tire.search(:per_page => 20, :page => (params[:page] || 1)) do  
        query do
          boolean do
-           must   { string search_term }
+           must   { term :body, search_term } if search_term.present?
+           must   { term :title, search_title } if search_title.present?
+           must   { term :isbn, search_isbn } if search_isbn.present?
+           must   { term :dynamic_image_id, search_image } if search_image.present?
+           must   { term :image_type, search_image_type } if search_image_type.present?
            must   { term :is_last_approved, '1' }
+           must   { term :dynamic_description_library_id, user_library_id}
          end
        end
       end
       @dynamic_description_hash = DynamicDescription.where(:id => @results.map(&:id)).all.inject({}){|acc, desc| acc[desc.id] = desc; acc}
     end
   end
-
-
-  # 
-  # def search
-  #   @results = DynamicDescription.tire.search(:per_page => 20, :page => (params[:page] || 1)) do 
-  #   query  do
-  #         more_like_this do
-  #         like_text =>  search_term, 
-  #         min_term_freq => '1',
-  #         min_doc_freq  =>'1'
-  #       end
-  #   end
-  #   p "results ******************"
-  #   p @results
-  # end
-  # end
-
-
 
 
 

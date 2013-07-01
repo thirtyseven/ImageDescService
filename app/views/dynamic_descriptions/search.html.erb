@@ -1,40 +1,105 @@
- <h1> Matching Descriptions</h1>
- <div style="margin-left: 50px; width:900px; padding-top: 40px;" >
- <p><p><p>
-
-<% if @results.blank? || @results.size < 1 %>
-  
-  <div style="margin: auto; text-align: center; font-weight: bold; color:red; padding: 5px; border-width: 4px; border-style: ridge; border-color: yellow;" >No results found</div>
-     
-<% else%>
+<div style="margin-left: 50px; width:900px; padding-top: 40px;" >
+ <h2> Matching Descriptions</h2>
  
- <% @results.each do |result| %> 
- <% dynamic_description = @dynamic_description_hash[result.id.to_i]%>
- <table border="0" cellspacing="0" cellpadding="4" id="dynamic_descriptions" class="index_table"> 
-  <thead>
-    <tr class="odd">
-      <th class = "inputs"> 
-        Title <%= dynamic_description.try(:book).try(:title) %> by  Author
-         <% if dynamic_description.try(:book).try(:isbn) %>
-           | ISBN-<%=dynamic_description.try(:book).try(:isbn)%>
-         <% end %> 
-         | <%= dynamic_description.try(:book).try(:publisher) %> -  <%= dynamic_description.try(:book).try(:publisher_date).try(:year) %> 
-      </th>
-    </tr>
-  </thead>  
-  <tbody>
-    <td>
-       <div style="height:84px; overflow:auto;">
-       <table cellspacing="0" cellpadding="1" border="1" width="300" >
-       <%= dynamic_description.body %>
-       </table>
-       </div>
-    </td>
-  </tbody>
- <table>
- <% end%> 
- <%= paginate @results %>
-<% end %>
-</div> 
-</div>
+ <p><p><p>
+   
+  <table style='width: 100%;'>
+     <tr>
+       <td style='width: 200px;'>
+         <div style="border: solid 0 #060; border-right-width:2px; padding-right:0.5ex">
+         <b> Search Filters </b></br>
+         </br>
+          <table style="width:100px">
+         <%= form_for :search, :url => dynamic_descriptions_search_path do |f|%>
+            <tr>
+            <td><%= f.label :title,  'Title:'  %></td>
+            <td><%= f.text_field :title, options={:style=> "width: 100px;"} %></td>
+            </tr><tr>
+            <td><%= f.label :isbn,  'ISBN:'  %></td>
+            <td><%= f.text_field :isbn, options={:style=> "width: 100px;"} %></td>
+            </tr><tr>
+            <td><%= f.label :image,  'Image:'  %></td>
+            <td><%= f.text_field :image, options={:style=> "width: 100px;"} %></td>
+            </tr><tr>
+            <td><%= f.label :term,  'Descriptions:'  %></td>
+            <td><%= f.text_field :term, options={:style=> "width: 100px;"} %></td>
+            </tr><tr>
+             <td><%= f.label :image_type,  'Image Type:'  %></td>
+              <td>
+               <%= f.select :image_type,  ImageCategory.order(:order_to_display).all.map {|category| [category.name, category.id]}, {:include_blank => 'None', :custom_label => 'Category'}%>
+             </td>
+            </tr>
+          </table>
+          <div align="right">
+            <%= f.submit "Search" %>
+          </div>
+         <% end %>
+        </div>
+       </td>
+       <td>
+        
 
+
+  <% if @results.blank? || @results.size < 1 %>
+
+    <div style="margin: auto; text-align: center; font-weight: bold; color:red; padding: 5px; border-width: 4px; border-style: ridge; border-color: yellow;" >
+      No results found</div>
+
+  <% else%>
+
+   <% @results.each do |result| %> 
+
+   <% dynamic_description = @dynamic_description_hash[result.id.to_i]
+
+      image = dynamic_description.dynamic_image
+      xml_id = image.xml_id
+      raw_src = image.image_location
+      src = "book/#{raw_src}"
+      book = dynamic_description.book
+      model =  image
+
+
+      %>
+  <table class="outer-table-wrapper">
+    <tbody>
+    <tr>
+    <td style='width: 200px;'>
+      <div id="div_<%= src %>" style="padding-left: 5px;">
+       <img style="padding-top: 55px;"
+         alt="Image <%= model.id %>. Clicking will cause the frame to the right to scroll to this image within the book." src="<%= model.medium_source(@host)%>">
+       </img>
+       </br><b>Image:</b>  <a href="/edit_book/edit?book_id=<%= dynamic_description.try(:book).try(:id) %>" href="#<%= xml_id %>"><%= model.id %></a> </br>
+    </td>
+    <td> 
+       </br>
+       </br>       
+       </br>
+       </br>
+       <b>Title:</b> <%= dynamic_description.try(:book).try(:title) %> </br>
+       
+       <b>ISBN:</b> <%= dynamic_description.try(:book).try(:isbn) %> </br>
+
+       <b>Image Type:</b> 
+       <%= ImageCategory.find(image.try(:image_category_id)).try(:name) if image.image_category_id%></br>
+       </td>
+       
+      </div>      
+
+     </td>
+      </tr>
+      <tr>
+        <td span="2">
+        <b>Image Description:</b> </br>
+        <%= truncate(dynamic_description.body, :length => 175) %>
+        </td>
+      </tr>
+    </tbody>
+   </table>
+    <hr>
+
+
+  <% end%> 
+ <%= paginate @results %>
+ <% end %>
+ </td>
+</table>
