@@ -1,7 +1,7 @@
 require 'fileutils'
 require 'nokogiri'
 require 'tempfile'
-include DaisyUtils, UnzipUtils
+include DaisyUtils, UnzipUtils, EpubUtils
 include ActionView::Helpers::NumberHelper
 
 
@@ -35,14 +35,12 @@ class UploadBookController < ApplicationController
 
 
   def submit
-
     #init session vars
     session[:book_id] = nil
     session[:content] = nil
     session[:daisy_directory] = nil
-
-
-
+    file_type = nil
+    
     book = params[:book]
     if !book
       flash[:alert] = "Must specify a book file to upload"
@@ -50,21 +48,24 @@ class UploadBookController < ApplicationController
       return
     end
 
-
-    if !valid_daisy_zip?(book.path)
+    if valid_daisy_zip?(book.path)
+      file_type = "Daisy"
+    elsif valid_epub_zip?(book.path)
+      file_type = "Epub"
+    else  
       redirect_to :action => 'upload'
       return
-    end
+    end  
 
     begin
-      zip_directory, book_directory, daisy_file = accept_book(book.path)
-      xml = get_xml_from_dir book_directory
+      zip_directory, book_directory, file = accept_and_copy_book(book.path, file_type) #store filetype bookstable
+      xml = get_xml_from_dir book_directory, file_type
       doc = Nokogiri::XML xml
-      @book_uid = extract_book_uid(doc)
+      @book_uid = extract_book_uid(doc, file_type)
       doc = nil
       xml = nil
-      preprocessing_book = Book.where(:uid => @book_uid).first
      
+      preprocessing_book = Book.where(:uid => @book_uid).first
       if preprocessing_book && preprocessing_book.status == 4
         flash[:alert] = "The book (#{@book_uid}) is still being processed. Please try again later."
         redirect_to :action => 'upload'
@@ -72,13 +73,18 @@ class UploadBookController < ApplicationController
       end
 
       if !preprocessing_book
-         preprocessing_book = Book.create(:uid => @book_uid, :status => 4, :library =>  current_library, :user_id => current_user.id)
+         preprocessing_book = Book.create(:uid => @book_uid, :file_type => file_type, :status => 4, :library =>  current_library, :user_id => current_user.id)
       end
 
       pid = fork do
         begin
           @repository.store_file(book.path, @book_uid, @book_uid + ".zip", nil)
-          job = S3UnzippingJob.new(preprocessing_book.id, @repository, current_library, current_user.id)
+          job = nil
+          if file_type == "Epub"
+            job = EpubParser.new(preprocessing_book.id, @repository, current_library, current_user.id)
+          else
+            job = DaisyParser.new(preprocessing_book.id, @repository, current_library, current_user.id)
+          end
           Delayed::Job.enqueue(job)
 
           # hack for testing
@@ -121,16 +127,5 @@ class UploadBookController < ApplicationController
       return
     end
   end
-
-private
-  def get_xml_from_dir book_directory = nil
-    contents_filename = get_daisy_contents_xml_name(book_directory)
-    File.read(contents_filename)
-  end
-
-  def get_daisy_contents_xml_name(book_directory)
-    return Dir.glob(File.join(book_directory, '*.xml'))[0]
-  end
-
 
 end

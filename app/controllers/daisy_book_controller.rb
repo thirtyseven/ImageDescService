@@ -20,7 +20,8 @@ class DaisyBookController < ApplicationController
       redirect_to :action => 'image_check'
       return
     end
-
+    
+    # TODO ESH: look at checking EPUB as well
     if !valid_daisy_zip?(book.path)
       flash[:alert] = "Not a valid DAISY book"
       redirect_to :action => 'image_check'
@@ -28,7 +29,7 @@ class DaisyBookController < ApplicationController
     end
 
     begin
-      zip_directory, book_directory, daisy_file = accept_book(book.path)
+      zip_directory, book_directory, daisy_file = accept_and_copy_book(book.path)
       display_image_coverage zip_directory, book_directory, daisy_file
     rescue Zip::Error => e
       logger.info "#{e.class}: #{e.message}"

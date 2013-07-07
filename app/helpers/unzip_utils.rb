@@ -1,12 +1,14 @@
 module UnzipUtils
   
-  def accept_book(book_path)
-    UnzipUtils.accept_book(book_path)
+  def accept_and_copy_book(book_path, file_type)
+    UnzipUtils.accept_and_copy_book(book_path, file_type)
   end
   def unzip_to_temp(zipped_file)
     UnzipUtils.unzip_to_temp(zipped_file)
   end
-  def self.accept_book(book_path)
+  
+  
+  def self.accept_and_copy_book(book_path, file_type)
     zip_directory = unzip_to_temp(book_path)
     top_level_entries = Dir.entries(zip_directory)
     top_level_entries.delete('.')
@@ -14,13 +16,12 @@ module UnzipUtils
     if(top_level_entries.size == 1)
       book_directory = File.join(zip_directory, top_level_entries.first)
     else
-      book_directory = zip_directory
+      book_directory = zip_directory      
     end
+    copy_of_file = File.join(zip_directory,  file_type + ".zip")
+    FileUtils.cp(book_path, copy_of_file)
 
-    copy_of_daisy_file = File.join(zip_directory, "Daisy.zip")
-    FileUtils.cp(book_path, copy_of_daisy_file)
-
-    return zip_directory, book_directory, copy_of_daisy_file
+    return zip_directory, book_directory, copy_of_file
   end
 
   def self.unzip_to_temp(zipped_file)
@@ -41,5 +42,25 @@ module UnzipUtils
     end
     return dir
   end
+  
+  def extract_book_uid book, file_type = nil
+    book_uid = nil
+    if file_type == "Epub"  
+      book_uid = EpubUtils.extract_book_uid book
+    else
+      book_uid = DaisyUtils.extract_book_uid book
+    end
+  end
+  
+  
+  def get_xml_from_dir book_directory = nil, file_type = nil
+    if file_type == "Epub"
+       contents_filename = get_epub_contents_xml_name(book_directory) 
+    else
+       contents_filename = get_daisy_contents_xml_name(book_directory) 
+    end   
+    File.read(contents_filename)
+  end
+  
 
 end

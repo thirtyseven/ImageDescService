@@ -13,7 +13,7 @@ module DaisyBookHelper
       password = enter_params['password']
       random_uid = enter_params['random_uid']
       random_uid_book_location = repository.read_file(random_uid, File.join( "", "tmp", "#{random_uid}.zip"))
-      zip_directory, book_directory, daisy_file = UnzipUtils.accept_book(random_uid_book_location)
+      zip_directory, book_directory, daisy_file = UnzipUtils.accept_and_copy_book(random_uid_book_location)
       book = File.open daisy_file
       unless password.blank?
         begin
