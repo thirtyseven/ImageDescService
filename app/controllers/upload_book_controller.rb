@@ -47,15 +47,29 @@ class UploadBookController < ApplicationController
       redirect_to :action => 'upload'
       return
     end
-
-    if valid_daisy_zip?(book.path)
-      file_type = "Daisy"
-    elsif valid_epub_zip?(book.path)
-      file_type = "Epub"
-    else  
-      redirect_to :action => 'upload'
-      return
-    end  
+    
+    begin
+      if valid_daisy_zip?(book.path)
+        file_type = "Daisy"
+      elsif valid_epub_zip?(book.path)
+        file_type = "Epub"
+      else  
+        redirect_to :action => 'upload'
+        return
+      end 
+    rescue Exception => e
+        ActiveRecord::Base.logger.info "#{e.class}: #{e.message}"
+        if e.message.include?("Not a zip archive")
+            ActiveRecord::Base.logger.info "#{caller_info} Not a ZIP File"
+            flash[:alert] = "Uploaded file must be a valid Daisy or EPub3 (zip) file"
+        else
+            ActiveRecord::Base.logger.info "#{caller_info} Other problem with zip epub file"
+          flash[:alert] = "There is a problem with this zip file"
+        end
+        puts e
+        puts e.backtrace.join("\n")
+        return false
+    end   
 
     begin
       zip_directory, book_directory, file = accept_and_copy_book(book.path, file_type) #store filetype bookstable

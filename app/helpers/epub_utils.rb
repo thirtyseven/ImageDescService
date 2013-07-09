@@ -3,10 +3,8 @@ module EpubUtils
     EpubUtils.valid_epub_zip?(file)
   end
   
-  #valid epub
-  #look for opf EpubUtils
+
   def self.valid_epub_zip?(file)
-    begin
       Zip::Archive.open(file) do |zipfile|
         zipfile.each do |entry|
           if entry.name =~ /package\.opf$/
@@ -14,20 +12,6 @@ module EpubUtils
           end
         end
       end
-    rescue Zip::Error => e
-        ActiveRecord::Base.logger.info "#{e.class}: #{e.message}"
-        if e.message.include?("Not a zip archive")
-            ActiveRecord::Base.logger.info "#{caller_info} Not a ZIP File"
-       #     flash[:alert] = "Uploaded file must be a valid Epub (zip) file"
-        else
-            ActiveRecord::Base.logger.info "#{caller_info} Other problem with zip"
-        #    flash[:alert] = "There is a problem with this zip file"
-        end
-        puts e
-        puts e.backtrace.join("\n")
-        return false
-    end
-   flash[:alert] = "Uploaded file must be a valid EPUB3 file"
     return false
   end
   
