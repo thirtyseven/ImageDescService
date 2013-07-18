@@ -85,6 +85,12 @@ class UploadBookController < ApplicationController
         redirect_to :action => 'upload'
         return
       end
+      this_book = Book.where(:uid => @book_uid, :file_type => file_type).first
+      if this_book
+        flash[:alert] = "The #{file_type} book (#{@book_uid}) has already been uploaded."
+        redirect_to :action => 'upload'
+        return
+      end
 
       if !preprocessing_book
          preprocessing_book = Book.create(:uid => @book_uid, :file_type => file_type, :status => 4, :library =>  current_library, :user_id => current_user.id)

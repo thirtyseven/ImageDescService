@@ -18,6 +18,7 @@ ActiveAdmin.register Book do
     column "Status" do |book|
       book.status_to_english
     end
+    column "Format", :file_type
     column "Added", :created_at
     if can? :tag_all_images, @all
     column  do |book| 
