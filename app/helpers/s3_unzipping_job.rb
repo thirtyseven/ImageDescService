@@ -1,6 +1,6 @@
 require 'xml/xslt'
 
-class S3UnzippingJob < Struct.new(:book_id, :repository, :library, :uploader_id)
+class S3UnzippingJob < Struct.new(:book_id, :repository_name, :library, :uploader_id)
 
   def enqueue(job)
 
@@ -101,7 +101,8 @@ class S3UnzippingJob < Struct.new(:book_id, :repository, :library, :uploader_id)
         file_location = File.join(book_directory, image_location)
 
         #puts ("begin thread memory is #{number_to_human_size(`ps -o rss= -p #{Process.pid}`.to_i)}")
-        repository.store_file(file_location, book_uid, file_key, s3_service)
+        
+        RepositoryChooser.choose(repository_name).store_file(file_location, book_uid, file_key, s3_service)
       end
     end
   end

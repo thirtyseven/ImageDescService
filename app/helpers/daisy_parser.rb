@@ -9,6 +9,7 @@ class DaisyParser <  S3UnzippingJob
    
    def perform
       begin
+        repository = RepositoryChooser.choose(repository_name)
           book = Book.where(:id => book_id).first
           p "ESH: 0000, repository is a Class? = #{repository.is_a?(Class)}"
           p "ESH: 1111, have repository = #{repository.name}"

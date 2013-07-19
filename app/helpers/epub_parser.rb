@@ -4,6 +4,8 @@ class EpubParser <  S3UnzippingJob
 
    def perform
       begin
+        repository = RepositoryChooser.choose(repository_name)
+        
           book = Book.where(:id => book_id).first
           file = repository.read_file(book.uid + ".zip", File.join( "", "tmp", "#{book.uid}.zip"))
           book_directory  = accept_book(file)
