@@ -8,7 +8,7 @@ class Library < ActiveRecord::Base
   has_many :users, :through => :user_libraries, :dependent => :destroy
   
   def related_books
-    Book.where(:library_id => self.id).where("status <> 4").readonly(false)
+    Book.where(:library_id => self.id).readonly(false)
   end
   
   def related_users
