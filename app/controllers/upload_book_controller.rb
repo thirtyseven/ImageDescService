@@ -78,7 +78,7 @@ class UploadBookController < ApplicationController
       pid = fork do
         begin
           @repository.store_file(book.path, @book_uid, @book_uid + ".zip", nil)
-          job = S3UnzippingJob.new(preprocessing_book.id, @repository, current_library, current_user.id)
+          job = S3UnzippingJob.new(preprocessing_book.id, @repository.name, current_library, current_user.id)
           Delayed::Job.enqueue(job)
 
           # hack for testing

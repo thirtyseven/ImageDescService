@@ -1,6 +1,6 @@
 require 'xml/xslt'
 
-class S3UnzippingJob < Struct.new(:book_id, :repository, :library, :uploader_id)
+class S3UnzippingJob < Struct.new(:book_id, :repository_name, :library, :uploader_id)
 
   def enqueue(job)
 
@@ -17,6 +17,8 @@ class S3UnzippingJob < Struct.new(:book_id, :repository, :library, :uploader_id)
   def perform
     begin
         book = Book.where(:id => book_id).first
+        repository = RepositoryChooser.choose(repository_name)
+        
         daisy_file = repository.read_file(book.uid + ".zip", File.join( "", "tmp", "#{book.uid}.zip"))
         book_directory = accept_book(daisy_file)
 
@@ -175,6 +177,7 @@ class S3UnzippingJob < Struct.new(:book_id, :repository, :library, :uploader_id)
   end
 
   def upload_files_to_s3(book_directory, doc)
+    repository = RepositoryChooser.choose(repository_name)
 
     s3_service = nil
     if !ENV['POET_LOCAL_STORAGE_DIR']
