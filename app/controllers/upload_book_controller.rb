@@ -100,7 +100,6 @@ class UploadBookController < ApplicationController
         begin
           @repository.store_file(book.path, @book_uid, @book_uid + ".zip", nil)
           job = nil
-          p "ESH: ZZZZZZZ have @repository.name=#{@repository.name.inspect}"
           if file_type == "Epub"
             job = EpubParser.new(preprocessing_book.id, @repository.name, current_library, current_user.id)
           else

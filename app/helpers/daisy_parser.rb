@@ -11,9 +11,6 @@ class DaisyParser <  S3UnzippingJob
       begin
         repository = RepositoryChooser.choose(repository_name)
           book = Book.where(:id => book_id).first
-          p "ESH: 0000, repository is a Class? = #{repository.is_a?(Class)}"
-          p "ESH: 1111, have repository = #{repository.name}"
-          p "ESH: 2222, #{repository.inspect}"
           file = repository.read_file(book.uid + ".zip", File.join( "", "tmp", "#{book.uid}.zip"))
           book_directory  = accept_book(file)
 
