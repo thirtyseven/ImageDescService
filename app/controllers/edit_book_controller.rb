@@ -1,5 +1,5 @@
 class EditBookController < ApplicationController
-  before_filter :authenticate_user!
+  before_filter :authenticate_user!, :except => [:help, :description_guidance]
   include RepositoryChooser
 
   def initialize
