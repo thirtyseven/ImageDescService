@@ -58,7 +58,7 @@ module UnzipUtils
        contents_filename = get_epub_contents_xml_name(book_directory) 
     else
        contents_filename = get_daisy_contents_xml_name(book_directory) 
-    end   
+    end 
     File.read(contents_filename)
   end
   

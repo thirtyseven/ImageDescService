@@ -44,7 +44,6 @@ class DaisyParser <  S3UnzippingJob
             sequence_number = i+1
             book_fragment = BookFragment.where(:book_id => book.id, :sequence_number => sequence_number).first || BookFragment.create(:book_id => book.id, :sequence_number => sequence_number)
             doc = Nokogiri::XML segment_xml
-
             create_images_in_database(book, book_fragment, book_directory, doc)
 
             doc.css('img').each do |img_node| 
@@ -58,15 +57,12 @@ class DaisyParser <  S3UnzippingJob
               end
             end
             segment_xml = doc.to_xml
-
             book.update_attribute("status", 2) if i == 0
-
             contents = repository.xslt(segment_xml, xsl) # don't do that for epub files only read contents
             content_html = File.join("","tmp", "#{book.uid}_#{sequence_number}.html")
             File.open(content_html, 'wb'){|f|f.write(contents)}
             repository.store_file(content_html, book.uid, "#{book.uid}/#{book.uid}_#{sequence_number}.html", nil)
           end
-
           book.update_attribute("status", 3) 
           doc = nil
           xml = nil

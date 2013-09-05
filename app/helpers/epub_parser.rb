@@ -20,8 +20,8 @@ class EpubParser <  S3UnzippingJob
            acc = "#{acc} #{cur_doc.css('body').children.to_s}"
            acc
           end
-          file_contents = "<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en'><body>#{file_contents}</body></html>"
-           
+          file_contents = "<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en'><link rel='stylesheet' type='text/css' href='//s3.amazonaws.com/org-benetech-poet/html.css'/><body>#{file_contents}</body></html>"
+
 
           book = Book.where(:id => book_id).first
           book = update_epub_book_in_db(book, doc, file_names.join(', '), opf, uploader_id)

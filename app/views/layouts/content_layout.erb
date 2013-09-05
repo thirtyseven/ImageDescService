@@ -87,7 +87,6 @@
 <div id='result'></div>
 
 <% DynamicImage.includes(:dynamic_descriptions).where(:book_id => @book.id, :book_fragment_id => @book_fragment.id).each do |dynamic_image| %>
-  
   <% description = dynamic_image.dynamic_descriptions.last %>
   <% description_body = description && description.body ? description.body.force_utf8 : '' %>
   <div class='image-editing-description-<%= dynamic_image.id.to_s.force_encoding("UTF-8") %>' image-original-src ="<%= dynamic_image.image_source(@host).to_s.force_encoding("UTF-8")%>" image-src="<%= dynamic_image.medium_source(@host).to_s.force_encoding("UTF-8") %>" image-id="<%= dynamic_image.id.to_s.force_encoding("UTF-8") %>" image-xml-id="<%= dynamic_image.xml_id.to_s.force_encoding("UTF-8") %>" description-body="<%= description_body %>" description-summary="<%= description ? description.summary : '' %>" description-sld="<%= description ? description.simplified_language_description : '' %>" description-annotation="<%= description ? description.annotation : '' %>" description-tactile-src="<%= description ? description.tactile_src : '' %>" description-tactile-tour="<%= description ? description.tactile_tour : '' %>" description-tas="<%= description ? description.target_age_start : '' %>" description-tae="<%= description ? description.target_age_end : '' %>" description-tgs="<%= description ? description.target_grade_start : '' %>" description-tge="<%= description ? description.target_grade_end : '' %>" description-author= "<%= (description && description.submitter_id) ? description.submitter_name : '' %>" description-image-category-id="<%= dynamic_image.image_category_id %>"></div>
@@ -481,7 +480,7 @@ function handleImageCategory(element){
 
         // show alt text
         if($altText) {
-          $('.alt_text', $newDiv).html('Alt Text: ' + $altText);
+          $('.alt_text', $newDiv).html('Alt Text:' + $altText);
         }
         else{
           $('.alt_text', $newDiv).html('Alt Text: (No description provided by publisher)');
