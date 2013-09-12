@@ -12,15 +12,15 @@ DiagramRailsApp::Application.routes.draw do
 
   #devise_for :admin_users, ActiveAdmin::Devise.config, ActiveAdmin::Devise.config
 
-  get "daisy_book/get_xml_with_descriptions"
-  get "daisy_book/get_daisy_with_descriptions"
-  get "daisy_book/process"
-  get "daisy_book/image_check"
-  get "daisy_book/download_daisy_with_descriptions", :as => :download_daisy_with_descriptions
-  get "daisy_book/poll_daisy_with_descriptions", :as => :poll_daisy_with_descriptions
+  get "image_book/get_xml_with_descriptions"
+  get "image_book/get_daisy_with_descriptions"
+  get "image_book/process"
+  get "image_book/image_check"
+  get "image_book/download_daisy_with_descriptions", :as => :download_daisy_with_descriptions
+  get "image_book/poll_daisy_with_descriptions", :as => :poll_daisy_with_descriptions
   
-  post "daisy_book/submit_to_get_descriptions"
-  post "daisy_book/check_image_coverage"
+  post "image_book/submit_to_get_descriptions"
+  post "image_book/check_image_coverage"
 
   post "upload_book/submit"
   get "upload_book/upload"
@@ -75,7 +75,7 @@ DiagramRailsApp::Application.routes.draw do
 
   match "book_list", :controller => 'books', :action => 'book_list'
   match "book_list_by_user", :controller => 'books', :action => 'book_list_by_user'
-  match "daisy_book/describe", :controller => 'edit_book', :action => 'describe'
+  match "image_book/describe", :controller => 'edit_book', :action => 'describe'
   match "edit_book/help", :controller => 'edit_book', :action => 'help'
   match "edit_book/description_guidance", :controller => 'edit_book', :action => 'description_guidance'
   match "update_descriptions_in_book/upload" => "update_descriptions_in_book#upload", :via => "post"

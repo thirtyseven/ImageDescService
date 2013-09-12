@@ -94,7 +94,7 @@ class EpubParser <  S3UnzippingJob
       isbn = nil
       if opf
         opf_doc = Nokogiri::XML opf
-        isbn = extract_optional_epub_isbn(opf_doc) #TODO: ISBN? Vicky
+        isbn = extract_optional_epub_isbn(opf_doc) 
       end
       @book_title = doc.css("[property='dcterms:title']").first.text if doc.css("[property='dcterms:title']").first
       @book_publisher = doc.css("[property='dcterms:publisher']").first.text if doc.css("[property='dcterms:publisher']").first

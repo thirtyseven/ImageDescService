@@ -39,19 +39,11 @@ module EpubUtils
     return xpath_uid
   end
   
-
+  def self.extract_book_title(doc)
+    doc.css("[property='dcterms:title']").first.text if doc.css("[property='dcterms:title']").first
+  end
   
-  # 
-  #  def extract_book_title(doc)
-  #    xpath_title = "//xmlns:meta[@name='dc:Title']"
-  #    matches = doc.xpath(doc, xpath_title)
-  #    if matches.size != 1
-  #      return ""
-  #    end
-  #    node = matches.first
-  #    return node.attributes['content'].content
-  #  end
-  # 
+
   #  def caller_info
   #    return "#{request.remote_addr}"
   #  end

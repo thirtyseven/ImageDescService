@@ -43,6 +43,16 @@ module UnzipUtils
     return dir
   end
   
+  def extract_book_title(doc, file_type)
+    book_title = nil
+    if file_type == "Epub"  
+       book_title = EpubUtils.extract_book_title doc
+     else
+       book_title = DaisyUtils.extract_book_title doc
+     end
+  end
+  
+  
   def extract_book_uid book, file_type = nil
     book_uid = nil
     if file_type == "Epub"  

@@ -24,7 +24,7 @@ module DaisyUtils
     return node.attributes['content'].content
   end
 
-  def extract_book_title(doc)
+  def self.extract_book_title(doc)
     xpath_title = "//xmlns:meta[@name='dc:Title']"
     matches = doc.xpath(doc, xpath_title)
     if matches.size != 1
