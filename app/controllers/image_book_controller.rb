@@ -71,84 +71,21 @@ class ImageBookController < ApplicationController
       @host = @repository.get_host(request)
       xml_file = get_xml_from_dir(book_directory, file_type)
       
- 
       begin
         doc = Nokogiri::XML xml_file
         root = doc.xpath(doc, ROOT_XPATH)
-        # if root.size != 1
-        #   raise NonDaisyXMLException.new
-        # end
         @book_title = extract_book_title(doc, file_type)
+        extract_images_prod_notes doc, file_type, book_directory
         
-        if file_type == "Epub"
-          extract_images_prod_notes_for_epub doc 
-        else
-          extract_images_prod_notes_for_daisy doc
-        end
-
-      rescue NonDaisyXMLException => e
-        logger.info "#{caller_info} Uploaded non-dtbook #{contents_filename}"
-        raise ShowAlertAndGoBack.new("Uploaded file must be a valid Daisy book XML content file")
+      # rescue NonDaisyXMLException => e
+      #   logger.info "#{caller_info} Uploaded non-dtbook #{contents_filename}"
+      #   raise ShowAlertAndGoBack.new("Uploaded file must be a valid Daisy book XML content file")
       end
-
     end
   end
  
-  
-  def extract_images_prod_notes_for_epub doc
-     images = doc.css('img')
-     @num_images = images.size()
-     limit = 249
-     @prodnotes_hash = Hash.new()
-     
-     images.each do |img_node| 
-       unless (img_node['src']).blank?
-         db_image = DynamicImage.where(:book_id => book.id, :image_location => img_node['src']).first
-         if db_image
-             @prodnotes_hash[dynamic_image] =  img_node['src']
-         end
-         image_srces << img_node['src']
-       end
-     end
-      @alt_text_hash = Hash.new()
-      @captions_hash = Hash.new()
-    
-  end
-  
-  def extract_images_prod_notes_for_daisy doc
-      images = doc.xpath("//xmlns:img")
-      prodnotes = doc.xpath("//xmlns:imggroup//xmlns:prodnote")
-      captions = doc.xpath("//xmlns:imggroup//xmlns:caption")
 
-      @num_images = images.size()
-      limit = 249
-      @prodnotes_hash = Hash.new()
-      prodnotes.each do |node|
-        dynamic_image = DynamicImage.where(:xml_id => node['imgref']).first
-        if (dynamic_image)
-          @prodnotes_hash[dynamic_image] = node.inner_text
-        else
-          @prodnotes_hash[node['imgref']] = node.inner_text
-        end
-        break if @prodnotes_hash.size > limit
-      end
-      @captions_hash = Hash.new()
 
-      captions.each do |node|
-        @captions_hash[node['imgref']] = node.inner_text
-        break if @captions_hash.size > limit
-      end
-
-      @alt_text_hash = Hash.new()
-      images.each do |node|
-        alt_text =  node['alt']
-        id = node['id']
-        if alt_text.size > 1
-          @alt_text_hash[id] = alt_text
-        end
-        break if @alt_text_hash.size > limit
-      end
-  end
 
   
   def poll_daisy_with_descriptions

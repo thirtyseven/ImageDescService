@@ -65,11 +65,19 @@ module UnzipUtils
   
   def get_xml_from_dir book_directory = nil, file_type = nil
     if file_type == "Epub"
-       contents_filename = get_epub_contents_xml_name(book_directory) 
+       contents_filename = EpubUtils.get_contents_xml_name(book_directory) 
     else
-       contents_filename = get_daisy_contents_xml_name(book_directory) 
+       contents_filename = DaisyUtils.get_contents_xml_name(book_directory) 
     end 
     File.read(contents_filename)
+  end
+  
+  def extract_images_prod_notes doc, file_type, book_directory = nil
+    if file_type == "Epub"
+      extract_images_prod_notes_for_epub doc, book_directory
+    else
+      extract_images_prod_notes_for_daisy doc
+    end 
   end
   
 

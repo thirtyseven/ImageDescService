@@ -38,8 +38,43 @@ module DaisyUtils
     return "#{request.remote_addr}"
   end
 
-  def get_daisy_contents_xml_name(book_directory) 
+  def self.get_contents_xml_name(book_directory) 
     return Dir.glob(File.join(book_directory, '*.xml'))[0]
+  end
+  
+  def extract_images_prod_notes_for_daisy doc
+      images = doc.xpath("//xmlns:img")
+      prodnotes = doc.xpath("//xmlns:imggroup//xmlns:prodnote")
+      captions = doc.xpath("//xmlns:imggroup//xmlns:caption")
+
+      @num_images = images.size()
+      limit = 249
+      @prodnotes_hash = Hash.new()
+      prodnotes.each do |node|
+        dynamic_image = DynamicImage.where(:xml_id => node['imgref']).first
+        if (dynamic_image)
+          @prodnotes_hash[dynamic_image] = node.inner_text
+        else
+          @prodnotes_hash[node['imgref']] = node.inner_text
+        end
+        break if @prodnotes_hash.size > limit
+      end
+      @captions_hash = Hash.new()
+
+      captions.each do |node|
+        @captions_hash[node['imgref']] = node.inner_text
+        break if @captions_hash.size > limit
+      end
+
+      @alt_text_hash = Hash.new()
+      images.each do |node|
+        alt_text =  node['alt']
+        id = node['id']
+        if alt_text.size > 1
+          @alt_text_hash[id] = alt_text
+        end
+        break if @alt_text_hash.size > limit
+      end
   end
   
 end
