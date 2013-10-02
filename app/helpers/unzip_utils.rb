@@ -52,6 +52,13 @@ module UnzipUtils
      end
   end
   
+  def self.get_file_type filename
+    if filename=~/\.epub$/
+       file_type = "Epub"
+    else
+       file_type = "Daisy"
+    end
+  end
   
   def extract_book_uid book, file_type = nil
     book_uid = nil

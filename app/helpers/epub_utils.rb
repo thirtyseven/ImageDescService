@@ -16,20 +16,25 @@ module EpubUtils
   end
   
   def get_epub_file_main_directory(book_directory)
-      opf_file = "**/package.opf" 
-      opf_dir = Dir.glob("#{book_directory}/#{opf_file}").first
-      File.dirname opf_dir
+       EpubUtils.get_epub_file_main_directory(book_directory)
   end
+  
+  def self.get_epub_file_main_directory(book_directory)
+       opf_file = "**/package.opf" 
+       opf_dir = Dir.glob("#{book_directory}/#{opf_file}").first
+       File.dirname opf_dir
+  end     
   
   def self.get_contents_xml_name(book_directory)
       book_dir = get_epub_file_main_directory book_directory 
       return Dir.glob(File.join(book_dir, 'package.opf'))[0]
   end
+  
    
- def get_epub_book_xml_file_names(book_directory)   
-     book_dir = get_epub_file_main_directory book_directory 
+  def self.get_epub_book_xml_file_names(book_directory) 
+     book_dir = EpubUtils.get_epub_file_main_directory book_directory 
      return Dir.glob(File.join(book_dir, '*.xhtml'))
- end
+  end
    
   def self.extract_book_uid(doc)
     xpath_uid = doc.css("[id='pub-id']").first.text if doc.css("[id='pub-id']").first
@@ -50,7 +55,7 @@ module EpubUtils
      limit = 249
      book_uid = EpubUtils.extract_book_uid doc
      book = Book.where(:uid => book_uid).first
-     file_names = get_epub_book_xml_file_names(book_directory)
+     file_names = EpubUtils.get_epub_book_xml_file_names(book_directory)
      file_contents = file_names.inject('') do |acc, file_name|
       cur_file_contents = File.read(file_name)
       cur_doc = Nokogiri::XML cur_file_contents

@@ -13,7 +13,7 @@ class EpubParser <  S3UnzippingJob
           doc = Nokogiri::XML xml
 
           opf = get_opf_from_dir(book_directory)
-          file_names = get_epub_book_xml_file_names(book_directory)
+          file_names = EpubUtils.get_epub_book_xml_file_names(book_directory)
           file_contents = file_names.inject('') do |acc, file_name|
            cur_file_contents = File.read(file_name)
            cur_doc = Nokogiri::XML cur_file_contents
@@ -52,10 +52,8 @@ class EpubParser <  S3UnzippingJob
               end
             end
             segment_xml = doc.to_xml
-
             book.update_attribute("status", 2) if i == 0
 
-# we need to read the contents ...
             content_html = File.join("","tmp", "#{book.uid}_#{sequence_number}.html")
             File.open(content_html, 'wb'){|f|f.write(segment_xml)}
             repository.store_file(content_html, book.uid, "#{book.uid}/#{book.uid}_#{sequence_number}.html", nil)

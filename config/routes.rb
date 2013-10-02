@@ -16,8 +16,8 @@ DiagramRailsApp::Application.routes.draw do
   get "image_book/get_daisy_with_descriptions"
   get "image_book/process"
   get "image_book/image_check"
-  get "image_book/download_daisy_with_descriptions", :as => :download_daisy_with_descriptions
-  get "image_book/poll_daisy_with_descriptions", :as => :poll_daisy_with_descriptions
+  get "image_book/download_with_descriptions", :as => :download_with_descriptions
+  get "image_book/poll_file_with_descriptions", :as => :poll_file_with_descriptions
   
   post "image_book/submit_to_get_descriptions"
   post "image_book/check_image_coverage"

@@ -62,7 +62,19 @@ class ImageBookController < ApplicationController
     @repository.store_file(book.path, 'delayed', random_uid, nil) #store file in a directory
     @job = Job.new({:user_id => current_user.id, :enter_params => ({:random_uid => random_uid, :password => password, :book_name => book.original_filename, :content_type => book.content_type}).to_json})
     @job.save
-    DaisyBookHelper::BatchHelper.delay.batch_add_descriptions_to_book(@job.id, current_library)
+    
+    @file_type = UnzipUtils.get_file_type book.original_filename
+    zip_directory, book_directory, file = accept_and_copy_book(book.path, @file_type)
+    xml = get_xml_from_dir book_directory, @file_type
+    doc = Nokogiri::XML xml
+    @book_uid = extract_book_uid(doc, @file_type)
+    
+    if @file_type == "Epub"
+       EpubBookHelper::BatchHelper.delay.batch_add_descriptions_to_book(@job.id, current_library)
+    else
+       DaisyBookHelper::BatchHelper.delay.batch_add_descriptions_to_book(@job.id, current_library) 
+    end
+    
   end
   
   def display_image_coverage zip_directory, book_directory, file_type
@@ -83,12 +95,9 @@ class ImageBookController < ApplicationController
       end
     end
   end
- 
-
-
-
   
-  def poll_daisy_with_descriptions
+
+  def poll_file_with_descriptions
     job = Job.where(:id => params[:job_id], :user_id => current_user.id).first
     
     if job && job.state == 'complete'
@@ -100,16 +109,17 @@ class ImageBookController < ApplicationController
     end
   end
   
-  def download_daisy_with_descriptions
+  def download_with_descriptions
     job = Job.where(:id => params[:job_id], :user_id => current_user.id).first
     repository = RepositoryChooser.choose
+    file_ext = params[:file_type] == "Epub" ? ".epub" : ".zip"
     
     if job && job.state == 'complete'
       exit_params = job.json_exit_params
       random_uid = exit_params['random_uid']
       basename = exit_params['basename']
       random_uid_book_location = repository.read_file(random_uid, File.join( "", "tmp", "#{random_uid}.zip"))
-      send_file random_uid_book_location, :type => 'application/zip; charset=utf-8', :filename => basename + '.zip', :disposition => 'attachment' 
+      send_file random_uid_book_location, :type => 'application/zip; charset=utf-8', :filename => basename + file_ext, :disposition => 'attachment' 
     else
       render :text => "Not Complete"
     end

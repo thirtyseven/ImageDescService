@@ -20,7 +20,7 @@ class DaisyParser <  S3UnzippingJob
           doc = Nokogiri::XML xml
           opf = get_opf_from_dir(book_directory)
       
-          contents_filename = get_daisy_contents_xml_name(book_directory)
+          contents_filename =DaisyUtils.get_contents_xml_name(book_directory)
 
           book = Book.where(:id => book_id).first
           book = update_daisy_book_in_db(book, doc, File.basename(contents_filename), opf, uploader_id)
