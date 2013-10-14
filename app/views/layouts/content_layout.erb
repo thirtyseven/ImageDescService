@@ -6,8 +6,13 @@
 <%= stylesheet_link_tag 'poet' %>
 <script type="text/x-mathjax-config">
       MathJax.Hub.Config({
-        jax: ["input/AsciiMath","input/MathML","output/SVG","output/NativeMML"],
-        extensions: ["asciimath2jax.js","MathMenu.js","MathZoom.js","toMathML.js"]
+        jax: ["input/AsciiMath", "input/MathML", "input/TeX", "output/SVG", "output/NativeMML"],
+        extensions: ["asciimath2jax.js", "tex2jax.js", "MathMenu.js", "MathZoom.js", "toMathML.js"],
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+          processEscapes: true
+        }
       });
     </script>
 

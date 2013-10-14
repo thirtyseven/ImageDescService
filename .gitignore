@@ -5,3 +5,5 @@ log/*.log
 DiagramRailsApp.iml
 tmp/
 .project
+/books
+.env
