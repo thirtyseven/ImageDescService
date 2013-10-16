@@ -28,6 +28,27 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
   add_index "active_admin_comments", ["namespace"], :name => "index_active_admin_comments_on_namespace"
   add_index "active_admin_comments", ["resource_type", "resource_id"], :name => "index_admin_notes_on_resource_type_and_resource_id"
 
+  create_table "audits", :force => true do |t|
+    t.integer  "auditable_id"
+    t.string   "auditable_type"
+    t.integer  "associated_id"
+    t.string   "associated_type"
+    t.integer  "user_id"
+    t.string   "user_type"
+    t.string   "username"
+    t.string   "action"
+    t.text     "audited_changes"
+    t.integer  "version",         :default => 0
+    t.string   "comment"
+    t.string   "remote_address"
+    t.datetime "created_at"
+  end
+
+  add_index "audits", ["associated_id", "associated_type"], :name => "associated_index"
+  add_index "audits", ["auditable_id", "auditable_type"], :name => "auditable_index"
+  add_index "audits", ["created_at"], :name => "index_audits_on_created_at"
+  add_index "audits", ["user_id", "user_type"], :name => "user_index"
+
   create_table "book_fragments", :force => true do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -128,6 +149,7 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.integer  "target_grade_start"
     t.integer  "target_grade_end"
     t.integer  "description_quality"
+    t.integer  "submitter_id"
     t.string   "language",                                         :default => "en-US",     :null => false
     t.string   "repository",                                       :default => "Bookshare", :null => false
     t.string   "credentials"
@@ -136,7 +158,6 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.text     "tactile_tour"
     t.string   "simplified_image_src"
     t.text     "simplified_image_tour"
-    t.integer  "submitter_id"
   end
 
   add_index "dynamic_descriptions", ["dynamic_image_id", "is_current"], :name => "dynamic_descriptions_uid_image_id_current"

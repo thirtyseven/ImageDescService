@@ -173,7 +173,7 @@ module EpubBookHelper
            matched_image = matching_images_hash[image_location]
            unless matched_image == nil 
              matching_images_hash.delete(image_location) 
-             dynamic_description = matched_image.best_description
+             dynamic_description = matched_image.dynamic_description
              if(!dynamic_description)
                ActiveRecord::Base.logger.info "Image #{book_uid} #{image_location} is in database but with no descriptions"
                

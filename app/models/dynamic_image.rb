@@ -10,13 +10,10 @@ class DynamicImage < ActiveRecord::Base
   end
 
   belongs_to :book
-  has_many :dynamic_descriptions
+  has_one :dynamic_description
   has_one :image_category
 
-  def best_description
-    return dynamic_descriptions.last
-  end
-  
+
   def image_source(host)
     return "#{host}/#{book.uid}/original/#{image_location}"
   end

@@ -148,7 +148,7 @@ class EditBookController < ApplicationController
           when FILTER_DESCRIPTION_NEEDED
             # ESH: used to be:::
             # @images = DynamicImage.find_by_sql("SELECT * FROM dynamic_images WHERE book_uid = '#{book_uid}' and should_be_described = true and id not in (select dynamic_image_id from dynamic_descriptions where dynamic_descriptions.book_uid = '#{book_uid}') ORDER BY id ASC;")
-            @images = DynamicImage.includes(:dynamic_descriptions).where(:book_id => @book.id, :book_fragment_id => @book_fragment.id, :should_be_described => true, :dynamic_descriptions => {:id => nil}).order('dynamic_images.id asc')
+            @images = DynamicImage.includes(:dynamic_description).where(:book_id => @book.id, :book_fragment_id => @book_fragment.id, :should_be_described => true, :dynamic_descriptions => {:id => nil}).order('dynamic_images.id asc')
           when FILTER_UNSPECIFIED
             @images = DynamicImage.where(:book_id => @book.id, :book_fragment_id => @book_fragment.id, :should_be_described => nil).order("id ASC")
           else

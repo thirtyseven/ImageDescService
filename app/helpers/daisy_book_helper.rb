@@ -161,7 +161,7 @@ module DaisyBookHelper
           next
         end
 
-        dynamic_description = dynamic_image.best_description
+        dynamic_description = dynamic_image.dynamic_description
         if(!dynamic_description)
           ActiveRecord::Base.logger.info "Image #{book_uid} #{image_location} is in database but with no descriptions"
           next
