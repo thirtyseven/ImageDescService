@@ -53,16 +53,12 @@ class DynamicDescriptionsController < ApplicationController
       book = @dynamic_image.book if @dynamic_image
       @dynamic_description = @dynamic_image.dynamic_description  
         
-      if params[:dynamic_description][:body].gsub(/\s+/, '').blank?  
-          @dynamic_description = DynamicDescription.new
-          @missing_parameters = true
-      elsif @dynamic_description
+      if @dynamic_description
           @dynamic_description.update_attributes(params[:dynamic_description].merge({:book_id => book.id, :submitter_id => current_user.id})) if params[:dynamic_description] && params[:dynamic_description].is_a?(Hash)
       else
           @dynamic_description = DynamicDescription.create(params[:dynamic_description].merge({:book_id => book.id, :submitter_id => current_user.id})) if params[:dynamic_description] && params[:dynamic_description].is_a?(Hash)
           @dynamic_image.dynamic_description =  @dynamic_description
-      end
-       
+      end       
     else
       @dynamic_description = DynamicDescription.new
       @dynamic_description.body = "missing parameters"

@@ -1,6 +1,6 @@
 class DynamicDescription < ActiveRecord::Base
   audited  :allow_mass_assignment => true
-  validates :body, :length => { :minimum => 2, :maximum => 16384, :allow_blank => true } , :presence => true
+  validates :body, :length => { :minimum => 0, :maximum => 16384, :allow_blank => true } 
   #validates :submitter, :length => { :maximum => 255 }
   validates :dynamic_image_id, :presence => true
 
