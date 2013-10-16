@@ -61,4 +61,5 @@ group :development, :test do
   gem 'factory_girl_rails'
 
 gem 'audited-activerecord', '~> 3.0'
+
 end
