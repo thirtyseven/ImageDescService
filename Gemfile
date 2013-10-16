@@ -45,6 +45,7 @@ gem 'newrelic_rpm'
 gem 'kaminari'
 gem "airbrake"
 gem 'rack-ssl', :require => 'rack/ssl'
+gem 'audited-activerecord', '~> 3.0'
 
 # Bundle gems for the local environment. Make sure to
 # put test-only gems in this group so their generators
@@ -60,6 +61,5 @@ group :development, :test do
   gem 'oink'
   gem 'factory_girl_rails'
 
-gem 'audited-activerecord', '~> 3.0'
 
 end
