@@ -7,3 +7,4 @@ tmp/
 .project
 /books
 .env
+.rvmrc
