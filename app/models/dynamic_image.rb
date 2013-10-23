@@ -6,7 +6,7 @@ class DynamicImage < ActiveRecord::Base
   if ENV['AWS_ACCESS_KEY_ID'] && ENV['AWS_SECRET_ACCESS_KEY'] && ENV['POET_ASSET_BUCKET']
     has_attached_file :physical_file, {:styles => PAPERCLIP_STYLES,  :path => :path_by_book}.merge(PAPERCLIP_S3_STORAGE_OPTIONS)
   else
-    has_attached_file :physical_file, :styles => PAPERCLIP_STYLES, :path => :tmp_path_by_book
+    has_attached_file :physical_file, :styles => PAPERCLIP_STYLES, :path => :path_by_book
   end
 
   belongs_to :book
@@ -44,15 +44,11 @@ class DynamicImage < ActiveRecord::Base
 
   private
 
-  def tmp_path_by_book
-    "tmp/#{book.uid}/:style/#{image_location}"
-  end
-
   def path_by_book
-    root = ""
+    path = "#{book.uid}/:style/#{image_location}"
     if ENV['POET_LOCAL_STORAGE_DIR']
-      root = ENV['POET_LOCAL_STORAGE_DIR']
+      path = File.join(ENV['POET_LOCAL_STORAGE_DIR'], path)
     end
-    root + "#{book.uid}/:style/#{image_location}"
+    path
   end
 end
