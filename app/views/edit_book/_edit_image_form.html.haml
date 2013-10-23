@@ -118,9 +118,14 @@
                 = f.text_area :tactile_tour, :rows => 3, :cols => 44, :style => 'font-size:120%'
             %br
             %br
+
+            
+            %br
             
             %div{:align => "right"}
               = f.submit "Save"
+          =  link_to "Description History", dyn_desc_history_path( :image_id => 'history_desc_image_id'), :target => '_blank', :class => "description-history"
+          
           .description-result
             %br
         %div{:class => 'duplicate-image', :style => 'display: none;'}

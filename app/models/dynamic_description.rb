@@ -67,4 +67,7 @@ class DynamicDescription < ActiveRecord::Base
     end
   end
 
+  def description_history
+     audits.map {|changes| changes.audited_changes['body']}
+  end
 end

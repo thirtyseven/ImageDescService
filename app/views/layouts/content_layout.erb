@@ -428,6 +428,15 @@ function handleImageCategory(element){
           annotationTextArea.attr('id', "dynamic_description_annotation_" + $imageId);
           var annotationLabel = $('.annotation-label', $newDiv);
           annotationLabel.attr('for', "dynamic_description_annotation_" + $imageId);
+          
+          var historyLink = $('.description-history', $newDiv);
+          if(historyLink && historyLink.attr('href') != null) {
+            historyLink.attr('href', historyLink.attr('href').replace('history_desc_image_id', $imageId));
+            
+            if($descriptionBody == null || $descriptionBody == '') {
+              $(historyLink).hide();
+            }
+          }
 
           var fromAgeSelect = $("#dynamic_description_target_age_start", $newDiv);
           var newId = "dynamic_description_target_age_start_" + $imageId;

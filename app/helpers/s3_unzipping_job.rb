@@ -84,29 +84,6 @@ class S3UnzippingJob < Struct.new(:book_id, :repository_name, :library, :uploade
     end
   end
 
-  def upload_files_to_s3(book_directory, doc)
-
-    s3_service = nil
-    if !ENV['POET_LOCAL_STORAGE_DIR']
-      # get handle to s3 service
-      s3_service = AWS::S3.new
-    end
-
-    # upload image to S3
-    each_image(doc) do |image_node|
-      image_location = image_node['src']
-      # only want to upload images that have a src attribute
-      if image_location
-        file_key = book_uid + "/" + image_location
-        file_location = File.join(book_directory, image_location)
-
-        #puts ("begin thread memory is #{number_to_human_size(`ps -o rss= -p #{Process.pid}`.to_i)}")
-        
-        RepositoryChooser.choose(repository_name).store_file(file_location, book_uid, file_key, s3_service)
-      end
-    end
-  end
-
 
 
 

@@ -101,6 +101,7 @@ DiagramRailsApp::Application.routes.draw do
   match 'dynamic_descriptions_search', :controller => 'dynamic_descriptions', :action => 'search'
   
   match 'dynamic_images_sample_html/:id', :controller => 'dynamic_images', :action => 'category_sample_html_page'
+  match 'dyn_desc_history/:image_id', :controller => 'dynamic_descriptions', :action => 'body_history', :as => 'dyn_desc_history'
 
 
 

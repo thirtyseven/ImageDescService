@@ -125,7 +125,28 @@ class DynamicDescriptionsController < ApplicationController
       @dynamic_description_hash = DynamicDescription.where(:id => @results.map(&:id)).all.inject({}){|acc, desc| acc[desc.id] = desc; acc}
     end
   end
+  
+  def body_history
+    dynamic_image = DynamicImage.where(:id => params['image_id']).first
+    dynamic_description = dynamic_image.dynamic_description  
+    @desc_body_changes = []
 
+    if dynamic_description      
+      dynamic_description.audits.each do |changes|     
+        if changes.audited_changes.instance_of?(SimpleAudit)
+          body_changes = nil
+          meta_data= changes.audited_changes.meta_data
+          meta_data.each do |elem| 
+            body_changes = elem[1] if elem[0] == 'body'       
+          end
+          @desc_body_changes << body_changes if body_changes
+        else
+          @desc_body_changes << changes.audited_changes['body'] 
+        end 
+      end
+    end  
+    @desc_body_changes
+end
 
 
 end
