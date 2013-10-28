@@ -8,3 +8,5 @@ tmp/
 /books
 .env
 .rvmrc
+.ruby-version
+.ruby-gemset
