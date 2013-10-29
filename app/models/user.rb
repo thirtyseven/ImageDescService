@@ -34,7 +34,7 @@ class User < ActiveRecord::Base
   validates_presence_of  :last_name
   
   before_save :populate_new_library
-  before_validation_on_create :set_demo_library
+  before_validation  :set_demo_library, :on => :create
   validates_acceptance_of :agreed_tos, :accept => true, :message => "To Sign up you must accept our Terms of Service", :if => lambda {|user| user.from_signup }
    
   
