@@ -125,13 +125,10 @@ class S3Repository
     end
   end
 
-
-
   def self.xslt(xml, xsl)
-    engine = XML::XSLT.new
-    engine.xml = xml
-    engine.xsl = xsl
-    return engine.serve
+    document = Nokogiri::XML(xml)
+    transformer = Nokogiri::XSLT(xsl)
+    return transformer.transform(document)
   end
 
   def self.get_cached_html(book_uid, file_name)

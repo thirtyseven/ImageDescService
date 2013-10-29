@@ -199,7 +199,6 @@ GEM
     rubinius-actor (0.0.2)
       rubinius-core-api
     rubinius-core-api (0.0.1)
-    ruby-xslt (0.9.9)
     rubyzip (0.9.4)
     sass (3.1.11)
     selenium-webdriver (0.2.0)
@@ -262,7 +261,6 @@ DEPENDENCIES
   rack-ssl
   rails (= 3.0.20)
   rspec-rails
-  ruby-xslt
   sqlite3
   test-unit
   thin

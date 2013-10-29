@@ -1,5 +1,3 @@
-require 'xml/xslt'
-
 class S3UnzippingJob < Struct.new(:book_id, :repository_name, :library, :uploader_id)
 
   def enqueue(job)

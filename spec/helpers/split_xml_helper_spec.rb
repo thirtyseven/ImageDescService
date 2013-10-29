@@ -23,14 +23,12 @@ describe SplitXmlHelper do
     segments = parse_and_segment xml_splitting, image_limit
 
     xsl = File.read(S3UnzippingJob.daisy_xsl)
-    engine = XML::XSLT.new
-    engine.xsl = xsl
+    transformer = Nokogiri::XSLT(xsl)
 
     segments.each do |seg|
       xml_doc = Nokogiri::XML seg
       num_xml_images = xml_doc.css('img').size
-      engine.xml = seg
-      contents = engine.serve
+      contents = transformer.transform(xml_doc)
       html_doc = Nokogiri::HTML(contents)
       num_html_images = html_doc.css('img').size
       num_html_images.size.should eq num_xml_images.size

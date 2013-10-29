@@ -60,11 +60,9 @@ class LocalRepository
   end
 
   def self.xslt(xml, xsl)
-    engine = XML::XSLT.new
-    engine.xml = xml
-    engine.xsl = xsl
-
-    return engine.serve
+    document = Nokogiri::XML(xml)
+    transformer = Nokogiri::XSLT(xsl)
+    return transformer.transform(document)
   end
 
   def self.generate_file_path(book_uid, file_name, expires = 60)
