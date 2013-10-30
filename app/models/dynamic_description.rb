@@ -33,6 +33,7 @@ class DynamicDescription < ActiveRecord::Base
                        }
             }  do
     mapping do
+      indexes :submitter_by, :as => 'DynamicDescription.connection.select_value("select user.id from users user, dynamic_descriptions dyn_des where dyn_des.submitter_id = user.id and dyn_des.id = #{self.id}")' 
       indexes :image_type, :as => 'DynamicDescription.connection.select_value("select dynamic_image.image_category_id from dynamic_images dynamic_image, dynamic_descriptions dyn_des where dyn_des.dynamic_image_id = dynamic_image.id and dyn_des.id = #{self.id}")'      
       indexes :dynamic_image_id, :type => 'integer'  
       indexes :isbn, :type => 'string', :index_analyzer => "str_index_analyzer", :search_analyzer => "str_search_analyzer", :as => 'DynamicDescription.connection.select_value("select book.isbn from books book, dynamic_descriptions dyn_des where dyn_des.book_id = book.id and dyn_des.id = #{self.id}")'
