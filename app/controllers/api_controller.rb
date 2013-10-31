@@ -108,7 +108,7 @@ class ApiController < ApplicationController
 
   def extract_dynamic_description_images book
     book.current_images_and_descriptions.all.map do |image|
-      last_description = image.dynamic_descriptions.last || DynamicDescription.new
+      last_description = image.dynamic_description || DynamicDescription.new
       {:image => (image ? image.image_location : nil), :longdesc => last_description.body, :iscurrent => last_description.is_current,
         :submitter => last_description.submitter_name, :date_approved => last_description.date_approved, :dynamic_image_id => last_description.dynamic_image_id,
         :book_id => last_description.book_id, :book_fragment_id => image ? image.book_fragment_id : nil, :summary => last_description.summary, 
@@ -122,7 +122,7 @@ class ApiController < ApplicationController
   
   def extract_image_and_description book
     book.current_images_and_descriptions.all.map do |image| 
-      {:image => (image ? image.image_location : nil), :description => image.dynamic_descriptions.first}
+      {:image => (image ? image.image_location : nil), :description => image.dynamic_description}
     end
   end
   

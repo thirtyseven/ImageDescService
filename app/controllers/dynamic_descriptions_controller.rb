@@ -48,10 +48,17 @@ class DynamicDescriptionsController < ApplicationController
   # POST /dynamic_descriptions.xml
   def create
     book = load_book
-    if params[:dynamic_description] && params[:dynamic_description][:dynamic_image_id]
+    if params[:dynamic_description] && params[:dynamic_description][:dynamic_image_id] 
       @dynamic_image = DynamicImage.where(:id => params[:dynamic_description][:dynamic_image_id]).first
       book = @dynamic_image.book if @dynamic_image
-      @dynamic_description = @dynamic_image.dynamic_descriptions.create(params[:dynamic_description].merge({:book_id => book.id, :submitter_id => current_user.id})) if params[:dynamic_description] && params[:dynamic_description].is_a?(Hash)
+      @dynamic_description = @dynamic_image.dynamic_description  
+        
+      if @dynamic_description
+          @dynamic_description.update_attributes(params[:dynamic_description].merge({:book_id => book.id, :submitter_id => current_user.id})) if params[:dynamic_description] && params[:dynamic_description].is_a?(Hash)
+      else
+          @dynamic_description = DynamicDescription.create(params[:dynamic_description].merge({:book_id => book.id, :submitter_id => current_user.id})) if params[:dynamic_description] && params[:dynamic_description].is_a?(Hash)
+          @dynamic_image.dynamic_description =  @dynamic_description
+      end       
     else
       @dynamic_description = DynamicDescription.new
       @dynamic_description.body = "missing parameters"
@@ -118,7 +125,28 @@ class DynamicDescriptionsController < ApplicationController
       @dynamic_description_hash = DynamicDescription.where(:id => @results.map(&:id)).all.inject({}){|acc, desc| acc[desc.id] = desc; acc}
     end
   end
+  
+  def body_history
+    dynamic_image = DynamicImage.where(:id => params['image_id']).first
+    dynamic_description = dynamic_image.dynamic_description  
+    @desc_body_changes = []
 
+    if dynamic_description      
+      dynamic_description.audits.each do |changes|     
+        if changes.audited_changes.instance_of?(SimpleAudit)
+          body_changes = nil
+          meta_data= changes.audited_changes.meta_data
+          meta_data.each do |elem| 
+            body_changes = elem[1] if elem[0] == 'body'       
+          end
+          @desc_body_changes << body_changes if body_changes
+        else
+          @desc_body_changes << changes.audited_changes['body'] 
+        end 
+      end
+    end  
+    @desc_body_changes
+end
 
 
 end

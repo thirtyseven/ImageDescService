@@ -43,7 +43,7 @@ class Book < ActiveRecord::Base
   end
 
   def current_images_and_descriptions
-    dynamic_images.includes(:dynamic_descriptions).where(:dynamic_descriptions => {:is_current => true}).group('dynamic_descriptions.id')
+    dynamic_images.includes(:dynamic_description).where(:dynamic_descriptions => {:is_current => true}).group('dynamic_descriptions.id')
   end
   
   def book_stats_plus_unessential_images_described

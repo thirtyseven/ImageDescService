@@ -97,7 +97,7 @@ private
         raise UnrecognizedProdnoteException.new
       end
       
-      dynamic_description = dynamic_image.best_description
+      dynamic_description = dynamic_image.dynamic_description
       prodnote.content = dynamic_description.body
       prodnote['render'] = 'optional'
       prodnote['imgref'] = image_id

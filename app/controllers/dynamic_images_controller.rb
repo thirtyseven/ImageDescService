@@ -8,7 +8,7 @@ class DynamicImagesController < ApplicationController
     if params[:image_location] && book
       @dynamic_image = DynamicImage.where(:book_id => book.id, :image_location => params[:image_location]).first
       if @dynamic_image
-        @last_desc = @dynamic_image.dynamic_descriptions.last
+        @last_desc = @dynamic_image.dynamic_description
       else
         @last_desc = DynamicDescription.new
         @last_desc.body = "no description found"

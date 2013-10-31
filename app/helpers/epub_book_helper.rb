@@ -1,8 +1,8 @@
-module DaisyBookHelper
+module EpubBookHelper
   class BatchHelper
     ROOT_XPATH = "/xmlns:dtbook"
 
-    def self.batch_add_descriptions_to_book job_id, current_library 
+    def self.batch_add_descriptions_to_book job_id, current_library
       job = Job.where(:id => job_id).first
       # Retrieve file from S3
       repository = RepositoryChooser.choose
@@ -10,8 +10,8 @@ module DaisyBookHelper
       password = enter_params['password']
       random_uid = enter_params['random_uid']
       random_uid_book_location = repository.read_file(random_uid, File.join( "", "tmp", "#{random_uid}.zip"))
-      zip_directory, book_directory, daisy_file = UnzipUtils.accept_and_copy_book(random_uid_book_location, "Daisy")
-      book = File.open daisy_file
+      zip_directory, book_directory, epub_file = UnzipUtils.accept_and_copy_book(random_uid_book_location, "Epub")
+      book = File.open epub_file
       unless password.blank?
         begin
           Zip::Archive.decrypt(book.path, password)
@@ -19,32 +19,32 @@ module DaisyBookHelper
           ActiveRecord::Base.logger.info "#{e.class}: #{e.message}"
           if e.message.include?("Wrong password")
             ActiveRecord::Base.logger.info "Invalid Password for encyrpted zip"
-            flash[:alert] = "Please check your password and re-enter"
+           # flash[:alert] = "Please check your password and re-enter"
           else
             ActiveRecord::Base.logger.info "Other problem with encrypted zip"
-            flash[:alert] = "There is a problem with this zip file"
+            #flash[:alert] = "There is a problem with this zip file"
           end
           redirect_to :action => 'process'
           return
         end
       end
 
-      if !DaisyUtils.valid_daisy_zip?(book.path)
-        flash[:alert] = "Not a valid DAISY book"
+      if !EpubUtils.valid_epub_zip?(book.path)
+        flash[:alert] = "Not a valid Epub book"
         redirect_to :action => 'process'
         return
       end
       
       begin
-        get_daisy_with_descriptions zip_directory, book_directory, daisy_file, job, current_library
+        get_epub_with_descriptions zip_directory, book_directory, epub_file, job, current_library
       rescue Zip::Error => e
         ActiveRecord::Base.logger.info "#{e.class}: #{e.message}"
         if e.message.include?("File encrypted")
           ActiveRecord::Base.logger.info "Password needed for zip"
-          flash[:alert] = "Please enter a password for this book"
+       #   flash[:alert] = "Please enter a password for this book"
         else
           ActiveRecord::Base.logger.info "Other problem with zip"
-          flash[:alert] = "There is a problem with this zip file"
+        #  flash[:alert] = "There is a problem with this zip file"
         end
 
         redirect_to :action => 'process'
@@ -53,16 +53,18 @@ module DaisyBookHelper
     end
     
   
-    def self.get_daisy_with_descriptions zip_directory, book_directory, daisy_file, job, current_library
+    def self.get_epub_with_descriptions zip_directory, book_directory, epub_file, job, current_library
       begin
-        contents_filename = DaisyUtils.get_contents_xml_name(book_directory)
-        relative_contents_path = contents_filename[zip_directory.length..-1]
+        contents_filenames = EpubUtils.get_epub_book_xml_file_names(book_directory)
+        relative_contents_path = contents_filenames[0][zip_directory.length..-1]
+       
         if(relative_contents_path[0,1] == '/')
           relative_contents_path = relative_contents_path[1..-1]
         end
-        xml = get_xml_contents_with_updated_descriptions(contents_filename, current_library)
-        zip_filename = create_zip(daisy_file, relative_contents_path, xml)
-        basename = File.basename(contents_filename)
+        
+        xml = get_xml_contents_with_updated_descriptions(book_directory, contents_filenames, current_library)
+        zip_filename = create_zip(epub_file, relative_contents_path, xml)
+        basename = File.basename(contents_filenames[0])
         ActiveRecord::Base.logger.info "Sending zip #{zip_filename} of length #{File.size(zip_filename)}"
       
         # Store this file in S3, update the Job; change exit_params and the state
@@ -72,34 +74,33 @@ module DaisyBookHelper
         job.update_attributes :state => 'complete', :exit_params => ({:basename => basename, :random_uid => random_uid}).to_json
       rescue ShowAlertAndGoBack => e
         p "ESH: have an error e=#{e.inspect}, trace=#{e.backtrace.inspect}"
-        flash[:alert] = e.message
+       # flash[:alert] = e.message
         job.update_attributes :state => 'error', :error_explanation => 'Unable to process this book at this time.  Please contact your Poet administrator.'
         redirect_to :action => 'process'
         return
       end
     end
-
     
-    def self.get_xml_contents_with_updated_descriptions(contents_filename, current_library)
-      xml_file = File.read(contents_filename)
+    
+    def self.get_xml_contents_with_updated_descriptions(book_directory, contents_filenames, current_library)
       begin
-        xml = get_contents_with_updated_descriptions(xml_file, current_library)
+        xml = EpubBookHelper::BatchHelper.get_contents_with_updated_descriptions(book_directory, contents_filenames, current_library)
       rescue NoImageDescriptions
-        ActiveRecord::Base.logger.info "No descriptions available #{contents_filename}"
+        ActiveRecord::Base.logger.info "No descriptions available #{contents_filenames}"
         raise ShowAlertAndGoBack.new("There are no image descriptions available for this book")
-      rescue NonDaisyXMLException => e
-        ActiveRecord::Base.logger.info "Uploaded non-dtbook #{contents_filename}"
-        raise ShowAlertAndGoBack.new("Uploaded file must be a valid Daisy book XML content file")
+      # rescue NonEpubXMLException => e
+      #   ActiveRecord::Base.logger.info "Uploaded non-dtbook #{contents_filename}"
+      #   raise ShowAlertAndGoBack.new("Uploaded file must be a valid Epub book XML content file")
       rescue MissingBookUIDException => e
-        ActiveRecord::Base.logger.info "Uploaded dtbook without UID #{contents_filename}"
+        ActiveRecord::Base.logger.info "Uploaded dtbook without UID #{contents_filenames}"
         raise ShowAlertAndGoBack.new("Uploaded Daisy book XML content file must have a UID element")
       rescue Nokogiri::XML::XPath::SyntaxError => e
-        ActiveRecord::Base.logger.info "Uploaded invalid XML file #{contents_filename}"
+        ActiveRecord::Base.logger.info "Uploaded invalid XML file #{contents_filenames}"
         ActiveRecord::Base.logger.info "#{e.class}: #{e.message}"
         ActiveRecord::Base.logger.info "Line #{e.line}, Column #{e.column}, Code #{e.code}"
         raise ShowAlertAndGoBack.new("Uploaded file must be a valid Daisy book XML content file")
       rescue Exception => e
-        ActiveRecord::Base.logger.info "Unexpected exception processing #{contents_filename}:"
+        ActiveRecord::Base.logger.info "Unexpected exception processing #{contents_filenames}:"
         ActiveRecord::Base.logger.info "#{e.class}: #{e.message}"
         ActiveRecord::Base.logger.info e.backtrace.join("\n")
         $stderr.puts e
@@ -109,11 +110,11 @@ module DaisyBookHelper
       return xml
     end
     
-    def self.create_zip(old_daisy_zip, contents_filename, new_xml_contents)
-      new_daisy_zip = Tempfile.new('baked-daisy')
-      new_daisy_zip.close
-      FileUtils.cp(old_daisy_zip, new_daisy_zip.path)
-      Zip::Archive.open(new_daisy_zip.path) do |zipfile|
+    def self.create_zip(old_file_zip, contents_filename, new_xml_contents)
+      new_file_zip = Tempfile.new('baked-book')
+      new_file_zip.close
+      FileUtils.cp(old_file_zip, new_file_zip.path)
+      Zip::Archive.open(new_file_zip.path) do |zipfile|
         zipfile.num_files.times do |index|
           if(zipfile.get_name(index) == contents_filename)
             zipfile.replace_buffer(index, new_xml_contents)
@@ -121,7 +122,7 @@ module DaisyBookHelper
           end
         end
       end
-      return new_daisy_zip.path
+      return new_file_zip.path
     end
     
     def get_description_count_for_book_uid(book_uid, current_library)
@@ -134,18 +135,23 @@ module DaisyBookHelper
           count
     end
     
-    def get_contents_with_updated_descriptions(file, current_library)
-      DaisyBookHelper::BatchHelper.get_contents_with_updated_descriptions(file, current_library)
-    end
-    def self.get_contents_with_updated_descriptions(file, current_library)
-      doc = Nokogiri::XML file
-
-      root = doc.xpath(doc, ROOT_XPATH)
-      if root.size != 1
-        raise NonDaisyXMLException.new
+    # def get_contents_with_updated_descriptions(file, current_library)
+    #   DaisyBookHelper::BatchHelper.get_contents_with_updated_descriptions(file, current_library)
+    # end
+    
+    def self.get_contents_with_updated_descriptions(book_directory, contents_filenames, current_library)
+      xml =  File.read(EpubUtils.get_contents_xml_name(book_directory)) 
+      doc = Nokogiri::XML xml
+      book_uid = EpubUtils.extract_book_uid(doc)
+      @book_uid = book_uid
+      
+      xml_file = contents_filenames.inject('') do |acc, file_name|
+        cur_file_contents = File.read(file_name)
+        cur_doc = Nokogiri::XML cur_file_contents
+        acc = "#{acc} #{cur_doc.css('body').children.to_s}"
+        acc
       end
-
-      book_uid = DaisyUtils.extract_book_uid(doc)
+      xml_file = "<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en'><link rel='stylesheet' type='text/css' href='//s3.amazonaws.com/org-benetech-poet/html.css'/><body>#{xml_file}</body></html>"
 
       if get_description_count_for_book_uid(book_uid, current_library) == 0
         raise NoImageDescriptions.new
@@ -153,53 +159,44 @@ module DaisyBookHelper
 
       book = Book.where(:uid => book_uid, :library_id => current_library.id).first
       matching_images = DynamicImage.where("book_id = ?", book.id).all
+      matching_images_hash = Hash.new()
       matching_images.each do | dynamic_image |
-        image_location = dynamic_image.image_location
-        image = doc.at_xpath( doc, "//xmlns:img[@src='#{image_location}']")
-        if !image
-          ActiveRecord::Base.logger.info "Missing img element for database description #{book_uid} #{image_location}"
-          next
-        end
-
-        dynamic_description = dynamic_image.dynamic_description
-        if(!dynamic_description)
-          ActiveRecord::Base.logger.info "Image #{book_uid} #{image_location} is in database but with no descriptions"
-          next
-        end
-
-        image_id = image['id']
-
-        parent = image.at_xpath("..")
-        imggroup = get_imggroup_parent_of(image)
-        if(!imggroup)
-          imggroup = Nokogiri::XML::Node.new "imggroup", doc
-          imggroup['id'] =  "imggroup_#{image_id}"
-          imggroup.parent = parent
-
-          parent.children.delete(image)
-          image.parent = imggroup
-          parent = imggroup
-        end
-
-        prodnotes = imggroup.xpath(".//xmlns:prodnote")
-        our_prodnote = nil
-        prodnotes.each do | prodnote |
-          if(prodnote['id'] == create_prodnote_id(image_id))
-            our_prodnote = prodnote
-          end
-        end
-        if(!our_prodnote)
-          our_prodnote = Nokogiri::XML::Node.new "prodnote", doc 
-          imggroup.add_child our_prodnote 
-        end
-
-        our_prodnote.add_child(dynamic_description.body)
-        our_prodnote['render'] = 'optional'
-        our_prodnote['imgref'] = image_id
-        our_prodnote['id'] = create_prodnote_id(image_id)
-        our_prodnote['showin'] = 'blp'
+         matching_images_hash[dynamic_image.image_location] = dynamic_image
+       #  p "image location in dbis #{dynamic_image.image_location} "
       end
-
+      
+      
+      doc = Nokogiri::XML xml_file
+      doc.css('img').each do |img_node| 
+         unless (img_node['src']).blank? 
+           image_location =  img_node['src']
+           matched_image = matching_images_hash[image_location]
+           unless matched_image == nil 
+             matching_images_hash.delete(image_location) 
+             dynamic_description = matched_image.dynamic_description
+             if(!dynamic_description)
+               ActiveRecord::Base.logger.info "Image #{book_uid} #{image_location} is in database but with no descriptions"
+               
+               next
+             end
+             parent_node = img_node.parent
+             figure_node = Nokogiri::XML::Node.new "figure", doc 
+             parent_node.children.delete(img_node)
+             img_node['aria-describedby'] = dynamic_description.id.to_s 
+             parent_node.add_child  figure_node
+             figure_node.add_child img_node
+             figcaption_node = Nokogiri::XML::Node.new "figcaption", doc
+             figure_node.add_child figcaption_node
+             details_node = Nokogiri::XML::Node.new "details", doc
+             details_node['id'] = dynamic_description.id.to_s
+             figcaption_node.add_child details_node
+             summary_node = Nokogiri::XML::Node.new "summary", doc
+             details_node.content = dynamic_description.body
+             details_node.add_child summary_node
+             
+          end
+         end   
+       end
       return doc.to_xml
     end
     

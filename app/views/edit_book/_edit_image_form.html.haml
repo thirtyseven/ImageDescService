@@ -24,7 +24,7 @@
               = img_form.hidden_field :id, :class => 'hidden-id'
               %strong.image_category_text{:style => "font-size: 80%;", :tabindex => "-1"}
                 Image Category:
-              = img_form.select :image_category_id, ImageCategory.order(:order_to_display).all.map {|category| [category.name, category.id]}, {:include_blank => 'None', :custom_label => 'Category?'},{:id => "dynamic_image_image_category_id_#{img_form.object.id}", :class => 'dynamic-image-category-selector', :onChange => "handleImageCategory(this);" }
+              = img_form.select :image_category_id, ImageCategory.order(:order_to_display).all.map {|category| [category.name, category.id]}, {:custom_label => 'Category?'},{:id => "dynamic_image_image_category_id_#{img_form.object.id}", :class => 'dynamic-image-category-selector', :onChange => "handleImageCategory(this);" }
             %br
             %br
             %div.long-description-container
@@ -118,9 +118,14 @@
                 = f.text_area :tactile_tour, :rows => 3, :cols => 44, :style => 'font-size:120%'
             %br
             %br
+
+            
+            %br
             
             %div{:align => "right"}
               = f.submit "Save"
+          =  link_to "Description History", dyn_desc_history_path( :image_id => 'history_desc_image_id'), :target => '_blank', :class => "description-history"
+          
           .description-result
             %br
         %div{:class => 'duplicate-image', :style => 'display: none;'}

@@ -11,4 +11,5 @@ class DescriptionsController < ApplicationController
     @description.destroy
     redirect_to image_path(@image)
   end
+       
 end

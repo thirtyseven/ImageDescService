@@ -1,0 +1,39 @@
+.download_link
+
+  %div{:style => "margin: auto; width:700px; padding-top: 40px;"}
+    %h3
+      Thank You! Your book is being processed.
+    
+    Please give us 15 minutes to finish preparing your book. 
+    %br
+      Copy the following book ID, 
+      %strong
+        = @book_uid
+    %br
+      and enter it on the home page to edit image descriptions.
+
+    %br
+    %a{:href => "/"} Back to home page
+  
+:javascript
+  function doPoll(){
+    $.get('#{poll_file_with_descriptions_path(:job_id => @job.id)}', function(data) {
+      console.log("Have results");
+      console.log(data);
+      console.log("Not Complete:");
+      console.log(data == 'Not Complete');
+      console.log("Complete:");
+      console.log(data == 'Complete');
+      if(data == 'Complete') {
+        $('.download_link').html("<a href='#{download_with_descriptions_path(:job_id => @job.id, :file_type => @file_type)}'> Click to download the book with updated image descriptions. </a>");
+      }
+      else if(data == 'Error') {
+        // TODO ESH: add an error message back to the user 
+        console.log("Error")
+      }
+      else {
+        setTimeout(doPoll, 500);
+      }
+    });
+  }
+  doPoll();

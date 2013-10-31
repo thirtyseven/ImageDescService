@@ -1,5 +1,6 @@
 class DynamicDescription < ActiveRecord::Base
-  validates :body, :length => { :minimum => 2, :maximum => 16384 } , :presence => true
+  audited  :allow_mass_assignment => true
+  validates :body, :length => { :minimum => 0, :maximum => 16384, :allow_blank => true } 
   #validates :submitter, :length => { :maximum => 255 }
   validates :dynamic_image_id, :presence => true
 
@@ -24,26 +25,12 @@ class DynamicDescription < ActiveRecord::Base
   settings :number_of_shards => 1,
            :number_of_replicas => 1,
            :analysis => {
-                      :analyzer => {
-                                 :str_search_analyzer => {
-                                               :type => :custom,
-                                               :tokenizer => :keyword,
-                                               :filter => [:lowercase]
-                                 },
-                                 :str_index_analyzer => {
-                                               :type => :custom,
-                                               :tokenizer => :keyword,
-                                               :filter => [:lowercase, :substring]
-                                 }
-                                 
-                      },
-                      :filter => {
-                               :substring => {
-                                          :type => "nGram",
-                                          :min_gram => 3,
-                                          :max_gram => 7
-                               }
-                      }
+                      text: {
+                         tokenizer: "standard",
+                         # note, this lowercase filter is now redundant with the ElasticSearchable.ascii_folding logic
+                         filter: ["standard","lowercase"],
+                         char_filter: 'html_strip'
+                       }
             }  do
     mapping do
       indexes :image_type, :as => 'DynamicDescription.connection.select_value("select dynamic_image.image_category_id from dynamic_images dynamic_image, dynamic_descriptions dyn_des where dyn_des.dynamic_image_id = dynamic_image.id and dyn_des.id = #{self.id}")'      
@@ -80,4 +67,7 @@ class DynamicDescription < ActiveRecord::Base
     end
   end
 
+  def description_history
+     audits.map {|changes| changes.audited_changes['body']}
+  end
 end

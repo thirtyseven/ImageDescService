@@ -20,13 +20,13 @@
          <h1 id="site_title"><a title="Poet, version <%= t(:version)%>, home page" href="/">Poet Image Description</a></h1>
          <ul class="tabbed_navigation" id="tabs">
            <li>
-           <%# <% if current_user %>
-           <%#  <%= form_for :search, :url => dynamic_descriptions_search_path, :html => { :style => 'background:none;border:0;display:inline;', :method => :get } do |f|%>
-           <%#     <%= f.label :term,  'Search Descriptions:', options={:style=>"color:white;"}  %>
-           <%#     <%= f.text_field :term, options={:style=> "width: 100px;"} %>
-           <%#     <%= f.submit "Go" %>
-           <%#  <% end %>
-           <%#<% end %>
+           <% if current_user %>
+             <%= form_for :search, :url => dynamic_descriptions_search_path, :html => { :style => 'background:none;border:0;display:inline;', :method => :get } do |f|%>
+               <%= f.label :term,  'Search Descriptions:', options={:style=>"color:white;"}  %>
+               <%= f.text_field :term, options={:style=> "width: 100px;"} %>
+               <%= f.submit "Go" %>
+             <% end %>
+           <% end %>
            </li>
           <% if can? :view_admin, @all %>
              <li><%= link_to "Books", admin_books_path %> </li>
