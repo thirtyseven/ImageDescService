@@ -5,9 +5,9 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable
 
   # Setup accessible (or protected) attributes for your model
-  attr_accessor :login, :new_library, :use_new_library, :current_user, :from_signup
+  attr_accessor :login, :new_library, :use_new_library, :current_user, :from_signup, :delete_library, :use_delete_library
   attr_accessible :first_name, :last_name, :email, :password, :password_confirmation, 
-                   :remember_me, :username, :role_ids, :subject_expertise_ids,  :other_subject_expertise, :library_ids, :new_library, :use_new_library, :from_signup, :agreed_tos
+                   :remember_me, :username, :role_ids, :subject_expertise_ids,  :other_subject_expertise, :library_ids, :new_library, :use_new_library, :from_signup, :agreed_tos, :delete_library, :use_delete_library
   has_many :user_roles, :dependent => :destroy
   has_many :roles, :through => :user_roles
   
@@ -33,10 +33,10 @@ class User < ActiveRecord::Base
   validates_presence_of  :first_name
   validates_presence_of  :last_name
   
-  before_save :populate_new_library
+  before_save :populate_new_library, :delete_library_if_checked
   before_validation_on_create :set_demo_library
   validates_acceptance_of :agreed_tos, :accept => true, :message => "To Sign up you must accept our Terms of Service", :if => lambda {|user| user.from_signup }
-   
+  validate :library_to_delete_not_linked
   
   def full_name
     [first_name, last_name].compact.join ' '
@@ -129,7 +129,35 @@ class User < ActiveRecord::Base
        library = Library.where(:name => 'Demo').first
        self.libraries = [library]
      end
-   end
+  end
+  
+  
+  def library_to_delete_not_linked
+     if use_delete_library.eql? "1"
+         library = Library.where(:name => delete_library).first
+         if library 
+           if library.user_libraries.try(:size) > 0
+             errors[:use_delete_library] << "Please assign users that belong to this library to another library"
+           end
+           if library.books.try(:size) > 0
+             errors[:use_delete_library] << "Please assign books that belong to this library to another library"
+           end
+         else
+            errors[:use_delete_library] << "Please enter a valid library"
+         end
+         
+    end
+  end
+  
+  def delete_library_if_checked
+    if use_delete_library.eql? "1"
+       library = Library.where(:name => delete_library).first
+       if library && library.user_libraries.try(:size) == 0 && library.books.try(:size) == 0
+         library.destroy
+       end
+      
+    end
+  end
    
 end
 

@@ -15,6 +15,11 @@ ActiveAdmin.register User do
       f.input :use_new_library, :label => 'Click to Create a new library', :as => :boolean, :input_html => {:class => 'book-toggle', 'data-related-off' => '.library-select', 'data-related-on' => '.new-library'}  
       f.input :libraries, :as => :select, :collection => Library.all.map {|library| [library.name, library.id]}, :include_blank => nil, :multiple => true
       f.input :new_library, :label => 'New Library', :wrapper_html => {:class => 'new-library'}
+      
+      if !f.object.new_record? 
+          f.input :use_delete_library, :label => 'Click to Delete a existing library', :as => :boolean, :input_html => {:class => 'book-toggle', 'data-related-off' => '.library-select', 'data-related-on' => '.delete-library'}  
+          f.input :delete_library, :label => 'Delete Library', :wrapper_html => {:class => 'delete-library'}
+      end
       # dropdown of roles
       f.input :roles, :as => :select, :collection => Role.all.map {|role| [role.name, role.id]}, :include_blank => nil
     end
