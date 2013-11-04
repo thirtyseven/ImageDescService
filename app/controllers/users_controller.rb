@@ -15,7 +15,7 @@ class UsersController < ApplicationController
 
     respond_to do |format|
       if @user.update_attributes(params[:user]) && (@user.id == current_user.id)
-        format.html { redirect_to  '/'  }
+        format.html { redirect_to('/', :notice => 'User profile successfully updated') }
         format.json { head :ok }
       else
         format.html { render action: "edit" }
