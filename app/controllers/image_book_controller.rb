@@ -1,7 +1,6 @@
 require 'fileutils'
 require 'nokogiri'
 require 'tempfile'
-require 'xml/xslt'
 include ActionView::Helpers::NumberHelper
 include DaisyUtils, UnzipUtils, EpubUtils
 
