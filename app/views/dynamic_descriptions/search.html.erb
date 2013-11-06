@@ -26,7 +26,7 @@
             </tr><tr>
              <td><%= f.label :image_type,  'Image Type:'  %></td>
               <td>
-               <%= f.select :image_type,  ImageCategory.order(:order_to_display).all.map {|category| [category.name, category.id]}, {:custom_label => 'Category'}%>
+               <%= f.select :image_type,  ImageCategory.order(:order_to_display).all.map {|category| [category.name, category.id]}.reject! {|k| k[0] == "None"}, :include_blank => true, :custom_label => 'Category'%>
              </td>
             </tr>
             <tr>
