@@ -87,7 +87,7 @@ class DaisyParser <  S3UnzippingJob
       File.read(opf_filename)
     end
     
-    def update_daisy_book_in_db(book, doc, xml_file, opf, uploader)
+    def update_daisy_book_in_db(book, doc, xml_file, opf, uploader)     
       isbn = nil
       if opf
         opf_doc = Nokogiri::XML opf
@@ -96,7 +96,9 @@ class DaisyParser <  S3UnzippingJob
       @book_title = extract_optional_book_title(doc)
       @book_publisher = extract_optional_book_publisher(doc)
       @book_publisher_date = extract_optional_book_publisher_date(doc)
-      book.update_attributes(:title => @book_title, :isbn => isbn, :xml_file => xml_file, :status => 1, :publisher => @book_publisher, :publisher_date => @book_publisher_date)    
+      description = extract_description(doc)
+      authors = extract_book_authors(doc)
+      book.update_attributes(:title => @book_title, :isbn => isbn, :xml_file => xml_file, :status => 1, :publisher => @book_publisher, :publisher_date => @book_publisher_date, :description => description, :authors => authors)    
       book
     end
     
@@ -108,8 +110,17 @@ class DaisyParser <  S3UnzippingJob
       node = matches.first
       node.text
     end
-    
-    
+
+    def extract_book_authors(doc)
+      xpath_author = "//xmlns:meta[@name='dc:Creator']"
+      matches = doc.xpath(doc, xpath_author)
+      if matches.size != 1
+        return nil
+      end
+      node = matches.first
+      node.attributes['content'].content
+    end
+
     def extract_optional_book_title(doc)
       xpath_title = "//xmlns:meta[@name='dc:Title']"
       matches = doc.xpath(doc, xpath_title)
@@ -120,6 +131,15 @@ class DaisyParser <  S3UnzippingJob
       node.attributes['content'].content
     end
     
+    def extract_description(doc) xpath_title = "//xmlns:meta[@name='dc:Title']"
+      xpath_description = "//xmlns:meta[@name='dc:Description']"
+      matches = doc.xpath(doc, xpath_description)
+      if matches.size == 0
+        return nil
+      end
+      node = matches.first
+      node.attributes['content'].content
+    end
     
     def extract_optional_book_publisher(doc)
       xpath_publisher = "//xmlns:meta[@name='dc:Publisher']"

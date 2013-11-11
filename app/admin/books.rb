@@ -18,6 +18,8 @@ ActiveAdmin.register Book do
     column "Status" do |book|
       book.status_to_english
     end
+    column :description
+    column :authors
     column "Format", :file_type
     column "Added", :created_at
     if can? :tag_all_images, @all
@@ -42,5 +44,7 @@ ActiveAdmin.register Book do
   filter :uid 
   filter :title
   filter :isbn
+  filter :authors
+  filter :description
   
 end

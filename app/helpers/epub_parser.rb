@@ -29,7 +29,7 @@ class EpubParser <  S3UnzippingJob
           splitter = SplitXmlHelper::DTBookSplitter.new(IMAGE_LIMIT)
           parser = Nokogiri::XML::SAX::Parser.new(splitter)
           parser.parse(file_contents)
-  
+
           # Keep track of the original img src attribute and whether it has been used already
           image_srces = []
 
@@ -58,7 +58,7 @@ class EpubParser <  S3UnzippingJob
             File.open(content_html, 'wb'){|f|f.write(segment_xml)}
             repository.store_file(content_html, book.uid, "#{book.uid}/#{book.uid}_#{sequence_number}.html", nil)
           end
-
+          
           book.update_attribute("status", 3) 
           doc = nil
           xml = nil
@@ -78,7 +78,7 @@ class EpubParser <  S3UnzippingJob
       end
     end
     
-    
+
     
 
     def get_opf_from_dir (book_directory)
@@ -97,7 +97,9 @@ class EpubParser <  S3UnzippingJob
       @book_title = doc.css("[property='dcterms:title']").first.text if doc.css("[property='dcterms:title']").first
       @book_publisher = doc.css("[property='dcterms:publisher']").first.text if doc.css("[property='dcterms:publisher']").first
       @book_publisher_date = doc.css("[property='dc:date']").first.text if doc.css("[property='dc:date']").first
-      book.update_attributes(:title => @book_title, :isbn => isbn, :xml_file => xml_file, :status => 1, :publisher => @book_publisher, :publisher_date => @book_publisher_date)    
+      description =  doc.css("[property='dcterms:description']").first.text if doc.css("[property='dcterms:description']").first
+      author =  doc.css("[property='dcterms:creator']").first.text if doc.css("[property='dcterms:creator']").first
+      book.update_attributes(:title => @book_title, :isbn => isbn, :xml_file => xml_file, :status => 1, :publisher => @book_publisher, :publisher_date => @book_publisher_date, :description => description, :authors => author)    
       book
     end    
     
