@@ -22,9 +22,7 @@ class DynamicDescription < ActiveRecord::Base
   #   end
   # end
   
-  settings :number_of_shards => 1,
-           :number_of_replicas => 1,
-           :analysis => {
+  settings :analysis => {
                       text: {
                          tokenizer: "standard",
                          # note, this lowercase filter is now redundant with the ElasticSearchable.ascii_folding logic
