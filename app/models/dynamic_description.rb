@@ -13,7 +13,7 @@ class DynamicDescription < ActiveRecord::Base
   include Tire::Model::Callbacks
   accepts_nested_attributes_for :dynamic_image, :allow_destroy => true
   
-  index_name 'dynamic_description'
+  # index_name 'dynamic_description'
   # TO RUN THE INDEX: bundle exec rake environment tire:import CLASS='DynamicDescription' FORCE=1 --trace
   
   # tire do
