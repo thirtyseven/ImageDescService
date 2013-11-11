@@ -14,7 +14,7 @@ class DynamicDescription < ActiveRecord::Base
   accepts_nested_attributes_for :dynamic_image, :allow_destroy => true
   
   # index_name 'dynamic_description'
-  # TO RUN THE INDEX: bundle exec rake environment tire:import CLASS='DynamicDescription' FORCE=1 --trace
+  # TO RUN THE INDEX: bundle exec rake environment tire:import CLASS='DynamicDescription' FORCE=true --trace
   
   # tire do
   #   mapping do
@@ -36,9 +36,9 @@ class DynamicDescription < ActiveRecord::Base
       indexes :submitter_by, :as => 'DynamicDescription.connection.select_value("select user.id from users user, dynamic_descriptions dyn_des where dyn_des.submitter_id = user.id and dyn_des.id = #{self.id}")' 
       indexes :image_type, :as => 'DynamicDescription.connection.select_value("select dynamic_image.image_category_id from dynamic_images dynamic_image, dynamic_descriptions dyn_des where dyn_des.dynamic_image_id = dynamic_image.id and dyn_des.id = #{self.id}")'      
       indexes :dynamic_image_id, :type => 'integer'  
-      indexes :isbn, :type => 'string', :index_analyzer => "str_index_analyzer", :search_analyzer => "str_search_analyzer", :as => 'DynamicDescription.connection.select_value("select book.isbn from books book, dynamic_descriptions dyn_des where dyn_des.book_id = book.id and dyn_des.id = #{self.id}")'
-      indexes :title, :type => 'string', :index_analyzer => "str_index_analyzer", :search_analyzer => "str_search_analyzer", :as => 'DynamicDescription.connection.select_value("select book.title from books book, dynamic_descriptions dyn_des where dyn_des.book_id = book.id and dyn_des.id = #{self.id}")'
-      indexes :body, :type => 'string', :index_analyzer => "str_index_analyzer", :search_analyzer => "str_search_analyzer"
+      indexes :isbn, :type => 'string', :as => 'DynamicDescription.connection.select_value("select book.isbn from books book, dynamic_descriptions dyn_des where dyn_des.book_id = book.id and dyn_des.id = #{self.id}")'
+      indexes :title, :type => 'string', :as => 'DynamicDescription.connection.select_value("select book.title from books book, dynamic_descriptions dyn_des where dyn_des.book_id = book.id and dyn_des.id = #{self.id}")'
+      indexes :body, :type => 'string'
       indexes :dynamic_description_library_id, :as => 'DynamicDescription.connection.select_value("select book.library_id from books book, dynamic_descriptions dyn_des where dyn_des.book_id = book.id and dyn_des.id = #{self.id}")'
       indexes :is_last_approved, :as => 'DynamicDescription.connection.select_value("select (select id from dynamic_descriptions inner_dd where inner_dd.dynamic_image_id = dynamic_descriptions.dynamic_image_id and date_approved is not null order by date_approved desc limit 1) = dynamic_descriptions.id from dynamic_descriptions where id = #{self.id}")'
     end
