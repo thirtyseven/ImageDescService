@@ -45,9 +45,14 @@ class Book < ActiveRecord::Base
   def current_images_and_descriptions
     dynamic_images.includes(:dynamic_description).where(:dynamic_descriptions => {:is_current => true}).group('dynamic_descriptions.id')
   end
-  
+    
   def book_stats_plus_unessential_images_described
     book_stats.select("book_stats.*, total_images_described - essential_images_described as unessential_images_described") 
+  end
+  
+
+  def dynamic_desc_submitters
+    User.where( :id => dynamic_descriptions.map(&:submitter_id)).select(:email).map(&:email)
   end
   
   def status_to_english

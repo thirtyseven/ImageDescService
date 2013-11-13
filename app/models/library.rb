@@ -11,6 +11,10 @@ class Library < ActiveRecord::Base
     Book.where(:library_id => self.id).readonly(false)
   end
   
+  def related_books_by_description  
+      Book.select("books.*, submitter_dynamic_descriptions.submitter_id").joins("left outer join dynamic_descriptions submitter_dynamic_descriptions on submitter_dynamic_descriptions.book_id = books.id").where(:library_id => self.id).group("books.id, submitter_dynamic_descriptions.submitter_id").readonly(false)        
+  end
+  
   def related_users
      User.joins(:user_libraries).where('user_libraries.library_id' => self.id).readonly(false)
   end

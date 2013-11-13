@@ -81,6 +81,9 @@ DiagramRailsApp::Application.routes.draw do
   match "update_descriptions_in_book/upload" => "update_descriptions_in_book#upload", :via => "post"
   match "update_descriptions_in_book" => "update_descriptions_in_book#index", :via => "get"
   match "user/terms_of_service", :controller => 'users', :action => 'terms_of_service'
+
+  match "delete_descriptions_by_id", :controller => "dynamic_descriptions", :action => "delete_descriptions_by_id", :via => "post", :as => 'delete_descriptions_by_id'
+
   get "home/index"
 
   # match 'imageDesc' => "dynamic_images#show"

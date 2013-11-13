@@ -98,6 +98,12 @@ class DynamicDescriptionsController < ApplicationController
       format.xml  { head :ok }
     end
   end
+  
+  def delete_descriptions_by_id
+    description_ids_to_delete = params[:ids]
+    DynamicDescription.where(:id => description_ids_to_delete).delete_all if description_ids_to_delete.present?
+    render :text => 'Descriptions deleted'
+  end
 
   def search 
     search_term = params['search']['term']

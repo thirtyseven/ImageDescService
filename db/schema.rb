@@ -84,6 +84,8 @@ ActiveRecord::Schema.define(:version => 20130719213106) do
     t.string   "publisher"
     t.date     "publisher_date"
     t.string   "file_type"
+    t.string   "authors"
+    t.string   "description"
   end
 
   add_index "books", ["isbn"], :name => "index_books_on_isbn"
