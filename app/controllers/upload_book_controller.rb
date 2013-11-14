@@ -52,7 +52,10 @@ class UploadBookController < ApplicationController
       if valid_daisy_zip?(book.path)
         file_type = "Daisy"
       elsif valid_epub_zip?(book.path)
-        file_type = "Epub"
+        #file_type = "Epub"
+        flash[:alert] = "You have uploaded an EPUB3 file. POET currently does not support this format."
+        redirect_to :action => 'upload'
+        return
       else  
         redirect_to :action => 'upload'
         return
@@ -61,13 +64,15 @@ class UploadBookController < ApplicationController
         ActiveRecord::Base.logger.info "#{e.class}: #{e.message}"
         if e.message.include?("Not a zip archive")
             ActiveRecord::Base.logger.info "#{caller_info} Not a ZIP File"
-            flash[:alert] = "Uploaded file must be a valid Daisy or EPub3 (zip) file"
+            #flash[:alert] = "Uploaded file must be a valid Daisy or EPub3 (zip) file"
+            flash[:alert] = "Uploaded file must be a valid Daisy file"
         else
-            ActiveRecord::Base.logger.info "#{caller_info} Other problem with zip epub file"
+            ActiveRecord::Base.logger.info "#{caller_info} Other problem with zip file"
           flash[:alert] = "There is a problem with this zip file"
         end
         puts e
         puts e.backtrace.join("\n")
+        redirect_to :action => 'upload'
         return false
     end   
 
