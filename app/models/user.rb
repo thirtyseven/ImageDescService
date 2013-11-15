@@ -33,7 +33,7 @@ class User < ActiveRecord::Base
   validates_presence_of  :first_name
   validates_presence_of  :last_name
   
-  before_save :populate_new_library
+  before_save :populate_new_library, :delete_library_if_checked
   before_validation :set_demo_library, :on => :create
   validates_acceptance_of :agreed_tos, :accept => true, :message => "To Sign up you must accept our Terms of Service", :if => lambda {|user| user.from_signup }
   validate :library_to_delete_not_linked
