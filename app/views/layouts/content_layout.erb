@@ -115,9 +115,9 @@ function handleImageCategory(element){
     "id" : id,
     "dynamic_image[image_category_id]" : image_category_id
   }
-  jQuery.post("/imageDesc/dynamic_images/" + id, data, function(data, status) {})
+  jQuery.post("/imageDesc/dynamic_images/" + id, data, Poet.imageCategoryPostSave(element));
 }
- 
+
   imageCategoryContent = [];
   // NOTE ESH: Preload all the category content in case it's used multiple times
   <% ImageCategory.all.each do |img_cat| %>
@@ -168,6 +168,12 @@ function handleImageCategory(element){
         // Grab _edit_image_form.html.haml template HTML and inject in the appropriate place
         $newDiv = $($imageEditingControlHtml);
         
+        $('form.description-form', $newDiv).bind('submit', function(evt) {
+            if($(evt.srcElement).find('.dynamic-image-category-selector').val() == "") {
+              alert("Please select specify a category for this image.")
+              evt.preventDefault();
+            }
+        });
       
         $('form.description-form', $newDiv).bind('ajax:success',    function(data, html, status) {
           notification = $('.description-result', $(this).parent());
@@ -183,7 +189,8 @@ function handleImageCategory(element){
           if(html != null && html.submitter != null) {
             previewAuthor.html('Author: ' + html.submitter)
           }
-        })
+        });
+
         $('form.description-form', $newDiv).bind('ajax:error',    function(data, html, status) {
           notification = $('.description-result', $(this).parent());
           notification = $(notification);
@@ -197,7 +204,7 @@ function handleImageCategory(element){
           notification.css('color', 'red');
           var mySubmit = $('#dynamic_description_submit', $(this));
           $(mySubmit).focus();
-        })
+        });
 
         $('.collapsible', $newDiv).each(function(index, item) {
           triggerElement = $("<a href='#'>" + $(item).attr('trigger') + "</a>");
@@ -373,8 +380,14 @@ function handleImageCategory(element){
             $('.category_description', $(this).parents('.outer-table-wrapper')).html(imageCategoryContent[$(this).val()]);
           });
           
-          if($descriptionImageCategoryId != null && $descriptionImageCategoryId > 0 && imageCategoryContent[$descriptionImageCategoryId]) {
-            $('.category_description', $newDiv).html(imageCategoryContent[$descriptionImageCategoryId]);
+          // for non-empty category, nuke the null selector
+          if($descriptionImageCategoryId != null && $descriptionImageCategoryId > 0) {
+            $('.dynamic-image-category-selector option[value=""]', $newDiv).remove();
+
+            // if category has helper content, populate it
+            if (imageCategoryContent[$descriptionImageCategoryId]) {
+              $('.category_description', $newDiv).html(imageCategoryContent[$descriptionImageCategoryId]);
+            }
           }
           
 

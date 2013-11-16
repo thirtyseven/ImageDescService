@@ -54,5 +54,12 @@ jQuery(function($) {
     $($frame).insertAfter(item).contents().find('body').append(htmlDecode($(item).html()));
     $(item).remove();
   });
-  
+
+  window.Poet = {
+    imageCategoryPostSave: function(element) {
+      return function(data, status) {
+        $(element).find('option[value=""]').remove();
+      }
+    }
+  };
 });

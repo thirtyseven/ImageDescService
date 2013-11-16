@@ -24,7 +24,7 @@
               = img_form.hidden_field :id, :class => 'hidden-id'
               %strong.image_category_text{:style => "font-size: 80%;", :tabindex => "-1"}
                 Image Category:
-              = img_form.select :image_category_id, ImageCategory.order(:order_to_display).all.map {|category| [category.name, category.id]}, {:custom_label => 'Category?'},{:id => "dynamic_image_image_category_id_#{img_form.object.id}", :class => 'dynamic-image-category-selector', :onChange => "handleImageCategory(this);" }
+              = img_form.select :image_category_id, ImageCategory.order(:order_to_display).all.map {|category| [category.name, category.id]}, {:custom_label => 'Category?', :include_blank => '-- Choose one --'},{:id => "dynamic_image_image_category_id_#{img_form.object.id}", :class => 'dynamic-image-category-selector', :onChange => "handleImageCategory(this);"}
             %br
             %br
             %div.long-description-container

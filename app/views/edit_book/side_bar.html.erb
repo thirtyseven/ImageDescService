@@ -29,10 +29,6 @@ function showGuide() {
             'height=400,width=700,status=false,menubar=0,location=0,toolbar=1,scrollbars=yes,left=100,top=100');
 }
 
-function handleSubmitResponse(responseText, responseStatus) {
-  // no need to tell the user it worked
-}
-
 function handleImageCategory(form){
   jQuery.ajaxSetup({ 
     timeout: 5 * 1000,
@@ -47,7 +43,7 @@ function handleImageCategory(form){
     "id" : id,
     "dynamic_image[image_category_id]" : image_category_id
   }
-  jQuery.post("/imageDesc/dynamic_images/" + id, data, function(data, status) {handleSubmitResponse(data, status)})
+  jQuery.post("/imageDesc/dynamic_images/" + id, data, Poet.imageCategoryPostSave(form["dynamic_image[image_category_id]"]));
 }
 
 function handleImageEssentialChange(form){
@@ -163,8 +159,13 @@ function handleFilterChange()
       <%= form.hidden_field(:book_id) %>
       <%= form.hidden_field(:image_location) %>
       <%= form.label("image category", "Type:") %>
-      <%= form.select :image_category_id, ImageCategory.order(:order_to_display).all.map {|category| [category.name, category.id]},
-        {:custom_label => 'Category?'},
+      <%
+        selectOptions = {:custom_label => 'Category?'}
+        if model.image_category_id.nil?
+          selectOptions[:include_blank] = "-- Choose one --"
+        end
+      %>
+      <%= form.select :image_category_id, ImageCategory.order(:order_to_display).all.map {|category| [category.name, category.id]}, selectOptions,
         {:id => "dynamic_image_image_category_id_#{model.id}", :onChange => "handleImageCategory(this.form);" }  %>      
         
               
