@@ -1,10 +1,10 @@
 ActiveAdmin.register Book, :as => "BookDescriptions" do  
-  menu :if => proc{ can? :admin_user, @all }
    scope_to :current_library, :association_method => :related_books_by_description
   
   
    actions :index
-    
+   
+   
 
     index do
       
@@ -22,7 +22,7 @@ ActiveAdmin.register Book, :as => "BookDescriptions" do
       end
       
       column "Described by" do |book|
-          described_by = Book.connection.select_value "select email from users where id = #{book.submitter_id} and deleted_at is not null" if book.submitter_id
+          described_by = Book.connection.select_value "select email from users where id = #{book.submitter_id}" if book.submitter_id
           described_by.to_s
       end
       

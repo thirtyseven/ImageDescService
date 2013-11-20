@@ -6,7 +6,7 @@ class EpubParser <  S3UnzippingJob
       begin
         repository = RepositoryChooser.choose(repository_name)
         
-          book = Book.where(:id => book_id, :deleted_at => nil).first
+          book = Book.where(:id => book_id).first
           file = repository.read_file(book.uid + ".zip", File.join( "", "tmp", "#{book.uid}.zip"))
           book_directory  = accept_book(file)
           xml = get_xml_from_dir(book_directory, book.file_type)
@@ -23,7 +23,7 @@ class EpubParser <  S3UnzippingJob
           file_contents = "<html xmlns='http://www.w3.org/1999/xhtml' xml:lang='en'><link rel='stylesheet' type='text/css' href='//s3.amazonaws.com/org-benetech-poet/html.css'/><body>#{file_contents}</body></html>"
 
 
-          book = Book.where(:id => book_id, :deleted_at => nil).first
+          book = Book.where(:id => book_id).first
           book = update_epub_book_in_db(book, doc, file_names.join(', '), opf, uploader_id)
 
           splitter = SplitXmlHelper::DTBookSplitter.new(IMAGE_LIMIT)
@@ -62,7 +62,7 @@ class EpubParser <  S3UnzippingJob
           book.update_attribute("status", 3) 
           doc = nil
           xml = nil
-          current_user = User.where(:id => uploader_id, :deleted_at => nil).first
+          current_user = User.where(:id => uploader_id).first
           UserMailer.book_uploaded_email(current_user, book).deliver #email 'current user'
 
           # remove zip file from holding bucket

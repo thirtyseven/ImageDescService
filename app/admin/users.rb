@@ -1,7 +1,6 @@
 ActiveAdmin.register User do  
   menu :if => proc{ can? :admin_user, @all }
-  # returns non-deleted users all libraries 
-  scope_to :current_library, :association_method => :related_users
+ # scope_to :current_library, :association_method => :related_users
   
   form do |f|
       f.inputs "User Details" do
@@ -47,15 +46,7 @@ ActiveAdmin.register User do
       User.connection.select_value "select group_concat(roles.name separator ' ') from user_roles, roles where 
            user_roles.user_id = #{user.id} and user_roles.role_id = roles.id"
     end
-   # default_actions  
-    column :actions do |user|
-      links = link_to I18n.t('active_admin.view'), resource_path(user)
-      links += " "
-      links += link_to I18n.t('active_admin.edit'), edit_resource_path(user)
-      links += " "
-      links += link_to "Delete", admin_user_delete_path(:user_id => user.id), :confirm=>'Are you sure?'
-      links
-    end
+    default_actions
   end
   
   filter :user_libraries_library_id, :as => :select, :collection => proc { Library.all}, :label => 'Library'

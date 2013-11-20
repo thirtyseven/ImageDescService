@@ -131,7 +131,7 @@ module EpubBookHelper
     def self.get_description_count_for_book_uid(book_uid, current_library)
       return DynamicImage.
           joins(:book).
-          where(:books => {:uid => book_uid, :library_id => current_library.id, :deleted_at => nil}).
+          where(:books => {:uid => book_uid, :library_id => current_library.id}).
           count
     end
     
@@ -157,7 +157,7 @@ module EpubBookHelper
         raise NoImageDescriptions.new
       end
 
-      book = Book.where(:uid => book_uid, :library_id => current_library.id, :deleted_at => nil).first
+      book = Book.where(:uid => book_uid, :library_id => current_library.id).first
       matching_images = DynamicImage.where("book_id = ?", book.id).all
       matching_images_hash = Hash.new()
       matching_images.each do | dynamic_image |

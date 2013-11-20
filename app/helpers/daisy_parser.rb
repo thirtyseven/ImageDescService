@@ -10,7 +10,7 @@ class DaisyParser <  S3UnzippingJob
    def perform
       begin
         repository = RepositoryChooser.choose(repository_name)
-          book = Book.where(:id => book_id, :deleted_at => nil).first
+          book = Book.where(:id => book_id).first
           file = repository.read_file(book.uid + ".zip", File.join( "", "tmp", "#{book.uid}.zip"))
           book_directory  = accept_book(file)
 
@@ -22,7 +22,7 @@ class DaisyParser <  S3UnzippingJob
       
           contents_filename =DaisyUtils.get_contents_xml_name(book_directory)
 
-          book = Book.where(:id => book_id, :deleted_at => nil).first
+          book = Book.where(:id => book_id).first
           book = update_daisy_book_in_db(book, doc, File.basename(contents_filename), opf, uploader_id)
 
           splitter = SplitXmlHelper::DTBookSplitter.new(IMAGE_LIMIT)
@@ -66,7 +66,7 @@ class DaisyParser <  S3UnzippingJob
           book.update_attribute("status", 3) 
           doc = nil
           xml = nil
-          current_user = User.where(:id => uploader_id, :deleted_at => nil).first
+          current_user = User.where(:id => uploader_id).first
           UserMailer.book_uploaded_email(current_user, book).deliver #email 'current user'
 
           # remove zip file from holding bucket
