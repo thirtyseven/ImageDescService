@@ -64,7 +64,7 @@ private
     end
     node = matches.first
     book_uid = node.attributes['content'].content
-    book = Book.where(:uid => book_uid).first
+    book = Book.where(:uid => book_uid, :deleted_at => nil).first
 
     matching_images = book.dynamic_images
     matching_images.each do | dynamic_image |

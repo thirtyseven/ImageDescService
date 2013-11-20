@@ -52,6 +52,7 @@ class UploadBookController < ApplicationController
       if valid_daisy_zip?(book.path)
         file_type = "Daisy"
       elsif valid_epub_zip?(book.path)
+        # to do - when turning on the upload for EPUB files we need to check the deleted_at flag
         #file_type = "Epub"
         flash[:alert] = "You have uploaded an EPUB3 file. POET currently does not support this format."
         redirect_to :action => 'upload'
@@ -84,13 +85,14 @@ class UploadBookController < ApplicationController
       doc = nil
       xml = nil
      
-      preprocessing_book = Book.where(:uid => @book_uid).first
+      preprocessing_book = Book.where(:uid => @book_uid, :deleted_at => nil).first
       if preprocessing_book && preprocessing_book.status == 4
         flash[:alert] = "The book (#{@book_uid}) is still being processed. Please try again later."
         redirect_to :action => 'upload'
         return
       end
-      this_book = Book.where(:uid => @book_uid, :file_type => file_type).first
+      #uploading a book that has been deleted uid number unique? look into this TODO
+      this_book = Book.where(:uid => @book_uid, :file_type => file_type, :deleted_at => nil).first
       if this_book
         flash[:alert] = "The #{file_type} book (#{@book_uid}) has already been uploaded."
         redirect_to :action => 'upload'
@@ -110,12 +112,13 @@ class UploadBookController < ApplicationController
           else
             job = DaisyParser.new(preprocessing_book.id, @repository.name, current_library, current_user.id)
           end
-          Delayed::Job.enqueue(job)
-
-          # hack for testing
-          if (Rails.env.test?)
-            Delayed::Worker.new.work_off
-          end
+job.perform
+          # Delayed::Job.enqueue(job)
+          # 
+          # # hack for testing
+          # if (Rails.env.test?)
+          #   Delayed::Worker.new.work_off
+          # end
 
         rescue AWS::Errors::Base => e
           logger.info "S3 Problem uploading book to S3 for book #{@book_uid}"

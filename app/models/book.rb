@@ -9,6 +9,13 @@ class Book < ActiveRecord::Base
   has_many :book_stats, :class_name => 'BookStats', :foreign_key => :book_id, :dependent => :destroy
   has_many :book_fragments, :dependent => :destroy
   belongs_to :library
+  after_save :index_related_descriptions
+  
+  def index_related_descriptions
+    if deleted_at
+      dynamic_descriptions.each{|description| description.index.store description}
+    end
+  end
   
   
   def mark_approved
@@ -52,7 +59,7 @@ class Book < ActiveRecord::Base
   
 
   def dynamic_desc_submitters
-    User.where( :id => dynamic_descriptions.map(&:submitter_id)).select(:email).map(&:email)
+    User.where( :id => dynamic_descriptions.map(&:submitter_id), :deleted_at => nil).select(:email).map(&:email)
   end
   
   def status_to_english

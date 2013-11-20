@@ -24,6 +24,9 @@
             <td><%= f.label :term,  'Descriptions:'  %></td>
             <td><%= f.text_field :term, options={:style=> "width: 100px;"} %></td>
             </tr><tr>
+            <td><%= f.label :term,  'Authors:'  %></td>  
+            <td><%= f.text_field :authors, options={:style=> "width: 100px;"} %></td>  
+            </tr><tr>  
              <td><%= f.label :image_type,  'Image Type:'  %></td>
               <td>
                <%= f.select :image_type,  ImageCategory.order(:order_to_display).all.map {|category| [category.name, category.id]}.reject {|k| k[0] == "None"}, :include_blank => true, :custom_label => 'Category'%>
@@ -84,6 +87,8 @@
        <b>Title:</b> <%= dynamic_description.try(:book).try(:title) %> </br>
        
        <b>ISBN:</b> <%= dynamic_description.try(:book).try(:isbn) %> </br>
+       
+       <b>Authors:</b> <%= dynamic_description.try(:book).try(:authors) %>
 
        <b>Image Type:</b> 
        <%= ImageCategory.find(image.try(:image_category_id)).try(:name) if image.image_category_id%></br>

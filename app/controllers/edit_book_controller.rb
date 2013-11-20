@@ -30,7 +30,7 @@ class EditBookController < ApplicationController
     book_uid = params[:book_uid]
     
     if (book_uid)
-      book = Book.where(:uid => book_uid, :library_id => current_library.id).first
+      book = Book.where(:uid => book_uid, :library_id => current_library.id, :deleted_at => nil).first
       book_id = session[:book_id] = book.id.to_s if book
     elsif (book_id)
       session[:book_id] = book_id.strip
@@ -50,7 +50,7 @@ class EditBookController < ApplicationController
       return
     end
 
-    @book = Book.where(:id => book_id, :library_id => current_library.id).first
+    @book = Book.where(:id => book_id, :library_id => current_library.id, :deleted_at => nil).first
     if(!@book)
       flash[:alert] = "There is no book in the system with that ID (#{book_id}) ."
       render :template => error_redirect
@@ -129,7 +129,7 @@ class EditBookController < ApplicationController
     book_id = @book.id
     session[:book_id] = book_id
     @fragment_id = @book_fragment.id
-    @book = Book.where(:id => book_id, :library_id => current_library.id).first
+    @book = Book.where(:id => book_id, :library_id => current_library.id, :deleted_at => nil).first
     
     if @book
       filter = params[:filter]
@@ -187,14 +187,14 @@ class EditBookController < ApplicationController
 
    unless book_fragment_id
      book_id = params[:book_id] || session[:book_id]
-     book = Book.where(:id => book_id, :library_id => current_library.id).first
+     book = Book.where(:id => book_id, :library_id => current_library.id, :deleted_at => nil).first
      if book
        book_fragment = book.book_fragments.first
        book_fragment_id = book_fragment.id if book_fragment
      end
    end
    
-   book_fragment = BookFragment.joins(:book).where(:id => book_fragment_id, :books => {:library_id => current_library.id}).first
+   book_fragment = BookFragment.joins(:book).where(:id => book_fragment_id, :books => {:library_id => current_library.id, :deleted_at => nil}).first
    if book_fragment
      book = book_fragment.book
    

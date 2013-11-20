@@ -18,13 +18,14 @@ class User < ActiveRecord::Base
   has_many :user_subject_expertises, :dependent => :destroy
   has_many :subject_expertises, :through => :user_subject_expertises
   
-  validates_length_of :email, :within => 6..250 
-  validates_uniqueness_of :email
+  validates_length_of :email, :within => 6..250, :if => lambda {|user| !user.email.blank? } 
+  validates_uniqueness_of :email, :if => lambda {|user| !user.email.blank? }, :scope => [:deleted_at]
   validates_presence_of  :email
 
-  validates_length_of :username, :within => 5..40 
-  validates_uniqueness_of :username 
+  validates_length_of :username, :within => 5..40, :if => lambda {|user| !user.login.blank? } 
+  validates_uniqueness_of :username, :if => lambda {|user| !user.username.blank? }, :scope => [:deleted_at] 
   validates_presence_of  :username
+#  validates_uniqueness_of :username
 
   validates_presence_of :password, :if => lambda {|user| user.new_record? }
   validates_length_of :password, :within => 6..40, :if => lambda {|user| !user.password.blank? }
@@ -63,11 +64,11 @@ class User < ActiveRecord::Base
   end
   
   protected
-
+  
    def self.find_for_database_authentication(warden_conditions)
      conditions = warden_conditions.dup
      login = conditions.delete(:login)
-     where(conditions).where(["lower(username) = :value OR lower(email) = :value", { :value => login.downcase }]).first
+     where(conditions).where("deleted_at is null").where(["lower(username) = :value OR lower(email) = :value", { :value => login.downcase }]).first
    end
 
    # Attempt to find a user by it's email. If a record is found, send new
