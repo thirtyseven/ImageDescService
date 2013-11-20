@@ -151,7 +151,7 @@ module DaisyBookHelper
         raise NoImageDescriptions.new
       end
 
-      book = Book.where(:uid => book_uid, :library_id => current_library.id).first
+      book = Book.where(:uid => book_uid, :library_id => current_library.id, :deleted_at => nil).first
       matching_images = DynamicImage.where("book_id = ?", book.id).all
       matching_images.each do | dynamic_image |
         image_location = dynamic_image.image_location

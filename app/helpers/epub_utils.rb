@@ -54,7 +54,7 @@ module EpubUtils
      @captions_hash = Hash.new()
      limit = 249
      book_uid = EpubUtils.extract_book_uid doc
-     book = Book.where(:uid => book_uid).first
+     book = Book.where(:uid => book_uid, :deleted_at => nil).first
      file_names = EpubUtils.get_epub_book_xml_file_names(book_directory)
      file_contents = file_names.inject('') do |acc, file_name|
       cur_file_contents = File.read(file_name)
