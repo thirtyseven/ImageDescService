@@ -36,14 +36,14 @@ function handleImageCategory(form){
                 alert("ERROR: Unable to save change\n" + errorThrown) }
     });
   authenticity_token = form.authenticity_token.value
-  id = form["dynamic_image[id]"].value
-  image_category_id = form["dynamic_image[image_category_id]"].value
+  var id = form["dynamic_image[id]"].value
+  var image_category_id = form["dynamic_image[image_category_id]"].value
   data = {
     "authenticity_token" : authenticity_token,
     "id" : id,
     "dynamic_image[image_category_id]" : image_category_id
   }
-  jQuery.post("/imageDesc/dynamic_images/" + id, data, Poet.imageCategoryPostSave(form["dynamic_image[image_category_id]"]));
+  jQuery.post("/imageDesc/dynamic_images/" + id, data, Poet.imageCategoryPostSave(id, image_category_id));
 }
 
 function handleImageEssentialChange(form){

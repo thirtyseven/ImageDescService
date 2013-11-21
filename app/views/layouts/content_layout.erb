@@ -108,14 +108,14 @@ function handleImageCategory(element){
                 alert("ERROR: Unable to save change\n" + errorThrown) }
     });
   authenticity_token = form.authenticity_token.value
-  id = $('.hidden-id', parentElement).val();
-  image_category_id = $('.dynamic-image-category-selector', parentElement).val();
+  var id = $('.hidden-id', parentElement).val();
+  var image_category_id = $('.dynamic-image-category-selector', parentElement).val();
   data = {
     "authenticity_token" : authenticity_token,
     "id" : id,
     "dynamic_image[image_category_id]" : image_category_id
   }
-  jQuery.post("/imageDesc/dynamic_images/" + id, data, Poet.imageCategoryPostSave(element));
+  jQuery.post("/imageDesc/dynamic_images/" + id, data, Poet.imageCategoryPostSave(id, image_category_id));
 }
 
   imageCategoryContent = [];
@@ -167,11 +167,13 @@ function handleImageCategory(element){
 
         // Grab _edit_image_form.html.haml template HTML and inject in the appropriate place
         $newDiv = $($imageEditingControlHtml);
-        
+
         $('form.description-form', $newDiv).bind('submit', function(evt) {
             if($(evt.srcElement).find('.dynamic-image-category-selector').val() == "") {
-              alert("Please select specify a category for this image.")
-              evt.preventDefault();
+              alert("Please specify a category for this image.")
+              return false;
+            } else {
+              return true;
             }
         });
       
@@ -338,6 +340,9 @@ function handleImageCategory(element){
               });
           }
         
+          // set ID appropriately
+          var categorySelect = $('.dynamic-image-category-selector', $newDiv);
+          categorySelect.attr('id', categorySelect.attr('id') + $imageId);
 
           $descriptionBody = $dataNode.attr('description-body');
           if($descriptionBody != "" && $descriptionBody != null) {
@@ -376,9 +381,6 @@ function handleImageCategory(element){
           $('input[name="dynamic_description[dynamic_image_attributes][id]"]', $newDiv).val($imageId);
           $descriptionImageCategoryId = $dataNode.attr('description-image-category-id');
           $('select[name="dynamic_description[dynamic_image_attributes][image_category_id]"]', $newDiv).val($descriptionImageCategoryId);
-          $('select[name="dynamic_description[dynamic_image_attributes][image_category_id]"]', $newDiv).change(function() {
-            $('.category_description', $(this).parents('.outer-table-wrapper')).html(imageCategoryContent[$(this).val()]);
-          });
           
           // for non-empty category, nuke the null selector
           if($descriptionImageCategoryId != null && $descriptionImageCategoryId > 0) {
@@ -509,7 +511,7 @@ function handleImageCategory(element){
         if($altText) {
           $('.alt_text', $newDiv).html('Alt Text:' + $altText);
         }
-        else{
+        else {
           $('.alt_text', $newDiv).html('Alt Text: (No description provided by publisher)');
         }
         

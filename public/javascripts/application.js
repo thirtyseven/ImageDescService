@@ -56,9 +56,26 @@ jQuery(function($) {
   });
 
   window.Poet = {
-    imageCategoryPostSave: function(element) {
+    imageCategoryPostSave: function(imageId, categoryId) {
       return function(data, status) {
-        $(element).find('option[value=""]').remove();
+        for (var i = 0; i < window.top.frames.length; i++) {
+
+          var win = window.top.frames[i];
+          var el = $(win.document).find('#dynamic_image_image_category_id_' + imageId);
+
+          if (el.val() != categoryId) {
+            el.val(categoryId);
+          }
+          el.find('option[value=""]').remove();
+
+          // update help text if available
+          if (win.name == "content") {
+            var helpText = win.imageCategoryContent[categoryId];
+            if (helpText) {
+              el.parents('table.outer-table-wrapper').find('div.category_description').html(helpText);
+            }
+          }
+        }
       }
     }
   };
