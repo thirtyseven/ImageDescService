@@ -1,6 +1,6 @@
 ActiveAdmin.register Book, :as => "BookDescriptions" do  
   menu :if => proc{ can? :admin_user, @all }
-   scope_to :current_library, :association_method => :related_books_by_description
+  scope_to :current_library, :association_method => :related_books_by_description
   
   
    actions :index

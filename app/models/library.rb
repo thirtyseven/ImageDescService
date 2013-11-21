@@ -24,4 +24,11 @@ class Library < ActiveRecord::Base
      BookStats.joins(:book => :library).where(:libraries => {:id => self.id}).where('books.deleted_at is null').readonly(false)  
   end  
   
+  def related_deleted_books
+      Book.where(:library_id => self.id).where("deleted_at is not null").readonly(false)
+  end
+  
+  def related_deleted_users
+      User.where("deleted_at is not null").readonly(false)
+  end
 end
