@@ -71,9 +71,7 @@ jQuery(function($) {
           // update help text if available
           if (win.name == "content") {
             var helpText = win.imageCategoryContent[categoryId];
-            if (helpText) {
-              el.parents('table.outer-table-wrapper').find('div.category_description').html(helpText);
-            }
+            el.parents('table.outer-table-wrapper').find('div.category_description').html(helpText);
           }
         }
       }
