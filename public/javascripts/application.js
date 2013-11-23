@@ -49,12 +49,6 @@ jQuery(function($) {
       bookToggleOnElement(this).toggle();
     });
 
-  $('.convert-to-iframe').each(function(index, item) {
-    $frame = $('<iframe width="100%" height="100" scrolling="yes"/>');
-    $($frame).insertAfter(item).contents().find('body').append(htmlDecode($(item).html()));
-    $(item).remove();
-  });
-
   window.Poet = {
     imageCategoryPostSave: function(imageId, categoryId) {
       return function(data, status) {

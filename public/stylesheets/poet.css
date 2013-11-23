@@ -49,3 +49,8 @@ position: relative;  /* constrains the absolutely positioned search-bar div */
 overflow: auto; /* clears the floated search-bar div */
 }
 
+.description-scroller {
+  width: 100%;
+  height: 100px;
+  overflow-y: auto;
+}
