@@ -113,6 +113,7 @@ class DynamicDescriptionsController < ApplicationController
     search_image_type = params['search']['image_type']
     user_library_id =  current_user.user_libraries.first.library_id
     search_submitter_by = params['search']['submitter_by']
+    search_authors = params['search']['authors']
 
     @host =  @repository.get_host(request)
     @results = DynamicDescription.tire.search(:per_page => 20, :page => (params[:page] || 1)) do  
@@ -122,9 +123,11 @@ class DynamicDescriptionsController < ApplicationController
          must   { term :title, search_title } if search_title.present?
          must   { term :isbn, search_isbn } if search_isbn.present?
          must   { term :dynamic_image_id, search_image } if search_image.present?
+         must   { term :authors, search_authors } if search_authors.present?         
          must   { term :image_type, search_image_type } if search_image_type.present?
          must   { term :submitter_by, search_submitter_by } if search_submitter_by.present?
          must   { term :is_last_approved, '1' }
+         must   { term :is_not_deleted, '1'}
          must   { term :dynamic_description_library_id, user_library_id}
        end
      end
