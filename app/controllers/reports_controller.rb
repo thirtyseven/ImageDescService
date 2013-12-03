@@ -4,11 +4,9 @@ class ReportsController < ApplicationController
 
   def index
 
-    @books_total = Book.connection.select_value("select count(id) from books where id in (select distinct(book_id) from dynamic_descriptions)")
+    @books_total = Book.connection.select_value("select count(id) from books where id in (select distinct(book_id) from dynamic_descriptions) and deleted_at is null")
     #@descriptions_total = DynamicDescription.connection.select_value("select count(id) from dynamic_descriptions")
-
-    @book_stats = BookStats.joins(:book).order('books.title').all
-    
+    @book_stats = BookStats.joins(:book).where('deleted_at is null').order('books.title').all
     @total_essential_images = BookStats.sum("total_essential_images")
     @total_images_described = BookStats.sum("total_images_described")
     @total_essential_images_described = BookStats.sum("essential_images_described")
@@ -53,7 +51,7 @@ class ReportsController < ApplicationController
      submitters = DynamicDescription.connection.select_rows("select submitter_id, count(*) as total from dynamic_descriptions group by submitter_id order by total desc;")
      @submitter_list =[]
      submitters.each do |submitter_id, count|
-         submitter = User.where(:id => submitter_id).first
+         submitter = User.where(:id => submitter_id, :deleted_at => nil).first
          if submitter 
            if submitter.full_name && !submitter.full_name.blank?
              name = submitter.full_name

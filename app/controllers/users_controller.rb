@@ -1,7 +1,8 @@
 class UsersController < ApplicationController
   before_filter :authenticate_user!, :except => :terms_of_service
   def index
-    @users = User.find(:all, :order => "created_at")
+    #@users = User.find(:all, :order => "created_at")
+    @users = User.where(:deleted_at => nil, :order => "created_at")
   end
   
   
@@ -25,6 +26,14 @@ class UsersController < ApplicationController
   end
 
   def terms_of_service
+  end
+  
+  def delete
+    @user = User.find(params[:user_id])
+    @user.deleted_at = Time.now
+    @user.save
+    flash[:alert] = "#{@user.full_name} has been deleted"
+    redirect_to admin_users_path
   end
 
 end
