@@ -14,10 +14,10 @@
   
 </head>
 
-  <body class="index admin_books logged_in">
+  <body class="index admin_books active_admin logged_in admin_namespace">
      <div id="header-wrap">
-       <div id="header">
-         <h1 id="site_title"><a title="Poet, version <%= t(:version)%>, home page" href="/">Poet Image Description</a></h1>
+       <div id="header" class="header">
+         <h1 id="site_title" class="site_title"><a title="Poet, version <%= t(:version)%>, home page" href="/">Poet Image Description</a></h1>
          <ul class="tabbed_navigation" id="tabs">
            <li>
            <% if can? :view_admin, @all %>

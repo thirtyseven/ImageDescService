@@ -106,14 +106,15 @@ class DynamicDescriptionsController < ApplicationController
   end
 
   def search 
-    search_term = params['search']['term']
-    search_title = params['search']['title']
-    search_isbn = params['search']['isbn']
-    search_image = params['search']['image']
-    search_image_type = params['search']['image_type']
-    user_library_id =  current_user.user_libraries.first.library_id
-    search_submitter_by = params['search']['submitter_by']
-    search_authors = params['search']['authors']
+    @search_term = search_term = params['search']['term']
+    @search_title = search_title = params['search']['title']
+    @search_isbn = search_isbn = params['search']['isbn']
+    @search_image = search_image = params['search']['image']
+    @search_image_type = search_image_type = params['search']['image_type']
+    @user_library_id = user_library_id =  current_user.user_libraries.first.library_id
+    @search_submitter_by = search_submitter_by = params['search']['submitter_by']
+    @search_authors = search_authors = params['search']['authors']
+    
 
     @host =  @repository.get_host(request)
     @results = DynamicDescription.tire.search(:per_page => 20, :page => (params[:page] || 1)) do  
