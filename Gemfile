@@ -21,7 +21,7 @@ gem "tire"
 gem 'ffi'
 gem 'sass-rails', :require => 'sass'
 gem 'meta_search', '>= 1.1.0.pre'
-gem 'activeadmin'
+gem 'activeadmin', '0.6.2'
 # Use unicorn as the web server
 # gem 'unicorn'
 
@@ -40,8 +40,8 @@ gem 'nokogiri'
 
 gem 'image_size'
 gem 'parallel'
-gem 'delayed_job'
-gem 'devise', '1.4.7'
+gem 'delayed_job', '2.1.4'
+gem 'devise'
 gem 'newrelic_rpm'
 gem 'kaminari'
 gem "airbrake"

@@ -1,5 +1,6 @@
 ActiveAdmin.register Book do
   scope_to :current_library, :association_method => :related_books
+  menu :priority => 1
   
   actions :index
 

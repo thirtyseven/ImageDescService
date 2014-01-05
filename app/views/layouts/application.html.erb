@@ -42,7 +42,7 @@
              <li><%= link_to 'My Books', book_list_by_user_path %> </li>
           <% end %>
           <% if can? :view_admin, @all %> 
-             <li><%= link_to "Admin", admin_dashboard_path %> </li>
+             <li><%= link_to "Admin", admin_root_path %> </li>
           <% end %>
           <% if user_signed_in? %>
             <li><%= current_user.username %></li>

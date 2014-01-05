@@ -1,5 +1,6 @@
 DiagramRailsApp::Application.routes.draw do
   root :to => "home#index"
+  match "admin", :controller => 'admin/books', :action => 'index' 
 
   resources :jobs
 

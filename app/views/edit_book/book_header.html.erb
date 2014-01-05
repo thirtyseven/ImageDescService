@@ -14,7 +14,7 @@
           <%= link_to 'User Profile', edit_user_path(current_user) %> &nbsp;
         <% end %>
         <% if can? :view_admin, @all %> 
-          <%= link_to "Admin", admin_dashboard_path %> &nbsp;
+          <%= link_to "Admin", admin_root_path %> &nbsp;
         <% end %>
         <% if user_signed_in? %>
           <%= current_user.username %> 
