@@ -18,7 +18,7 @@ ActiveAdmin.register Book, :as => "DeletedBooks" do
     column :description
     column :authors
     column "Format", :file_type
-    column "Added", :created_at
+    column "Added", :created_at, :class =>'body'
     column  "Deleted at", :deleted_at
   
   

@@ -15,7 +15,7 @@
         <% end %>
         <% if can? :view_admin, @all %> 
           <%= link_to "Admin", admin_root_path %> &nbsp;
-        <% end %>
+        <% end %>  
         <% if user_signed_in? %>
           <%= current_user.username %> 
           <%= link_to "Sign out", destroy_user_session_path, :method => :delete %>

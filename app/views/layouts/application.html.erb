@@ -18,7 +18,7 @@
      <div id="header-wrap">
        <div id="header" class="header">
          <h1 id="site_title" class="site_title"><a title="Poet, version <%= t(:version)%>, home page" href="/">Poet Image Description</a></h1>
-         <ul class="tabbed_navigation" id="tabs">
+         <ul class="header-item tabs" id="tabs">
            <li>
            <% if can? :view_admin, @all %>
              <%= form_for :search, :url => dynamic_descriptions_search_path, :html => { :style => 'background:none;border:0;display:inline;', :method => :get } do |f|%>
@@ -58,7 +58,8 @@
        <%= yield %>
 
    <div id="poet_footer" class="poet_footer"> <!-- TODO -- footer font smaller !-->
-    <p><strong>Legal Disclaimer</strong>: The Poet tool is intended to assist in the creation of accessible content. Use of the Poet tool is limited to activities for creating content that comply with applicable copyright law and contractual agreements. By using this tool, you accept all provisions contained in the <%= link_to('Terms of Use', user_terms_of_service_path, :target => '_blank' ) %>. If you do not wish to be bound by the provisions contained in the Terms of Use, do not use the Poet tool.</p>
+    <p><p>
+    <p><br><strong>Legal Disclaimer</strong>: The Poet tool is intended to assist in the creation of accessible content. Use of the Poet tool is limited to activities for creating content that comply with applicable copyright law and contractual agreements. By using this tool, you accept all provisions contained in the <%= link_to('Terms of Use', user_terms_of_service_path, :target => '_blank' ) %>. If you do not wish to be bound by the provisions contained in the Terms of Use, do not use the Poet tool.</p>
     <p>Copyright &copy; 2012 <a href="http://www.benetech.org">Benetech</a>.</p>
    </div>
      
