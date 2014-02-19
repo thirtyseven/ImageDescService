@@ -4,6 +4,6 @@ class AddFileTypeToBooks < ActiveRecord::Migration
   end
 
   def self.down
-    remove_column :books, :file_type,
+    remove_column :books, :file_type
   end
 end
