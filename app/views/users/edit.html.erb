@@ -2,10 +2,10 @@
 <h1>Editing Your Profile</h1>
 
 
-<% semantic_form_for  @user do |f| %>
-<% f.inputs "Username &nbsp; &nbsp; #{@user.username}" do %>
-<%= render :partial => "users/form", :locals => {:f => f} %>
-<%= f.submit "Update" %>
-<% end %>
+<%= semantic_form_for  @user do |f| %>
+	<%= f.inputs "Username &nbsp; &nbsp; #{@user.username}" do %>
+		<%= render :partial => "users/form", :locals => {:f => f} %>
+		<%= f.submit "Update" %>
+	<% end %>
 <% end %>
 </div>
