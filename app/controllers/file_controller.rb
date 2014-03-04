@@ -1,6 +1,5 @@
 class FileController < ApplicationController
   def file
-    p "ESH: #{request.url}"
     suffix = (request.url =~ /(\..*)$/) ? $1 : ''
     directory_name = params[:directory]
     if !directory_name

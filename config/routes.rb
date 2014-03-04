@@ -9,6 +9,7 @@ DiagramRailsApp::Application.routes.draw do
   
   modified_config = ActiveAdmin::Devise.config.clone
   modified_config[:controllers][:registrations] = 'registrations'
+  modified_config[:path] = 'auth'
   devise_for :users, modified_config
 
   ActiveAdmin.routes(self)

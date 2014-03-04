@@ -71,7 +71,6 @@ module DaisyBookHelper
         repository.store_file(zip_filename, 'delayed', random_uid, nil) #store file in a directory
         job.update_attributes :state => 'complete', :exit_params => ({:basename => basename, :random_uid => random_uid}).to_json
       rescue ShowAlertAndGoBack => e
-        p "ESH: have an error e=#{e.inspect}, trace=#{e.backtrace.inspect}"
         flash[:alert] = e.message
         job.update_attributes :state => 'error', :error_explanation => 'Unable to process this book at this time.  Please contact your Poet administrator.'
         redirect_to :action => 'process'
