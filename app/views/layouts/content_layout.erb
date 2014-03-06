@@ -169,7 +169,7 @@ function handleImageCategory(element){
         $newDiv = $($imageEditingControlHtml);
 
         $('form.description-form', $newDiv).bind('submit', function(evt) {
-            if($(evt.srcElement).find('.dynamic-image-category-selector').val() == "") {
+            if($(evt.target).find('.dynamic-image-category-selector').val() == "") {
               alert("Please specify a category for this image.")
               return false;
             } else {
