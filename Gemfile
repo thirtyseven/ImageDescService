@@ -14,7 +14,8 @@ gem 'test-unit'
 gem 'zipruby'
 gem 'aws-sdk'
 gem 'cancan'
-gem 'jquery-rails', '>= 1.0.12'
+gem 'jquery-rails'
+gem 'jquery-ui-rails'
 gem "haml"
 gem "paperclip", "~> 3.0"
 gem "paperclip-aws"
