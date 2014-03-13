@@ -17,112 +17,28 @@
           processEscapes: true
         }
       });
-    </script>
+  </script>
 
-  <style type="text/css">
-  .toolbar  { position:fixed; top:0px; left:1px; padding:1px; font-family:Arial;  background:#fffea1; border:1px solid #fc0; font-size: 80%;}
-  .original_image {font-family:Arial; font-size: 80%; font-weight: bold;}
-  .preview {border: 1px gray solid; margin: 2px 0px 2px 0px; padding-left: 2px;}
-  .svg_node {padding: 10px;}
-  .alt_text {display: block; font-size: 80%; font-weight:bold; border:1px solid #ccc; margin: 2px; text-align: left;}
-  label {font-weight: bold;}
+  <script type="text/javascript">
 
-  .tabs_container {
-      border-bottom: 1px solid #ccc;
+  function handleImageCategory(element){
+    form = element.form;
+    parentElement = $(element).parent().parent().parent();
+    jQuery.ajaxSetup({ 
+      timeout: 5 * 1000,
+      error: function(XMLHttpRequest, textStatus, errorThrown) {
+                  alert("ERROR: Unable to save change\n" + errorThrown) }
+      });
+    authenticity_token = form.authenticity_token.value
+    var id = $('.hidden-id', parentElement).val();
+    var image_category_id = $('.dynamic-image-category-selector', parentElement).val();
+    data = {
+      "authenticity_token" : authenticity_token,
+      "id" : id,
+      "dynamic_image[image_category_id]" : image_category_id
+    }
+    jQuery.post("/imageDesc/dynamic_images/" + id, data, Poet.imageCategoryPostSave(id, image_category_id));
   }
-  .tabs {
-      list-style: none;
-      padding: 5px 0 4px 0;
-      margin: 0 0 0 10px;
-      font: 0.75em arial;
-  }
-  .tabs li {
-      display: inline;
-  }
-  .tabs li a {
-      border: 1px solid #ccc;
-      padding: 4px 6px;
-      text-decoration: none;
-      background-color: #eeeeee;
-      border-bottom: none;
-      outline: none;
-      border-radius: 5px 5px 0 0;
-      -moz-border-radius: 5px 5px 0 0;
-      -webkit-border-top-left-radius: 5px;
-      -webkit-border-top-right-radius: 5px;
-  }
-  .tabs li a:hover {
-      background-color: #dddddd;
-      padding: 4px 6px;
-  }
-  .tabs li.active a {
-      border-bottom: 1px solid #fff;
-      background-color: #fff;
-      padding: 4px 6px 5px 6px;
-      border-bottom: none;
-  }
-  .tabs li.active a:hover {
-      background-color: #eeeeee;
-      padding: 4px 6px 5px 6px;
-      border-bottom: none;
-  }
-
-  .tabs_content_container {
-      border: 1px solid #ccc;
-      border-top: none;
-      padding: 10px;
-  }
-  .tab_content {
-      display: none;
-  }
-
-  .preview-author {
-      border: 1px solid #ccc;
-      margin-top: 12px;
-      font-weight: bold;
-      font-size: 80%;
-  }
-
-  </style>
-</head>
-
-  <body class="index admin_books active_admin logged_in admin_namespace">
-
-  <div class="toolbar" style="width:350px;">
-    <b><%= @book.title %></b>
- </div>
-  </div>
-<div class='image-editing-controls' template="<%= h generate_html(:partial => 'edit_book/edit_image_form')%>" book-id="<%= @book.id %>"></div>
-
-<%=yield%>
-<div id='result'></div>
-
-<% DynamicImage.includes(:dynamic_description).where(:book_id => @book.id, :book_fragment_id => @book_fragment.id).each do |dynamic_image| %>
-  <% description = dynamic_image.dynamic_description %>
-  <% description_body = description && description.body ? description.body : '' %>
-  <div class='image-editing-description-<%= dynamic_image.id.to_s.force_encoding("UTF-8") %>' image-original-src ="<%= dynamic_image.image_source(@host).to_s.force_encoding("UTF-8")%>" image-src="<%= dynamic_image.medium_source(@host).to_s.force_encoding("UTF-8") %>" image-id="<%= dynamic_image.id.to_s.force_encoding("UTF-8") %>" image-xml-id="<%= dynamic_image.xml_id.to_s.force_encoding("UTF-8") %>" description-body="<%= description_body %>" description-summary="<%= description ? description.summary : '' %>" description-sld="<%= description ? description.simplified_language_description : '' %>" description-annotation="<%= description ? description.annotation : '' %>" description-tactile-src="<%= description ? description.tactile_src : '' %>" description-tactile-tour="<%= description ? description.tactile_tour : '' %>" description-tas="<%= description ? description.target_age_start : '' %>" description-tae="<%= description ? description.target_age_end : '' %>" description-tgs="<%= description ? description.target_grade_start : '' %>" description-tge="<%= description ? description.target_grade_end : '' %>" description-author= "<%= (description && description.submitter_id) ? description.submitter_name : '' %>" description-image-category-id="<%= dynamic_image.image_category_id %>"></div>
-<% end %>
-
-<script type="text/javascript">
-
-function handleImageCategory(element){
-  form = element.form;
-  parentElement = $(element).parent().parent().parent();
-  jQuery.ajaxSetup({ 
-    timeout: 5 * 1000,
-    error: function(XMLHttpRequest, textStatus, errorThrown) {
-                alert("ERROR: Unable to save change\n" + errorThrown) }
-    });
-  authenticity_token = form.authenticity_token.value
-  var id = $('.hidden-id', parentElement).val();
-  var image_category_id = $('.dynamic-image-category-selector', parentElement).val();
-  data = {
-    "authenticity_token" : authenticity_token,
-    "id" : id,
-    "dynamic_image[image_category_id]" : image_category_id
-  }
-  jQuery.post("/imageDesc/dynamic_images/" + id, data, Poet.imageCategoryPostSave(id, image_category_id));
-}
 
   imageCategoryContent = [];
   // NOTE ESH: Preload all the category content in case it's used multiple times
@@ -643,8 +559,90 @@ function handleImageCategory(element){
         }
         return xmlString;
     }
-  
-  
-</script>
+  </script>
+
+  <style type="text/css">
+  .toolbar  { position:fixed; top:0px; left:1px; padding:1px; font-family:Arial;  background:#fffea1; border:1px solid #fc0; font-size: 80%;}
+  .original_image {font-family:Arial; font-size: 80%; font-weight: bold;}
+  .preview {border: 1px gray solid; margin: 2px 0px 2px 0px; padding-left: 2px;}
+  .svg_node {padding: 10px;}
+  .alt_text {display: block; font-size: 80%; font-weight:bold; border:1px solid #ccc; margin: 2px; text-align: left;}
+  label {font-weight: bold;}
+
+  .tabs_container {
+      border-bottom: 1px solid #ccc;
+  }
+  .tabs {
+      list-style: none;
+      padding: 5px 0 4px 0;
+      margin: 0 0 0 10px;
+      font: 0.75em arial;
+  }
+  .tabs li {
+      display: inline;
+  }
+  .tabs li a {
+      border: 1px solid #ccc;
+      padding: 4px 6px;
+      text-decoration: none;
+      background-color: #eeeeee;
+      border-bottom: none;
+      outline: none;
+      border-radius: 5px 5px 0 0;
+      -moz-border-radius: 5px 5px 0 0;
+      -webkit-border-top-left-radius: 5px;
+      -webkit-border-top-right-radius: 5px;
+  }
+  .tabs li a:hover {
+      background-color: #dddddd;
+      padding: 4px 6px;
+  }
+  .tabs li.active a {
+      border-bottom: 1px solid #fff;
+      background-color: #fff;
+      padding: 4px 6px 5px 6px;
+      border-bottom: none;
+  }
+  .tabs li.active a:hover {
+      background-color: #eeeeee;
+      padding: 4px 6px 5px 6px;
+      border-bottom: none;
+  }
+
+  .tabs_content_container {
+      border: 1px solid #ccc;
+      border-top: none;
+      padding: 10px;
+  }
+  .tab_content {
+      display: none;
+  }
+
+  .preview-author {
+      border: 1px solid #ccc;
+      margin-top: 12px;
+      font-weight: bold;
+      font-size: 80%;
+  }
+
+  </style>
+</head>
+
+  <body class="index admin_books active_admin logged_in admin_namespace">
+
+  <div class="toolbar" style="width:350px;">
+    <b><%= @book.title %></b>
+ </div>
+  </div>
+<div class='image-editing-controls' template="<%= h generate_html(:partial => 'edit_book/edit_image_form')%>" book-id="<%= @book.id %>"></div>
+
+<%=yield%>
+<div id='result'></div>
+
+<% DynamicImage.includes(:dynamic_description).where(:book_id => @book.id, :book_fragment_id => @book_fragment.id).each do |dynamic_image| %>
+  <% description = dynamic_image.dynamic_description %>
+  <% description_body = description && description.body ? description.body : '' %>
+  <div class='image-editing-description-<%= dynamic_image.id.to_s.force_encoding("UTF-8") %>' image-original-src ="<%= dynamic_image.image_source(@host).to_s.force_encoding("UTF-8")%>" image-src="<%= dynamic_image.medium_source(@host).to_s.force_encoding("UTF-8") %>" image-id="<%= dynamic_image.id.to_s.force_encoding("UTF-8") %>" image-xml-id="<%= dynamic_image.xml_id.to_s.force_encoding("UTF-8") %>" description-body="<%= description_body %>" description-summary="<%= description ? description.summary : '' %>" description-sld="<%= description ? description.simplified_language_description : '' %>" description-annotation="<%= description ? description.annotation : '' %>" description-tactile-src="<%= description ? description.tactile_src : '' %>" description-tactile-tour="<%= description ? description.tactile_tour : '' %>" description-tas="<%= description ? description.target_age_start : '' %>" description-tae="<%= description ? description.target_age_end : '' %>" description-tgs="<%= description ? description.target_grade_start : '' %>" description-tge="<%= description ? description.target_grade_end : '' %>" description-author= "<%= (description && description.submitter_id) ? description.submitter_name : '' %>" description-image-category-id="<%= dynamic_image.image_category_id %>"></div>
+<% end %>
 
 </body></html>

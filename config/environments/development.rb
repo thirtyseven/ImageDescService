@@ -6,6 +6,9 @@ DiagramRailsApp::Application.configure do
   # since you don't have to restart the webserver when you make code changes.
   config.cache_classes = false
 
+  # non-minified JS for environment
+  config.action_view.javascript_expansions[:defaults] = ['jquery.js', 'jquery_ujs.js', 'jquery-ui.js']
+
   # Log error messages when you accidentally call methods on nil.
   config.whiny_nils = true
 
