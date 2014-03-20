@@ -60,7 +60,7 @@ ActiveAdmin.register BookStats, :as => "Reports" do
 
   sidebar "Update" do
     div :class => :action do
-      link_to "Update Book Stats", reports_update_book_stats_path(), :remote => true, :method => "get", :format => :text, :class => "book-link-ajax"
+      link_to "Update Book Stats", reports_update_book_stats_path(), :data => {:remote => true, :method => "get", :type => :text}, :class => "book-link-ajax"
     end
     div :class => :action do
       link_to "Describer Count Report", reports_describer_list_path(), :target => '_blank'
