@@ -22,8 +22,8 @@ ActiveAdmin.register Book, :as => "BookDescriptions" do
       end
       
       column "Described by" do |book|
-          described_by = Book.connection.select_value "select email from users where id = #{book.submitter_id} and deleted_at is not null" if book.submitter_id
-          described_by.to_s
+          described_by = Book.connection.select_value "select email from users where id = #{book.submitter_id} and deleted_at is null" if book.submitter_id
+          if described_by == nil then "Unknown" else described_by.to_s end
       end
       
       column "# Images Described" do |book|
