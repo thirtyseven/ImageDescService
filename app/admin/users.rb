@@ -58,11 +58,11 @@ ActiveAdmin.register User do
     end
   end
   
-  filter :user_libraries_library_id, :as => :select, :collection => proc { Library.all}, :label => 'Library'
-  filter :user_roles_role_id, :as => :select, :collection => proc { Role.all}, :label => 'Role'
+  filter :libraries, :as => :select
+  filter :roles, :as => :select
   filter :username
   filter :email
-  filter :user_subject_expertises_subject_expertise_id, :as => :select, :collection => proc { SubjectExpertise.all}, :label => 'Subject Matter Expertise'
+  filter :subject_expertises, :as => :select
   filter :other_subject_expertise
   
   show do

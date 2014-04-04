@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 201109211852030) do
+ActiveRecord::Schema.define(:version => 20131202190359) do
 
   create_table "active_admin_comments", :force => true do |t|
     t.integer  "resource_id",   :null => false
@@ -19,8 +19,8 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.integer  "author_id"
     t.string   "author_type"
     t.text     "body"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
     t.string   "namespace"
   end
 
@@ -50,8 +50,8 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
   add_index "audits", ["user_id", "user_type"], :name => "user_index"
 
   create_table "book_fragments", :force => true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
     t.integer  "book_id"
     t.integer  "sequence_number"
   end
@@ -62,8 +62,8 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.integer "total_images"
     t.integer "total_essential_images",                                     :default => 0
     t.integer "total_images_described",                                     :default => 0
-    t.integer "book_id"
     t.integer "essential_images_described",                                 :default => 0
+    t.integer "book_id"
     t.integer "approved_descriptions",                                      :default => 0
     t.decimal "percent_essential_described", :precision => 10, :scale => 0, :default => 0
   end
@@ -75,8 +75,8 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.string   "title"
     t.string   "isbn",           :limit => 13
     t.integer  "status"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                       :null => false
+    t.datetime "updated_at",                                       :null => false
     t.string   "xml_file",                     :default => "none", :null => false
     t.datetime "last_approved"
     t.integer  "library_id",                                       :null => false
@@ -109,8 +109,8 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.string   "creator",                                                  :null => false
     t.datetime "date_approved"
     t.integer  "image_id",                                                 :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                               :null => false
+    t.datetime "updated_at",                                               :null => false
   end
 
   create_table "delayed_jobs", :force => true do |t|
@@ -122,8 +122,8 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.datetime "locked_at"
     t.datetime "failed_at"
     t.string   "locked_by"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
   end
 
   create_table "descriptions", :force => true do |t|
@@ -132,8 +132,8 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.string   "submitter",                      :default => "anonymous", :null => false
     t.datetime "date_approved"
     t.integer  "image_id",                                                :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                              :null => false
+    t.datetime "updated_at",                                              :null => false
   end
 
   create_table "dynamic_descriptions", :force => true do |t|
@@ -141,8 +141,8 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.boolean  "is_current",                                       :default => false,       :null => false
     t.datetime "date_approved"
     t.integer  "dynamic_image_id",                                                          :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                                                :null => false
+    t.datetime "updated_at",                                                                :null => false
     t.integer  "book_id"
     t.text     "summary"
     t.text     "simplified_language_description"
@@ -151,7 +151,6 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.integer  "target_grade_start"
     t.integer  "target_grade_end"
     t.integer  "description_quality"
-    t.integer  "submitter_id"
     t.string   "language",                                         :default => "en-US",     :null => false
     t.string   "repository",                                       :default => "Bookshare", :null => false
     t.string   "credentials"
@@ -160,6 +159,7 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.text     "tactile_tour"
     t.string   "simplified_image_src"
     t.text     "simplified_image_tour"
+    t.integer  "submitter_id"
   end
 
   add_index "dynamic_descriptions", ["dynamic_image_id", "is_current"], :name => "dynamic_descriptions_uid_image_id_current"
@@ -167,9 +167,9 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
   add_index "dynamic_descriptions", ["submitter_id"], :name => "dynamic_descriptions_submitter_id"
 
   create_table "dynamic_images", :force => true do |t|
-    t.string   "image_location",             :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.string   "image_location"
+    t.datetime "created_at",                 :null => false
+    t.datetime "updated_at",                 :null => false
     t.boolean  "should_be_described"
     t.integer  "width"
     t.integer  "height"
@@ -183,14 +183,16 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.integer  "image_category_id"
   end
 
+  add_index "dynamic_images", ["book_fragment_id"], :name => "dynamic_images_book_frag_id"
   add_index "dynamic_images", ["book_id", "image_location"], :name => "index_dynamic_images_on_book_id_and_image_location"
+  add_index "dynamic_images", ["image_location"], :name => "index_dynamic_images_on_book_uid_and_image_location"
   add_index "dynamic_images", ["should_be_described"], :name => "index_dynamic_images_on_book_uid_and_should_be_described"
 
   create_table "image_categories", :force => true do |t|
     t.string   "name",             :null => false
     t.string   "sample_file_name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
     t.integer  "order_to_display"
   end
 
@@ -203,13 +205,13 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
     t.string   "caption",         :limit => 8192
     t.string   "url"
     t.integer  "library_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
   end
 
   create_table "jobs", :force => true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                           :null => false
+    t.datetime "updated_at",                           :null => false
     t.string   "state",             :default => "new", :null => false
     t.string   "job_type"
     t.integer  "user_id"
@@ -222,29 +224,29 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
 
   create_table "libraries", :force => true do |t|
     t.string   "name",       :limit => 128, :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
   end
 
   add_index "libraries", ["name"], :name => "idx_library_name_unique", :unique => true
 
   create_table "roles", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "subject_expertises", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "user_libraries", :force => true do |t|
     t.integer  "user_id"
     t.integer  "library_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   add_index "user_libraries", ["library_id"], :name => "user_libraries_library_id"
@@ -253,8 +255,8 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
   create_table "user_roles", :force => true do |t|
     t.integer  "user_id"
     t.integer  "role_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   add_index "user_roles", ["role_id"], :name => "user_roles_role_id"
@@ -263,31 +265,31 @@ ActiveRecord::Schema.define(:version => 201109211852030) do
   create_table "user_subject_expertises", :force => true do |t|
     t.integer  "user_id"
     t.integer  "subject_expertise_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",           :null => false
+    t.datetime "updated_at",           :null => false
   end
 
   add_index "user_subject_expertises", ["subject_expertise_id"], :name => "user_subject_expertises_subject_expertise_id"
   add_index "user_subject_expertises", ["user_id"], :name => "user_subject_expertises_user_id"
 
   create_table "users", :force => true do |t|
-    t.string   "email",                                                     :null => false
-    t.string   "encrypted_password",      :limit => 128,                    :null => false
+    t.string   "email",                   :default => "",    :null => false
+    t.string   "encrypted_password",      :default => "",    :null => false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",                          :default => 0
+    t.integer  "sign_in_count",           :default => 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "username",                                                  :null => false
+    t.datetime "created_at",                                 :null => false
+    t.datetime "updated_at",                                 :null => false
+    t.string   "username",                                   :null => false
     t.string   "first_name"
     t.string   "last_name"
     t.string   "other_subject_expertise"
-    t.boolean  "agreed_tos",                             :default => false
+    t.boolean  "agreed_tos",              :default => false
     t.datetime "deleted_at"
   end
 

@@ -87,7 +87,7 @@ class RepopulateAudits < ActiveRecord::Migration
 			puts 'Audit table contains ' + x[0].to_s + " entries; should be safe to delete."
 			ActiveRecord::Base.connection.execute DynamicDescription.send(:sanitize_sql_array, ["DELETE FROM dynamic_descriptions WHERE id NOT IN (?)", image_description_ids.values])
   		else
-			puts 'Audit table contains no entries. Something went wrong, do not continue with delete.'
+			puts 'Audit table contains no entries. Do not continue with delete.'
 		end
 		break
 	end

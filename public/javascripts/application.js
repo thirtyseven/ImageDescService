@@ -32,6 +32,20 @@ jQuery(function($) {
     return $('<div/>').html(value).text(); 
   }
   
+  function handleSubmitResponse(responseText, responseStatus) {
+      var notification = document.getElementById("messageBox")
+      if(responseStatus == "success")  {
+          notification.innerHTML = "<%=t '.success' %>"
+          notification.style.fontWeight = "bold"
+          notification.style.color = "green"
+      }
+      else {
+          notification.innerHTML = "<%=t '.update_error' %>"
+          notification.style.fontWeight = "bold"
+          notification.style.color = "red"
+      }
+  }
+  
   $(".book-toggle").each(function() {
     if($(this).attr('checked')) {
       bookToggleOffElement(this).hide();

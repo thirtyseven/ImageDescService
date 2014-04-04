@@ -36,7 +36,7 @@ ActiveAdmin.register Book, :as => "BookDescriptions" do
           "No unapproved images"
         else
            div :class => :action do
-             link_to "Delete Unapproved Descriptions", delete_descriptions_by_id_path(:ids => unapproved_description_ids), :remote => true, :method => "post", :format => :js, :class => "delete-descriptions-link-ajax"
+             link_to "Delete Unapproved Descriptions", delete_descriptions_by_id_path(:ids => unapproved_description_ids), :data => {:remote => true, :method => "post", :type => :text}, :class => "delete-descriptions-link-ajax"
           end
         end
       end

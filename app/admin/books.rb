@@ -1,5 +1,6 @@
 ActiveAdmin.register Book do
   scope_to :current_library, :association_method => :related_books
+  menu :priority => 1
   
   actions :index
 
@@ -21,7 +22,8 @@ ActiveAdmin.register Book do
     column :description
     column :authors
     column "Format", :file_type
-    column "Added", :created_at
+    column "Added", :created_at, :class =>'body'
+    
     if can? :tag_all_images, @all
     column  do |book| 
       div :class => :action do

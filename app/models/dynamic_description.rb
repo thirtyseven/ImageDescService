@@ -1,7 +1,6 @@
 class DynamicDescription < ActiveRecord::Base
   audited  :allow_mass_assignment => true
   validates :body, :length => { :minimum => 0, :maximum => 16384, :allow_blank => true } 
-  #validates :submitter, :length => { :maximum => 255 }
   validates :dynamic_image_id, :presence => true
 
   belongs_to :dynamic_image
@@ -23,7 +22,7 @@ class DynamicDescription < ActiveRecord::Base
   # end
   
   settings :analysis => {
-                      text: {
+                      poet_analyzer: {
                          tokenizer: "standard",
                          # note, this lowercase filter is now redundant with the ElasticSearchable.ascii_folding logic
                          filter: ["standard","lowercase"],

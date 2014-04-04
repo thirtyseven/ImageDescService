@@ -1,25 +1,29 @@
 source 'http://rubygems.org'
+ruby "2.0.0"
 
-gem 'rails', '3.0.20'
+gem 'rails', '3.2.17'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
+# gem "sass", "~> 3.2.12"
 gem 'thin' # avoids massive memory consumption (as with webrick) on dev machine
 gem 'mysql2'
 gem 'uuidtools'
 gem 'test-unit'
 gem 'zipruby'
 gem 'aws-sdk'
-gem 'activeadmin'
 gem 'cancan'
-gem 'jquery-rails', '>= 1.0.12'
+gem 'jquery-rails'
+gem 'jquery-ui-rails'
 gem "haml"
 gem "paperclip", "~> 3.0"
 gem "paperclip-aws"
 gem "tire"
-gem 'ffi', '1.0.9'
-
+gem 'ffi'
+gem 'sass-rails', :require => 'sass'
+gem 'meta_search', '>= 1.1.0.pre'
+gem 'activeadmin', '0.6.2'
 # Use unicorn as the web server
 # gem 'unicorn'
 
@@ -38,7 +42,7 @@ gem 'nokogiri'
 
 gem 'image_size'
 gem 'parallel'
-gem 'delayed_job'
+gem 'delayed_job', '2.1.4'
 gem 'devise'
 gem 'newrelic_rpm'
 gem 'kaminari'
@@ -58,7 +62,7 @@ group :development, :test do
   gem 'sqlite3'
   gem 'foreman'
   gem 'oink'
-  gem 'factory_girl_rails'
+  gem 'factory_girl_rails', '1.2.0'
 
 
 end
