@@ -47,26 +47,23 @@ class UploadBookController < ApplicationController
       redirect_to :action => 'upload'
       return
     end
-    
+
     begin
       if valid_daisy_zip?(book.path)
         file_type = "Daisy"
       elsif valid_epub_zip?(book.path)
         # to do - when turning on the upload for EPUB files we need to check the deleted_at flag
-        #file_type = "Epub"
-        flash[:alert] = "You have uploaded an EPUB3 file. POET currently does not support this format."
-        redirect_to :action => 'upload'
-        return
+        file_type = "Epub"
       else  
         redirect_to :action => 'upload'
         return
       end 
+
     rescue Exception => e
         ActiveRecord::Base.logger.info "#{e.class}: #{e.message}"
         if e.message.include?("Not a zip archive")
             ActiveRecord::Base.logger.info "#{caller_info} Not a ZIP File"
-            #flash[:alert] = "Uploaded file must be a valid Daisy or EPub3 (zip) file"
-            flash[:alert] = "Uploaded file must be a valid Daisy file"
+            flash[:alert] = "Uploaded file must be a valid DAISY or EPUB 3 file"
         else
             ActiveRecord::Base.logger.info "#{caller_info} Other problem with zip file"
           flash[:alert] = "There is a problem with this zip file"
@@ -112,7 +109,8 @@ class UploadBookController < ApplicationController
           else
             job = DaisyParser.new(preprocessing_book.id, @repository.name, current_library, current_user.id)
           end
-job.perform
+
+        job.perform
           # Delayed::Job.enqueue(job)
           # 
           # # hack for testing
