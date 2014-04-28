@@ -26,12 +26,8 @@ class ImageBookController < ApplicationController
         file_type = "Daisy"
       elsif valid_epub_zip?(book.path)
         file_type = "Epub"
-        flash[:alert] = "You have uploaded an EPUB3 file. POET currently does not support this format."
-        redirect_to :action => 'image_check'
-        return
       else
-        #flash[:alert] = "Not a valid DAISY or EPUB book"
-        flash[:alert] = "Not a valid DAISY book"
+        flash[:alert] = "Not a valid DAISY or EPUB book"
         redirect_to :action => 'image_check'
         return
       end
@@ -59,31 +55,26 @@ class ImageBookController < ApplicationController
     
     begin
       @file_type = UnzipUtils.get_file_type book.original_filename
-      if @file_type == "Epub"
-         flash[:alert] = "You have uploaded an EPUB3 file. POET currently does not support this format."
-         redirect_to :action => 'process'
-        return
-      end
     
       # Store file in S3
-      p "Ok here we are uploading to S3"
       repository = RepositoryChooser.choose
       random_uid = UUIDTools::UUID.random_create.to_s
       @repository.store_file(book.path, 'delayed', random_uid, nil) #store file in a directory
       @job = Job.new({:user_id => current_user.id, :enter_params => ({:random_uid => random_uid, :password => password, :book_name => book.original_filename, :content_type => book.content_type}).to_json})
       @job.save
     
-      #@file_type = UnzipUtils.get_file_type book.original_filename
+      @file_type = UnzipUtils.get_file_type book.original_filename
       zip_directory, book_directory, file = accept_and_copy_book(book.path, @file_type)
       xml = get_xml_from_dir book_directory, @file_type
       doc = Nokogiri::XML xml
       @book_uid = extract_book_uid(doc, @file_type)
     
-      # if @file_type == "Epub"
-      #    EpubBookHelper::BatchHelper.delay.batch_add_descriptions_to_book(@job.id, current_library)
-      # else
-         DaisyBookHelper::BatchHelper.delay.batch_add_descriptions_to_book(@job.id, current_library) 
-      #end
+      if @file_type == "Epub"
+        EpubBookHelper::BatchHelper.delay.batch_add_descriptions_to_book(@job.id, current_library)
+      else
+        DaisyBookHelper::BatchHelper.delay.batch_add_descriptions_to_book(@job.id, current_library) 
+      end
+
     rescue Zip::Error => e
       logger.info "#{e.class}: #{e.message}"
       logger.info "#{caller_info} Other problem with zip"
