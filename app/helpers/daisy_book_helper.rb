@@ -169,6 +169,7 @@ module DaisyBookHelper
 
         image_references.each do |image|
 
+          # note that there's no guarantee this will be non-null
           image_id = image['id']
 
           # Attempt to find the parent imggroup
@@ -178,6 +179,7 @@ module DaisyBookHelper
           # Push down into an imggroup element if none already exists
           if(!imggroup)
             imggroup = Nokogiri::XML::Node.new "imggroup", doc
+            # could result in an ID collision
             imggroup['id'] =  "imggroup_#{image_id}"
             imggroup.parent = parent
 
@@ -190,6 +192,7 @@ module DaisyBookHelper
           prodnotes = imggroup.xpath(".//xmlns:prodnote")
           our_prodnote = nil
           prodnotes.each do | prodnote |
+
             if(prodnote['id'] == create_prodnote_id(image_id))
               # Found a match, keep it
               our_prodnote = prodnote
