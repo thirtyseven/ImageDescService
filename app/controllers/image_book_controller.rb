@@ -68,7 +68,8 @@ class ImageBookController < ApplicationController
       xml = get_xml_from_dir book_directory, @file_type
       doc = Nokogiri::XML xml
       @book_uid = extract_book_uid(doc, @file_type)
-    
+      @book_title = extract_book_title(doc, @file_type)
+
       if @file_type == "Epub"
         EpubBookHelper::BatchHelper.delay.batch_add_descriptions_to_book(@job.id, current_library)
       else
