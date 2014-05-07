@@ -3,11 +3,11 @@ module EpubUtils
     EpubUtils.valid_epub_zip?(file)
   end
   
-
+  # checks for mimetype container file
   def self.valid_epub_zip?(file)
       Zip::Archive.open(file) do |zipfile|
         zipfile.each do |entry|
-          if entry.name =~ /package\.opf$/
+          if entry.name == "META-INF/container.xml"
             return true
           end
         end
@@ -26,7 +26,7 @@ module EpubUtils
   end     
   
   def self.get_contents_xml_name(book_directory)
-      book_dir = get_epub_file_main_directory book_directory 
+      book_dir = get_epub_file_main_directory book_directory
       return Dir.glob(File.join(book_dir, 'package.opf'))[0]
   end
   
@@ -37,15 +37,25 @@ module EpubUtils
   end
    
   def self.extract_book_uid(doc)
-    xpath_uid = doc.css("[id='pub-id']").first.text if doc.css("[id='pub-id']").first
-    if !xpath_uid
+    # determine the ID for unique-identifier
+    uid_id = doc.xpath('/opf:package/@unique-identifier', {'opf' => 'http://www.idpf.org/2007/opf'}).first
+
+    # look up the ID
+    if uid_id != nil
+      xpath_uid = doc.xpath('//*[@id="' + uid_id + '"]').first
+    end
+
+    if xpath_uid == nil || xpath_uid.text == nil
       raise MissingBookUIDException.new
     end
-    return xpath_uid
+
+    # return sanitized version
+    return xpath_uid.text.gsub(/[^a-zA-Z0-9]/, '-')
   end
   
   def self.extract_book_title(doc)
-    doc.css("[property='dcterms:title']").first.text if doc.css("[property='dcterms:title']").first
+    titleElement = doc.xpath('//dc:title', {'dc' => 'http://purl.org/dc/elements/1.1/'}).first
+    titleElement.text if titleElement
   end
   
   def extract_images_prod_notes_for_epub doc, book_directory

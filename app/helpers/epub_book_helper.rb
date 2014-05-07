@@ -19,10 +19,10 @@ module EpubBookHelper
           ActiveRecord::Base.logger.info "#{e.class}: #{e.message}"
           if e.message.include?("Wrong password")
             ActiveRecord::Base.logger.info "Invalid Password for encyrpted zip"
-           # flash[:alert] = "Please check your password and re-enter"
+            flash[:alert] = "Please check your password and re-enter"
           else
             ActiveRecord::Base.logger.info "Other problem with encrypted zip"
-            #flash[:alert] = "There is a problem with this zip file"
+            flash[:alert] = "There is a problem with this zip file"
           end
           redirect_to :action => 'process'
           return
@@ -41,10 +41,10 @@ module EpubBookHelper
         ActiveRecord::Base.logger.info "#{e.class}: #{e.message}"
         if e.message.include?("File encrypted")
           ActiveRecord::Base.logger.info "Password needed for zip"
-       #   flash[:alert] = "Please enter a password for this book"
+          flash[:alert] = "Please enter a password for this book"
         else
           ActiveRecord::Base.logger.info "Other problem with zip"
-        #  flash[:alert] = "There is a problem with this zip file"
+          flash[:alert] = "There is a problem with this zip file"
         end
 
         redirect_to :action => 'process'
@@ -87,17 +87,14 @@ module EpubBookHelper
       rescue NoImageDescriptions
         ActiveRecord::Base.logger.info "No descriptions available #{contents_filenames}"
         raise ShowAlertAndGoBack.new("There are no image descriptions available for this book")
-      # rescue NonEpubXMLException => e
-      #   ActiveRecord::Base.logger.info "Uploaded non-dtbook #{contents_filename}"
-      #   raise ShowAlertAndGoBack.new("Uploaded file must be a valid Epub book XML content file")
       rescue MissingBookUIDException => e
-        ActiveRecord::Base.logger.info "Uploaded dtbook without UID #{contents_filenames}"
-        raise ShowAlertAndGoBack.new("Uploaded Daisy book XML content file must have a UID element")
+        ActiveRecord::Base.logger.info "Uploaded EPUB without Publication ID #{contents_filenames}"
+        raise ShowAlertAndGoBack.new("Uploaded EPUB XML content file must have a Publication ID element")
       rescue Nokogiri::XML::XPath::SyntaxError => e
-        ActiveRecord::Base.logger.info "Uploaded invalid XML file #{contents_filenames}"
+        ActiveRecord::Base.logger.info "Uploaded file must contain a valid EPUB Content Document #{contents_filenames}"
         ActiveRecord::Base.logger.info "#{e.class}: #{e.message}"
         ActiveRecord::Base.logger.info "Line #{e.line}, Column #{e.column}, Code #{e.code}"
-        raise ShowAlertAndGoBack.new("Uploaded file must be a valid Daisy book XML content file")
+        raise ShowAlertAndGoBack.new("Uploaded file must contain a valid EPUB Content Document")
       rescue Exception => e
         ActiveRecord::Base.logger.info "Unexpected exception processing #{contents_filenames}:"
         ActiveRecord::Base.logger.info "#{e.class}: #{e.message}"
@@ -134,10 +131,6 @@ module EpubBookHelper
           count
     end
     
-    # def get_contents_with_updated_descriptions(file, current_library)
-    #   DaisyBookHelper::BatchHelper.get_contents_with_updated_descriptions(file, current_library)
-    # end
-    
     def self.get_contents_with_updated_descriptions(book_directory, contents_filenames, current_library)
       xml =  File.read(EpubUtils.get_contents_xml_name(book_directory)) 
       doc = Nokogiri::XML xml
@@ -171,6 +164,9 @@ module EpubBookHelper
            image_location =  img_node['src']
            matched_image = matching_images_hash[image_location]
            unless matched_image == nil 
+             # this is a problem; what about images that are reused multiple times?
+             # when the xml parser gets to that image node, the image description
+             # is no longer in the hash. 
              matching_images_hash.delete(image_location) 
              dynamic_description = matched_image.dynamic_description
              if(!dynamic_description)
@@ -192,7 +188,6 @@ module EpubBookHelper
              summary_node = Nokogiri::XML::Node.new "summary", doc
              details_node.content = dynamic_description.body
              details_node.add_child summary_node
-             
           end
          end   
        end
