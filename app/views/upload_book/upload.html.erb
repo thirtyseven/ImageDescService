@@ -1,11 +1,11 @@
 
 <div style="margin: auto; width:700px; padding-top: 40px;" >
-<h1>DAISY Book Upload </h1>
+<h1>Poet Book Upload </h1>
 <p>
-To add image descriptions to a DAISY book in the Poet library, follow these steps:
+To add image descriptions to a DAISY or EPUB book in the Poet library, follow these steps:
 </p>
 <ol>
-<li>Click the Browse (or Choose File) button below, and select a DAISY book (zip) file from your local drive to upload.</li>
+<li>Click the Browse (or Choose File) button below, and select a DAISY book (zip) or EPUB book (epub) from your local drive to upload.</li>
 <li>If the book is password protected, enter your password in the field.</li>
 <li>Click the Upload button.</li>
 </ol>
@@ -16,7 +16,7 @@ After the upload process completes, you will need to remember the code displayed
 
 
 <%= form_tag("/upload_book/submit", {:multipart => true}) do %>
-<p><label for="upload_file">Select DAISY book file</label> :
+<p><label for="upload_file">Select book file</label> :
 <%= file_field_tag 'book' %> </p>
 <p></p>
 <%= submit_tag "Upload" %>
