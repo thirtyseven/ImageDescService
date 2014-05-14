@@ -1,21 +1,11 @@
-
 <h3>Description History</h3>  
 
-
-
-  <hr>
-  <%
-    
-   @desc_body_changes.each do |body|
-  
-  %>
-  
-    <%= body %>
-    
-  <hr>  
-  
-  <%
-  
+<hr />
+<%
+   @dynamic_description.audits.descending.each do |change|
+ %>
+	<h4><%= change.created_at %> - <%= change.user.full_name %></h4>
+    <p><%= (change.audited_changes['body'].size == 2) ? change.audited_changes['body'][1] : change.audited_changes['body'] %></p>
+<%
   end
-  
-  %>
+%>
