@@ -386,8 +386,7 @@
 					modal: true,
 					close: function(event, ui) {
 						$("#history-dialog").remove();
-						$(".clickedHistoryLink:first").focus();
-						$(".clickedHistoryLink").removeClass("clickedHistoryLink");
+						$(".clickedHistoryLink:first").focus().removeClass("clickedHistoryLink");
 					}
 				});
 				return false;
