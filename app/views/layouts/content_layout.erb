@@ -377,6 +377,7 @@
             historyLink.attr('href', historyLink.attr('href').replace('history_desc_image_id', $imageId));
             
 			historyLink.click(function(event) {
+				$(this).addClass("clickedHistoryLink");
 				event.preventDefault();
 				var historyDialog = $('<div id="history-dialog"></div>');
 				$('body').append(historyDialog);
@@ -385,6 +386,8 @@
 					modal: true,
 					close: function(event, ui) {
 						$("#history-dialog").remove();
+						$(".clickedHistoryLink:first").focus();
+						$(".clickedHistoryLink").removeClass("clickedHistoryLink");
 					}
 				});
 				return false;
