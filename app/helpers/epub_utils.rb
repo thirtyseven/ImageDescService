@@ -1,3 +1,4 @@
+require 'uri'
 module EpubUtils
   def valid_epub_zip?(file)
     EpubUtils.valid_epub_zip?(file)
@@ -30,10 +31,22 @@ module EpubUtils
       return Dir.glob(File.join(book_dir, 'package.opf'))[0]
   end
   
-   
-  def self.get_epub_book_xml_file_names(book_directory) 
-     book_dir = EpubUtils.get_epub_file_main_directory book_directory 
-     return Dir.glob(File.join(book_dir, '*.xhtml'))
+  def self.get_epub_book_xml_file_names(book_directory)
+     # Get opf
+     doc = Nokogiri::XML get_xml_from_dir(book_directory, "Epub")
+     
+     # get main directory
+     mainDirectory = EpubUtils.get_epub_file_main_directory(book_directory)
+     
+     #Use spine to get ordered list of content.
+     filenames = Array.new
+     doc.search('itemref').each do |itemref| 
+       itemURI = URI(doc.xpath('//*[@id="' + itemref['idref'] + '"]').first['href'])
+       filename = itemURI.scheme.nil? ? mainDirectory + "/" + itemURI.to_s : itemURI.to_s
+       filenames.push(filename) 
+     end
+     
+     return filenames
   end
    
   def self.extract_book_uid(doc)
