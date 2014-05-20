@@ -1,4 +1,4 @@
-include DaisyUtils, UnzipUtils, EpubUtils
+include UnzipUtils, EpubUtils
 
 class EpubParser <  S3UnzippingJob
 
@@ -12,7 +12,6 @@ class EpubParser <  S3UnzippingJob
           xml = get_xml_from_dir(book_directory, book.file_type)
           doc = Nokogiri::XML xml
 
-          opf = get_opf_from_dir(book_directory)
           file_names = EpubUtils.get_epub_book_xml_file_names(book_directory)
           file_contents = file_names.inject('') do |acc, file_name|
            cur_file_contents = File.read(file_name)
@@ -24,7 +23,7 @@ class EpubParser <  S3UnzippingJob
 
 
           book = Book.where(:id => book_id, :deleted_at => nil).first
-          book = update_epub_book_in_db(book, doc, file_names.join(', '), opf, uploader_id)
+          book = update_epub_book_in_db(book, doc, file_names.join(', '), uploader_id)
 
           splitter = SplitXmlHelper::DTBookSplitter.new(IMAGE_LIMIT)
           parser = Nokogiri::XML::SAX::Parser.new(splitter)
@@ -81,24 +80,13 @@ class EpubParser <  S3UnzippingJob
 
     
 
-    def get_opf_from_dir (book_directory)
-       opf_file = "**/package.opf" 
-       opf_filename = Dir.glob("#{book_directory}/#{opf_file}").first
-       File.read(opf_filename)
-    end
-    
-    
-    def update_epub_book_in_db(book, doc, xml_file, opf, uploader)
-      isbn = nil
-      if opf
-        opf_doc = Nokogiri::XML opf
-        isbn = extract_optional_epub_isbn(opf_doc) 
-      end
-      @book_title = doc.css("[property='dcterms:title']").first.text if doc.css("[property='dcterms:title']").first
+    def update_epub_book_in_db(book, doc, xml_file, uploader)
+      @book_title = EpubUtils.extract_book_title(doc)
       @book_publisher = doc.css("[property='dcterms:publisher']").first.text if doc.css("[property='dcterms:publisher']").first
       @book_publisher_date = doc.css("[property='dc:date']").first.text if doc.css("[property='dc:date']").first
       description =  doc.css("[property='dcterms:description']").first.text if doc.css("[property='dcterms:description']").first
       author =  doc.css("[property='dcterms:creator']").first.text if doc.css("[property='dcterms:creator']").first
+      isbn = extract_optional_epub_isbn(doc) 
       book.update_attributes(:title => @book_title, :isbn => isbn, :xml_file => xml_file, :status => 1, :publisher => @book_publisher, :publisher_date => @book_publisher_date, :description => description, :authors => author)    
       book
     end    

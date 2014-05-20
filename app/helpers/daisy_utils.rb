@@ -1,4 +1,7 @@
 module DaisyUtils
+
+  EXPECTED_DTD_FILES = ['dtbook-2005-2.dtd', 'dtbook-2005-3.dtd']
+
   def valid_daisy_zip?(file)
     DaisyUtils.valid_daisy_zip?(file)
   end
@@ -6,7 +9,7 @@ module DaisyUtils
   def self.valid_daisy_zip?(file)
       Zip::Archive.open(file) do |zipfile|
         zipfile.each do |entry|
-          if entry.name =~ /\.ncx$/
+          if EXPECTED_DTD_FILES.include? entry.name
             return true
           end
         end
@@ -51,6 +54,8 @@ module DaisyUtils
       limit = 249
       @prodnotes_hash = Hash.new()
       prodnotes.each do |node|
+        # MQ: Why are we even querying the DB for a matching DynamicImage?
+        # And why doesn't it care about the book the image belongs to?
         dynamic_image = DynamicImage.where(:xml_id => node['imgref']).first
         if (dynamic_image)
           @prodnotes_hash[dynamic_image] = node.inner_text

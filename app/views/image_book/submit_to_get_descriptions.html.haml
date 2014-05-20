@@ -1,20 +1,18 @@
-.download_link
+%div{:class => "download_link", :style => "margin: auto; padding: 40px;"}
 
-  %div{:style => "margin: auto; width:700px; padding-top: 40px;"}
-    %h3
-      Thank You! Your book is being processed.
-    
-    Please give us 15 minutes to finish preparing your book. 
-    %br
-      Copy the following book ID, 
-      %strong
-        = @book_uid
-    %br
-      and enter it on the home page to edit image descriptions.
-
-    %br
-    %a{:href => "/"} Back to home page
+  %h3
+    Thank You! Your book is being processed.
   
+  %p
+    Poet is inserting image descriptions back into
+    %strong
+      = @book_title
+    \.
+    Please give us up to 15 minutes to finish preparing your book.
+
+  %p
+    %img{:src => "/images/throbber.gif"}
+
 :javascript
   function doPoll(){
     $.get('#{poll_file_with_descriptions_path(:job_id => @job.id)}', function(data) {
@@ -25,7 +23,7 @@
       console.log("Complete:");
       console.log(data == 'Complete');
       if(data == 'Complete') {
-        $('.download_link').html("<a href='#{download_with_descriptions_path(:job_id => @job.id, :file_type => @file_type)}'> Click to download the book with updated image descriptions. </a>");
+        $('.download_link').html("<h3>Download your book</h3><p>Click the provided link to download your updated book.</p><p><a href='#{download_with_descriptions_path(:job_id => @job.id, :file_type => @file_type)}'><strong>#{@book_title}</strong></a>");
       }
       else if(data == 'Error') {
         // TODO ESH: add an error message back to the user 

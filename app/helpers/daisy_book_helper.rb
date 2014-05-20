@@ -154,8 +154,9 @@ module DaisyBookHelper
       matching_images = DynamicImage.where("book_id = ?", book.id).all
       matching_images.each do | dynamic_image |
         image_location = dynamic_image.image_location
-        image = doc.at_xpath( doc, "//xmlns:img[@src='#{image_location}']")
-        if !image
+
+        image_references = doc.xpath("//xmlns:img[@src='#{image_location}']")
+        if image_references.size == 0
           ActiveRecord::Base.logger.info "Missing img element for database description #{book_uid} #{image_location}"
           next
         end
@@ -166,37 +167,55 @@ module DaisyBookHelper
           next
         end
 
-        image_id = image['id']
+        image_references.each do |image|
 
-        parent = image.at_xpath("..")
-        imggroup = get_imggroup_parent_of(image)
-        if(!imggroup)
-          imggroup = Nokogiri::XML::Node.new "imggroup", doc
-          imggroup['id'] =  "imggroup_#{image_id}"
-          imggroup.parent = parent
+          # note that there's no guarantee this will be non-null
+          image_id = image['id']
 
-          parent.children.delete(image)
-          image.parent = imggroup
-          parent = imggroup
-        end
+          # Attempt to find the parent imggroup
+          parent = image.at_xpath("..")
+          imggroup = get_imggroup_parent_of(image)
 
-        prodnotes = imggroup.xpath(".//xmlns:prodnote")
-        our_prodnote = nil
-        prodnotes.each do | prodnote |
-          if(prodnote['id'] == create_prodnote_id(image_id))
-            our_prodnote = prodnote
+          # Push down into an imggroup element if none already exists
+          if(!imggroup)
+            imggroup = Nokogiri::XML::Node.new "imggroup", doc
+            # could result in an ID collision
+            imggroup['id'] =  "imggroup_#{image_id}"
+            imggroup.parent = parent
+
+            parent.children.delete(image)
+            image.parent = imggroup
+            parent = imggroup
           end
-        end
-        if(!our_prodnote)
-          our_prodnote = Nokogiri::XML::Node.new "prodnote", doc 
-          imggroup.add_child our_prodnote 
-        end
 
-        our_prodnote.add_child(dynamic_description.body)
-        our_prodnote['render'] = 'optional'
-        our_prodnote['imgref'] = image_id
-        our_prodnote['id'] = create_prodnote_id(image_id)
-        our_prodnote['showin'] = 'blp'
+          # Attempt to locate prodnote that conforms to our ID naming convention 
+          prodnotes = imggroup.xpath(".//xmlns:prodnote")
+          our_prodnote = nil
+          prodnotes.each do | prodnote |
+
+            if(prodnote['id'] == create_prodnote_id(image_id))
+              # Found a match, keep it
+              our_prodnote = prodnote
+            end
+          end
+
+          # If not found, create a new one
+          if(!our_prodnote)
+            our_prodnote = Nokogiri::XML::Node.new "prodnote", doc 
+            imggroup.add_child our_prodnote 
+          end
+
+          # flush old contents then append most recent ones
+          our_prodnote.children.each do |child|
+            child.remove
+          end
+
+          our_prodnote.add_child(dynamic_description.body)
+          our_prodnote['render'] = 'optional'
+          our_prodnote['imgref'] = image_id
+          our_prodnote['id'] = create_prodnote_id(image_id)
+          our_prodnote['showin'] = 'blp'
+        end
       end
 
       return doc.to_xml
