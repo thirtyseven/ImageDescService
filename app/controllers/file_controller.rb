@@ -1,15 +1,21 @@
 class FileController < ApplicationController
   def file
-    suffix = (request.url =~ /(\..*)$/) ? $1 : ''
     directory_name = params[:directory]
     if !directory_name
       directory_name = ''
+    end
+    extension = params[:format]
+    if !extension
+      extension = ''
+    else
+      extension = '.' + extension
     end
     file_name = params[:file]
     book_directory = ENV['POET_LOCAL_STORAGE_DIR']
 
     directory = File.join(book_directory, directory_name)
-    file = File.join(directory, "#{file_name}#{suffix}")
+    file = File.join(directory, "#{file_name}#{extension}")
+    p file
     timestamp = File.stat(file).ctime
     if(stale?(:last_modified => timestamp))
       content_type = 'text/plain'
