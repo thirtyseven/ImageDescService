@@ -50,7 +50,7 @@ module EpubUtils
     end
 
     # return sanitized version
-    return xpath_uid.text.gsub(/[^a-zA-Z0-9]/, '-')
+    return xpath_uid.text.gsub(/[^a-zA-Z0-9\-\_]/, '-')
   end
   
   def self.extract_book_title(doc)
