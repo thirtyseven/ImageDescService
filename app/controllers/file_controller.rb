@@ -15,7 +15,6 @@ class FileController < ApplicationController
 
     directory = File.join(book_directory, directory_name)
     file = File.join(directory, "#{file_name}#{extension}")
-    p file
     timestamp = File.stat(file).ctime
     if(stale?(:last_modified => timestamp))
       content_type = 'text/plain'
