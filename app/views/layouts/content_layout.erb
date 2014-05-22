@@ -8,6 +8,7 @@
   <%= javascript_include_tag 'ckeditor/ckeditor' %>
   <%= javascript_include_tag 'ckeditor/adapters/jquery' %>
   <%= stylesheet_link_tag 'poet' %>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/excite-bike/jquery-ui.css">
   <script type="text/x-mathjax-config">
       MathJax.Hub.Config({
         jax: ["input/AsciiMath", "input/MathML", "input/TeX", "output/SVG", "output/NativeMML"],
@@ -369,6 +370,21 @@
           if(historyLink && historyLink.attr('href') != null) {
             historyLink.attr('href', historyLink.attr('href').replace('history_desc_image_id', $imageId));
             
+			historyLink.click(function(event) {
+				$(this).addClass("clickedHistoryLink");
+				event.preventDefault();
+				var historyDialog = $('<div id="history-dialog"></div>');
+				$('body').append(historyDialog);
+				historyDialog.load(historyLink.attr("href") + " #descriptionHistory").dialog({					
+					width: 600,
+					modal: true,
+					close: function(event, ui) {
+						$("#history-dialog").remove();
+						$(".clickedHistoryLink:first").focus().removeClass("clickedHistoryLink");
+					}
+				});
+				return false;
+			});
             if($descriptionBody == null || $descriptionBody == '') {
               $(historyLink).hide();
             }
