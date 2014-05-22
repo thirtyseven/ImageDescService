@@ -1,4 +1,4 @@
-
+<%= javascript_include_tag 'jquery.lazyload.min' %>
 <style type="text/css">
   .toolbar  { position:fixed; top:0px; left:1px; padding:1px; font-family:Arial; background:#fffea1; border:1px solid #fc0;}
     a, a:link, a:visited {color: #ffffff;}
@@ -110,6 +110,10 @@ function handleFilterChange()
     var desired = document.getElementById("filter").value;
     window.location.href = "/edit_book/side_bar?book_id=<%=session[:book_id]%>" + "&filter=" + desired + "&book_fragment_id=<%= @fragment_id%>";
 }
+
+$(function() {
+  $("img.lazyload").lazyload();
+});
 <%
   book = Book.find session[:book_id] rescue nil
 %>
@@ -144,9 +148,9 @@ function handleFilterChange()
 %>
 <div id="div_<%= src %>" style="padding-left: 5px;">
   <a id="<%= xml_id %>" href="#<%= xml_id %>">
-  <img style="padding-top: 55px;"
+  <img class="lazyload" style="padding-top: 55px;"
     onclick="handleClick('<%= book.id %>', '<%= xml_id %>', '<%= raw_src %>', '<%= model.id %>')"
-    alt="Image <%= model.id %>. Clicking will cause the frame to the right to scroll to this image within the book." src="<%= model.thumb_source(@host)%>">
+    alt="Image <%= model.id %>. Clicking will cause the frame to the right to scroll to this image within the book." data-original="<%= model.thumb_source(@host)%>">
   </img>
   </a>
   </br>Image Number: <%= model.id %>
