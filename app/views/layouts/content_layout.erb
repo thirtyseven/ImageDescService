@@ -4,9 +4,11 @@
   <title>Poet Image Description</title>
   <%= javascript_include_tag :defaults %>
   <%= javascript_include_tag 'jquery.scrollto' %>
+  <%= javascript_include_tag 'jquery.lazyload.min' %>
   <%= javascript_include_tag 'ckeditor/ckeditor' %>
   <%= javascript_include_tag 'ckeditor/adapters/jquery' %>
   <%= stylesheet_link_tag 'poet' %>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/excite-bike/jquery-ui.css">
   <script type="text/x-mathjax-config">
       MathJax.Hub.Config({
         jax: ["input/AsciiMath", "input/MathML", "input/TeX", "output/SVG", "output/NativeMML"],
@@ -51,10 +53,8 @@
   // TODO: move this into the application.js file when we move away from frames
   // First load up the HTML file and inject it into the DOM
   $bookUrl = '<%= raw @book_url %>';
-  //console.log("ESH: Have a url to load up of " + $bookUrl);
   $.get($bookUrl, function(data) {
     $('#result').html(data);
-    //console.log("ESH: after loading in the HTML data");
 
   // Inject DHTML into each image with previous description and current description
   
@@ -253,14 +253,9 @@
           $imageSource = $dataNode.attr('image-src');
           $imageOriginalSource = $dataNode.attr('image-original-src');
 
-          if (currentImageNode.attr('src', $imageSource)) {
-              currentImageNode.attr('src', $imageSource).load(function() {
-                if(singleImage) {
-                  scrollToElement = $('img[img-id="<%= params['book_image_id'] %>"]');
-                  scrollToElement.ScrollTo();
-                }
-              });
-          }
+          currentImageNode.addClass('lazyload');
+          currentImageNode.removeAttr('src');
+          currentImageNode.attr('data-original', $imageSource);
         
           // set ID appropriately
           var categorySelect = $('.dynamic-image-category-selector', $newDiv);
@@ -375,6 +370,21 @@
           if(historyLink && historyLink.attr('href') != null) {
             historyLink.attr('href', historyLink.attr('href').replace('history_desc_image_id', $imageId));
             
+			historyLink.click(function(event) {
+				$(this).addClass("clickedHistoryLink");
+				event.preventDefault();
+				var historyDialog = $('<div id="history-dialog"></div>');
+				$('body').append(historyDialog);
+				historyDialog.load(historyLink.attr("href") + " #descriptionHistory").dialog({					
+					width: 600,
+					modal: true,
+					close: function(event, ui) {
+						$("#history-dialog").remove();
+						$(".clickedHistoryLink:first").focus().removeClass("clickedHistoryLink");
+					}
+				});
+				return false;
+			});
             if($descriptionBody == null || $descriptionBody == '') {
               $(historyLink).hide();
             }
@@ -442,6 +452,13 @@
       }
     })
   }
+
+  // init lazyload
+  console.log("Lazy load!!");
+  $("img.lazyload").lazyload({
+    threshold : 100
+  });
+
   $.getScript("https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML");
 
     //  When user clicks on tab, this code will be executed

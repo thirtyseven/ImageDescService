@@ -24,7 +24,7 @@ module DaisyUtils
       raise MissingBookUIDException.new
     end
     node = matches.first
-    return node.attributes['content'].content
+    return node.attributes['content'].content.gsub(/[^a-zA-Z0-9\-\_]/, '-')
   end
 
   def self.extract_book_title(doc)
