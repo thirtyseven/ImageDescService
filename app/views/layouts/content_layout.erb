@@ -171,7 +171,7 @@
           return false;
         });
 
-        $('.equation-editor', $newDiv).keyup(Poet.debounce(function() {
+        $('.equation-editor', $newDiv).keydown(Poet.debounce(function() {
           var $editorString = $('.equation-editor', $(this).parent())[0].value;
           var $svg_node = $('.svg_node',$(this).parent());
            $svg_node[0].innerHTML = '`' + $editorString + '`';
