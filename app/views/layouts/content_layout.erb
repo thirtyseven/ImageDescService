@@ -171,12 +171,12 @@
           return false;
         });
 
-        $('.equation-editor', $newDiv).keyup(function() {
+        $('.equation-editor', $newDiv).keyup(Poet.debounce(function() {
           var $editorString = $('.equation-editor', $(this).parent())[0].value;
           var $svg_node = $('.svg_node',$(this).parent());
            $svg_node[0].innerHTML = '`' + $editorString + '`';
           MathJax.Hub.Typeset($svg_node[0]);
-        });
+        }, 300));
 
         $('.add-to-desc', $newDiv).click(function() {
           var svg_node = $('.svg_node',$(this).parent())[0];
